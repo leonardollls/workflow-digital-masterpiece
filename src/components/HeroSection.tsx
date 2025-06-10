@@ -3,20 +3,11 @@ import { Button } from '@/components/ui/button';
 import AnimatedBackground from '@/components/AnimatedBackground';
 
 const HeroSection = () => {
-  const [leadsGenerated, setLeadsGenerated] = useState(15847);
   const [showModal, setShowModal] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Simulate real-time lead generation with more realistic intervals
-    const interval = setInterval(() => {
-      if (Math.random() > 0.85) {
-        setLeadsGenerated(prev => prev + Math.floor(Math.random() * 3) + 1);
-      }
-    }, 15000);
-
     // Intersection Observer for scroll animations
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
@@ -28,19 +19,8 @@ const HeroSection = () => {
     }
 
     return () => {
-      clearInterval(interval);
       observer.disconnect();
     };
-  }, []);
-
-  // Mouse tracking for magnetic effects
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const trustBadges = [
@@ -125,26 +105,8 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Live Stats Counter */}
-        <div className={`mb-8 transition-all duration-1000 delay-300 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
-          <div className="inline-flex items-center gap-4 glass-strong px-8 py-4 rounded-2xl">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-4 h-4 bg-success-500 rounded-full animate-glow-pulse" />
-                <div className="absolute inset-0 w-4 h-4 bg-success-500 rounded-full animate-ping opacity-75" />
-              </div>
-              <div className="text-left">
-                <div className="text-2xl font-bold text-workflow-energy font-mono">
-                  {leadsGenerated.toLocaleString('pt-BR')}
-                </div>
-                <div className="text-sm text-workflow-deep/70 font-medium">leads gerados e contando...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Stats Grid */}
-        <div className={`grid grid-cols-3 gap-6 mb-12 max-w-md mx-auto transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-3 gap-6 mb-12 max-w-md mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
               <div className="text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">
@@ -161,7 +123,7 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced CTA Ecosystem */}
-        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 transition-all duration-1000 delay-500 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
+        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
           <Button 
             className="btn-primary btn-magnetic group relative overflow-hidden min-w-[240px]"
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
@@ -197,7 +159,7 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced Client Showcase */}
-        <div className={`transition-all duration-1000 delay-600 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <p className="text-sm text-workflow-deep/60 mb-6 font-medium">Confiado por empresas inovadoras ao redor do mundo</p>
           <div className="flex justify-center items-center gap-8 flex-wrap">
             {clientLogos.map((client, index) => (
