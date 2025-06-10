@@ -94,11 +94,13 @@ const PortfolioGallery = () => {
   ];
 
   const openImageModal = (imageSrc: string) => {
+    console.log('openImageModal called with:', imageSrc);
     setSelectedImage(imageSrc);
     document.body.style.overflow = 'hidden';
   };
 
   const closeImageModal = () => {
+    console.log('closeImageModal called');
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
   };
@@ -153,8 +155,14 @@ const PortfolioGallery = () => {
                 key={project.id}
                 className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
+                onMouseEnter={() => {
+                  console.log('Card hovered:', project.id);
+                  setHoveredProject(project.id);
+                }}
+                onMouseLeave={() => {
+                  console.log('Card unhovered');
+                  setHoveredProject(null);
+                }}
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
@@ -166,16 +174,22 @@ const PortfolioGallery = () => {
                   />
                   
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   
                   {/* Eye Icon for Preview */}
                   <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                     hoveredProject === project.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}>
-                    <button
-                      onClick={() => openImageModal(project.image)}
-                      className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-workflow-energy hover:bg-white hover:scale-110 transition-all duration-300 shadow-workflow"
-                    >
+                  }`} style={{ pointerEvents: hoveredProject === project.id ? 'auto' : 'none' }}>
+                                          <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Button clicked!', project.image);
+                          openImageModal(project.image);
+                        }}
+                        className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-workflow-energy hover:bg-white hover:scale-110 transition-all duration-300 shadow-workflow relative z-10"
+                        type="button"
+                      >
                       <svg
                         width="24"
                         height="24"
