@@ -233,44 +233,69 @@ const PortfolioGallery = () => {
 
       {/* Image Modal */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="relative max-w-7xl max-h-[90vh] w-full">
-            {/* Close Button */}
-            <button
-              onClick={closeImageModal}
-              className="absolute -top-12 right-0 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white hover:scale-110 transition-all duration-300 z-10"
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 animate-fade-in">
+          {/* Close Button */}
+          <button
+            onClick={closeImageModal}
+            className="fixed top-6 right-6 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white hover:scale-110 transition-all duration-300 z-10 backdrop-blur-sm"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-
-            {/* Image Container */}
-            <div className="relative bg-white rounded-2xl overflow-hidden shadow-workflow-xl animate-scale-in">
-              <img
-                src={selectedImage}
-                alt="Landing page preview"
-                className="w-full h-auto max-h-[85vh] object-contain"
+              <path
+                d="M18 6L6 18M6 6L18 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
-            </div>
+            </svg>
+          </button>
 
-            {/* Click outside to close */}
-            <div
-              className="absolute inset-0 -z-10"
-              onClick={closeImageModal}
-            />
+          {/* Scrollable Container */}
+          <div className="h-full overflow-y-auto overflow-x-hidden">
+            <div className="min-h-full flex items-start justify-center p-4 pt-20">
+              {/* Image Container */}
+              <div className="relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl animate-scale-in">
+                <img
+                  src={selectedImage}
+                  alt="Landing page preview"
+                  className="w-full h-auto block"
+                  style={{ minHeight: '100vh' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Click outside overlay */}
+          <div
+            className="fixed inset-0 -z-10"
+            onClick={closeImageModal}
+          />
+
+          {/* Scroll Indicator */}
+          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="animate-bounce"
+            >
+              <path
+                d="M7 13L12 18L17 13M7 6L12 11L17 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>Role para ver a landing page completa</span>
           </div>
         </div>
       )}
