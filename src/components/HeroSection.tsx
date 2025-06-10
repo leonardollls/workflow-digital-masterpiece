@@ -91,11 +91,11 @@ const HeroSection = () => {
         {/* Main Headline with Enhanced Typography */}
         <div className={`mb-8 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
           <h1 className="text-responsive-4xl font-display font-bold text-workflow-deep mb-6 leading-tight">
-            Não criamos <span className="relative">
+            Não criamos <span className="relative inline-block">
               <span className="text-gradient-rainbow">landing pages</span>
-              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
+              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
             </span>.<br />
-            Criamos <span className="text-gradient text-glow-strong">máquinas de conversão</span>.
+            Criamos <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
           </h1>
           
           <div className="flex items-center justify-center gap-4 mb-6">

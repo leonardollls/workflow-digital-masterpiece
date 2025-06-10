@@ -262,6 +262,10 @@
     text-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
   }
 
+  .text-glow-subtle {
+    text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  }
+
   .text-glow-strong {
     text-shadow: 
       0 0 5px rgba(124, 58, 237, 0.8),
