@@ -180,7 +180,7 @@ const ResourceVault = () => {
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 bg-workflow-zen/10 border border-workflow-zen/20 rounded-full px-4 py-2 mb-6">
             <span className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse"></span>
-            <span className="text-workflow-zen font-semibold text-sm">RECURSOS GRATUITOS</span>
+            <span className="text-workflow-zen font-semibold text-sm">BÔNUS EXCLUSIVOS</span>
           </div>
           
           <h2 className="text-5xl lg:text-6xl font-display font-bold text-workflow-deep mb-6">
@@ -188,21 +188,21 @@ const ResourceVault = () => {
           </h2>
           <p className="text-xl text-workflow-deep/70 mb-8 max-w-3xl mx-auto leading-relaxed">
             Ferramentas profissionais que valem <strong>R$ {totalValue.toLocaleString('pt-BR')}</strong> no mercado.
-            <br />Nosso presente para acelerar seus projetos digitais.
+            <br />Entregues como <strong>bônus exclusivo</strong> após a conclusão do seu projeto.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <div className="inline-flex items-center gap-2 bg-success/10 border border-success/20 rounded-full px-6 py-3">
               <span className="w-3 h-3 bg-success rounded-full animate-glow"></span>
-              <span className="text-success font-semibold">100% Gratuito</span>
+              <span className="text-success font-semibold">Bônus Gratuito</span>
             </div>
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-6 py-3">
-              <span className="text-blue-500">⚡</span>
-              <span className="text-blue-500 font-semibold">Download Instantâneo</span>
+              <span className="text-blue-500">🎁</span>
+              <span className="text-blue-500 font-semibold">Pós-Entrega</span>
             </div>
             <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-6 py-3">
               <span className="text-purple-500">🚀</span>
-              <span className="text-purple-500 font-semibold">Pronto para Usar</span>
+              <span className="text-purple-500 font-semibold">Valor Agregado</span>
             </div>
           </div>
         </div>
@@ -278,17 +278,17 @@ const ResourceVault = () => {
                         <span className="font-semibold text-workflow-deep">{resource.rating}</span>
                       </div>
                       <div className="text-workflow-deep/60">
-                        {resource.downloadCount} downloads
+                        {resource.downloadCount} usuários
                       </div>
                     </div>
 
-                    {/* CTA */}
-                    <Button className="w-full bg-gradient-to-r from-workflow-zen to-blue-500 hover:from-workflow-zen/90 hover:to-blue-500/90 text-white border-0 rounded-xl py-3 group-hover:scale-105 transition-all duration-300 font-semibold">
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="text-lg">📥</span>
-                        Download Gratuito
+                    {/* Status Badge */}
+                    <div className="w-full bg-gradient-to-r from-workflow-zen/10 to-blue-500/10 border border-workflow-zen/20 rounded-xl py-3 px-6 text-center">
+                      <span className="flex items-center justify-center gap-2 text-workflow-zen font-semibold">
+                        <span className="text-lg">🎁</span>
+                        Incluído no Projeto
                       </span>
-                    </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -309,8 +309,8 @@ const ResourceVault = () => {
                 Valor Total: <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-400 bg-clip-text text-transparent">R$ {totalValue.toLocaleString('pt-BR')}</span>
               </h3>
               <p className="text-xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Mais de 30 horas de trabalho condensadas em ferramentas que você pode usar imediatamente.
-                <strong> Zero custo, máximo valor.</strong>
+                Mais de 30 horas de trabalho condensadas em ferramentas profissionais.
+                <strong> Entregues como bônus após a conclusão da sua landing page.</strong>
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -320,7 +320,7 @@ const ResourceVault = () => {
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                   <div className="text-3xl font-bold text-workflow-zen mb-2">{(totalDownloads / 1000).toFixed(1)}k+</div>
-                  <div className="text-white/70">Downloads Totais</div>
+                  <div className="text-white/70">Usuários Ativos</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                   <div className="text-3xl font-bold text-workflow-zen mb-2">4.8★</div>
@@ -328,19 +328,14 @@ const ResourceVault = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-white text-workflow-deep hover:bg-workflow-zen/20 border-0 rounded-xl px-8 py-4 font-semibold text-lg">
-                  <span className="flex items-center gap-2">
-                    <span>🚀</span>
-                    Baixar Tudo Agora
-                  </span>
-                </Button>
-                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-xl px-8 py-4 font-semibold text-lg">
-                  <span className="flex items-center gap-2">
-                    <span>👁️</span>
-                    Ver Preview
-                  </span>
-                </Button>
+              <div className="text-center">
+                <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">
+                  <div className="text-3xl">📅</div>
+                  <div className="text-left">
+                    <div className="text-white font-bold text-lg">Entrega Pós-Projeto</div>
+                    <div className="text-white/70 text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
