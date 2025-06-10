@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 
 interface Project {
   id: number;
@@ -7,11 +6,11 @@ interface Project {
   description: string;
   image: string;
   category: string;
-  link?: string;
 }
 
 const PortfolioGallery = () => {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const galleryRef = useRef<HTMLElement>(null);
 
@@ -31,68 +30,89 @@ const PortfolioGallery = () => {
   const projects: Project[] = [
     {
       id: 1,
-      title: "FinTech Revolution",
-      description: "Interface moderna para banco digital com foco em conversão e experiência premium",
+      title: "Design Agency Portfolio",
+      description: "Portfolio moderno para agência de design com showcase interativo e animações elegantes",
       image: "/Images/ee1872227308933.683debf336d7e.webp",
-      category: "fintech"
+      category: "design"
     },
     {
       id: 2,
-      title: "E-commerce Premium",
-      description: "Loja virtual de luxo com design imersivo e jornada de compra otimizada",
+      title: "Creative Studio",
+      description: "Landing page criativa para estúdio com foco em branding e identidade visual",
       image: "/Images/a07726227325915.683e384f30c96.webp",
-      category: "ecommerce"
+      category: "creative"
     },
     {
       id: 3,
-      title: "SaaS Platform",
-      description: "Dashboard intuitiva para plataforma SaaS B2B com métricas em tempo real",
+      title: "Corporate Business",
+      description: "Site corporativo empresarial com design profissional e layout institucional",
       image: "/Images/6355c2227386813.683f241d5b2f9.webp",
-      category: "saas"
+      category: "corporate"
     },
     {
       id: 4,
-      title: "HealthTech App",
-      description: "Aplicativo de telemedicina com interface clean e foco na usabilidade",
+      title: "Fashion Brand",
+      description: "E-commerce de moda com galeria visual impactante e experiência de compra premium",
       image: "/Images/d1f278227408887.683f856b97a03.webp",
-      category: "healthtech"
+      category: "fashion"
     },
     {
       id: 5,
-      title: "EdTech Platform",
-      description: "Plataforma educacional moderna com gamificação e aprendizado adaptativo",
+      title: "Technology Startup",
+      description: "Landing page tech com design futurista e foco em inovação tecnológica",
       image: "/Images/4683bc227571641.684237771bde1.webp",
-      category: "edtech"
+      category: "tech"
     },
     {
       id: 6,
-      title: "Real Estate Luxury",
-      description: "Portal imobiliário premium com tour virtual 3D e experiência imersiva",
+      title: "Luxury Restaurant",
+      description: "Site gastronômico premium com apresentação visual sofisticada e menu interativo",
       image: "/Images/d45ff7227834569.6848166f2acfe.webp",
-      category: "realestate"
+      category: "restaurant"
     },
     {
       id: 7,
-      title: "Crypto Exchange",
-      description: "Exchange de criptomoedas com design futurista e trading avançado",
+      title: "Digital Agency",
+      description: "Agência digital moderna com portfólio de serviços e cases de sucesso",
       image: "/Images/e953da227530013.6841891c2230b.webp",
-      category: "crypto"
+      category: "agency"
     },
     {
       id: 8,
-      title: "Food Delivery",
-      description: "App de delivery premium com interface gastronômica e UX excepcional",
+      title: "Creative Portfolio",
+      description: "Portfolio pessoal criativo com galeria de trabalhos e biografia interativa",
       image: "/Images/14f8a8227635329.68437fc4b7069.webp",
-      category: "food"
+      category: "portfolio"
     },
     {
       id: 9,
-      title: "Fashion E-commerce",
-      description: "Loja virtual de moda com AR try-on e experiência shopping personalizada",
+      title: "Product Landing",
+      description: "Landing page de produto com foco em conversão e apresentação visual impactante",
       image: "/Images/9ffefc227662493.68444f2354b35 (1).webp",
-      category: "fashion"
+      category: "product"
     }
   ];
+
+  const openImageModal = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeImageModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
 
   return (
     <section 
@@ -141,23 +161,45 @@ const PortfolioGallery = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
                   
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
-                  {/* Hover Content */}
+                  {/* Eye Icon for Preview */}
                   <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                     hoveredProject === project.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}>
-                    <Button className="btn-primary btn-magnetic">
-                      <span className="flex items-center gap-2">
-                        <span>Ver Projeto</span>
-                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                      </span>
-                    </Button>
+                    <button
+                      onClick={() => openImageModal(project.image)}
+                      className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-workflow-energy hover:bg-white hover:scale-110 transition-all duration-300 shadow-workflow"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="transition-transform duration-300"
+                      >
+                        <path
+                          d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </button>
                   </div>
                 </div>
 
@@ -187,31 +229,51 @@ const PortfolioGallery = () => {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Call to Action */}
-        <div className={`text-center mt-16 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex flex-col sm:flex-row gap-4 items-center">
-            <Button 
-              className="btn-primary btn-magnetic min-w-[200px]"
-              onClick={() => document.getElementById('cta-accelerator')?.scrollIntoView({ behavior: 'smooth' })}
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="relative max-w-7xl max-h-[90vh] w-full">
+            {/* Close Button */}
+            <button
+              onClick={closeImageModal}
+              className="absolute -top-12 right-0 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white hover:scale-110 transition-all duration-300 z-10"
             >
-              <span className="flex items-center gap-2">
-                <span>Criar Meu Projeto</span>
-                <span>🚀</span>
-              </span>
-            </Button>
-            <Button 
-              className="btn-ghost btn-magnetic"
-              onClick={() => window.open('https://dribbble.com', '_blank')}
-            >
-              <span className="flex items-center gap-2">
-                <span>Ver Mais Cases</span>
-                <span>↗</span>
-              </span>
-            </Button>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M18 6L6 18M6 6L18 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+
+            {/* Image Container */}
+            <div className="relative bg-white rounded-2xl overflow-hidden shadow-workflow-xl animate-scale-in">
+              <img
+                src={selectedImage}
+                alt="Landing page preview"
+                className="w-full h-auto max-h-[85vh] object-contain"
+              />
+            </div>
+
+            {/* Click outside to close */}
+            <div
+              className="absolute inset-0 -z-10"
+              onClick={closeImageModal}
+            />
           </div>
         </div>
-      </div>
+      )}
 
       {/* Floating Background Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
