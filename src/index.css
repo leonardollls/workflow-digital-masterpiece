@@ -1,10 +1,9 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Workflow Design System - Scientific Color Palette */
+/* Workflow Design System 2.0 - Modern Color Palette */
 
 @layer base {
   :root {
@@ -17,16 +16,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 258 49% 25%;
+    --primary: 258 88% 57%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 258 20% 85%;
+    --secondary: 258 30% 88%;
     --secondary-foreground: 258 49% 25%;
 
     --muted: 258 10% 96%;
     --muted-foreground: 258 10% 45%;
 
-    --accent: 258 49% 25%;
+    --accent: 258 88% 57%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -34,11 +33,11 @@
 
     --border: 258 10% 90%;
     --input: 258 10% 90%;
-    --ring: 258 49% 25%;
+    --ring: 258 88% 57%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Workflow Spacing System */
+    /* Enhanced Workflow Spacing System */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
@@ -47,8 +46,9 @@
     --spacing-2xl: 3rem;
     --spacing-3xl: 4rem;
     --spacing-4xl: 6rem;
+    --spacing-5xl: 8rem;
 
-    /* Workflow Typography Scale */
+    /* Advanced Typography Scale */
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
@@ -58,11 +58,20 @@
     --text-3xl: 2rem;
     --text-4xl: 2.5rem;
     --text-5xl: 3rem;
+    --text-6xl: 3.75rem;
+    --text-7xl: 4.5rem;
 
-    /* Workflow Transitions */
-    --transition-fast: 0.15s ease-out;
-    --transition-base: 0.3s ease-out;
-    --transition-slow: 0.5s ease-out;
+    /* Advanced Transition System */
+    --transition-fastest: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Glass Morphism Variables */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
   }
 
   .dark {
@@ -75,7 +84,7 @@
     --popover: 258 49% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 258 49% 75%;
+    --primary: 258 88% 67%;
     --primary-foreground: 258 49% 8%;
 
     --secondary: 258 20% 15%;
@@ -84,7 +93,7 @@
     --muted: 258 20% 15%;
     --muted-foreground: 258 10% 70%;
 
-    --accent: 258 49% 75%;
+    --accent: 258 88% 67%;
     --accent-foreground: 258 49% 8%;
 
     --destructive: 0 62.8% 30.6%;
@@ -92,7 +101,12 @@
 
     --border: 258 20% 20%;
     --input: 258 20% 20%;
-    --ring: 258 49% 75%;
+    --ring: 258 88% 67%;
+
+    /* Dark mode glass variables */
+    --glass-bg: rgba(30, 30, 46, 0.8);
+    --glass-border: rgba(124, 58, 237, 0.3);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -103,100 +117,267 @@
 
   html {
     scroll-behavior: smooth;
+    font-feature-settings: "cv11", "ss01", "ss02", "ss03", "ss04";
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom Scrollbar */
+  /* Enhanced Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-muted;
+    @apply bg-muted/50;
+    border-radius: 100vw;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-workflow-energy rounded-full;
+    @apply bg-workflow-energy/70 rounded-full;
+    transition: background-color 0.2s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-workflow-deep;
+    @apply bg-workflow-energy;
+  }
+
+  ::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+  }
+
+  /* Selection Styling */
+  ::selection {
+    @apply bg-workflow-energy/20 text-workflow-deep;
+  }
+
+  ::-moz-selection {
+    @apply bg-workflow-energy/20 text-workflow-deep;
+  }
+
+  /* Focus Styles */
+  :focus-visible {
+    @apply outline-none ring-2 ring-workflow-energy/50 ring-offset-2 ring-offset-background;
+    transition: all var(--transition-fast);
+  }
+
+  /* Improved Link Styles */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  /* Enhanced Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-feature-settings: "ss01", "ss02", "ss03";
+    letter-spacing: -0.025em;
   }
 }
 
 @layer components {
-  /* Workflow Button System */
+  /* Enhanced Workflow Button System */
   .btn-primary {
-    @apply bg-gradient-to-r from-workflow-energy to-workflow-zen text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-workflow hover:shadow-workflow-lg transform hover:scale-105 transition-all duration-300;
+    @apply relative overflow-hidden bg-gradient-to-r from-workflow-energy via-workflow-600 to-workflow-zen text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-workflow hover:shadow-workflow-lg transform hover:scale-105 transition-all duration-300 group;
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000;
   }
 
   .btn-secondary {
-    @apply bg-white text-workflow-deep border-2 border-workflow-energy px-8 py-4 rounded-xl font-semibold text-lg hover:bg-workflow-glow transition-all duration-300;
+    @apply relative bg-white/90 backdrop-blur-sm text-workflow-deep border-2 border-workflow-energy/30 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-workflow-energy/5 hover:border-workflow-energy hover:shadow-workflow transition-all duration-300 group;
   }
 
   .btn-ghost {
-    @apply text-workflow-energy hover:text-workflow-deep hover:bg-workflow-glow px-6 py-3 rounded-lg transition-all duration-300;
+    @apply relative text-workflow-energy hover:text-workflow-deep hover:bg-workflow-energy/10 px-6 py-3 rounded-xl transition-all duration-300 group;
   }
 
-  /* Workflow Card System */
+  .btn-magnetic {
+    @apply transition-transform duration-300 ease-out cursor-pointer;
+  }
+
+  .btn-magnetic:hover {
+    transform: scale(1.05) translateZ(0);
+  }
+
+  /* Advanced Workflow Card System */
   .card-workflow {
-    @apply bg-white/80 backdrop-blur-lg border border-workflow-glass rounded-2xl p-6 shadow-workflow hover:shadow-workflow-lg transition-all duration-500;
+    @apply relative bg-white/80 backdrop-blur-xl border border-workflow-energy/20 rounded-3xl p-8 shadow-glass hover:shadow-workflow-lg transition-all duration-500 group overflow-hidden;
+  }
+
+  .card-workflow::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-workflow-energy/5 via-transparent to-workflow-zen/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500;
+    border-radius: inherit;
   }
 
   .card-project {
-    @apply bg-white rounded-2xl overflow-hidden shadow-workflow hover:shadow-workflow-lg transform hover:scale-105 transition-all duration-500;
+    @apply relative bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-glass hover:shadow-workflow-lg transform hover:scale-[1.02] transition-all duration-500 group;
   }
 
-  /* Workflow Text Styles */
+  .card-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    @apply rounded-2xl;
+  }
+
+  .card-neumorphism {
+    @apply bg-gradient-to-br from-white to-gray-50 shadow-neumorphism rounded-2xl;
+  }
+
+  .card-floating {
+    @apply transform transition-all duration-500 hover:shadow-workflow-xl hover:-translate-y-2;
+  }
+
+  /* Enhanced Text Styles */
   .text-gradient {
-    @apply bg-gradient-to-r from-workflow-energy to-workflow-zen bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-workflow-energy via-workflow-600 to-workflow-zen bg-clip-text text-transparent;
+    background-size: 200% 100%;
+    animation: gradient-shift 4s ease-in-out infinite;
+  }
+
+  .text-gradient-rainbow {
+    @apply bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent;
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
   }
 
   .text-glow {
-    text-shadow: 0 0 20px rgba(164, 95, 196, 0.5);
+    text-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
   }
 
-  /* Workflow Animations */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
+  .text-glow-strong {
+    text-shadow: 
+      0 0 5px rgba(124, 58, 237, 0.8),
+      0 0 10px rgba(124, 58, 237, 0.6),
+      0 0 20px rgba(124, 58, 237, 0.4);
   }
 
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-
-  .animate-particle {
-    animation: particle 2s ease-in-out infinite;
-  }
-
-  /* Workflow Backgrounds */
+  /* Enhanced Background Effects */
   .bg-workflow-gradient {
-    background: linear-gradient(135deg, #3d3051 0%, #a45fc4 50%, #c3aee0 100%);
+    background: linear-gradient(135deg, #1a0d2e 0%, #7c3aed 50%, #a78bfa 100%);
   }
 
   .bg-workflow-mesh {
     background: 
-      radial-gradient(circle at 25% 25%, rgba(164, 95, 196, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(195, 174, 224, 0.1) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(61, 48, 81, 0.05) 0%, rgba(164, 95, 196, 0.05) 100%);
+      radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(167, 139, 250, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(26, 13, 46, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
   }
 
-  /* Glass Effects */
+  .bg-workflow-mesh-animated {
+    @apply bg-workflow-mesh;
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  .bg-noise {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(124, 58, 237, 0.15) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+
+  /* Glass Effects Enhanced */
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+    @apply backdrop-blur-lg border border-white/20;
+    background: var(--glass-bg);
+    box-shadow: var(--glass-shadow);
   }
 
   .glass-workflow {
-    @apply bg-workflow-glass backdrop-blur-lg border border-workflow-energy/20;
+    @apply backdrop-blur-xl border border-workflow-energy/20;
+    background: rgba(167, 139, 250, 0.1);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.15);
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-2xl;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 48px rgba(31, 38, 135, 0.4);
+  }
+
+  /* Interactive Elements */
+  .interactive-glow {
+    @apply transition-all duration-300;
+  }
+
+  .interactive-glow:hover {
+    filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.4));
+  }
+
+  .magnetic-hover {
+    @apply transition-transform duration-300 ease-out;
+  }
+
+  .magnetic-hover:hover {
+    transform: scale(1.05) translateY(-2px);
+  }
+
+  /* Loading and State Animations */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    animation: shimmer 2s infinite;
+  }
+
+  .pulse-glow {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Particle Effects */
+  .particle-container {
+    @apply relative overflow-hidden;
+  }
+
+  .particle {
+    @apply absolute w-1 h-1 bg-workflow-energy/30 rounded-full;
+    animation: particle 3s infinite ease-in-out;
+  }
+
+  /* Scroll Reveal Animation */
+  .reveal {
+    @apply opacity-0 translate-y-8;
+    transition: all 0.8s cubic-bezier(0.17, 0.55, 0.55, 1);
+  }
+
+  .reveal.revealed {
+    @apply opacity-100 translate-y-0;
+  }
+
+  /* Modern Input Styles */
+  .input-modern {
+    @apply relative bg-white/80 backdrop-blur-sm border-2 border-workflow-energy/20 rounded-xl px-4 py-3 text-workflow-deep placeholder:text-workflow-deep/50 focus:border-workflow-energy focus:bg-white focus:shadow-workflow transition-all duration-300;
+  }
+
+  .input-floating-label {
+    @apply relative;
+  }
+
+  .input-floating-label input {
+    @apply peer placeholder-transparent;
+  }
+
+  .input-floating-label label {
+    @apply absolute left-4 -top-2.5 text-sm text-workflow-energy bg-white px-2 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-workflow-deep/50 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-workflow-energy;
   }
 }
 
 @layer utilities {
-  /* Custom utilities for the Workflow design system */
+  /* Enhanced utilities for the Workflow design system */
   .perspective-1000 {
     perspective: 1000px;
   }
@@ -209,57 +390,81 @@
     backface-visibility: hidden;
   }
 
-  /* Workflow spacing utilities */
   .space-workflow > * + * {
     margin-top: var(--spacing-lg);
   }
 
-  /* Workflow responsive text */
+  /* Responsive Text Utilities Enhanced */
   .text-responsive-sm {
-    font-size: clamp(0.875rem, 2vw, 1rem);
+    @apply text-sm md:text-base;
   }
 
   .text-responsive-base {
-    font-size: clamp(1rem, 2.5vw, 1.125rem);
+    @apply text-base md:text-lg;
   }
 
   .text-responsive-lg {
-    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    @apply text-lg md:text-xl;
   }
 
   .text-responsive-xl {
-    font-size: clamp(1.25rem, 4vw, 2rem);
+    @apply text-xl md:text-2xl;
   }
 
   .text-responsive-2xl {
-    font-size: clamp(1.5rem, 5vw, 3rem);
+    @apply text-2xl md:text-3xl lg:text-4xl;
   }
 
   .text-responsive-3xl {
-    font-size: clamp(2rem, 6vw, 4rem);
+    @apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
   }
-}
 
-/* Workflow Intersection Observer Animations */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
+  .text-responsive-4xl {
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+  }
 
-.reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
+  /* Layout Utilities */
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
 
-/* Custom selection */
-::selection {
-  background: rgba(164, 95, 196, 0.3);
-  color: #3d3051;
-}
+  .container-fluid {
+    @apply max-w-none px-4 md:px-8 lg:px-12;
+  }
 
-/* Focus styles */
-:focus-visible {
-  outline: 2px solid #a45fc4;
-  outline-offset: 2px;
+  /* Animation Utilities */
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-12 transition-all duration-1000 ease-out;
+  }
+
+  .animate-on-scroll.animate {
+    @apply opacity-100 translate-y-0;
+  }
+
+  /* Brand Gradients */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-workflow-energy to-workflow-zen;
+  }
+
+  .gradient-secondary {
+    @apply bg-gradient-to-r from-workflow-zen to-workflow-accent;
+  }
+
+  .gradient-accent {
+    @apply bg-gradient-to-r from-workflow-accent to-workflow-energy;
+  }
+
+  /* Border Utilities */
+  .border-gradient {
+    @apply border-2 border-transparent bg-gradient-to-r from-workflow-energy to-workflow-zen;
+    background-clip: padding-box;
+    position: relative;
+  }
+
+  .border-gradient::before {
+    content: '';
+    @apply absolute inset-0 -z-10 rounded-inherit;
+    background: linear-gradient(to right, #7c3aed, #a78bfa);
+    margin: -2px;
+  }
 }
