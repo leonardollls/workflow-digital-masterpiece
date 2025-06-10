@@ -94,21 +94,11 @@ const PortfolioGallery = () => {
   ];
 
   const openImageModal = (imageSrc: string) => {
-    console.log('openImageModal called with:', imageSrc);
-    console.log('Current selectedImage before:', selectedImage);
-    console.log('Setting selectedImage to:', imageSrc);
     setSelectedImage(imageSrc);
-    console.log('selectedImage state should now be:', imageSrc);
     document.body.style.overflow = 'hidden';
-    
-    // Teste adicional - forçar update
-    setTimeout(() => {
-      console.log('selectedImage state after timeout:', selectedImage);
-    }, 100);
   };
 
   const closeImageModal = () => {
-    console.log('closeImageModal called');
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
   };
@@ -163,14 +153,8 @@ const PortfolioGallery = () => {
                 key={project.id}
                 className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
-                onMouseEnter={() => {
-                  console.log('Card hovered:', project.id);
-                  setHoveredProject(project.id);
-                }}
-                onMouseLeave={() => {
-                  console.log('Card unhovered');
-                  setHoveredProject(null);
-                }}
+                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
@@ -185,52 +169,71 @@ const PortfolioGallery = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
                 
-                {/* Botão SIMPLES no canto superior direito */}
-                <button
-                  onClick={() => {
-                    console.log('BUTTON CLICKED FOR:', project.title);
-                    openImageModal(project.image);
-                  }}
-                  className="absolute top-4 right-4 w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-lg z-20"
-                  type="button"
-                >
-                  👁️
-                </button>
+                {/* Ícone de olho moderno com animação */}
+                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+                  hoveredProject === project.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                }`}>
+                  <button
+                    onClick={() => openImageModal(project.image)}
+                    className="group/btn relative w-16 h-16 backdrop-blur-md bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer border border-white/20 hover:border-white/40 hover:scale-110 animate-pulse-soft"
+                    type="button"
+                  >
+                    {/* Brilho de fundo */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/20 to-workflow-zen/20 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 animate-glow-pulse" />
+                    
+                    {/* Ícone SVG moderno */}
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="relative z-10 text-white drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
+                    >
+                      <path
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                        fill="currentColor"
+                        className="group-hover/btn:fill-workflow-energy transition-colors duration-300"
+                      />
+                    </svg>
+                    
+                    {/* Efeito de ondas */}
+                    <div className="absolute inset-0 rounded-full border-2 border-white/30 scale-100 group-hover/btn:scale-125 opacity-100 group-hover/btn:opacity-0 transition-all duration-500" />
+                    <div className="absolute inset-0 rounded-full border-2 border-white/20 scale-110 group-hover/btn:scale-150 opacity-0 group-hover/btn:opacity-100 transition-all duration-700" />
+                  </button>
+                </div>
 
                 {/* Project Info */}
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xl font-bold text-workflow-deep group-hover:text-workflow-energy transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    <button
-                      onClick={() => {
-                        console.log('TITLE BUTTON CLICKED FOR:', project.title);
-                        openImageModal(project.image);
-                      }}
-                      className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-full transition-colors duration-300"
-                    >
-                      Ver
-                    </button>
-                  </div>
+                  <h3 className="text-xl font-bold text-workflow-deep mb-3 group-hover:text-workflow-energy transition-colors duration-300">
+                    {project.title}
+                  </h3>
                   <p className="text-workflow-deep/70 text-sm leading-relaxed mb-4">
                     {project.description}
                   </p>
                   
                   {/* Category Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
-                      <span className="w-2 h-2 bg-workflow-energy rounded-full animate-glow-pulse" />
-                      <span className="capitalize">{project.category}</span>
-                    </div>
-                    
-                    {/* Botão GARANTIDO de funcionar */}
-                    <button
-                      onClick={() => openImageModal(project.image)}
-                      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      Abrir Preview
-                    </button>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
+                    <span className="w-2 h-2 bg-workflow-energy rounded-full animate-glow-pulse" />
+                    <span className="capitalize">{project.category}</span>
                   </div>
                 </div>
 
@@ -247,7 +250,7 @@ const PortfolioGallery = () => {
       </div>
 
       {/* Image Modal */}
-      {selectedImage && (console.log('Rendering modal with image:', selectedImage) || true) && (
+      {selectedImage && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 animate-fade-in">
           {/* Close Button */}
           <button
