@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 
 const MethodologyLab = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [expandedPhase, setExpandedPhase] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -43,6 +42,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-blue-500 to-cyan-500",
+      accentColor: "blue",
       icon: "🔍"
     },
     {
@@ -69,6 +69,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-purple-500 to-pink-500",
+      accentColor: "purple",
       icon: "🏗️"
     },
     {
@@ -95,6 +96,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-green-500 to-teal-500", 
+      accentColor: "green",
       icon: "🎨"
     },
     {
@@ -121,6 +123,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-orange-500 to-red-500",
+      accentColor: "orange",
       icon: "⚡"
     },
     {
@@ -147,6 +150,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-indigo-500 to-purple-500",
+      accentColor: "indigo",
       icon: "✅"
     },
     {
@@ -173,6 +177,7 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-yellow-500 to-orange-500",
+      accentColor: "yellow",
       icon: "🚀"
     },
     {
@@ -199,146 +204,206 @@ const MethodologyLab = () => {
         }
       ],
       color: "from-pink-500 to-rose-500",
+      accentColor: "pink",
       icon: "📈"
     }
   ];
 
-  const togglePhaseExpansion = (phaseNumber: number) => {
-    setExpandedPhase(expandedPhase === phaseNumber ? null : phaseNumber);
-  };
-
   return (
     <section ref={sectionRef} className="section-padding bg-workflow-deep relative overflow-hidden">
-      {/* Background Effects */}
+      {/* Animated Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-workflow-deep via-workflow-700 to-workflow-deep opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-workflow-deep via-gray-900 to-workflow-deep opacity-95" />
         <div className="absolute inset-0 bg-noise opacity-5" />
+        
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-workflow-zen/20 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${8 + Math.random() * 4}s`
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-0.5 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full" />
-            <span className="text-workflow-zen font-mono text-sm tracking-wider uppercase">Metodologia</span>
-            <div className="w-12 h-0.5 bg-gradient-to-l from-workflow-zen to-workflow-accent rounded-full" />
+        <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-flex items-center gap-4 mb-8">
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <span className="text-workflow-zen font-mono text-sm tracking-[0.2em] uppercase font-medium">
+              Metodologia Científica
+            </span>
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-responsive-3xl font-display font-bold text-white mb-6">
-            The <span className="text-gradient bg-gradient-to-r from-workflow-zen to-workflow-accent bg-clip-text text-transparent">Lab</span>
+          <h2 className="text-5xl lg:text-7xl font-display font-bold text-white mb-8 leading-tight">
+            The{' '}
+            <span className="relative">
+              <span className="text-gradient bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
+                Lab
+              </span>
+              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-workflow-zen/0 via-workflow-zen/60 to-workflow-zen/0 rounded-full" />
+            </span>
           </h2>
           
-          <p className="text-responsive-lg text-workflow-zen/80 mb-8 max-w-3xl mx-auto">
-            Metodologia Workflow: 7 fases científicas para transformar sua visão em resultados concretos
+          <p className="text-xl lg:text-2xl text-workflow-zen/80 mb-8 max-w-4xl mx-auto leading-relaxed">
+            7 fases científicas que transformam sua visão em{' '}
+            <span className="text-workflow-accent font-semibold">resultados mensuráveis</span>
           </p>
           
-          <div className="text-workflow-zen/60">
-            Processo comprovado em mais de 150 projetos de alta conversão • Entrega em apenas 8 dias
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-workflow-zen/60">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
+              <span>150+ projetos de alta conversão</span>
+            </div>
+            <div className="hidden sm:block w-1 h-1 bg-workflow-zen/40 rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-workflow-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <span>Entrega garantida em 8 dias</span>
+            </div>
           </div>
         </div>
 
         {/* Process Timeline */}
-        <div className="relative">
-          {/* Timeline Line */}
-          <div className="absolute left-1/2 transform -translate-x-0.5 w-1 h-full bg-workflow-zen/20 hidden lg:block"></div>
+        <div className="relative max-w-7xl mx-auto">
+          {/* Central Timeline Line */}
+          <div className="absolute left-1/2 transform -translate-x-0.5 w-1 h-full bg-gradient-to-b from-workflow-zen/0 via-workflow-zen/30 to-workflow-zen/0 hidden lg:block" />
 
           {phases.map((phase, index) => (
             <div
               key={phase.number}
-              className={`relative mb-16 lg:mb-20 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className={`relative mb-24 lg:mb-32 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-12'}`}
+              style={{ animationDelay: `${index * 0.15}s` }}
             >
-              <div className={`lg:flex items-start ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8`}>
+              <div className={`lg:flex items-start ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12`}>
+                
                 {/* Phase Content */}
-                <div className="lg:w-1/2">
-                  <div className="card-workflow bg-white/10 backdrop-blur-lg border-workflow-zen/20 hover:bg-white/15 transition-all duration-300">
-                    <div className="p-6 lg:p-8">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className={`w-12 h-12 bg-gradient-to-r ${phase.color} rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg`}>
+                <div className="lg:w-1/2 space-y-6">
+                  {/* Phase Header Card */}
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 rounded-2xl blur-xl transition-all duration-500 group-hover:blur-2xl" />
+                    <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500">
+                      <div className="flex items-center gap-6 mb-6">
+                        <div className={`relative w-16 h-16 bg-gradient-to-r ${phase.color} rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-2xl`}>
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl" />
                           {phase.number}
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-xl font-display font-bold text-white">
+                          <h3 className="text-2xl lg:text-3xl font-display font-bold text-white mb-2">
                             {phase.title}
                           </h3>
-                          <div className="text-workflow-zen/70">{phase.duration}</div>
+                          <div className="flex items-center gap-3">
+                            <div className={`w-3 h-3 bg-${phase.accentColor}-400 rounded-full animate-pulse`} />
+                            <span className="text-workflow-zen/80 font-medium">{phase.duration}</span>
+                          </div>
                         </div>
-                        <button
-                          onClick={() => togglePhaseExpansion(phase.number)}
-                          className="text-workflow-zen hover:text-workflow-accent transition-colors duration-300"
-                        >
-                          {expandedPhase === phase.number ? '−' : '+'}
-                        </button>
                       </div>
 
-                      <p className="text-workflow-zen/80 mb-6">
+                      <p className="text-workflow-zen/90 text-lg leading-relaxed mb-8">
                         {phase.description}
                       </p>
-
-                      <div className="space-y-3">
-                        {phase.activities.map((activity, i) => (
-                          <div key={i} className="group">
-                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => togglePhaseExpansion(phase.number)}>
-                              <div className="w-1.5 h-1.5 bg-workflow-zen rounded-full group-hover:scale-125 transition-transform duration-300"></div>
-                              <span className="text-white/90 text-sm font-medium group-hover:text-workflow-zen transition-colors duration-300">
-                                {activity.name}
-                              </span>
-                            </div>
-                            
-                            {expandedPhase === phase.number && (
-                              <div className="mt-2 ml-5 p-3 bg-white/5 rounded-lg border border-workflow-zen/10 animate-fade-in">
-                                <p className="text-workflow-zen/70 text-sm leading-relaxed">
-                                  {activity.explanation}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
                     </div>
+                  </div>
+
+                  {/* Activities with Details */}
+                  <div className="space-y-4">
+                    {phase.activities.map((activity, i) => (
+                      <div
+                        key={i}
+                        className="group relative"
+                        style={{ animationDelay: `${(index * 0.15) + (i * 0.1)}s` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/5 to-workflow-accent/5 rounded-xl blur-sm transition-all duration-300 group-hover:blur-md opacity-0 group-hover:opacity-100" />
+                        
+                        <div className="relative bg-white/3 backdrop-blur-lg border border-white/5 rounded-xl p-6 hover:bg-white/8 transition-all duration-300">
+                          <div className="flex items-start gap-4 mb-4">
+                            <div className={`w-8 h-8 bg-gradient-to-r ${phase.color} rounded-lg flex items-center justify-center flex-shrink-0 mt-1 shadow-lg`}>
+                              <div className="w-3 h-3 bg-white rounded-full" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-white font-semibold text-lg mb-2 group-hover:text-workflow-zen transition-colors duration-300">
+                                {activity.name}
+                              </h4>
+                              <p className="text-workflow-zen/70 leading-relaxed text-sm lg:text-base">
+                                {activity.explanation}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 {/* Phase Icon */}
-                <div className="lg:w-1/2 flex justify-center mb-6 lg:mb-0">
-                  <div className={`w-32 h-32 bg-gradient-to-r ${phase.color} rounded-full flex items-center justify-center text-6xl text-white shadow-workflow-lg animate-float hover:scale-110 transition-transform duration-300`}>
-                    {phase.icon}
+                <div className="lg:w-1/2 flex justify-center mb-8 lg:mb-0">
+                  <div className="relative group">
+                    <div className={`absolute inset-0 bg-gradient-to-r ${phase.color} rounded-full blur-2xl opacity-30 transition-all duration-500 group-hover:blur-3xl group-hover:opacity-50`} />
+                    <div className={`relative w-40 h-40 lg:w-48 lg:h-48 bg-gradient-to-r ${phase.color} rounded-full flex items-center justify-center text-7xl lg:text-8xl text-white shadow-2xl hover:scale-110 transition-all duration-500 border-4 border-white/20`}>
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-full" />
+                      <span className="relative z-10 filter drop-shadow-lg">{phase.icon}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Timeline Dot */}
-              <div className="absolute left-1/2 top-16 transform -translate-x-1/2 w-4 h-4 bg-workflow-zen rounded-full border-4 border-workflow-deep hidden lg:block shadow-lg"></div>
+              <div className="absolute left-1/2 top-20 transform -translate-x-1/2 w-6 h-6 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full border-4 border-workflow-deep hidden lg:block shadow-xl">
+                <div className="absolute inset-1 bg-white/30 rounded-full" />
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Process Stats */}
-        <div className={`mt-20 grid grid-cols-1 md:grid-cols-4 gap-8 transition-all duration-1000 delay-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="text-center group">
-            <div className="text-4xl font-bold text-workflow-zen mb-2 group-hover:scale-110 transition-transform duration-300">7</div>
-            <div className="text-white/70">Fases Científicas</div>
-          </div>
-          <div className="text-center group">
-            <div className="text-4xl font-bold text-workflow-zen mb-2 group-hover:scale-110 transition-transform duration-300">150+</div>
-            <div className="text-white/70">Projetos Executados</div>
-          </div>
-          <div className="text-center group">
-            <div className="text-4xl font-bold text-workflow-zen mb-2 group-hover:scale-110 transition-transform duration-300">98%</div>
-            <div className="text-white/70">Taxa de Sucesso</div>
-          </div>
-          <div className="text-center group">
-            <div className="text-4xl font-bold text-workflow-zen mb-2 group-hover:scale-110 transition-transform duration-300">8</div>
-            <div className="text-white/70">Dias de Entrega</div>
+        {/* Enhanced Process Stats */}
+        <div className={`mt-24 transition-all duration-1000 delay-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-zen/10 rounded-3xl blur-xl" />
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 lg:p-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="text-center group cursor-pointer">
+                  <div className="text-5xl lg:text-6xl font-bold text-workflow-zen mb-4 group-hover:scale-110 transition-transform duration-300">
+                    7
+                  </div>
+                  <div className="text-white/80 font-medium">Fases Científicas</div>
+                  <div className="w-12 h-0.5 bg-workflow-zen/50 mx-auto mt-2 group-hover:bg-workflow-zen transition-colors duration-300" />
+                </div>
+                
+                <div className="text-center group cursor-pointer">
+                  <div className="text-5xl lg:text-6xl font-bold text-workflow-accent mb-4 group-hover:scale-110 transition-transform duration-300">
+                    150+
+                  </div>
+                  <div className="text-white/80 font-medium">Projetos Executados</div>
+                  <div className="w-12 h-0.5 bg-workflow-accent/50 mx-auto mt-2 group-hover:bg-workflow-accent transition-colors duration-300" />
+                </div>
+                
+                <div className="text-center group cursor-pointer">
+                  <div className="text-5xl lg:text-6xl font-bold text-green-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                    98%
+                  </div>
+                  <div className="text-white/80 font-medium">Taxa de Sucesso</div>
+                  <div className="w-12 h-0.5 bg-green-400/50 mx-auto mt-2 group-hover:bg-green-400 transition-colors duration-300" />
+                </div>
+                
+                <div className="text-center group cursor-pointer">
+                  <div className="text-5xl lg:text-6xl font-bold text-orange-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                    8
+                  </div>
+                  <div className="text-white/80 font-medium">Dias de Entrega</div>
+                  <div className="w-12 h-0.5 bg-orange-400/50 mx-auto mt-2 group-hover:bg-orange-400 transition-colors duration-300" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Floating Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/6 w-32 h-32 bg-workflow-zen/5 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/6 w-24 h-24 bg-workflow-accent/5 rounded-full blur-lg animate-float-delayed" />
-        <div className="absolute top-3/4 left-3/4 w-20 h-20 bg-workflow-zen/5 rounded-full blur-md animate-float" style={{ animationDelay: '2s' }} />
       </div>
     </section>
   );
