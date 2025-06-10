@@ -35,61 +35,61 @@ const CapabilityMatrix = () => {
       category: "Frontend Excellence",
       description: "Interfaces modernas e performáticas que convertem",
       technologies: [
-        { name: "React 18+", level: 98, icon: "⚛️", description: "Aplicações SPA complexas com hooks avançados" },
-        { name: "Next.js 14+", level: 95, icon: "▲", description: "SSR/SSG com App Router e otimizações automáticas" },
-        { name: "TypeScript", level: 97, icon: "🔷", description: "Tipagem robusta e código maintível em larga escala" },
-        { name: "Vue 3", level: 92, icon: "💚", description: "Composition API e reatividade avançada" },
-        { name: "Tailwind CSS", level: 96, icon: "🎨", description: "Design systems e componentes reutilizáveis" },
-        { name: "Framer Motion", level: 89, icon: "🌀", description: "Animações fluidas e micro-interações" }
+        { name: "React 18+", level: 98, icon: "⚛️", description: "Hooks avançados, Suspense, Concurrent Features e Server Components" },
+        { name: "Next.js 14+", level: 96, icon: "▲", description: "App Router, SSR/SSG, API Routes e otimizações automáticas" },
+        { name: "TypeScript", level: 97, icon: "🔷", description: "Tipagem robusta, generics e utility types para código maintível" },
+        { name: "Tailwind CSS", level: 98, icon: "🎨", description: "Design systems completos e componentes reutilizáveis" },
+        { name: "Framer Motion", level: 92, icon: "🌀", description: "Animações fluidas, gestures e layout animations" },
+        { name: "Shadcn/ui", level: 95, icon: "🧩", description: "Componentes acessíveis e customizáveis com Radix UI" }
       ],
       color: "from-blue-500 via-indigo-500 to-purple-500",
       accentColor: "blue",
       icon: "💻"
     },
     {
-      category: "Backend Mastery",
+      category: "Backend & Database",
       description: "APIs escaláveis e arquiteturas robustas",
       technologies: [
-        { name: "Node.js", level: 96, icon: "🟢", description: "Aplicações server-side de alta performance" },
-        { name: "Python", level: 94, icon: "🐍", description: "FastAPI, Django e machine learning integrado" },
-        { name: "PostgreSQL", level: 93, icon: "🐘", description: "Queries otimizadas e modelagem avançada" },
-        { name: "GraphQL", level: 91, icon: "💜", description: "APIs flexíveis com schema stitching" },
-        { name: "Redis", level: 90, icon: "🔴", description: "Cache distribuído e sessões em tempo real" },
-        { name: "Prisma", level: 88, icon: "🔷", description: "ORM type-safe com migrations automáticas" }
+        { name: "Node.js", level: 96, icon: "🟢", description: "Express, Fastify e aplicações server-side de alta performance" },
+        { name: "Python", level: 94, icon: "🐍", description: "FastAPI, Django e Flask para APIs modernas" },
+        { name: "PostgreSQL", level: 95, icon: "🐘", description: "Queries otimizadas, relacionamentos complexos e performance" },
+        { name: "Prisma", level: 93, icon: "🔷", description: "ORM type-safe com migrations automáticas e schema modeling" },
+        { name: "Supabase", level: 91, icon: "⚡", description: "Backend completo com auth, database e realtime" },
+        { name: "GraphQL", level: 89, icon: "💜", description: "APIs flexíveis com Apollo Server e schema stitching" }
       ],
       color: "from-green-500 via-emerald-500 to-teal-500",
       accentColor: "green",
       icon: "⚙️"
     },
     {
-      category: "Cloud & DevOps",
-      description: "Infraestrutura moderna e deploys automatizados",
+      category: "State & Forms",
+      description: "Gerenciamento de estado e formulários robustos",
       technologies: [
-        { name: "AWS", level: 94, icon: "☁️", description: "EC2, Lambda, RDS e arquitetura serverless" },
-        { name: "Docker", level: 97, icon: "🐳", description: "Containerização e orchestração completa" },
-        { name: "Vercel", level: 95, icon: "▲", description: "Deploy automático com edge computing" },
-        { name: "CI/CD", level: 93, icon: "🔄", description: "GitHub Actions e pipelines automatizadas" },
-        { name: "Monitoring", level: 89, icon: "📊", description: "Observabilidade com logs e métricas" },
-        { name: "Security", level: 91, icon: "🔒", description: "HTTPS, OAuth2 e proteção contra ataques" }
+        { name: "Zustand", level: 94, icon: "🐻", description: "State management simples e performático para React" },
+        { name: "React Hook Form", level: 96, icon: "📝", description: "Formulários performáticos com validação em tempo real" },
+        { name: "Zod", level: 92, icon: "🛡️", description: "Validação type-safe e schema validation robusta" },
+        { name: "TanStack Query", level: 90, icon: "🔄", description: "Data fetching, cache e sincronização avançada" },
+        { name: "React Context", level: 95, icon: "🔗", description: "State global nativo com patterns otimizados" },
+        { name: "Redux Toolkit", level: 87, icon: "🏪", description: "State management para aplicações complexas" }
       ],
       color: "from-purple-500 via-pink-500 to-rose-500",
       accentColor: "purple",
-      icon: "🚀"
+      icon: "🧠"
     },
     {
-      category: "Design & UX",
-      description: "Experiências visuais que encantam e convertem",
+      category: "Integrations & Deploy",
+      description: "Integrações modernas e deploy automatizado",
       technologies: [
-        { name: "Figma", level: 98, icon: "🎨", description: "Protótipos interativos e design systems" },
-        { name: "Adobe Suite", level: 92, icon: "🔸", description: "Photoshop, Illustrator e After Effects" },
-        { name: "Principle", level: 87, icon: "⚡", description: "Animações e transições complexas" },
-        { name: "Webflow", level: 90, icon: "🌊", description: "No-code para prototipação rápida" },
-        { name: "Blender", level: 85, icon: "🎭", description: "Modelagem 3D e renderização" },
-        { name: "UX Research", level: 93, icon: "🔍", description: "Testes de usabilidade e personas" }
+        { name: "Vercel", level: 98, icon: "▲", description: "Deploy automático com edge computing e analytics" },
+        { name: "Stripe", level: 93, icon: "💳", description: "Pagamentos seguros e checkout customizado" },
+        { name: "NextAuth.js", level: 91, icon: "🔐", description: "Autenticação completa com múltiplos providers" },
+        { name: "Resend", level: 89, icon: "📧", description: "API de emails transacionais moderna e confiável" },
+        { name: "Uploadthing", level: 87, icon: "📤", description: "Upload de arquivos type-safe para Next.js" },
+        { name: "GitHub Actions", level: 94, icon: "🚀", description: "CI/CD automatizado com pipelines customizados" }
       ],
       color: "from-orange-500 via-amber-500 to-yellow-500",
       accentColor: "orange",
-      icon: "✨"
+      icon: "🔌"
     }
   ];
 
@@ -154,20 +154,20 @@ const CapabilityMatrix = () => {
           </h2>
           
           <p className="text-lg lg:text-xl xl:text-2xl text-workflow-deep/80 mb-8 max-w-4xl mx-auto leading-relaxed">
-            Dominamos as{' '}
-            <span className="text-workflow-energy font-semibold">tecnologias mais avançadas</span>
-            {' '}do mercado para entregar resultados excepcionais
+            Domino{' '}
+            <span className="text-workflow-energy font-semibold">100% das tecnologias</span>
+            {' '}que uso para criar suas landing pages perfeitas
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-workflow-deep/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
-              <span>{totalTechnologies} tecnologias especializadas</span>
+              <span>{totalTechnologies} tecnologias que realmente domino</span>
             </div>
             <div className="hidden sm:block w-1 h-1 bg-workflow-deep/40 rounded-full" />
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-energy rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-              <span>{averageProficiency}% proficiência média</span>
+              <span>Posso implementar tudo na prática</span>
             </div>
           </div>
         </div>
@@ -278,15 +278,15 @@ const CapabilityMatrix = () => {
                   <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-zen mb-4 group-hover:scale-110 transition-transform duration-300">
                     {totalTechnologies}
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Tecnologias Especializadas</div>
+                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Tecnologias Dominadas</div>
                   <div className="w-12 h-0.5 bg-workflow-zen/50 mx-auto mt-3 group-hover:bg-workflow-zen transition-colors duration-300" />
                 </div>
                 
                 <div className="text-center group cursor-pointer">
                   <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-energy mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {averageProficiency}%
+                    100%
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Proficiência Média</div>
+                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Implementação Garantida</div>
                   <div className="w-12 h-0.5 bg-workflow-energy/50 mx-auto mt-3 group-hover:bg-workflow-energy transition-colors duration-300" />
                 </div>
                 
@@ -294,15 +294,15 @@ const CapabilityMatrix = () => {
                   <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-accent mb-4 group-hover:scale-110 transition-transform duration-300">
                     150+
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Projetos Implementados</div>
+                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Projetos Criados</div>
                   <div className="w-12 h-0.5 bg-workflow-accent/50 mx-auto mt-3 group-hover:bg-workflow-accent transition-colors duration-300" />
                 </div>
                 
                 <div className="text-center group cursor-pointer">
                   <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-green-500 mb-4 group-hover:scale-110 transition-transform duration-300">
-                    24/7
+                    0
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Suporte Técnico</div>
+                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Limitações Técnicas</div>
                   <div className="w-12 h-0.5 bg-green-500/50 mx-auto mt-3 group-hover:bg-green-500 transition-colors duration-300" />
                 </div>
               </div>
@@ -313,7 +313,7 @@ const CapabilityMatrix = () => {
         {/* Call to Action */}
         <div className={`mt-16 text-center transition-all duration-1000 delay-1200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <div className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full text-white font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer shadow-lg hover:shadow-xl">
-            <span>Descubra como aplicamos essas tecnologias</span>
+            <span>Pronto para criarmos sua landing page perfeita?</span>
             <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
           </div>
         </div>
