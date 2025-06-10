@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -253,7 +252,7 @@ const CTAAccelerator = () => {
 
         {/* Form Content */}
         <div className="max-w-4xl mx-auto">
-          <div className="card-workflow bg-white/95 backdrop-blur-lg min-h-[400px] flex flex-col">
+          <div className="bg-white/95 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl min-h-[400px] flex flex-col">
             <div className="flex-1 p-8 md:p-12">
               {renderStep()}
             </div>
