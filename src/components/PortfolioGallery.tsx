@@ -169,57 +169,59 @@ const PortfolioGallery = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
                 
-                {/* Ícone de olho moderno com animação */}
-                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-                  hoveredProject === project.id ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                }`}>
-                  <button
-                    onClick={() => openImageModal(project.image)}
-                    className="group/btn relative w-16 h-16 backdrop-blur-md bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer border border-white/20 hover:border-white/40 hover:scale-110 animate-pulse-soft"
-                    type="button"
+                {/* Ícone de olho SEMPRE VISÍVEL e clicável */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Eye button clicked for:', project.title);
+                    openImageModal(project.image);
+                  }}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group/btn w-16 h-16 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg hover:scale-110 z-20"
+                  type="button"
+                  style={{ zIndex: 20 }}
+                >
+                  {/* Brilho de fundo */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/20 to-workflow-zen/20 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 animate-glow-pulse" />
+                  
+                  {/* Ícone SVG moderno */}
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="relative z-10 text-workflow-deep drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
                   >
-                    {/* Brilho de fundo */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/20 to-workflow-zen/20 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 animate-glow-pulse" />
-                    
-                    {/* Ícone SVG moderno */}
-                    <svg
-                      width="28"
-                      height="28"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="relative z-10 text-white drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
-                    >
-                      <path
-                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="3"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="1"
-                        fill="currentColor"
-                        className="group-hover/btn:fill-workflow-energy transition-colors duration-300"
-                      />
-                    </svg>
-                    
-                    {/* Efeito de ondas */}
-                    <div className="absolute inset-0 rounded-full border-2 border-white/30 scale-100 group-hover/btn:scale-125 opacity-100 group-hover/btn:opacity-0 transition-all duration-500" />
-                    <div className="absolute inset-0 rounded-full border-2 border-white/20 scale-110 group-hover/btn:scale-150 opacity-0 group-hover/btn:opacity-100 transition-all duration-700" />
-                  </button>
-                </div>
+                    <path
+                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="1"
+                      fill="currentColor"
+                      className="group-hover/btn:fill-workflow-energy transition-colors duration-300"
+                    />
+                  </svg>
+                  
+                  {/* Efeito de ondas */}
+                  <div className="absolute inset-0 rounded-full border-2 border-white/30 scale-100 group-hover/btn:scale-125 opacity-100 group-hover/btn:opacity-0 transition-all duration-500" />
+                  <div className="absolute inset-0 rounded-full border-2 border-white/20 scale-110 group-hover/btn:scale-150 opacity-0 group-hover/btn:opacity-100 transition-all duration-700" />
+                </button>
 
                 {/* Project Info */}
                 <div className="p-6">
