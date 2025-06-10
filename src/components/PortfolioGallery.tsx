@@ -95,7 +95,9 @@ const PortfolioGallery = () => {
 
   const openImageModal = (imageSrc: string) => {
     console.log('openImageModal called with:', imageSrc);
+    console.log('Setting selectedImage to:', imageSrc);
     setSelectedImage(imageSrc);
+    console.log('selectedImage state should now be:', imageSrc);
     document.body.style.overflow = 'hidden';
   };
 
@@ -176,19 +178,19 @@ const PortfolioGallery = () => {
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   
-                  {/* Eye Icon for Preview */}
-                  <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-                    hoveredProject === project.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`} style={{ pointerEvents: hoveredProject === project.id ? 'auto' : 'none' }}>
+                  {/* Eye Icon for Preview - Temporariamente sempre visível para debug */}
+                  <div className="absolute inset-0 flex items-center justify-center transition-all duration-500 opacity-100 translate-y-0" style={{ pointerEvents: 'auto' }}>
                                           <button
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           console.log('Button clicked!', project.image);
+                          alert('Botão clicado! ' + project.title); // Debug temporário
                           openImageModal(project.image);
                         }}
-                        className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-workflow-energy hover:bg-white hover:scale-110 transition-all duration-300 shadow-workflow relative z-10"
+                        className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-all duration-300 relative z-50 cursor-pointer"
                         type="button"
+                        style={{ position: 'relative', zIndex: 9999 }}
                       >
                       <svg
                         width="24"
@@ -246,7 +248,7 @@ const PortfolioGallery = () => {
       </div>
 
       {/* Image Modal */}
-      {selectedImage && (
+      {selectedImage && (console.log('Rendering modal with image:', selectedImage) || true) && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 animate-fade-in">
           {/* Close Button */}
           <button
