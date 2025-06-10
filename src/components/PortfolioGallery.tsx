@@ -95,10 +95,16 @@ const PortfolioGallery = () => {
 
   const openImageModal = (imageSrc: string) => {
     console.log('openImageModal called with:', imageSrc);
+    console.log('Current selectedImage before:', selectedImage);
     console.log('Setting selectedImage to:', imageSrc);
     setSelectedImage(imageSrc);
     console.log('selectedImage state should now be:', imageSrc);
     document.body.style.overflow = 'hidden';
+    
+    // Teste adicional - forçar update
+    setTimeout(() => {
+      console.log('selectedImage state after timeout:', selectedImage);
+    }, 100);
   };
 
   const closeImageModal = () => {
@@ -177,61 +183,54 @@ const PortfolioGallery = () => {
                   
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  
-                  {/* Eye Icon for Preview - Temporariamente sempre visível para debug */}
-                  <div className="absolute inset-0 flex items-center justify-center transition-all duration-500 opacity-100 translate-y-0" style={{ pointerEvents: 'auto' }}>
-                                          <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          console.log('Button clicked!', project.image);
-                          alert('Botão clicado! ' + project.title); // Debug temporário
-                          openImageModal(project.image);
-                        }}
-                        className="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-all duration-300 relative z-50 cursor-pointer"
-                        type="button"
-                        style={{ position: 'relative', zIndex: 9999 }}
-                      >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="transition-transform duration-300"
-                      >
-                        <path
-                          d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="3"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        />
-                      </svg>
-                    </button>
-                  </div>
                 </div>
+                
+                {/* Botão SIMPLES no canto superior direito */}
+                <button
+                  onClick={() => {
+                    console.log('BUTTON CLICKED FOR:', project.title);
+                    openImageModal(project.image);
+                  }}
+                  className="absolute top-4 right-4 w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-lg z-20"
+                  type="button"
+                >
+                  👁️
+                </button>
 
                 {/* Project Info */}
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-workflow-deep mb-3 group-hover:text-workflow-energy transition-colors duration-300">
-                    {project.title}
-                  </h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xl font-bold text-workflow-deep group-hover:text-workflow-energy transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <button
+                      onClick={() => {
+                        console.log('TITLE BUTTON CLICKED FOR:', project.title);
+                        openImageModal(project.image);
+                      }}
+                      className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-full transition-colors duration-300"
+                    >
+                      Ver
+                    </button>
+                  </div>
                   <p className="text-workflow-deep/70 text-sm leading-relaxed mb-4">
                     {project.description}
                   </p>
                   
                   {/* Category Badge */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
-                    <span className="w-2 h-2 bg-workflow-energy rounded-full animate-glow-pulse" />
-                    <span className="capitalize">{project.category}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
+                      <span className="w-2 h-2 bg-workflow-energy rounded-full animate-glow-pulse" />
+                      <span className="capitalize">{project.category}</span>
+                    </div>
+                    
+                    {/* Botão GARANTIDO de funcionar */}
+                    <button
+                      onClick={() => openImageModal(project.image)}
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Abrir Preview
+                    </button>
                   </div>
                 </div>
 
