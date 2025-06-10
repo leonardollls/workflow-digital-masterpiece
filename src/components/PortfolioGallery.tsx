@@ -177,17 +177,17 @@ const PortfolioGallery = () => {
                     console.log('Eye button clicked for:', project.title);
                     openImageModal(project.image);
                   }}
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group/btn w-16 h-16 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg hover:scale-110 z-20"
+                  className="absolute top-4 right-4 group/btn w-14 h-14 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg hover:scale-110 z-20"
                   type="button"
                   style={{ zIndex: 20 }}
                 >
                   {/* Brilho de fundo */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/20 to-workflow-zen/20 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 animate-glow-pulse" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/30 to-workflow-zen/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
                   
                   {/* Ícone SVG moderno */}
                   <svg
-                    width="28"
-                    height="28"
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -218,9 +218,8 @@ const PortfolioGallery = () => {
                     />
                   </svg>
                   
-                  {/* Efeito de ondas */}
-                  <div className="absolute inset-0 rounded-full border-2 border-white/30 scale-100 group-hover/btn:scale-125 opacity-100 group-hover/btn:opacity-0 transition-all duration-500" />
-                  <div className="absolute inset-0 rounded-full border-2 border-white/20 scale-110 group-hover/btn:scale-150 opacity-0 group-hover/btn:opacity-100 transition-all duration-700" />
+                  {/* Efeito de ondas sutis */}
+                  <div className="absolute inset-0 rounded-full border border-white/40 scale-100 group-hover/btn:scale-110 opacity-100 group-hover/btn:opacity-0 transition-all duration-300" />
                 </button>
 
                 {/* Project Info */}
