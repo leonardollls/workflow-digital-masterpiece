@@ -182,20 +182,24 @@
 @layer components {
   /* Enhanced Workflow Button System */
   .btn-primary {
-    @apply relative overflow-hidden bg-gradient-to-r from-workflow-energy via-workflow-600 to-workflow-zen text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-workflow hover:shadow-workflow-lg transform hover:scale-105 transition-all duration-300 group;
+    @apply relative overflow-hidden bg-gradient-to-r from-workflow-energy via-workflow-500 to-workflow-zen text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-workflow hover:shadow-workflow-lg transform hover:scale-105 transition-all duration-300;
   }
 
   .btn-primary::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000;
+    @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] transition-transform duration-1000;
+  }
+
+  .btn-primary:hover::before {
+    @apply translate-x-[100%];
   }
 
   .btn-secondary {
-    @apply relative bg-white/90 backdrop-blur-sm text-workflow-deep border-2 border-workflow-energy/30 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-workflow-energy/5 hover:border-workflow-energy hover:shadow-workflow transition-all duration-300 group;
+    @apply relative bg-white/90 backdrop-blur-sm text-workflow-deep border-2 border-workflow-energy/30 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-workflow-energy/5 hover:border-workflow-energy hover:shadow-workflow transition-all duration-300;
   }
 
   .btn-ghost {
-    @apply relative text-workflow-energy hover:text-workflow-deep hover:bg-workflow-energy/10 px-6 py-3 rounded-xl transition-all duration-300 group;
+    @apply relative text-workflow-energy hover:text-workflow-deep hover:bg-workflow-energy/10 px-6 py-3 rounded-xl transition-all duration-300;
   }
 
   .btn-magnetic {
@@ -208,17 +212,21 @@
 
   /* Advanced Workflow Card System */
   .card-workflow {
-    @apply relative bg-white/80 backdrop-blur-xl border border-workflow-energy/20 rounded-3xl p-8 shadow-glass hover:shadow-workflow-lg transition-all duration-500 group overflow-hidden;
+    @apply relative bg-white/80 backdrop-blur-xl border border-workflow-energy/20 rounded-3xl p-8 shadow-glass hover:shadow-workflow-lg transition-all duration-500 overflow-hidden;
   }
 
   .card-workflow::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-workflow-energy/5 via-transparent to-workflow-zen/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500;
+    @apply absolute inset-0 bg-gradient-to-br from-workflow-energy/5 via-transparent to-workflow-zen/5 opacity-0 transition-opacity duration-500;
     border-radius: inherit;
   }
 
+  .card-workflow:hover::before {
+    @apply opacity-100;
+  }
+
   .card-project {
-    @apply relative bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-glass hover:shadow-workflow-lg transform hover:scale-[1.02] transition-all duration-500 group;
+    @apply relative bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-glass hover:shadow-workflow-lg transform hover:scale-[1.02] transition-all duration-500;
   }
 
   .card-glass {
@@ -239,7 +247,7 @@
 
   /* Enhanced Text Styles */
   .text-gradient {
-    @apply bg-gradient-to-r from-workflow-energy via-workflow-600 to-workflow-zen bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-workflow-energy via-workflow-500 to-workflow-zen bg-clip-text text-transparent;
     background-size: 200% 100%;
     animation: gradient-shift 4s ease-in-out infinite;
   }
