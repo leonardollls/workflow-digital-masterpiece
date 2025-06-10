@@ -1,154 +1,169 @@
-
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const TestimonialTheater = () => {
-  const [selectedTestimonial, setSelectedTestimonial] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const testimonials = [
     {
       id: 1,
-      name: "Carlos Silva",
-      role: "CEO TechUnicorn",
-      company: "TechUnicorn",
-      video: "🎬",
-      quote: "De startup a unicórnio em 18 meses. A Workflow não apenas criou nossa landing page, criou nossa máquina de crescimento.",
+      name: "Carlos Eduardo Silva",
+      role: "CEO & Founder",
+      company: "TechFlow Solutions",
+      image: "/Images/Feedbacks/perfil-cliente-feedback-1.png",
+      quote: "A Workflow transformou completamente nossa presença digital. Em apenas 8 dias, tivemos uma landing page que converteu 340% mais leads que a anterior. O investimento se pagou na primeira semana.",
       rating: 5,
-      result: "Captação de R$ 50M",
-      color: "from-blue-500 to-purple-500"
+      industry: "SaaS B2B"
     },
     {
       id: 2,
-      name: "Ana Costa",
-      role: "CMO RetailGiant",
-      company: "RetailGiant",
-      video: "🎬",
-      quote: "ROI de 1,247% no primeiro trimestre. Nunca vi resultados tão impressionantes em 15 anos de marketing.",
+      name: "Marina Costa Ribeiro",
+      role: "Diretora de Marketing",
+      company: "Innovate Commerce",
+      image: "/Images/Feedbacks/perfil-cliente-feedback-2.png", 
+      quote: "Trabalhar com a Workflow foi uma experiência excepcional. Eles entenderam nossa visão desde o primeiro briefing e entregaram uma página que superou todas as expectativas. Nosso CPL diminuiu 60%.",
       rating: 5,
-      result: "R$ 12M em vendas",
-      color: "from-green-500 to-teal-500"
+      industry: "E-commerce"
     },
     {
       id: 3,
-      name: "Dr. Roberto Lima",
-      role: "Founder HealthTech",
-      company: "HealthTech Pro",
-      video: "🎬",
-      quote: "50M de investimento após o lançamento. A página da Workflow foi decisiva para convencer os investidores.",
+      name: "Dr. Roberto Almeida",
+      role: "Diretor Executivo",
+      company: "MedTech Innovations",
+      image: "/Images/Feedbacks/perfil-cliente-feedback-3.png",
+      quote: "A expertise da Workflow em conversão é impressionante. Nossa nova landing page não só ficou visualmente impecável, como também aumentou nossa taxa de conversão em 280%. Recomendo sem hesitação.",
       rating: 5,
-      result: "Series A de R$ 50M",
-      color: "from-red-500 to-pink-500"
+      industry: "HealthTech"
     }
   ];
 
   return (
-    <section className="py-20 bg-workflow-glow">
-      <div className="container mx-auto px-6">
+    <section 
+      ref={sectionRef}
+      className="section-padding bg-gradient-to-br from-workflow-50 via-white to-workflow-100 relative overflow-hidden"
+    >
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-mesh opacity-20 animate-gradient-shift" />
+        <div className="absolute inset-0 bg-noise opacity-10" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-display font-bold text-workflow-deep mb-4">
-            Testimonial <span className="text-gradient">Theater</span>
+        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-12 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
+            <span className="text-workflow-energy font-mono text-sm tracking-wider uppercase">Depoimentos</span>
+            <div className="w-12 h-0.5 bg-gradient-to-l from-workflow-energy to-workflow-zen rounded-full" />
+          </div>
+          
+          <h2 className="text-responsive-3xl font-display font-bold text-workflow-deep mb-6">
+            Feedbacks dos <span className="text-gradient">Líderes</span>
           </h2>
-          <p className="text-xl text-workflow-deep/70">
-            Vozes dos líderes que transformaram seus negócios conosco
+          
+          <p className="text-responsive-lg text-workflow-deep/70 mb-8 max-w-3xl mx-auto">
+            Feedbacks dos líderes que transformaram seus negócios conosco
           </p>
         </div>
 
-        {/* Main Testimonial */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="card-workflow relative overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-r ${testimonials[selectedTestimonial].color} opacity-10`}></div>
-            <div className="relative z-10 p-8 md:p-12">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                {/* Video Preview */}
-                <div className="relative">
-                  <div className={`aspect-video bg-gradient-to-br ${testimonials[selectedTestimonial].color} rounded-xl flex items-center justify-center text-6xl text-white relative overflow-hidden`}>
-                    {testimonials[selectedTestimonial].video}
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center text-workflow-deep text-2xl hover:bg-white transition-colors">
-                        ▶
-                      </button>
-                    </div>
-                  </div>
+        {/* Testimonials Grid - Todos visíveis juntos */}
+        <div className={`grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-2"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              {/* Card Content */}
+              <div className="p-8">
+                {/* Rating Stars */}
+                <div className="flex mb-6">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl">⭐</span>
+                  ))}
                 </div>
+                
+                {/* Quote */}
+                <blockquote className="text-workflow-deep/80 text-base leading-relaxed mb-8 italic">
+                  "{testimonial.quote}"
+                </blockquote>
 
-                {/* Testimonial Content */}
-                <div>
-                  <div className="flex mb-4">
-                    {[...Array(testimonials[selectedTestimonial].rating)].map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-xl">⭐</span>
-                    ))}
-                  </div>
-                  
-                  <blockquote className="text-xl text-workflow-deep mb-6 italic">
-                    "{testimonials[selectedTestimonial].quote}"
-                  </blockquote>
-
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-workflow-energy rounded-full flex items-center justify-center text-white font-bold">
-                      {testimonials[selectedTestimonial].name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-workflow-deep">
-                        {testimonials[selectedTestimonial].name}
-                      </div>
-                      <div className="text-workflow-deep/70">
-                        {testimonials[selectedTestimonial].role}
-                      </div>
-                      <div className="text-workflow-energy font-medium">
-                        {testimonials[selectedTestimonial].company}
-                      </div>
+                {/* Client Info */}
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover border-2 border-workflow-energy/20"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-workflow-energy rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">✓</span>
                     </div>
                   </div>
-
-                  <div className="bg-success/10 border border-success/20 rounded-lg p-4">
-                    <div className="text-success font-semibold">Resultado:</div>
-                    <div className="text-workflow-deep font-bold text-lg">
-                      {testimonials[selectedTestimonial].result}
+                  <div>
+                    <div className="font-bold text-workflow-deep text-lg">
+                      {testimonial.name}
+                    </div>
+                    <div className="text-workflow-deep/70 text-sm">
+                      {testimonial.role}
+                    </div>
+                    <div className="text-workflow-energy font-semibold text-sm">
+                      {testimonial.company}
+                    </div>
+                    <div className="text-workflow-deep/50 text-xs mt-1">
+                      {testimonial.industry}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Testimonial Selector */}
-        <div className="flex justify-center gap-4 mb-12">
-          {testimonials.map((testimonial, index) => (
-            <button
-              key={testimonial.id}
-              onClick={() => setSelectedTestimonial(index)}
-              className={`p-4 rounded-xl transition-all duration-300 ${
-                selectedTestimonial === index
-                  ? 'bg-workflow-energy text-white shadow-workflow'
-                  : 'bg-white text-workflow-deep hover:bg-workflow-zen/20'
-              }`}
-            >
-              <div className="text-2xl mb-2">{testimonial.video}</div>
-              <div className="text-sm font-medium">{testimonial.name}</div>
-              <div className="text-xs opacity-70">{testimonial.company}</div>
-            </button>
+              {/* Hover Effect */}
+              <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-500" />
+              
+              {/* Background Glow */}
+              <div className="absolute top-4 right-4 w-2 h-2 bg-workflow-energy/30 rounded-full animate-glow-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </div>
           ))}
         </div>
 
         {/* Trust Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="text-4xl mb-4">🏆</div>
-            <div className="text-2xl font-bold text-workflow-energy mb-2">147</div>
-            <div className="text-workflow-deep/70">Reviews 5 estrelas</div>
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="text-center group">
+            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
+            <div className="text-3xl font-bold text-workflow-energy mb-2">98%</div>
+            <div className="text-workflow-deep/70">Taxa de Satisfação</div>
           </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">🎯</div>
-            <div className="text-2xl font-bold text-workflow-energy mb-2">98%</div>
-            <div className="text-workflow-deep/70">Taxa de recomendação</div>
+          <div className="text-center group">
+            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">💎</div>
+            <div className="text-3xl font-bold text-workflow-energy mb-2">150+</div>
+            <div className="text-workflow-deep/70">Projetos Entregues</div>
           </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">⚡</div>
-            <div className="text-2xl font-bold text-workflow-energy mb-2">15 dias</div>
-            <div className="text-workflow-deep/70">Tempo médio entrega</div>
+          <div className="text-center group">
+            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">⚡</div>
+            <div className="text-3xl font-bold text-workflow-energy mb-2">8 dias</div>
+            <div className="text-workflow-deep/70">Tempo Médio de Entrega</div>
           </div>
         </div>
+      </div>
+
+      {/* Floating Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/6 w-32 h-32 bg-workflow-energy/5 rounded-full blur-xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/6 w-24 h-24 bg-workflow-zen/5 rounded-full blur-lg animate-float-delayed" />
+        <div className="absolute top-3/4 left-3/4 w-20 h-20 bg-workflow-accent/5 rounded-full blur-md animate-float" style={{ animationDelay: '2s' }} />
       </div>
     </section>
   );
