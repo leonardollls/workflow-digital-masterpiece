@@ -22,7 +22,7 @@ const Privacy = () => {
                 Coletamos informações que você nos fornece diretamente quando:
               </p>
               <ul className="list-disc pl-6 text-workflow-deep/80 mb-8">
-                <li>Entra em contato conosco através de formulários</li>
+                <li>Interage com nossos formulários de contato</li>
                 <li>Solicita orçamentos ou informações sobre nossos serviços</li>
                 <li>Se inscreve em nossa newsletter</li>
                 <li>Interage com nosso site</li>
@@ -68,14 +68,11 @@ const Privacy = () => {
                 analisar o tráfego do site. Você pode configurar seu navegador para recusar cookies.
               </p>
 
-              <h2 className="text-2xl font-bold text-workflow-deep mb-4">7. Contato</h2>
-              <p className="text-workflow-deep/80 mb-4">
-                Para questões sobre esta política de privacidade ou exercer seus direitos, entre em contato:
+              <h2 className="text-2xl font-bold text-workflow-deep mb-4">7. Alterações nesta Política</h2>
+              <p className="text-workflow-deep/80 mb-8">
+                Esta política de privacidade pode ser atualizada periodicamente. 
+                Recomendamos que você revise esta página regularmente para se manter informado sobre nossas práticas de privacidade.
               </p>
-              <div className="bg-workflow-zen/10 rounded-2xl p-6">
-                <p className="text-workflow-deep font-semibold">Email: privacy@workflowdigital.com</p>
-                <p className="text-workflow-deep/70">Respondemos em até 48 horas</p>
-              </div>
             </div>
           </div>
         </div>

@@ -75,14 +75,12 @@ const Terms = () => {
                 resolvida nos tribunais competentes do Brasil.
               </p>
 
-              <h2 className="text-2xl font-bold text-workflow-deep mb-4">9. Contato</h2>
-              <p className="text-workflow-deep/80 mb-4">
-                Para questões sobre estes termos de uso, entre em contato:
+              <h2 className="text-2xl font-bold text-workflow-deep mb-4">9. Vigência</h2>
+              <p className="text-workflow-deep/80 mb-8">
+                Estes termos permanecem em vigor enquanto você usar nosso website. 
+                Podemos encerrar ou suspender seu acesso a qualquer momento, sem aviso prévio, 
+                por qualquer motivo, incluindo violação destes termos.
               </p>
-              <div className="bg-workflow-zen/10 rounded-2xl p-6">
-                <p className="text-workflow-deep font-semibold">Email: legal@workflowdigital.com</p>
-                <p className="text-workflow-deep/70">Respondemos em até 48 horas</p>
-              </div>
             </div>
           </div>
         </div>
