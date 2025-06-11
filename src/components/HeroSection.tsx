@@ -8,6 +8,11 @@ const HeroSection = () => {
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoWorkflow);
+  const [logoAttempts, setLogoAttempts] = useState(0);
+
+  useEffect(() => {
+    console.log('🔍 Logo inicial carregado:', logoWorkflow);
+  }, []);
 
   useEffect(() => {
     // Intersection Observer for scroll animations
@@ -69,18 +74,32 @@ const HeroSection = () => {
             src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
             className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                console.error('Erro ao carregar logo:', logoSrc);
-                // Se falhar com import, tenta caminho direto simples
-                if (logoSrc === logoWorkflow) {
-                  console.log('Tentando caminho direto /logo-workflow.png');
-                  setLogoSrc("/logo-workflow.png");
-                } else {
-                  console.error('Logo não pode ser carregado - verificar console do navegador');
-                  e.currentTarget.style.display = 'none';
-                }
-              }}
-            onLoad={() => console.log('Logo carregado com sucesso do caminho:', logoSrc)}
+                                      onError={(e) => {
+              const currentAttempt = logoAttempts + 1;
+              setLogoAttempts(currentAttempt);
+              console.error(`❌ Tentativa ${currentAttempt} falhou para:`, logoSrc);
+              
+              const fallbackPaths = [
+                "/logo-workflow.png",
+                "/Images/logo-workflow-sem-fundo.png", 
+                "/images/logo-workflow-sem-fundo.png",
+                "./Images/logo-workflow-sem-fundo.png"
+              ];
+              
+              if (currentAttempt <= fallbackPaths.length) {
+                const nextPath = fallbackPaths[currentAttempt - 1];
+                console.log(`🔄 Tentativa ${currentAttempt}: Tentando ${nextPath}`);
+                setLogoSrc(nextPath);
+              } else {
+                console.error('💀 Todas as tentativas de carregar o logo falharam');
+                e.currentTarget.style.display = 'none';
+              }
+            }}
+            onLoad={() => {
+              console.log('✅ Logo carregado com sucesso!');
+              console.log('📁 Caminho que funcionou:', logoSrc);
+              console.log('🎯 Número de tentativas:', logoAttempts + 1);
+            }}
           />
         </div>
 
