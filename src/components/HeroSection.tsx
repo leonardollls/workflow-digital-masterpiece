@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import AnimatedBackground from '@/components/AnimatedBackground';
-import logoWorkflow from '/Images/logo-workflow-sem-fundo.png';
+import logoWorkflow from '@/assets/logo-workflow.png';
 
 const HeroSection = () => {
   const [showModal, setShowModal] = useState(false);
@@ -69,17 +69,17 @@ const HeroSection = () => {
             src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
             className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              console.error('Erro ao carregar logo:', logoSrc);
-              // Se ainda falhar mesmo com import, tenta caminho direto
-              if (logoSrc === logoWorkflow) {
-                console.log('Tentando caminho alternativo direto');
-                setLogoSrc("/Images/logo-workflow-sem-fundo.png");
-              } else {
-                console.error('Logo não pode ser carregado');
-                e.currentTarget.style.display = 'none';
-              }
-            }}
+                          onError={(e) => {
+                console.error('Erro ao carregar logo:', logoSrc);
+                // Se falhar com import, tenta caminho direto simples
+                if (logoSrc === logoWorkflow) {
+                  console.log('Tentando caminho direto /logo-workflow.png');
+                  setLogoSrc("/logo-workflow.png");
+                } else {
+                  console.error('Logo não pode ser carregado - verificar console do navegador');
+                  e.currentTarget.style.display = 'none';
+                }
+              }}
             onLoad={() => console.log('Logo carregado com sucesso do caminho:', logoSrc)}
           />
         </div>
