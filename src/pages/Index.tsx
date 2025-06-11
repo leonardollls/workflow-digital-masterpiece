@@ -8,7 +8,6 @@ import TestimonialTheater from '@/components/TestimonialTheater';
 import MethodologyLab from '@/components/MethodologyLab';
 import CapabilityMatrix from '@/components/CapabilityMatrix';
 import ResourceVault from '@/components/ResourceVault';
-import CTAAccelerator from '@/components/CTAAccelerator';
 import WorkflowFooter from '@/components/WorkflowFooter';
 
 const Index = () => {
@@ -36,7 +35,6 @@ const Index = () => {
       <MethodologyLab />
       <CapabilityMatrix />
       <ResourceVault />
-      <CTAAccelerator />
       <WorkflowFooter />
     </div>
   );

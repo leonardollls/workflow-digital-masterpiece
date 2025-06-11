@@ -48,20 +48,6 @@ const ResourceVault = () => {
     
     // Checklists Interativos
     {
-      id: 4,
-      title: "SEO Audit Checklist 2024",
-      description: "Checklist interativo com 45 pontos críticos de SEO. Interface moderna que torna auditorias complexas em processos simples e organizados.",
-      detailedDescription: "Sistema completo de auditoria SEO com explicações detalhadas, links para ferramentas e scoring automático. Exporta relatórios profissionais.",
-      type: "Checklist",
-      value: "R$ 1.597",
-      icon: "🔍",
-      downloadCount: "5.7k",
-      rating: 5.0,
-      color: "from-orange-500 to-red-500",
-      category: "checklist",
-      features: ["45 pontos críticos", "Explicações detalhadas", "Scoring automático", "Relatório em PDF"]
-    },
-    {
       id: 5,
       title: "Pre-Launch Checklist",
       description: "20 verificações essenciais antes de qualquer lançamento. Sistema inteligente que garante que nada importante seja esquecido.",
@@ -118,20 +104,6 @@ const ResourceVault = () => {
       color: "from-indigo-500 to-blue-500",
       category: "guide",
       features: ["Media queries prontas", "Grid systems", "Mobile-first strategy", "Code examples"]
-    },
-    {
-      id: 9,
-      title: "Git Commands Mastery",
-      description: "Cheat sheet completo com 50+ comandos Git organizados por situação. Inclui emergency commands e workflow para equipes.",
-      detailedDescription: "Referência visual de 12 páginas com comandos categorizados, explicações práticas e cenários reais de uso em projetos profissionais.",
-      type: "Guia PDF",
-      value: "R$ 497",
-      icon: "🔧",
-      downloadCount: "6.2k",
-      rating: 4.7,
-      color: "from-gray-600 to-gray-800",
-      category: "guide",
-      features: ["50+ comandos essenciais", "Emergency scenarios", "Team workflows", "Visual explanations"]
     }
   ];
 
@@ -315,7 +287,7 @@ const ResourceVault = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">9</div>
+                  <div className="text-3xl font-bold text-workflow-zen mb-2">7</div>
                   <div className="text-white/70">Ferramentas Premium</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
