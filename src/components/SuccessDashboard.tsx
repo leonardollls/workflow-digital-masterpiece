@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import EarthLoader from './EarthLoader';
 
 const SuccessDashboard = () => {
   const [metrics, setMetrics] = useState({
@@ -288,7 +289,7 @@ const SuccessDashboard = () => {
                  {/* Enhanced Global Reach Map */}
          <div className={`mt-20 text-center transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
            <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-md px-6 py-3 rounded-full mb-8 border border-gray-200/60 shadow-md">
-             <span className="text-2xl">🌍</span>
+             <EarthLoader size="sm" />
              <span className="text-workflow-deep font-semibold">Presença Global</span>
            </div>
            <h3 className="text-3xl font-display font-bold text-white mb-12">
@@ -299,7 +300,7 @@ const SuccessDashboard = () => {
                {/* World Map Visual - Repositioned */}
                <div className="flex justify-center items-center mb-8">
                  <div className="relative">
-                   <div className="text-6xl filter drop-shadow-lg">🌍</div>
+                   <EarthLoader size="xl" className="filter drop-shadow-lg" />
                    {/* 4 Círculos representando cada região */}
                    <div className="absolute -top-3 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
                    <div className="absolute -top-1 -right-3 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
@@ -364,7 +365,9 @@ const SuccessDashboard = () => {
                  </div>
                  
                  <div className="group cursor-pointer bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 hover:scale-105 transition-all duration-300 border border-orange-200 hover:border-orange-400 shadow-sm hover:shadow-md">
-                   <div className="text-4xl mb-3">🌏</div>
+                   <div className="flex justify-center mb-3">
+                     <EarthLoader size="md" />
+                   </div>
                    <div className="text-xl font-bold text-workflow-deep group-hover:text-orange-600 transition-colors">Ásia & Outros</div>
                    <div className="text-gray-700 mb-3 text-lg font-semibold">12 clientes</div>
                    <div className="w-full bg-orange-100 h-3 rounded-full overflow-hidden mb-3">
