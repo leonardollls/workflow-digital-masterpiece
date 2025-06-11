@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import logoWorkflow from '/Images/logo-workflow-sem-fundo.png';
 
 const HeroSection = () => {
   const [showModal, setShowModal] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [logoSrc, setLogoSrc] = useState("/Images/logo-workflow-sem-fundo.png");
+  const [logoSrc, setLogoSrc] = useState(logoWorkflow);
 
   useEffect(() => {
     // Intersection Observer for scroll animations
@@ -69,19 +70,13 @@ const HeroSection = () => {
             alt="Workflow Digital Masterpiece" 
             className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              console.error('Erro ao carregar logo do caminho:', logoSrc);
-              // Tenta caminhos alternativos
-              const alternatives = [
-                "/images/logo-workflow-sem-fundo.png",
-                "./Images/logo-workflow-sem-fundo.png",
-                "Images/logo-workflow-sem-fundo.png"
-              ];
-              const current = alternatives.find(alt => alt !== logoSrc);
-              if (current) {
-                console.log('Tentando caminho alternativo:', current);
-                setLogoSrc(current);
+              console.error('Erro ao carregar logo:', logoSrc);
+              // Se ainda falhar mesmo com import, tenta caminho direto
+              if (logoSrc === logoWorkflow) {
+                console.log('Tentando caminho alternativo direto');
+                setLogoSrc("/Images/logo-workflow-sem-fundo.png");
               } else {
-                console.error('Nenhum caminho alternativo funcionou');
+                console.error('Logo não pode ser carregado');
                 e.currentTarget.style.display = 'none';
               }
             }}
