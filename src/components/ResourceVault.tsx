@@ -169,40 +169,74 @@ const ResourceVault = () => {
   }, 0);
 
   return (
-    <section className="py-24 bg-workflow-glow relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-workflow-zen/5 to-transparent"></div>
-      <div className="absolute top-20 left-10 w-72 h-72 bg-workflow-zen/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+    <section className="py-24 bg-workflow-deep relative overflow-hidden">
+      {/* Enhanced Dark Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-workflow-deep via-gray-900 to-workflow-deep opacity-95" />
+        <div className="absolute inset-0 bg-noise opacity-5" />
+        
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-workflow-zen/20 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${3 + Math.random() * 2}s`
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Glow Elements */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-workflow-zen/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-workflow-accent/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 bg-workflow-zen/10 border border-workflow-zen/20 rounded-full px-4 py-2 mb-6">
-            <span className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse"></span>
-            <span className="text-workflow-zen font-semibold text-sm">BÔNUS EXCLUSIVOS</span>
+          <div className="inline-flex items-center gap-4 mb-8">
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <span className="text-workflow-zen font-mono text-sm tracking-[0.2em] uppercase font-medium">
+              Bônus Exclusivos
+            </span>
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-5xl lg:text-6xl font-display font-bold text-workflow-deep mb-6">
-            The <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-500 bg-clip-text text-transparent">Vault</span>
+          <h2 className="text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-8 leading-tight">
+            The{' '}
+            <span className="relative">
+              <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
+                Vault
+              </span>
+              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-workflow-zen/0 via-workflow-zen/60 to-workflow-zen/0 rounded-full" />
+            </span>
           </h2>
-          <p className="text-xl text-workflow-deep/70 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Ferramentas profissionais que <strong>economizam {totalTimeSaved}+ horas</strong> de trabalho manual.
-            <br />Entregues como <strong>bônus exclusivo</strong> após a conclusão do seu projeto.
+          
+          <p className="text-lg lg:text-xl xl:text-2xl text-workflow-zen/80 mb-8 max-w-4xl mx-auto leading-relaxed">
+            Ferramentas profissionais que <span className="text-workflow-accent font-semibold">economizam {totalTimeSaved}+ horas</span> de trabalho manual.
+            <br />Entregues como <strong className="text-white">bônus exclusivo</strong> após a conclusão do seu projeto.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <div className="inline-flex items-center gap-2 bg-success/10 border border-success/20 rounded-full px-6 py-3">
-              <span className="w-3 h-3 bg-success rounded-full animate-glow"></span>
-              <span className="text-success font-semibold">Bônus Gratuito</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-workflow-zen/60">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
+              <span>9 ferramentas premium</span>
             </div>
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-6 py-3">
-              <span className="text-blue-500">🎁</span>
-              <span className="text-blue-500 font-semibold">Pós-Entrega</span>
+            <div className="hidden sm:block w-1 h-1 bg-workflow-zen/40 rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-workflow-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <span>Entrega pós-projeto</span>
             </div>
-            <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-6 py-3">
-              <span className="text-purple-500">🚀</span>
-              <span className="text-purple-500 font-semibold">Valor Agregado</span>
+            <div className="hidden sm:block w-1 h-1 bg-workflow-zen/40 rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+              <span>Economia de {totalTimeSaved}+ horas</span>
             </div>
           </div>
         </div>
@@ -216,11 +250,19 @@ const ResourceVault = () => {
             
             {/* Category Header */}
             <div className="text-center mb-12">
-              <div className={`inline-flex items-center gap-3 bg-gradient-to-r ${category.color} p-6 rounded-2xl text-white mb-6`}>
-                <span className="text-3xl">{category.icon}</span>
-                <div className="text-left">
-                  <h3 className="text-2xl font-display font-bold">{category.name}</h3>
-                  <p className="text-white/90 text-sm">{category.description}</p>
+              <div className="relative group">
+                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
+                <div className={`relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 lg:p-8 hover:bg-white/8 transition-all duration-500`}>
+                  <div className="flex items-center gap-4 lg:gap-6 mb-4">
+                    <div className={`relative w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center text-white text-2xl lg:text-3xl shadow-2xl`}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl" />
+                      <span className="relative z-10 filter drop-shadow-lg">{category.icon}</span>
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-xl lg:text-2xl xl:text-3xl font-display font-bold text-white mb-2">{category.name}</h3>
+                      <p className="text-workflow-zen/80 text-sm lg:text-base">{category.description}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -230,7 +272,7 @@ const ResourceVault = () => {
               {resources.filter(resource => resource.category === category.id).map((resource, index) => (
                 <div
                   key={resource.id}
-                  className="group bg-white/60 backdrop-blur-sm border border-white/40 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2"
+                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2 hover:bg-white/8"
                   style={{ animationDelay: `${(categoryIndex * 3 + index) * 0.1}s` }}
                 >
                   {/* Resource Header */}
@@ -252,14 +294,14 @@ const ResourceVault = () => {
 
                   {/* Resource Content */}
                   <div className="p-8">
-                    <h4 className="text-xl font-display font-bold text-workflow-deep mb-3 group-hover:text-workflow-zen transition-colors">
+                    <h4 className="text-xl font-display font-bold text-white mb-3 group-hover:text-workflow-zen transition-colors">
                       {resource.title}
                     </h4>
-                    <p className="text-workflow-deep/70 mb-4 text-sm leading-relaxed">
+                    <p className="text-workflow-zen/80 mb-4 text-sm leading-relaxed">
                       {resource.description}
                     </p>
                     
-                    <p className="text-workflow-deep/60 mb-6 text-xs leading-relaxed">
+                    <p className="text-workflow-zen/60 mb-6 text-xs leading-relaxed">
                       {resource.detailedDescription}
                     </p>
 
@@ -269,7 +311,7 @@ const ResourceVault = () => {
                         {resource.features.map((feature, featureIndex) => (
                           <div key={featureIndex} className="flex items-center gap-2 text-xs">
                             <span className="w-1.5 h-1.5 bg-workflow-zen rounded-full"></span>
-                            <span className="text-workflow-deep/70">{feature}</span>
+                            <span className="text-workflow-zen/70">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -279,15 +321,15 @@ const ResourceVault = () => {
                     <div className="flex items-center justify-between mb-6 text-sm">
                       <div className="flex items-center gap-1">
                         <span className="text-yellow-400">⭐</span>
-                        <span className="font-semibold text-workflow-deep">{resource.rating}</span>
+                        <span className="font-semibold text-white">{resource.rating}</span>
                       </div>
-                      <div className="text-workflow-deep/60">
+                      <div className="text-workflow-zen/60">
                         {resource.downloadCount} usuários
                       </div>
                     </div>
 
                     {/* Status Badge */}
-                    <div className="w-full bg-gradient-to-r from-workflow-zen/10 to-blue-500/10 border border-workflow-zen/20 rounded-xl py-3 px-6 text-center">
+                    <div className="w-full bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 border border-workflow-zen/30 rounded-xl py-3 px-6 text-center hover:bg-gradient-to-r hover:from-workflow-zen/30 hover:to-workflow-accent/30 transition-all duration-300">
                       <span className="flex items-center justify-center gap-2 text-workflow-zen font-semibold">
                         <span className="text-lg">🎁</span>
                         Incluído no Projeto
@@ -300,22 +342,25 @@ const ResourceVault = () => {
           </div>
         ))}
 
-        {/* Value Proposition */}
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-br from-workflow-deep to-workflow-deep/90 rounded-3xl overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-workflow-zen/10 to-transparent"></div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-workflow-zen/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl"></div>
-            
-            <div className="relative z-10 p-12 md:p-16 text-center">
-              <div className="text-7xl mb-8">🎁</div>
-              <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
-                Economia Total: <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-400 bg-clip-text text-transparent">{totalTimeSaved}+ Horas</span>
-              </h3>
-              <p className="text-xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Ferramentas que eliminam trabalho repetitivo e aceleram seu workflow.
-                <strong> Entregues como bônus após a conclusão da sua landing page.</strong>
-              </p>
+        {/* Enhanced Value Proposition */}
+        <div className="max-w-5xl mx-auto mt-20">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-zen/10 rounded-3xl blur-xl" />
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl lg:rounded-3xl p-8 lg:p-12">
+              <div className="text-center">
+                <div className="relative group cursor-pointer mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
+                  <div className="relative text-6xl lg:text-7xl xl:text-8xl filter drop-shadow-lg">🎁</div>
+                </div>
+                
+                <h3 className="text-3xl lg:text-4xl xl:text-5xl font-display font-bold mb-6 text-white">
+                  Economia Total: <span className="bg-gradient-to-r from-workflow-zen to-workflow-accent bg-clip-text text-transparent">{totalTimeSaved}+ Horas</span>
+                </h3>
+                
+                <p className="text-lg lg:text-xl text-workflow-zen/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+                  Ferramentas que eliminam trabalho repetitivo e aceleram seu workflow.
+                  <br /><strong className="text-white">Entregues como bônus após a conclusão da sua landing page.</strong>
+                </p>
               
 
 

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const WorkflowFooter = () => {
   const currentYear = new Date().getFullYear();
 
@@ -18,12 +20,12 @@ const WorkflowFooter = () => {
           
           {/* Simple Links */}
           <div className="flex items-center gap-6 text-sm text-white/60">
-            <a href="/privacidade" className="hover:text-workflow-zen transition-colors">
+            <Link to="/privacidade" className="hover:text-workflow-zen transition-colors">
               Privacidade
-            </a>
-            <a href="/termos" className="hover:text-workflow-zen transition-colors">
+            </Link>
+            <Link to="/termos" className="hover:text-workflow-zen transition-colors">
               Termos
-            </a>
+            </Link>
           </div>
         </div>
       </div>

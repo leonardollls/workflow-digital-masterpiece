@@ -31,7 +31,7 @@ const HeroSection = () => {
   }, []);
 
   const trustBadges = [
-    { text: "Foco em Conversão", icon: "🎯", color: "from-yellow-400 to-orange-500" },
+    { text: "Alta Performance", icon: "🔥", color: "from-yellow-400 to-orange-500" },
     { text: "Clutch 5.0★", icon: "⭐", color: "from-blue-400 to-purple-500" },
     { text: "Awwwards Winner", icon: "🎯", color: "from-green-400 to-cyan-500" }
   ];
