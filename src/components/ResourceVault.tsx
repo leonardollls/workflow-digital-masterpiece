@@ -364,12 +364,13 @@ const ResourceVault = () => {
               
 
 
-              <div className="text-center">
-                <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">
-                  <div className="text-3xl">📅</div>
-                  <div className="text-left">
-                    <div className="text-white font-bold text-lg">Entrega Pós-Projeto</div>
-                    <div className="text-white/70 text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
+                <div className="text-center">
+                  <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">
+                    <div className="text-3xl">📅</div>
+                    <div className="text-left">
+                      <div className="text-white font-bold text-lg">Entrega Pós-Projeto</div>
+                      <div className="text-white/70 text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
+                    </div>
                   </div>
                 </div>
               </div>
