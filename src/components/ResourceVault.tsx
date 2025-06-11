@@ -132,7 +132,7 @@ const ResourceVault = () => {
   ];
 
   const totalValue = resources.reduce((sum, resource) => {
-    return sum + parseInt(resource.value.replace('R$ ', ''));
+    return sum + parseInt(resource.value.replace('R$ ', '').replace('.', ''));
   }, 0);
 
   const totalDownloads = resources.reduce((sum, resource) => {
@@ -179,9 +179,26 @@ const ResourceVault = () => {
           </div>
         </div>
 
+        {/* Debug Info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-4 p-4 bg-red-100 rounded text-black text-sm">
+            <strong>Debug:</strong> Total resources: {resources.length} | 
+            Calculator: {resources.filter(r => r.category === 'calculator').length} | 
+            Checklist: {resources.filter(r => r.category === 'checklist').length} | 
+            Guide: {resources.filter(r => r.category === 'guide').length}
+          </div>
+        )}
+
         {/* Categories */}
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="mb-20">
+            {/* Debug per category */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mb-4 p-2 bg-yellow-100 rounded text-black text-xs">
+                Category: {category.name} ({category.id}) - Items: {resources.filter(resource => resource.category === category.id).length}
+              </div>
+            )}
+            
             {/* Category Header */}
             <div className="text-center mb-12">
               <div className={`inline-flex items-center gap-3 bg-gradient-to-r ${category.color} p-6 rounded-2xl text-white mb-6`}>
