@@ -69,11 +69,11 @@ const HeroSection = () => {
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-7xl mx-auto px-6">
         {/* Logo */}
-        <div className={`flex justify-center mb-8 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex justify-center mb-10 sm:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <img 
             src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
-            className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
+            className="h-24 sm:h-28 md:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300"
                                       onError={(e) => {
               const currentAttempt = logoAttempts + 1;
               setLogoAttempts(currentAttempt);
