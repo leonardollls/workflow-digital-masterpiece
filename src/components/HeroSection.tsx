@@ -29,14 +29,6 @@ const HeroSection = () => {
     { text: "Awwwards Winner", icon: "🎯", color: "from-green-400 to-cyan-500" }
   ];
 
-  const clientLogos = [
-    { name: "TechUnicorn", logo: "🦄" },
-    { name: "RetailGiant", logo: "🛍️" },
-    { name: "HealthTech", logo: "🏥" },
-    { name: "FinanceApp", logo: "💳" },
-    { name: "LuxuryBrand", logo: "✨" }
-  ];
-
   const stats = [
     { number: "247%", label: "ROI Médio", icon: "📈" },
     { number: "98%", label: "Satisfação", icon: "❤️" },
@@ -69,6 +61,15 @@ const HeroSection = () => {
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-7xl mx-auto px-6">
+        {/* Logo */}
+        <div className={`flex justify-center mb-8 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <img 
+            src="/Images/logo-workflow-sem-fundo.png" 
+            alt="Workflow Digital Masterpiece" 
+            className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+
         {/* Trust Layer */}
         <div className={`flex justify-center items-center gap-4 mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {trustBadges.map((badge, index) => (
@@ -129,53 +130,33 @@ const HeroSection = () => {
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="relative z-10 flex items-center gap-2">
-              <span>Explorar Cases Premiados</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">🏆</span>
+              <span>Criações Recentes</span>
+              <span className="group-hover:translate-x-1 transition-transform duration-300">🎨</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-energy/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           
           <Button 
             className="btn-secondary btn-magnetic min-w-[200px]"
-            onClick={() => document.getElementById('cta-accelerator')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="flex items-center gap-2">
-              <span>Começar Projeto</span>
-              <span className="text-workflow-energy">⚡</span>
+              <span>Metodologia Científica</span>
+              <span className="text-workflow-energy">🔬</span>
             </span>
           </Button>
           
           <Button 
             className="btn-ghost btn-magnetic"
-            onClick={() => setShowModal(true)}
+            onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="flex items-center gap-2">
               <span className="w-8 h-8 bg-workflow-energy/20 rounded-full flex items-center justify-center">
-                ▶
+                ⚡
               </span>
-              <span>Demo 60s</span>
+              <span>Arsenal Tecnológico</span>
             </span>
           </Button>
-        </div>
-
-        {/* Enhanced Client Showcase */}
-        <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <p className="text-sm text-workflow-deep/60 mb-6 font-medium">Confiado por empresas inovadoras ao redor do mundo</p>
-          <div className="flex justify-center items-center gap-8 flex-wrap">
-            {clientLogos.map((client, index) => (
-              <div 
-                key={index}
-                className="group flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-workflow-energy/5 transition-all duration-300 cursor-pointer"
-              >
-                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
-                  {client.logo}
-                </span>
-                <span className="text-workflow-deep/60 group-hover:text-workflow-energy transition-colors duration-300 font-semibold">
-                  {client.name}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
