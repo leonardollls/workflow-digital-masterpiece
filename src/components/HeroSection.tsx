@@ -6,6 +6,7 @@ const HeroSection = () => {
   const [showModal, setShowModal] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [logoSrc, setLogoSrc] = useState("/Images/logo-workflow-sem-fundo.png");
 
   useEffect(() => {
     // Intersection Observer for scroll animations
@@ -64,9 +65,27 @@ const HeroSection = () => {
         {/* Logo */}
         <div className={`flex justify-center mb-8 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <img 
-            src="/Images/logo-workflow-sem-fundo.png" 
+            src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
             className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
+              console.error('Erro ao carregar logo do caminho:', logoSrc);
+              // Tenta caminhos alternativos
+              const alternatives = [
+                "/images/logo-workflow-sem-fundo.png",
+                "./Images/logo-workflow-sem-fundo.png",
+                "Images/logo-workflow-sem-fundo.png"
+              ];
+              const current = alternatives.find(alt => alt !== logoSrc);
+              if (current) {
+                console.log('Tentando caminho alternativo:', current);
+                setLogoSrc(current);
+              } else {
+                console.error('Nenhum caminho alternativo funcionou');
+                e.currentTarget.style.display = 'none';
+              }
+            }}
+            onLoad={() => console.log('Logo carregado com sucesso do caminho:', logoSrc)}
           />
         </div>
 
