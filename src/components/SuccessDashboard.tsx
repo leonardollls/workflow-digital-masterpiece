@@ -299,14 +299,7 @@ const SuccessDashboard = () => {
              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-10 border border-gray-200/50 hover:border-workflow-zen/40 transition-all duration-500 shadow-2xl">
                {/* World Map Visual - Repositioned */}
                <div className="flex justify-center items-center mb-8">
-                 <div className="relative">
-                   <EarthLoader size="xl" className="filter drop-shadow-lg" />
-                   {/* 4 Círculos representando cada região */}
-                   <div className="absolute -top-3 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
-                   <div className="absolute -top-1 -right-3 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
-                   <div className="absolute -bottom-1 -left-3 w-3 h-3 bg-purple-500 rounded-full animate-bounce"></div>
-                   <div className="absolute -bottom-3 -left-1 w-4 h-4 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                 </div>
+                 <EarthLoader size="xl" className="filter drop-shadow-lg" />
                </div>
                
                {/* Statistics Summary */}

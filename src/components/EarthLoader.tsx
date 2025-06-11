@@ -16,158 +16,192 @@ const EarthLoader: React.FC<EarthLoaderProps> = ({ size = 'md', className = '' }
   return (
     <>
       <style>{`
-        .earth-loader {
-          --watercolor: #3344c1;
-          --landcolor: #7cc133;
-          background-color: var(--watercolor);
+        .modern-earth {
           position: relative;
-          overflow: hidden;
           border-radius: 50%;
-          box-shadow:
-            inset 0em 0.5em rgb(255, 255, 255, 0.25),
-            inset 0em -0.5em rgb(0, 0, 0, 0.25);
-          border: solid 0.15em white;
-          animation: startround 1s;
-          animation-iteration-count: 1;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          overflow: hidden;
+          box-shadow: 
+            0 8px 32px rgba(102, 126, 234, 0.3),
+            inset 0 2px 8px rgba(255, 255, 255, 0.2),
+            inset 0 -2px 8px rgba(0, 0, 0, 0.1);
+          animation: earthRotate 20s linear infinite;
         }
 
-        .earth-loader svg:nth-child(1) {
-          position: absolute;
-          bottom: -50%;
-          width: 100%;
-          height: auto;
-          animation: round1 5s infinite linear 0.75s;
-        }
-
-        .earth-loader svg:nth-child(2) {
-          position: absolute;
-          top: -60%;
-          width: 100%;
-          height: auto;
-          animation: round1 5s infinite linear;
-        }
-        
-        .earth-loader svg:nth-child(3) {
+        .modern-earth::before {
+          content: '';
           position: absolute;
           top: -50%;
-          width: 100%;
-          height: auto;
-          animation: round2 5s infinite linear;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: conic-gradient(
+            from 0deg at 50% 50%,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent
+          );
+          animation: shimmer 8s linear infinite;
         }
-        
-        .earth-loader svg:nth-child(4) {
+
+        .earth-core {
           position: absolute;
-          bottom: -44%;
-          width: 100%;
-          height: auto;
-          animation: round2 5s infinite linear 0.75s;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 80%;
+          height: 80%;
+          border-radius: 50%;
+          background: radial-gradient(circle at 30% 30%, #4f46e5, #7c3aed, #2563eb);
+          animation: coreGlow 4s ease-in-out infinite alternate;
         }
 
-        @keyframes startround {
-          0% {
-            filter: brightness(500%);
-            box-shadow: none;
+        .continent {
+          position: absolute;
+          background: linear-gradient(135deg, #10b981, #059669);
+          border-radius: 50%;
+          opacity: 0.8;
+          animation: continentFloat 6s ease-in-out infinite;
+        }
+
+        .continent:nth-child(2) {
+          top: 20%;
+          left: 15%;
+          width: 25%;
+          height: 15%;
+          animation-delay: -1s;
+        }
+
+        .continent:nth-child(3) {
+          top: 40%;
+          right: 20%;
+          width: 20%;
+          height: 12%;
+          animation-delay: -2s;
+        }
+
+        .continent:nth-child(4) {
+          bottom: 25%;
+          left: 25%;
+          width: 18%;
+          height: 10%;
+          animation-delay: -3s;
+        }
+
+        .continent:nth-child(5) {
+          top: 60%;
+          right: 35%;
+          width: 15%;
+          height: 8%;
+          animation-delay: -4s;
+        }
+
+        .orbital-ring {
+          position: absolute;
+          top: -10%;
+          left: -10%;
+          width: 120%;
+          height: 120%;
+          border: 2px solid rgba(102, 126, 234, 0.3);
+          border-radius: 50%;
+          border-top-color: rgba(102, 126, 234, 0.6);
+          animation: orbit 15s linear infinite;
+        }
+
+        .data-stream {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: #06b6d4;
+          border-radius: 50%;
+          opacity: 0;
+          animation: dataFlow 3s linear infinite;
+        }
+
+        .data-stream:nth-child(7) {
+          top: 30%;
+          left: 10%;
+          animation-delay: 0s;
+        }
+
+        .data-stream:nth-child(8) {
+          top: 50%;
+          right: 15%;
+          animation-delay: -0.5s;
+        }
+
+        .data-stream:nth-child(9) {
+          bottom: 30%;
+          left: 30%;
+          animation-delay: -1s;
+        }
+
+        .data-stream:nth-child(10) {
+          top: 70%;
+          right: 25%;
+          animation-delay: -1.5s;
+        }
+
+        @keyframes earthRotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        @keyframes coreGlow {
+          0% { 
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+            transform: translate(-50%, -50%) scale(1);
           }
-          75% {
-            filter: brightness(500%);
-            box-shadow: none;
-          }
-          100% {
-            filter: brightness(100%);
-            box-shadow:
-              inset 0em 0.5em rgb(255, 255, 255, 0.25),
-              inset 0em -0.5em rgb(0, 0, 0, 0.25);
+          100% { 
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+            transform: translate(-50%, -50%) scale(1.05);
           }
         }
 
-        @keyframes round1 {
-          0% {
-            left: -50%;
-            opacity: 100%;
-            transform: skewX(0deg) rotate(0deg);
-          }
-          30% {
-            left: -120%;
-            opacity: 100%;
-            transform: skewX(-25deg) rotate(25deg);
-          }
-          31% {
-            left: -120%;
-            opacity: 0%;
-            transform: skewX(-25deg) rotate(25deg);
-          }
-          35% {
-            left: 140%;
-            opacity: 0%;
-            transform: skewX(25deg) rotate(-25deg);
-          }
-          45% {
-            left: 140%;
-            opacity: 100%;
-            transform: skewX(25deg) rotate(-25deg);
-          }
-          100% {
-            left: -50%;
-            opacity: 100%;
-            transform: skewX(0deg) rotate(0deg);
-          }
+        @keyframes continentFloat {
+          0%, 100% { transform: translateY(0px) scale(1); }
+          50% { transform: translateY(-2px) scale(1.02); }
         }
 
-        @keyframes round2 {
-          0% {
-            left: 100%;
-            opacity: 100%;
-            transform: skewX(0deg) rotate(0deg);
+        @keyframes orbit {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes dataFlow {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.5); 
           }
-          75% {
-            left: -140%;
-            opacity: 100%;
-            transform: skewX(-25deg) rotate(25deg);
+          50% { 
+            opacity: 1; 
+            transform: scale(1.2); 
           }
-          76% {
-            left: -140%;
-            opacity: 0%;
-            transform: skewX(-25deg) rotate(25deg);
-          }
-          77% {
-            left: 160%;
-            opacity: 0%;
-            transform: skewX(25deg) rotate(-25deg);
-          }
-          80% {
-            left: 160%;
-            opacity: 100%;
-            transform: skewX(25deg) rotate(-25deg);
-          }
-          100% {
-            left: 100%;
-            opacity: 100%;
-            transform: skewX(0deg) rotate(0deg);
+          100% { 
+            opacity: 0; 
+            transform: scale(0.5); 
           }
         }
       `}</style>
       
-      <div className={`earth-loader ${sizeClasses[size]} ${className}`}>
-        {/* Continents SVG shapes */}
-        <svg viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 20 C 15 15, 25 15, 30 20 L 35 25 C 30 30, 20 30, 15 25 Z" fill="var(--landcolor)" />
-          <path d="M40 15 C 45 10, 55 10, 60 15 L 65 20 C 60 25, 50 25, 45 20 Z" fill="var(--landcolor)" />
-        </svg>
-        
-        <svg viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 25 C 12 20, 22 20, 28 25 L 32 30 C 28 35, 18 35, 12 30 Z" fill="var(--landcolor)" />
-          <path d="M45 20 C 52 15, 62 15, 68 20 L 72 25 C 68 30, 58 30, 52 25 Z" fill="var(--landcolor)" />
-        </svg>
-        
-        <svg viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 30 C 15 25, 25 25, 32 30 L 36 35 C 32 40, 22 40, 15 35 Z" fill="var(--landcolor)" />
-          <path d="M50 25 C 57 20, 67 20, 73 25 L 77 30 C 73 35, 63 35, 57 30 Z" fill="var(--landcolor)" />
-        </svg>
-        
-        <svg viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 35 C 18 30, 28 30, 34 35 L 38 40 C 34 45, 24 45, 18 40 Z" fill="var(--landcolor)" />
-          <path d="M55 30 C 62 25, 72 25, 78 30 L 82 35 C 78 40, 68 40, 62 35 Z" fill="var(--landcolor)" />
-        </svg>
+      <div className={`modern-earth ${sizeClasses[size]} ${className}`}>
+        <div className="earth-core"></div>
+        <div className="continent"></div>
+        <div className="continent"></div>
+        <div className="continent"></div>
+        <div className="continent"></div>
+        <div className="orbital-ring"></div>
+        <div className="data-stream"></div>
+        <div className="data-stream"></div>
+        <div className="data-stream"></div>
+        <div className="data-stream"></div>
       </div>
     </>
   );
