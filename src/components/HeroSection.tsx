@@ -157,9 +157,9 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced CTA Ecosystem */}
-        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
+        <div className={`flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
           <Button 
-            className="btn-primary btn-magnetic group relative overflow-hidden min-w-[240px]"
+            className="btn-primary btn-magnetic group relative overflow-hidden w-full sm:w-auto min-w-[240px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="relative z-10 flex items-center gap-2">
@@ -170,7 +170,7 @@ const HeroSection = () => {
           </Button>
           
           <Button 
-            className="btn-secondary btn-magnetic min-w-[200px]"
+            className="btn-secondary btn-magnetic w-full sm:w-auto min-w-[200px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
             onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="flex items-center gap-2">
@@ -180,7 +180,7 @@ const HeroSection = () => {
           </Button>
           
           <Button 
-            className="btn-ghost btn-magnetic"
+            className="btn-ghost btn-magnetic w-full sm:w-auto text-sm sm:text-base px-6 py-3"
             onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="flex items-center gap-2">
@@ -193,10 +193,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle">
+      {/* Scroll Indicator - Hidden on Mobile */}
+      <div className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle">
         <div className="w-6 h-10 border-2 border-workflow-energy/50 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-workflow-energy rounded-full mt-2 animate-bounce" />
         </div>
@@ -204,20 +202,20 @@ const HeroSection = () => {
 
       {/* Enhanced Demo Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-6 animate-fade-in">
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 max-w-4xl w-full relative shadow-workflow-xl">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-in">
+          <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 max-w-4xl w-full relative shadow-workflow-xl max-h-[90vh] overflow-y-auto">
             <button 
               onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 w-10 h-10 bg-workflow-energy/10 hover:bg-workflow-energy/20 rounded-full flex items-center justify-center text-workflow-deep hover:text-workflow-energy transition-all duration-300 text-xl font-semibold"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 bg-workflow-energy/10 hover:bg-workflow-energy/20 rounded-full flex items-center justify-center text-workflow-deep hover:text-workflow-energy transition-all duration-300 text-lg sm:text-xl font-semibold"
             >
               ×
             </button>
-            <div className="aspect-video bg-gradient-mesh rounded-2xl flex flex-col items-center justify-center text-workflow-deep relative overflow-hidden">
+            <div className="aspect-video bg-gradient-mesh rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-workflow-deep relative overflow-hidden">
               <div className="absolute inset-0 bg-workflow-energy/5" />
-              <div className="relative z-10 text-center">
-                <div className="text-6xl mb-4">🎬</div>
-                <h3 className="text-2xl font-bold mb-2">Demo Workflow</h3>
-                <p className="text-workflow-deep/70">Experiência completa em 60 segundos</p>
+              <div className="relative z-10 text-center px-4">
+                <div className="text-4xl sm:text-6xl mb-4">🎬</div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2">Demo Workflow</h3>
+                <p className="text-workflow-deep/70 text-sm sm:text-base">Experiência completa em 60 segundos</p>
                 <Button className="btn-primary mt-6">
                   <span className="flex items-center gap-2">
                     <span>▶</span>

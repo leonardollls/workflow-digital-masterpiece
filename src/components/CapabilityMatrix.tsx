@@ -168,7 +168,7 @@ const CapabilityMatrix = () => {
         </div>
 
         {/* Capabilities Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 lg:gap-12">
           {capabilities.map((capability, categoryIndex) => (
             <div
               key={categoryIndex}
@@ -179,50 +179,50 @@ const CapabilityMatrix = () => {
             >
               <div className="relative group h-full">
                 {/* Background Glow */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${capability.color} rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
+                <div className={`absolute inset-0 bg-gradient-to-r ${capability.color} rounded-2xl sm:rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
                 
                 {/* Main Card */}
-                <div className="relative bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 h-full">
+                <div className="relative bg-white/80 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 h-full">
                   
                   {/* Category Header */}
-                  <div className={`bg-gradient-to-r ${capability.color} p-6 lg:p-8 relative overflow-hidden`}>
+                  <div className={`bg-gradient-to-r ${capability.color} p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
                     <div className="absolute inset-0 bg-white/10" />
                     <div className="relative z-10">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="text-4xl filter drop-shadow-lg">{capability.icon}</div>
+                      <div className="flex items-center gap-3 sm:gap-4 mb-3">
+                        <div className="text-3xl sm:text-4xl filter drop-shadow-lg">{capability.icon}</div>
                         <div className="flex-1">
-                          <h3 className="text-2xl lg:text-3xl font-display font-bold text-white">
+                          <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-bold text-white">
                             {capability.category}
                           </h3>
                         </div>
                       </div>
-                      <p className="text-white/90 text-sm lg:text-base leading-relaxed">
+                      <p className="text-white/90 text-sm sm:text-base leading-relaxed">
                         {capability.description}
                       </p>
                     </div>
                   </div>
 
                   {/* Technologies */}
-                  <div className="p-6 lg:p-8">
-                    <div className="space-y-4">
+                  <div className="p-4 sm:p-6 lg:p-8">
+                    <div className="space-y-3 sm:space-y-4">
                       {capability.technologies.map((tech, techIndex) => (
                         <div 
                           key={techIndex}
-                          className="group/tech relative p-4 rounded-2xl hover:bg-gray-50/80 transition-all duration-300 cursor-pointer"
+                          className="group/tech relative p-3 sm:p-4 rounded-xl sm:rounded-2xl hover:bg-gray-50/80 transition-all duration-300 cursor-pointer"
                           onMouseEnter={() => setHoveredTech(`${categoryIndex}-${techIndex}`)}
                           onMouseLeave={() => setHoveredTech(null)}
                         >
-                          <div className="flex items-center gap-4 mb-3">
-                            <div className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-lg group-hover/tech:scale-110 transition-transform duration-300">
-                              <span className="text-xl">{tech.icon}</span>
+                          <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white rounded-lg sm:rounded-xl shadow-lg group-hover/tech:scale-110 transition-transform duration-300">
+                              <span className="text-lg sm:text-xl">{tech.icon}</span>
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between">
-                                <span className="font-bold text-workflow-deep text-lg group-hover/tech:text-workflow-zen transition-colors duration-300">
+                                <span className="font-bold text-workflow-deep text-base sm:text-lg group-hover/tech:text-workflow-zen transition-colors duration-300">
                                   {tech.name}
                                 </span>
                                 <div className="flex items-center gap-2">
-                                  <span className={`text-2xl font-bold bg-gradient-to-r ${capability.color} bg-clip-text text-transparent`}>
+                                  <span className={`text-xl sm:text-2xl font-bold bg-gradient-to-r ${capability.color} bg-clip-text text-transparent`}>
                                     {tech.level}%
                                   </span>
                                 </div>
@@ -231,8 +231,8 @@ const CapabilityMatrix = () => {
                           </div>
 
                           {/* Progress Bar */}
-                          <div className="mb-3">
-                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                          <div className="mb-2 sm:mb-3">
+                            <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
                               <div
                                 className={`bg-gradient-to-r ${capability.color} h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
                                 style={{ 
@@ -248,7 +248,7 @@ const CapabilityMatrix = () => {
                           {/* Tech Description */}
                           {hoveredTech === `${categoryIndex}-${techIndex}` && (
                             <div className="animate-fade-in">
-                              <p className="text-workflow-deep/70 text-sm leading-relaxed">
+                              <p className="text-workflow-deep/70 text-xs sm:text-sm leading-relaxed">
                                 {tech.description}
                               </p>
                             </div>
@@ -264,41 +264,41 @@ const CapabilityMatrix = () => {
         </div>
 
         {/* Enhanced Stats Summary */}
-        <div className={`mt-24 transition-all duration-1000 delay-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`mt-16 sm:mt-24 transition-all duration-1000 delay-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-energy/10 rounded-3xl blur-xl" />
-            <div className="relative bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-12">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-energy/10 rounded-2xl sm:rounded-3xl blur-xl" />
+            <div className="relative bg-white/60 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                 <div className="text-center group cursor-pointer">
-                  <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-zen mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-workflow-zen mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     {totalTechnologies}
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Tecnologias Dominadas</div>
-                  <div className="w-12 h-0.5 bg-workflow-zen/50 mx-auto mt-3 group-hover:bg-workflow-zen transition-colors duration-300" />
+                  <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Tecnologias Dominadas</div>
+                  <div className="w-8 sm:w-12 h-0.5 bg-workflow-zen/50 mx-auto mt-2 sm:mt-3 group-hover:bg-workflow-zen transition-colors duration-300" />
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-energy mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-workflow-energy mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     100%
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Implementação Garantida</div>
-                  <div className="w-12 h-0.5 bg-workflow-energy/50 mx-auto mt-3 group-hover:bg-workflow-energy transition-colors duration-300" />
+                  <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Implementação Garantida</div>
+                  <div className="w-8 sm:w-12 h-0.5 bg-workflow-energy/50 mx-auto mt-2 sm:mt-3 group-hover:bg-workflow-energy transition-colors duration-300" />
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-accent mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-workflow-accent mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     150+
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Projetos Criados</div>
-                  <div className="w-12 h-0.5 bg-workflow-accent/50 mx-auto mt-3 group-hover:bg-workflow-accent transition-colors duration-300" />
+                  <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Projetos Criados</div>
+                  <div className="w-8 sm:w-12 h-0.5 bg-workflow-accent/50 mx-auto mt-2 sm:mt-3 group-hover:bg-workflow-accent transition-colors duration-300" />
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-green-500 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-green-500 mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                     0
                   </div>
-                  <div className="text-workflow-deep/80 font-medium text-sm lg:text-base">Limitações Técnicas</div>
-                  <div className="w-12 h-0.5 bg-green-500/50 mx-auto mt-3 group-hover:bg-green-500 transition-colors duration-300" />
+                  <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Limitações Técnicas</div>
+                  <div className="w-8 sm:w-12 h-0.5 bg-green-500/50 mx-auto mt-2 sm:mt-3 group-hover:bg-green-500 transition-colors duration-300" />
                 </div>
               </div>
             </div>

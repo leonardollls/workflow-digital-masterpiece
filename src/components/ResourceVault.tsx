@@ -241,26 +241,22 @@ const ResourceVault = () => {
           </div>
         </div>
 
-
-
         {/* Categories */}
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="mb-20">
-
-            
             {/* Category Header */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-8 sm:mb-12">
               <div className="relative group">
-                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-                <div className={`relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 lg:p-8 hover:bg-white/8 transition-all duration-500`}>
-                  <div className="flex items-center gap-4 lg:gap-6 mb-4">
-                    <div className={`relative w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center text-white text-2xl lg:text-3xl shadow-2xl`}>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl" />
+                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} rounded-xl sm:rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
+                <div className={`relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 hover:bg-white/8 transition-all duration-500`}>
+                  <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 lg:gap-6 mb-3 sm:mb-4">
+                    <div className={`relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${category.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl lg:text-3xl shadow-2xl`}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl sm:rounded-2xl" />
                       <span className="relative z-10 filter drop-shadow-lg">{category.icon}</span>
                     </div>
-                    <div className="text-left">
-                      <h3 className="text-xl lg:text-2xl xl:text-3xl font-display font-bold text-white mb-2">{category.name}</h3>
-                      <p className="text-workflow-zen/80 text-sm lg:text-base">{category.description}</p>
+                    <div className="text-center sm:text-left">
+                      <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-display font-bold text-white mb-1 sm:mb-2">{category.name}</h3>
+                      <p className="text-workflow-zen/80 text-xs sm:text-sm lg:text-base">{category.description}</p>
                     </div>
                   </div>
                 </div>
@@ -268,36 +264,36 @@ const ResourceVault = () => {
             </div>
 
             {/* Resources Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {resources.filter(resource => resource.category === category.id).map((resource, index) => (
                 <div
                   key={resource.id}
-                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2 hover:bg-white/8"
+                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2 hover:bg-white/8"
                   style={{ animationDelay: `${(categoryIndex * 3 + index) * 0.1}s` }}
                 >
                   {/* Resource Header */}
-                  <div className={`bg-gradient-to-br ${resource.color} p-8 relative overflow-hidden`}>
-                    <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                  <div className={`bg-gradient-to-br ${resource.color} p-6 sm:p-8 relative overflow-hidden`}>
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/20 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1">
                       <span className="text-xs font-bold text-white">{resource.type}</span>
                     </div>
-                    <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white/10 rounded-full"></div>
+                    <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 bg-white/10 rounded-full"></div>
+                    <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 bg-white/10 rounded-full"></div>
                     
                     <div className="relative z-10">
-                      <div className="text-5xl mb-4">{resource.icon}</div>
-                      <div className="text-white font-bold text-xl">
+                      <div className="text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">{resource.icon}</div>
+                      <div className="text-white font-bold text-lg sm:text-xl">
                         {resource.value}
                       </div>
-                      <div className="text-white/90 text-sm">de trabalho manual</div>
+                      <div className="text-white/90 text-xs sm:text-sm">de trabalho manual</div>
                     </div>
                   </div>
 
                   {/* Resource Content */}
-                  <div className="p-8">
-                    <h4 className="text-xl font-display font-bold text-white mb-3 group-hover:text-workflow-zen transition-colors">
+                  <div className="p-6 sm:p-8">
+                    <h4 className="text-lg sm:text-xl font-display font-bold text-white mb-2 sm:mb-3 group-hover:text-workflow-zen transition-colors">
                       {resource.title}
                     </h4>
-                    <p className="text-workflow-zen/80 mb-4 text-sm leading-relaxed">
+                    <p className="text-workflow-zen/80 mb-4 text-xs sm:text-sm leading-relaxed">
                       {resource.description}
                     </p>
                     
@@ -318,7 +314,7 @@ const ResourceVault = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="flex items-center justify-between mb-6 text-sm">
+                    <div className="flex items-center justify-between mb-6 text-xs sm:text-sm">
                       <div className="flex items-center gap-1">
                         <span className="text-yellow-400">⭐</span>
                         <span className="font-semibold text-white">{resource.rating}</span>
