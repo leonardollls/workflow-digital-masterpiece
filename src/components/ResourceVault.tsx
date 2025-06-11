@@ -9,7 +9,7 @@ const ResourceVault = () => {
       description: "Calcule o retorno sobre investimento de forma instantânea. Interface intuitiva que transforma números em decisões estratégicas certeiras.",
       detailedDescription: "Ferramenta completa que calcula ROI, break-even point e projeções futuras. Inclui gráficos visuais e comparativos com benchmarks do mercado.",
       type: "Calculadora",
-      value: "R$ 897",
+      value: "Economiza 3h",
       icon: "📊",
       downloadCount: "3.2k",
       rating: 4.9,
@@ -23,7 +23,7 @@ const ResourceVault = () => {
       description: "Determine a significância estatística dos seus testes A/B com precisão científica. Nunca mais tome decisões baseadas em palpites.",
       detailedDescription: "Calculadora avançada com análise de confidence interval, power analysis e sample size. Interface que explica cada resultado de forma clara.",
       type: "Calculadora",
-      value: "R$ 1.297",
+      value: "Economiza 12h",
       icon: "🧮",
       downloadCount: "2.8k",
       rating: 4.8,
@@ -37,7 +37,7 @@ const ResourceVault = () => {
       description: "Analise e otimize suas taxas de conversão com precisão. Inclui benchmarks da indústria e sugestões de melhorias automáticas.",
       detailedDescription: "Mais que uma calculadora: um sistema completo de análise de conversão com insights acionáveis e roadmap de otimização personalizado.",
       type: "Calculadora",
-      value: "R$ 697",
+      value: "Economiza 2h",
       icon: "📈",
       downloadCount: "4.1k",
       rating: 4.9,
@@ -48,12 +48,26 @@ const ResourceVault = () => {
     
     // Checklists Interativos
     {
+      id: 4,
+      title: "SEO Audit Checklist 2024",
+      description: "Checklist interativo com 45 pontos críticos de SEO. Interface moderna que torna auditorias complexas em processos simples e organizados.",
+      detailedDescription: "Sistema completo de auditoria SEO com explicações detalhadas, links para ferramentas e scoring automático. Exporta relatórios profissionais.",
+      type: "Checklist",
+      value: "Economiza 8h",
+      icon: "🔍",
+      downloadCount: "5.7k",
+      rating: 5.0,
+      color: "from-orange-500 to-red-500",
+      category: "checklist",
+      features: ["45 pontos críticos", "Explicações detalhadas", "Scoring automático", "Relatório em PDF"]
+    },
+    {
       id: 5,
       title: "Pre-Launch Checklist",
       description: "20 verificações essenciais antes de qualquer lançamento. Sistema inteligente que garante que nada importante seja esquecido.",
       detailedDescription: "Checklist categorizado por áreas (técnico, design, marketing, legal) com sistema de prioridades e timeline sugerido para cada tarefa.",
       type: "Checklist",
-      value: "R$ 897",
+      value: "Economiza 5h",
       icon: "🚀",
       downloadCount: "3.9k",
       rating: 4.8,
@@ -67,7 +81,7 @@ const ResourceVault = () => {
       description: "15 pontos fundamentais para otimização de velocidade. Transforme sites lentos em máquinas de alta performance.",
       detailedDescription: "Guia prático com testes automatizados, links para ferramentas gratuitas e estimativas de impacto para cada otimização implementada.",
       type: "Checklist",
-      value: "R$ 1.147",
+      value: "Economiza 10h",
       icon: "⚡",
       downloadCount: "2.6k",
       rating: 4.9,
@@ -83,7 +97,7 @@ const ResourceVault = () => {
       description: "Guia visual completo com 25 combinações de fontes testadas e aprovadas. Inclui hierarquias e tamanhos ideais para cada dispositivo.",
       detailedDescription: "Manual premium de 24 páginas com exemplos reais, psychological impact das fontes e sistema completo de hierarquia tipográfica responsiva.",
       type: "Guia PDF",
-      value: "R$ 797",
+      value: "Economiza 7h",
       icon: "🎨",
       downloadCount: "4.3k",
       rating: 4.9,
@@ -97,7 +111,7 @@ const ResourceVault = () => {
       description: "Referência definitiva para design responsivo. Breakpoints, grid systems e best practices condensados em um guia prático e visual.",
       detailedDescription: "Guia técnico de 18 páginas com media queries prontas, exemplos de código e estratégias mobile-first que realmente funcionam.",
       type: "Guia PDF",
-      value: "R$ 597",
+      value: "Economiza 6h",
       icon: "📱",
       downloadCount: "3.8k",
       rating: 4.8,
@@ -107,17 +121,17 @@ const ResourceVault = () => {
     },
     {
       id: 9,
-      title: "UX Research Toolkit",
-      description: "Kit completo para pesquisas de usuário. Templates, scripts e metodologias para descobrir insights valiosos dos seus usuários.",
-      detailedDescription: "Mais de 15 templates prontos para entrevistas, surveys e testes de usabilidade. Inclui guias de análise e relatórios profissionais.",
+      title: "Git Commands Mastery",
+      description: "Cheat sheet completo com 50+ comandos Git organizados por situação. Inclui emergency commands e workflow para equipes.",
+      detailedDescription: "Referência visual de 12 páginas com comandos categorizados, explicações práticas e cenários reais de uso em projetos profissionais.",
       type: "Guia PDF",
-      value: "R$ 897",
-      icon: "🔬",
-      downloadCount: "2.9k",
+      value: "Economiza 4h",
+      icon: "🔧",
+      downloadCount: "6.2k",
       rating: 4.7,
-      color: "from-green-500 to-teal-500",
+      color: "from-gray-600 to-gray-800",
       category: "guide",
-      features: ["15+ templates prontos", "Scripts de entrevista", "Análise de dados", "Relatórios profissionais"]
+      features: ["50+ comandos essenciais", "Emergency scenarios", "Team workflows", "Visual explanations"]
     }
   ];
 
@@ -145,13 +159,13 @@ const ResourceVault = () => {
     }
   ];
 
-  const totalValue = resources.reduce((sum, resource) => {
-    return sum + parseInt(resource.value.replace('R$ ', '').replace('.', ''));
-  }, 0);
-
   const totalDownloads = resources.reduce((sum, resource) => {
     const count = parseFloat(resource.downloadCount.replace('k', '')) * 1000;
     return sum + count;
+  }, 0);
+
+  const totalTimeSaved = resources.reduce((sum, resource) => {
+    return sum + parseInt(resource.value.replace('Economiza ', '').replace('h', ''));
   }, 0);
 
   return (
@@ -173,7 +187,7 @@ const ResourceVault = () => {
             The <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-500 bg-clip-text text-transparent">Vault</span>
           </h2>
           <p className="text-xl text-workflow-deep/70 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Ferramentas profissionais que valem <strong>R$ {totalValue.toLocaleString('pt-BR')}</strong> no mercado.
+            Ferramentas profissionais que <strong>economizam {totalTimeSaved}+ horas</strong> de trabalho manual.
             <br />Entregues como <strong>bônus exclusivo</strong> após a conclusão do seu projeto.
           </p>
           
@@ -229,10 +243,10 @@ const ResourceVault = () => {
                     
                     <div className="relative z-10">
                       <div className="text-5xl mb-4">{resource.icon}</div>
-                      <div className="text-white font-bold text-xl line-through opacity-80">
+                      <div className="text-white font-bold text-xl">
                         {resource.value}
                       </div>
-                      <div className="text-white/90 text-sm">Valor de mercado</div>
+                      <div className="text-white/90 text-sm">de trabalho manual</div>
                     </div>
                   </div>
 
@@ -296,16 +310,16 @@ const ResourceVault = () => {
             <div className="relative z-10 p-12 md:p-16 text-center">
               <div className="text-7xl mb-8">🎁</div>
               <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
-                Valor Total: <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-400 bg-clip-text text-transparent">R$ {totalValue.toLocaleString('pt-BR')}</span>
+                Economia Total: <span className="text-gradient bg-gradient-to-r from-workflow-zen to-blue-400 bg-clip-text text-transparent">{totalTimeSaved}+ Horas</span>
               </h3>
               <p className="text-xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Mais de 30 horas de trabalho condensadas em ferramentas profissionais.
+                Ferramentas que eliminam trabalho repetitivo e aceleram seu workflow.
                 <strong> Entregues como bônus após a conclusão da sua landing page.</strong>
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">8</div>
+                  <div className="text-3xl font-bold text-workflow-zen mb-2">9</div>
                   <div className="text-white/70">Ferramentas Premium</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
