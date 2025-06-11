@@ -31,7 +31,7 @@ const HeroSection = () => {
   }, []);
 
   const trustBadges = [
-    { text: "Top 1% Global", icon: "🏆", color: "from-yellow-400 to-orange-500" },
+    { text: "Especialista Certificado", icon: "🎓", color: "from-yellow-400 to-orange-500" },
     { text: "Clutch 5.0★", icon: "⭐", color: "from-blue-400 to-purple-500" },
     { text: "Awwwards Winner", icon: "🎯", color: "from-green-400 to-cyan-500" }
   ];
@@ -193,36 +193,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Enhanced Real-time Activity Notifications */}
-      <div className="fixed bottom-6 left-6 z-20 space-y-3">
-        <div className="glass-workflow p-4 rounded-2xl animate-slide-up max-w-xs" style={{ animationDelay: '1s' }}>
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-3 h-3 bg-success-500 rounded-full animate-glow" />
-              <div className="absolute inset-0 w-3 h-3 bg-success-500 rounded-full animate-ping opacity-75" />
-            </div>
-            <div className="text-sm">
-              <div className="font-semibold text-workflow-deep">Projeto entregue</div>
-              <div className="text-workflow-deep/60">E-commerce • há 2h</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="fixed bottom-6 right-6 z-20 space-y-3">
-        <div className="glass-workflow p-4 rounded-2xl animate-slide-up max-w-xs" style={{ animationDelay: '1.2s' }}>
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-3 h-3 bg-warning-500 rounded-full animate-glow" />
-              <div className="absolute inset-0 w-3 h-3 bg-warning-500 rounded-full animate-ping opacity-75" />
-            </div>
-            <div className="text-sm">
-              <div className="font-semibold text-workflow-deep">Lead qualificado</div>
-              <div className="text-workflow-deep/60">SaaS B2B • há 34min</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle">

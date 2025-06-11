@@ -159,15 +159,10 @@ const CapabilityMatrix = () => {
             {' '}que uso para criar suas landing pages perfeitas
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-workflow-deep/60">
+          <div className="flex items-center justify-center gap-4 text-workflow-deep/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
-              <span>{totalTechnologies} tecnologias que realmente domino</span>
-            </div>
-            <div className="hidden sm:block w-1 h-1 bg-workflow-deep/40 rounded-full" />
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-workflow-energy rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-              <span>Posso implementar tudo na prática</span>
+              <span>Foco em resultados comprovados</span>
             </div>
           </div>
         </div>
