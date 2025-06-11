@@ -199,16 +199,16 @@ const ResourceVault = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16 sm:mb-20 px-4 sm:px-0">
-          <div className="inline-flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
-            <span className="text-workflow-zen font-mono text-xs sm:text-sm tracking-[0.2em] uppercase font-medium">
+        <div className="text-center mb-16 sm:mb-20 md:mb-24 px-4 sm:px-0">
+          <div className="inline-flex items-center gap-2 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <span className="text-workflow-zen font-mono text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase font-medium">
               Bônus Exclusivos
             </span>
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight">
             The{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
@@ -218,13 +218,13 @@ const ResourceVault = () => {
             </span>
           </h2>
           
-          <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-workflow-zen/80 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-workflow-zen/80 mb-6 sm:mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed">
             Ferramentas profissionais que <span className="text-workflow-accent font-semibold">economizam {totalTimeSaved}+ horas</span> de trabalho manual.
             <br className="hidden sm:block" />
             <span className="sm:hidden"> </span>Entregues como <strong className="text-white">bônus exclusivo</strong> após a conclusão do seu projeto.
           </p>
           
-          <div className="flex flex-col gap-3 sm:flex-row sm:gap-6 items-center justify-center text-sm sm:text-base text-workflow-zen/60">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-6 md:gap-8 items-center justify-center text-sm sm:text-base md:text-lg text-workflow-zen/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
               <span>9 ferramentas premium</span>
@@ -269,7 +269,7 @@ const ResourceVault = () => {
             </div>
 
             {/* Resources Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
               {resources.filter(resource => resource.category === category.id).map((resource, index) => (
                 <div
                   key={resource.id}

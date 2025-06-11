@@ -134,16 +134,16 @@ const CapabilityMatrix = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-16 sm:mb-20 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
-            <span className="text-workflow-zen font-mono text-xs sm:text-sm tracking-[0.2em] uppercase font-medium">
+        <div className={`text-center mb-16 sm:mb-20 md:mb-24 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-flex items-center gap-2 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <span className="text-workflow-zen font-mono text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase font-medium">
               Arsenal Tecnológico
             </span>
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-6 sm:mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-6 sm:mb-8 md:mb-10 leading-tight">
             Capability{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-energy bg-clip-text text-transparent">
@@ -153,13 +153,13 @@ const CapabilityMatrix = () => {
             </span>
           </h2>
           
-          <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-workflow-deep/80 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-workflow-deep/80 mb-6 sm:mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed">
             Domino{' '}
             <span className="text-workflow-energy font-semibold">100% das tecnologias</span>
             {' '}que uso para criar suas landing pages perfeitas
           </p>
           
-          <div className="flex items-center justify-center gap-4 text-sm sm:text-base text-workflow-deep/60">
+          <div className="flex items-center justify-center gap-4 md:gap-6 text-sm sm:text-base md:text-lg text-workflow-deep/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
               <span>Foco em resultados comprovados</span>

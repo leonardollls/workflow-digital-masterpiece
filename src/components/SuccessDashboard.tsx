@@ -72,21 +72,21 @@ const SuccessDashboard = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Enhanced Section Header */}
-        <div className={`text-center mb-12 sm:mb-16 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-2 sm:gap-3 bg-white/10 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-workflow-zen/20">
-            <span className="text-xl sm:text-2xl">⚡</span>
-            <span className="text-sm sm:text-base text-workflow-zen font-semibold">Métricas em Tempo Real</span>
+        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 bg-white/10 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-full mb-4 sm:mb-6 md:mb-8 border border-workflow-zen/20">
+            <span className="text-xl sm:text-2xl md:text-3xl">⚡</span>
+            <span className="text-sm sm:text-base md:text-lg text-workflow-zen font-semibold">Métricas em Tempo Real</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white mb-3 sm:mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-3 sm:mb-4 md:mb-6">
             Centro de <span className="text-gradient-zen">Comando</span>
           </h2>
-          <p className="text-base sm:text-xl text-workflow-zen/80 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl md:text-2xl text-workflow-zen/80 max-w-2xl md:max-w-3xl mx-auto">
             Dashboard científico com resultados comprovados e métricas de alta performance
           </p>
         </div>
 
                  {/* Enhanced Metrics Grid */}
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
+         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 px-4 sm:px-0">
            {/* Conversion Meter - Enhanced */}
            <div className={`card-workflow bg-white/95 backdrop-blur-xl border-gray-200/50 hover:border-workflow-zen/60 transform hover:scale-105 transition-all duration-500 group shadow-lg hover:shadow-xl ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
             <div className="text-center">

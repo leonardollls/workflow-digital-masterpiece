@@ -259,7 +259,7 @@ const MethodologyLab = () => {
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 leading-tight px-4 sm:px-0">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight px-4 sm:px-0">
             The{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
@@ -269,7 +269,7 @@ const MethodologyLab = () => {
             </span>
           </h2>
           
-          <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-workflow-zen/80 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-workflow-zen/80 mb-6 sm:mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
             7 fases científicas que transformam sua visão em{' '}
             <span className="text-workflow-accent font-semibold">resultados mensuráveis</span>
           </p>
@@ -297,26 +297,26 @@ const MethodologyLab = () => {
               key={phase.number}
               className="relative mb-20 lg:mb-28 opacity-100 translate-y-0"
             >
-              <div className={`flex flex-col lg:flex-row items-start ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-6 lg:gap-12`}>
+              <div className={`flex flex-col md:flex-row lg:flex-row items-start ${index % 2 === 0 ? 'md:flex-row lg:flex-row' : 'md:flex-row-reverse lg:flex-row-reverse'} gap-6 md:gap-8 lg:gap-12`}>
                 
                 {/* Phase Content */}
-                <div className="w-full lg:w-1/2 space-y-4 sm:space-y-6 px-4 sm:px-0">
+                <div className="w-full md:w-1/2 lg:w-1/2 space-y-4 sm:space-y-6 md:space-y-8 px-4 sm:px-0">
                   {/* Phase Header Card */}
                   <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 to-workflow-accent/10 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-                    <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8 hover:bg-white/8 transition-all duration-500">
-                      <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
-                        <div className={`relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${phase.color} rounded-2xl flex items-center justify-center text-white text-lg sm:text-xl lg:text-2xl font-bold shadow-2xl`}>
+                    <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 md:p-7 lg:p-8 hover:bg-white/8 transition-all duration-500">
+                      <div className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-4 sm:mb-6">
+                        <div className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 bg-gradient-to-r ${phase.color} rounded-2xl flex items-center justify-center text-white text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold shadow-2xl`}>
                           <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl" />
                           {phase.number}
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-display font-bold text-white mb-1 sm:mb-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-display font-bold text-white mb-1 sm:mb-2">
                             {phase.title}
                           </h3>
                           <div className="flex items-center gap-2 sm:gap-3">
-                            <div className={`w-2 h-2 sm:w-3 sm:h-3 ${phase.accentColor} rounded-full animate-pulse`} />
-                            <span className="text-sm sm:text-base text-workflow-zen/80 font-medium">{phase.duration}</span>
+                            <div className={`w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 ${phase.accentColor} rounded-full animate-pulse`} />
+                            <span className="text-sm sm:text-base md:text-lg text-workflow-zen/80 font-medium">{phase.duration}</span>
                           </div>
                         </div>
                       </div>

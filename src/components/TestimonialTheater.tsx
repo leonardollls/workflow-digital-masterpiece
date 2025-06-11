@@ -80,7 +80,7 @@ const TestimonialTheater = () => {
         </div>
 
         {/* Testimonials Grid - Todos visíveis juntos */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
@@ -88,16 +88,16 @@ const TestimonialTheater = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Card Content */}
-              <div className="p-4 sm:p-6 lg:p-8">
+              <div className="p-4 sm:p-6 md:p-7 lg:p-8">
                 {/* Rating Stars */}
                 <div className="flex mb-4 sm:mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-lg sm:text-xl">⭐</span>
+                    <span key={i} className="text-yellow-400 text-lg sm:text-xl md:text-2xl">⭐</span>
                   ))}
                 </div>
                 
                 {/* Quote */}
-                <blockquote className="text-workflow-deep/80 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 italic">
+                <blockquote className="text-workflow-deep/80 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 italic">
                   "{testimonial.quote}"
                 </blockquote>
 
@@ -107,23 +107,23 @@ const TestimonialTheater = () => {
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-workflow-energy/20"
+                      className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover border-2 border-workflow-energy/20"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-workflow-energy rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">✓</span>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 bg-workflow-energy rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs md:text-sm">✓</span>
                     </div>
                   </div>
                   <div>
-                    <div className="font-bold text-workflow-deep text-base sm:text-lg">
+                    <div className="font-bold text-workflow-deep text-base sm:text-lg md:text-xl">
                       {testimonial.name}
                     </div>
-                    <div className="text-workflow-deep/70 text-xs sm:text-sm">
+                    <div className="text-workflow-deep/70 text-xs sm:text-sm md:text-base">
                       {testimonial.role}
                     </div>
-                    <div className="text-workflow-energy font-semibold text-xs sm:text-sm">
+                    <div className="text-workflow-energy font-semibold text-xs sm:text-sm md:text-base">
                       {testimonial.company}
                     </div>
-                    <div className="text-workflow-deep/50 text-xs mt-1">
+                    <div className="text-workflow-deep/50 text-xs md:text-sm mt-1">
                       {testimonial.industry}
                     </div>
                   </div>
@@ -140,21 +140,21 @@ const TestimonialTheater = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-12 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <div className="text-center group">
-            <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
-            <div className="text-2xl sm:text-3xl font-bold text-workflow-energy mb-1 sm:mb-2">98%</div>
-            <div className="text-sm sm:text-base text-workflow-deep/70">Taxa de Satisfação</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">🏆</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">98%</div>
+            <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Taxa de Satisfação</div>
           </div>
           <div className="text-center group">
-            <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">💎</div>
-            <div className="text-2xl sm:text-3xl font-bold text-workflow-energy mb-1 sm:mb-2">150+</div>
-            <div className="text-sm sm:text-base text-workflow-deep/70">Projetos Entregues</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">💎</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">150+</div>
+            <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Projetos Entregues</div>
           </div>
           <div className="text-center group">
-            <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">⚡</div>
-            <div className="text-2xl sm:text-3xl font-bold text-workflow-energy mb-1 sm:mb-2">8 dias</div>
-            <div className="text-sm sm:text-base text-workflow-deep/70">Tempo Médio de Entrega</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">⚡</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">8 dias</div>
+            <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Tempo Médio de Entrega</div>
           </div>
         </div>
       </div>

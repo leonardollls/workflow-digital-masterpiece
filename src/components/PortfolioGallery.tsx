@@ -128,18 +128,18 @@ const PortfolioGallery = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section */}
-        <div className={`text-center mb-12 sm:mb-16 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
-            <span className="text-workflow-energy font-mono text-xs sm:text-sm tracking-wider uppercase">Portfolio</span>
-            <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-l from-workflow-energy to-workflow-zen rounded-full" />
+        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
+            <div className="w-8 sm:w-12 md:w-16 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
+            <span className="text-workflow-energy font-mono text-xs sm:text-sm md:text-base tracking-wider uppercase">Portfolio</span>
+            <div className="w-8 sm:w-12 md:w-16 h-0.5 bg-gradient-to-l from-workflow-energy to-workflow-zen rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-bold text-workflow-deep mb-4 sm:mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8">
             Nossas <span className="text-gradient">Criações</span>
           </h2>
           
-          <p className="text-base sm:text-lg lg:text-xl text-workflow-deep/70 mb-6 sm:mb-8 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-workflow-deep/70 mb-6 sm:mb-8 md:mb-10 max-w-3xl md:max-w-4xl mx-auto">
             Veja alguns de nossas criações mais recentes. Cada projeto é uma obra de arte 
             digital que transforma negócios e gera resultados extraordinários.
           </p>
@@ -147,7 +147,7 @@ const PortfolioGallery = () => {
 
         {/* Projects Grid */}
         <div className={`transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 px-4 sm:px-0">
             {projects.map((project, index) => (
               <div
                 key={project.id}

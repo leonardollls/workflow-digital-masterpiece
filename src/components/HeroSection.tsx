@@ -104,17 +104,17 @@ const HeroSection = () => {
         </div>
 
         {/* Trust Layer */}
-        <div className={`flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-8 sm:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12 md:mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {trustBadges.map((badge, index) => (
             <div 
               key={index}
-              className={`group flex items-center gap-2 sm:gap-3 glass-workflow px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}
+              className={`group flex items-center gap-2 sm:gap-3 md:gap-4 glass-workflow px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <span className="text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
+              <span className="text-lg sm:text-xl md:text-2xl group-hover:scale-110 transition-transform duration-300">
                 {badge.icon}
               </span>
-              <span className="text-xs sm:text-sm font-semibold text-workflow-deep">
+              <span className="text-xs sm:text-sm md:text-base font-semibold text-workflow-deep">
                 {badge.text}
               </span>
               <div className={`absolute inset-0 bg-gradient-to-r ${badge.color} opacity-0 group-hover:opacity-10 rounded-full transition-opacity duration-300`} />
@@ -123,8 +123,8 @@ const HeroSection = () => {
         </div>
 
         {/* Main Headline with Enhanced Typography */}
-        <div className={`mb-6 sm:mb-8 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 leading-tight">
+        <div className={`mb-6 sm:mb-8 md:mb-10 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8 leading-tight">
             Não criamos <span className="relative inline-block">
               <span className="text-gradient-rainbow">landing pages</span>
               <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
@@ -132,24 +132,24 @@ const HeroSection = () => {
             Criamos <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
           </h1>
           
-          <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
-            <span className="text-workflow-energy font-mono text-xs sm:text-sm tracking-wider">DIGITAL MASTERPIECE</span>
-            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
+          <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 mb-4 sm:mb-6">
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
+            <span className="text-workflow-energy font-mono text-xs sm:text-sm md:text-base tracking-wider">DIGITAL MASTERPIECE</span>
+            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className={`grid grid-cols-3 gap-3 sm:gap-6 mb-8 sm:mb-12 max-w-xs sm:max-w-md mx-auto px-4 sm:px-0 transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16 max-w-xs sm:max-w-md md:max-w-lg mx-auto px-4 sm:px-0 transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
-              <div className="text-2xl sm:text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-2xl sm:text-3xl md:text-4xl mb-1 md:mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.icon}
               </div>
-              <div className="text-lg sm:text-2xl font-bold text-workflow-energy mb-1">
+              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-workflow-energy mb-1">
                 {stat.number}
               </div>
-              <div className="text-xs sm:text-sm text-workflow-deep/70 font-medium">
+              <div className="text-xs sm:text-sm md:text-base text-workflow-deep/70 font-medium">
                 {stat.label}
               </div>
             </div>
@@ -157,38 +157,38 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced CTA Ecosystem */}
-        <div className={`flex flex-col gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
+        <div className={`flex flex-col gap-4 sm:gap-6 md:gap-8 justify-center items-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
           <Button 
-            className="btn-primary btn-magnetic group relative overflow-hidden w-full sm:w-auto min-w-[240px]"
+            className="btn-primary btn-magnetic group relative overflow-hidden w-full sm:w-auto md:min-w-[280px] min-w-[240px]"
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              <span>Criações Recentes</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">🎨</span>
+            <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+              <span className="md:text-lg">Criações Recentes</span>
+              <span className="group-hover:translate-x-1 transition-transform duration-300 md:text-xl">🎨</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-energy/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 w-full sm:w-auto">
             <Button 
-              className="btn-secondary btn-magnetic w-full sm:w-auto min-w-[200px]"
+              className="btn-secondary btn-magnetic w-full sm:w-auto md:min-w-[220px] min-w-[200px]"
               onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <span className="flex items-center justify-center gap-2">
-                <span>Metodologia Científica</span>
-                <span className="text-workflow-energy">🔬</span>
+              <span className="flex items-center justify-center gap-2 md:gap-3">
+                <span className="md:text-base">Metodologia Científica</span>
+                <span className="text-workflow-energy md:text-lg">🔬</span>
               </span>
             </Button>
             
             <Button 
-              className="btn-ghost btn-magnetic w-full sm:w-auto"
+              className="btn-ghost btn-magnetic w-full sm:w-auto md:min-w-[180px]"
               onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-8 h-8 bg-workflow-energy/20 rounded-full flex items-center justify-center">
-                  ⚡
+              <span className="flex items-center justify-center gap-2 md:gap-3">
+                <span className="w-8 h-8 md:w-10 md:h-10 bg-workflow-energy/20 rounded-full flex items-center justify-center">
+                  <span className="md:text-lg">⚡</span>
                 </span>
-                <span>Arsenal Tecnológico</span>
+                <span className="md:text-base">Arsenal Tecnológico</span>
               </span>
             </Button>
           </div>
