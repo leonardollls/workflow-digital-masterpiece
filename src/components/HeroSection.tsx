@@ -30,10 +30,10 @@ const HeroSection = () => {
     };
   }, []);
 
-  const benefitBadges = [
-    { text: "Entrega em 7 dias", icon: "⚡", color: "from-emerald-400 to-teal-500" },
-    { text: "Suporte 24/7", icon: "🛡️", color: "from-blue-400 to-purple-500" },
-    { text: "Garantia 100%", icon: "✅", color: "from-green-400 to-cyan-500" }
+  const trustBadges = [
+    { text: "Top 1% Global", icon: "🏆", color: "from-yellow-400 to-orange-500" },
+    { text: "Clutch 5.0★", icon: "⭐", color: "from-blue-400 to-purple-500" },
+    { text: "Awwwards Winner", icon: "🎯", color: "from-green-400 to-cyan-500" }
   ];
 
   const stats = [
@@ -103,9 +103,9 @@ const HeroSection = () => {
           />
         </div>
 
-        {/* Benefit Layer */}
+        {/* Trust Layer */}
         <div className={`flex justify-center items-center gap-4 mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          {benefitBadges.map((badge, index) => (
+          {trustBadges.map((badge, index) => (
             <div 
               key={index}
               className={`group flex items-center gap-3 glass-workflow px-6 py-3 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}

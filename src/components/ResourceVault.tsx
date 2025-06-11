@@ -323,8 +323,8 @@ const ResourceVault = () => {
                   <div className="text-white/70">Ferramentas Premium</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">{(totalDownloads / 1000).toFixed(1)}k+</div>
-                  <div className="text-white/70">Usuários Ativos</div>
+                  <div className="text-3xl font-bold text-workflow-zen mb-2">R$ 47k+</div>
+                  <div className="text-white/70">Valor Entregue</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                   <div className="text-3xl font-bold text-workflow-zen mb-2">4.8★</div>
