@@ -317,20 +317,7 @@ const ResourceVault = () => {
                 <strong> Entregues como bônus após a conclusão da sua landing page.</strong>
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">9</div>
-                  <div className="text-white/70">Ferramentas Premium</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">R$ 47k+</div>
-                  <div className="text-white/70">Valor Entregue</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">4.8★</div>
-                  <div className="text-white/70">Rating Médio</div>
-                </div>
-              </div>
+
 
               <div className="text-center">
                 <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">

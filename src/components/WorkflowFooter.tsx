@@ -18,14 +18,11 @@ const WorkflowFooter = () => {
           
           {/* Simple Links */}
           <div className="flex items-center gap-6 text-sm text-white/60">
-            <a href="#" className="hover:text-workflow-zen transition-colors">
+            <a href="/privacidade" className="hover:text-workflow-zen transition-colors">
               Privacidade
             </a>
-            <a href="#" className="hover:text-workflow-zen transition-colors">
+            <a href="/termos" className="hover:text-workflow-zen transition-colors">
               Termos
-            </a>
-            <a href="#" className="hover:text-workflow-zen transition-colors">
-              Contato
             </a>
           </div>
         </div>
