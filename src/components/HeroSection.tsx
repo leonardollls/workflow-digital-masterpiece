@@ -45,7 +45,7 @@ const HeroSection = () => {
   return (
     <section 
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-mesh"
+      className="relative min-h-screen sm:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-mesh py-8 sm:py-12"
     >
       {/* Animated Background */}
       <AnimatedBackground />
@@ -67,14 +67,14 @@ const HeroSection = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 text-center max-w-7xl mx-auto px-6">
+      <div className="relative z-10 text-center max-w-7xl mx-auto px-4 sm:px-6">
         {/* Logo */}
-        <div className={`flex justify-center mb-10 sm:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex justify-center mb-6 sm:mb-8 lg:mb-10 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <img 
             src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
-            className="h-24 sm:h-28 md:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300"
-                                      onError={(e) => {
+            className="h-16 sm:h-20 md:h-24 lg:h-28 xl:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
               const currentAttempt = logoAttempts + 1;
               setLogoAttempts(currentAttempt);
               console.error(`❌ Tentativa ${currentAttempt} falhou para:`, logoSrc);
@@ -103,18 +103,18 @@ const HeroSection = () => {
           />
         </div>
 
-        {/* Trust Layer */}
-        <div className={`flex justify-center items-center gap-4 mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        {/* Trust Layer - Mobile Optimized */}
+        <div className={`flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 lg:gap-4 mb-8 sm:mb-10 lg:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {trustBadges.map((badge, index) => (
             <div 
               key={index}
-              className={`group flex items-center gap-3 glass-workflow px-6 py-3 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}
+              className={`group flex items-center gap-2 sm:gap-3 glass-workflow px-3 py-2 sm:px-4 sm:py-2.5 lg:px-6 lg:py-3 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer text-xs sm:text-sm`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <span className="text-xl group-hover:scale-110 transition-transform duration-300">
+              <span className="text-base sm:text-lg lg:text-xl group-hover:scale-110 transition-transform duration-300">
                 {badge.icon}
               </span>
-              <span className="text-sm font-semibold text-workflow-deep">
+              <span className="font-semibold text-workflow-deep whitespace-nowrap">
                 {badge.text}
               </span>
               <div className={`absolute inset-0 bg-gradient-to-r ${badge.color} opacity-0 group-hover:opacity-10 rounded-full transition-opacity duration-300`} />
@@ -122,74 +122,80 @@ const HeroSection = () => {
           ))}
         </div>
 
-        {/* Main Headline with Enhanced Typography */}
-        <div className={`mb-8 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
-          <h1 className="text-responsive-4xl font-display font-bold text-workflow-deep mb-6 leading-tight">
-            Não criamos <span className="relative inline-block">
+        {/* Main Headline with Enhanced Typography - Mobile Optimized */}
+        <div className={`mb-6 sm:mb-8 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 leading-tight px-2 sm:px-0">
+            Não criamos{' '}
+            <span className="relative inline-block">
               <span className="text-gradient-rainbow">landing pages</span>
               <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
-            </span>.<br />
-            Criamos <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
+            </span>
+            .<br className="hidden sm:inline" />
+            <span className="sm:hidden"> </span>
+            Criamos{' '}
+            <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
           </h1>
           
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
-            <span className="text-workflow-energy font-mono text-sm tracking-wider">DIGITAL MASTERPIECE</span>
-            <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="w-8 sm:w-12 lg:w-16 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
+            <span className="text-workflow-energy font-mono text-xs sm:text-sm tracking-wider">DIGITAL MASTERPIECE</span>
+            <div className="w-8 sm:w-12 lg:w-16 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className={`grid grid-cols-3 gap-6 mb-12 max-w-md mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        {/* Stats Grid - Mobile Optimized */}
+        <div className={`grid grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-8 sm:mb-10 lg:mb-12 max-w-xs sm:max-w-sm lg:max-w-md mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
-              <div className="text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-xl sm:text-2xl lg:text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">
                 {stat.icon}
               </div>
-              <div className="text-2xl font-bold text-workflow-energy mb-1">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-workflow-energy mb-1">
                 {stat.number}
               </div>
-              <div className="text-sm text-workflow-deep/70 font-medium">
+              <div className="text-xs sm:text-sm text-workflow-deep/70 font-medium">
                 {stat.label}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Enhanced CTA Ecosystem */}
-        <div className={`flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
+        {/* Enhanced CTA Ecosystem - Mobile Optimized */}
+        <div className={`flex flex-col gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16 lg:mb-20 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
           <Button 
-            className="btn-primary btn-magnetic group relative overflow-hidden w-full sm:w-auto min-w-[240px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
+            className="btn-primary btn-magnetic group relative overflow-hidden w-full max-w-xs sm:max-w-sm lg:max-w-none sm:w-auto min-w-0 sm:min-w-[240px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center justify-center gap-2">
               <span>Criações Recentes</span>
               <span className="group-hover:translate-x-1 transition-transform duration-300">🎨</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-energy/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           
-          <Button 
-            className="btn-secondary btn-magnetic w-full sm:w-auto min-w-[200px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
-            onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <span className="flex items-center gap-2">
-              <span>Metodologia Científica</span>
-              <span className="text-workflow-energy">🔬</span>
-            </span>
-          </Button>
-          
-          <Button 
-            className="btn-ghost btn-magnetic w-full sm:w-auto text-sm sm:text-base px-6 py-3"
-            onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <span className="flex items-center gap-2">
-              <span className="w-8 h-8 bg-workflow-energy/20 rounded-full flex items-center justify-center">
-                ⚡
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+            <Button 
+              className="btn-secondary btn-magnetic w-full sm:w-auto min-w-0 sm:min-w-[200px] text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
+              onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <span>Metodologia Científica</span>
+                <span className="text-workflow-energy">🔬</span>
               </span>
-              <span>Arsenal Tecnológico</span>
-            </span>
-          </Button>
+            </Button>
+            
+            <Button 
+              className="btn-ghost btn-magnetic w-full sm:w-auto text-sm sm:text-base px-6 py-3"
+              onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-6 h-6 sm:w-8 sm:h-8 bg-workflow-energy/20 rounded-full flex items-center justify-center">
+                  ⚡
+                </span>
+                <span>Arsenal Tecnológico</span>
+              </span>
+            </Button>
+          </div>
         </div>
       </div>
 
