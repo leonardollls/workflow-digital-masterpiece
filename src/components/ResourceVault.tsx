@@ -104,6 +104,20 @@ const ResourceVault = () => {
       color: "from-indigo-500 to-blue-500",
       category: "guide",
       features: ["Media queries prontas", "Grid systems", "Mobile-first strategy", "Code examples"]
+    },
+    {
+      id: 9,
+      title: "UX Research Toolkit",
+      description: "Kit completo para pesquisas de usuário. Templates, scripts e metodologias para descobrir insights valiosos dos seus usuários.",
+      detailedDescription: "Mais de 15 templates prontos para entrevistas, surveys e testes de usabilidade. Inclui guias de análise e relatórios profissionais.",
+      type: "Guia PDF",
+      value: "R$ 897",
+      icon: "🔬",
+      downloadCount: "2.9k",
+      rating: 4.7,
+      color: "from-green-500 to-teal-500",
+      category: "guide",
+      features: ["15+ templates prontos", "Scripts de entrevista", "Análise de dados", "Relatórios profissionais"]
     }
   ];
 
@@ -179,25 +193,12 @@ const ResourceVault = () => {
           </div>
         </div>
 
-        {/* Debug Info */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mb-4 p-4 bg-red-100 rounded text-black text-sm">
-            <strong>Debug:</strong> Total resources: {resources.length} | 
-            Calculator: {resources.filter(r => r.category === 'calculator').length} | 
-            Checklist: {resources.filter(r => r.category === 'checklist').length} | 
-            Guide: {resources.filter(r => r.category === 'guide').length}
-          </div>
-        )}
+
 
         {/* Categories */}
         {categories.map((category, categoryIndex) => (
           <div key={category.id} className="mb-20">
-            {/* Debug per category */}
-            {process.env.NODE_ENV === 'development' && (
-              <div className="mb-4 p-2 bg-yellow-100 rounded text-black text-xs">
-                Category: {category.name} ({category.id}) - Items: {resources.filter(resource => resource.category === category.id).length}
-              </div>
-            )}
+
             
             {/* Category Header */}
             <div className="text-center mb-12">
@@ -304,7 +305,7 @@ const ResourceVault = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-                  <div className="text-3xl font-bold text-workflow-zen mb-2">7</div>
+                  <div className="text-3xl font-bold text-workflow-zen mb-2">8</div>
                   <div className="text-white/70">Ferramentas Premium</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
