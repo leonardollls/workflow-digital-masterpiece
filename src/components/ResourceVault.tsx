@@ -199,16 +199,16 @@ const ResourceVault = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-4 mb-8">
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
-            <span className="text-workflow-zen font-mono text-sm tracking-[0.2em] uppercase font-medium">
+        <div className="text-center mb-16 sm:mb-20 px-4 sm:px-0">
+          <div className="inline-flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <span className="text-workflow-zen font-mono text-xs sm:text-sm tracking-[0.2em] uppercase font-medium">
               Bônus Exclusivos
             </span>
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
+            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 leading-tight">
             The{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
@@ -218,12 +218,13 @@ const ResourceVault = () => {
             </span>
           </h2>
           
-          <p className="text-lg lg:text-xl xl:text-2xl text-workflow-zen/80 mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-workflow-zen/80 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
             Ferramentas profissionais que <span className="text-workflow-accent font-semibold">economizam {totalTimeSaved}+ horas</span> de trabalho manual.
-            <br />Entregues como <strong className="text-white">bônus exclusivo</strong> após a conclusão do seu projeto.
+            <br className="hidden sm:block" />
+            <span className="sm:hidden"> </span>Entregues como <strong className="text-white">bônus exclusivo</strong> após a conclusão do seu projeto.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-workflow-zen/60">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-6 items-center justify-center text-sm sm:text-base text-workflow-zen/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
               <span>9 ferramentas premium</span>
@@ -241,20 +242,24 @@ const ResourceVault = () => {
           </div>
         </div>
 
+
+
         {/* Categories */}
         {categories.map((category, categoryIndex) => (
-          <div key={category.id} className="mb-20">
+          <div key={category.id} className="mb-16 sm:mb-20 px-4 sm:px-0">
+
+            
             {/* Category Header */}
             <div className="text-center mb-8 sm:mb-12">
               <div className="relative group">
-                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} rounded-xl sm:rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-                <div className={`relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 hover:bg-white/8 transition-all duration-500`}>
-                  <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 lg:gap-6 mb-3 sm:mb-4">
-                    <div className={`relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${category.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl lg:text-3xl shadow-2xl`}>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl sm:rounded-2xl" />
+                <div className={`absolute inset-0 bg-gradient-to-r ${category.color} rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
+                <div className={`relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8 hover:bg-white/8 transition-all duration-500`}>
+                  <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 mb-3 sm:mb-4">
+                    <div className={`relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl lg:text-3xl shadow-2xl`}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-2xl" />
                       <span className="relative z-10 filter drop-shadow-lg">{category.icon}</span>
                     </div>
-                    <div className="text-center sm:text-left">
+                    <div className="text-left">
                       <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-display font-bold text-white mb-1 sm:mb-2">{category.name}</h3>
                       <p className="text-workflow-zen/80 text-xs sm:text-sm lg:text-base">{category.description}</p>
                     </div>
@@ -264,20 +269,20 @@ const ResourceVault = () => {
             </div>
 
             {/* Resources Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {resources.filter(resource => resource.category === category.id).map((resource, index) => (
                 <div
                   key={resource.id}
-                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2 hover:bg-white/8"
+                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-workflow-zen/20 transition-all duration-700 hover:-translate-y-2 hover:bg-white/8"
                   style={{ animationDelay: `${(categoryIndex * 3 + index) * 0.1}s` }}
                 >
                   {/* Resource Header */}
-                  <div className={`bg-gradient-to-br ${resource.color} p-6 sm:p-8 relative overflow-hidden`}>
+                  <div className={`bg-gradient-to-br ${resource.color} p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
                     <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/20 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1">
                       <span className="text-xs font-bold text-white">{resource.type}</span>
                     </div>
-                    <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 bg-white/10 rounded-full"></div>
-                    <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 w-12 h-12 sm:w-16 sm:h-16 bg-white/10 rounded-full"></div>
+                    <div className="absolute -top-6 -right-6 w-16 sm:w-24 h-16 sm:h-24 bg-white/10 rounded-full"></div>
+                    <div className="absolute -bottom-4 -left-4 w-12 sm:w-16 h-12 sm:h-16 bg-white/10 rounded-full"></div>
                     
                     <div className="relative z-10">
                       <div className="text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">{resource.icon}</div>
@@ -289,24 +294,24 @@ const ResourceVault = () => {
                   </div>
 
                   {/* Resource Content */}
-                  <div className="p-6 sm:p-8">
+                  <div className="p-4 sm:p-6 lg:p-8">
                     <h4 className="text-lg sm:text-xl font-display font-bold text-white mb-2 sm:mb-3 group-hover:text-workflow-zen transition-colors">
                       {resource.title}
                     </h4>
-                    <p className="text-workflow-zen/80 mb-4 text-xs sm:text-sm leading-relaxed">
+                    <p className="text-workflow-zen/80 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
                       {resource.description}
                     </p>
                     
-                    <p className="text-workflow-zen/60 mb-6 text-xs leading-relaxed">
+                    <p className="text-workflow-zen/60 mb-4 sm:mb-6 text-xs leading-relaxed">
                       {resource.detailedDescription}
                     </p>
 
                     {/* Features */}
-                    <div className="mb-6">
-                      <div className="grid grid-cols-2 gap-2">
+                    <div className="mb-4 sm:mb-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
                         {resource.features.map((feature, featureIndex) => (
                           <div key={featureIndex} className="flex items-center gap-2 text-xs">
-                            <span className="w-1.5 h-1.5 bg-workflow-zen rounded-full"></span>
+                            <span className="w-1.5 h-1.5 bg-workflow-zen rounded-full flex-shrink-0"></span>
                             <span className="text-workflow-zen/70">{feature}</span>
                           </div>
                         ))}
@@ -314,7 +319,7 @@ const ResourceVault = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="flex items-center justify-between mb-6 text-xs sm:text-sm">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6 text-xs sm:text-sm">
                       <div className="flex items-center gap-1">
                         <span className="text-yellow-400">⭐</span>
                         <span className="font-semibold text-white">{resource.rating}</span>
@@ -325,8 +330,8 @@ const ResourceVault = () => {
                     </div>
 
                     {/* Status Badge */}
-                    <div className="w-full bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 border border-workflow-zen/30 rounded-xl py-3 px-6 text-center hover:bg-gradient-to-r hover:from-workflow-zen/30 hover:to-workflow-accent/30 transition-all duration-300">
-                      <span className="flex items-center justify-center gap-2 text-workflow-zen font-semibold">
+                    <div className="w-full bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 border border-workflow-zen/30 rounded-xl py-2 sm:py-3 px-4 sm:px-6 text-center hover:bg-gradient-to-r hover:from-workflow-zen/30 hover:to-workflow-accent/30 transition-all duration-300">
+                      <span className="flex items-center justify-center gap-2 text-workflow-zen font-semibold text-sm sm:text-base">
                         <span className="text-lg">🎁</span>
                         Incluído no Projeto
                       </span>
@@ -339,33 +344,33 @@ const ResourceVault = () => {
         ))}
 
         {/* Enhanced Value Proposition */}
-        <div className="max-w-5xl mx-auto mt-20">
+        <div className="max-w-5xl mx-auto mt-16 sm:mt-20 px-4 sm:px-0">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-zen/10 rounded-3xl blur-xl" />
-            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl lg:rounded-3xl p-8 lg:p-12">
+            <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-12">
               <div className="text-center">
-                <div className="relative group cursor-pointer mb-8">
+                <div className="relative group cursor-pointer mb-6 sm:mb-8">
                   <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-                  <div className="relative text-6xl lg:text-7xl xl:text-8xl filter drop-shadow-lg">🎁</div>
+                  <div className="relative text-4xl sm:text-6xl lg:text-7xl xl:text-8xl filter drop-shadow-lg">🎁</div>
                 </div>
                 
-                <h3 className="text-3xl lg:text-4xl xl:text-5xl font-display font-bold mb-6 text-white">
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-display font-bold mb-4 sm:mb-6 text-white">
                   Economia Total: <span className="bg-gradient-to-r from-workflow-zen to-workflow-accent bg-clip-text text-transparent">{totalTimeSaved}+ Horas</span>
                 </h3>
                 
-                <p className="text-lg lg:text-xl text-workflow-zen/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-sm sm:text-lg lg:text-xl text-workflow-zen/80 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
                   Ferramentas que eliminam trabalho repetitivo e aceleram seu workflow.
-                  <br /><strong className="text-white">Entregues como bônus após a conclusão da sua landing page.</strong>
+                  <br className="hidden sm:block" /><span className="sm:hidden"> </span><strong className="text-white">Entregues como bônus após a conclusão da sua landing page.</strong>
                 </p>
               
 
 
                 <div className="text-center">
-                  <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-6">
-                    <div className="text-3xl">📅</div>
-                    <div className="text-left">
-                      <div className="text-white font-bold text-lg">Entrega Pós-Projeto</div>
-                      <div className="text-white/70 text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
+                  <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-6 sm:px-8 py-4 sm:py-6">
+                    <div className="text-2xl sm:text-3xl">📅</div>
+                    <div className="text-center sm:text-left">
+                      <div className="text-white font-bold text-base sm:text-lg">Entrega Pós-Projeto</div>
+                      <div className="text-white/70 text-xs sm:text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
                     </div>
                   </div>
                 </div>

@@ -407,10 +407,6 @@
   }
 
   /* Responsive Text Utilities Enhanced */
-  .text-responsive-xs {
-    @apply text-xs sm:text-sm;
-  }
-
   .text-responsive-sm {
     @apply text-sm md:text-base;
   }
@@ -439,123 +435,9 @@
     @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
   }
 
-  /* Mobile-first Grid Utilities */
-  .grid-responsive-1 {
-    @apply grid grid-cols-1;
-  }
-
-  .grid-responsive-2 {
-    @apply grid grid-cols-1 sm:grid-cols-2;
-  }
-
-  .grid-responsive-3 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
-  }
-
-  .grid-responsive-4 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
-  }
-
-  .grid-responsive-5 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5;
-  }
-
-  /* Mobile-first Spacing */
-  .space-mobile {
-    @apply space-y-4 md:space-y-6 lg:space-y-8;
-  }
-
-  .gap-mobile {
-    @apply gap-4 sm:gap-6 lg:gap-8;
-  }
-
-  .p-mobile {
-    @apply p-4 sm:p-6 lg:p-8;
-  }
-
-  .px-mobile {
-    @apply px-4 sm:px-6 lg:px-8;
-  }
-
-  .py-mobile {
-    @apply py-6 sm:py-8 lg:py-12;
-  }
-
-  /* Mobile-friendly Button Sizes */
-  .btn-mobile {
-    @apply px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base;
-  }
-
-  .btn-mobile-sm {
-    @apply px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm;
-  }
-
-  .btn-mobile-lg {
-    @apply px-8 py-4 sm:px-10 sm:py-5 text-base sm:text-lg;
-  }
-
-  /* Mobile-first Card Sizing */
-  .card-mobile {
-    @apply rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8;
-  }
-
-  .card-mobile-sm {
-    @apply rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6;
-  }
-
-  /* Mobile touch targets */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px];
-  }
-
-  /* Mobile-friendly animations */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-on-scroll,
-    .animate-float,
-    .animate-pulse,
-    .animate-bounce {
-      animation: none;
-    }
-  }
-
-  /* Mobile-specific utilities */
-  .scroll-smooth-mobile {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Enhanced responsive containers */
-  .container-mobile {
-    @apply max-w-full px-4 sm:px-6 lg:px-8 mx-auto;
-  }
-
-  .container-mobile-sm {
-    @apply max-w-screen-sm px-4 sm:px-6 mx-auto;
-  }
-
-  .container-mobile-md {
-    @apply max-w-screen-md px-4 sm:px-6 lg:px-8 mx-auto;
-  }
-
-  .container-mobile-lg {
-    @apply max-w-screen-lg px-4 sm:px-6 lg:px-8 mx-auto;
-  }
-
-  .container-mobile-xl {
-    @apply max-w-screen-xl px-4 sm:px-6 lg:px-8 mx-auto;
-  }
-
   /* Layout Utilities */
   .section-padding {
-    @apply py-12 sm:py-16 md:py-24 lg:py-32;
-  }
-
-  .section-padding-sm {
-    @apply py-8 sm:py-12 md:py-16 lg:py-20;
-  }
-
-  .section-padding-lg {
-    @apply py-16 sm:py-20 md:py-28 lg:py-36;
+    @apply py-16 md:py-24 lg:py-32;
   }
 
   .container-fluid {
@@ -596,27 +478,6 @@
     @apply absolute inset-0 -z-10 rounded-inherit;
     background: linear-gradient(to right, #7c3aed, #a78bfa);
     margin: -2px;
-  }
-
-  /* Mobile-specific improvements */
-  .mobile-nav {
-    @apply block sm:hidden;
-  }
-
-  .desktop-nav {
-    @apply hidden sm:block;
-  }
-
-  .mobile-stack {
-    @apply flex flex-col sm:flex-row;
-  }
-
-  .mobile-center {
-    @apply text-center sm:text-left;
-  }
-
-  .mobile-full-width {
-    @apply w-full sm:w-auto;
   }
 
   /* Animações customizadas para o ícone de olho */
