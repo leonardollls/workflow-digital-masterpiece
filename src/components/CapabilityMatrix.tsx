@@ -154,9 +154,9 @@ const CapabilityMatrix = () => {
           </h2>
           
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-workflow-deep/80 mb-6 sm:mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed">
-            Domino{' '}
-            <span className="text-workflow-energy font-semibold">100% das tecnologias</span>
-            {' '}que uso para criar suas landing pages perfeitas
+            Dominamos{' '}
+            <span className="text-workflow-energy font-semibold">até 100% das principais tecnologias do mercado</span>
+            {' '}para criar suas landing pages perfeitas
           </p>
           
           <div className="flex items-center justify-center gap-4 md:gap-6 text-sm sm:text-base md:text-lg text-workflow-deep/60">

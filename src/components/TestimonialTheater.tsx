@@ -24,7 +24,7 @@ const TestimonialTheater = () => {
       role: "CEO & Founder",
       company: "TechFlow Solutions",
       image: "/Images/Feedbacks/perfil-cliente-feedback-1.png",
-      quote: "A Workflow transformou completamente nossa presença digital. Em apenas 8 dias, tivemos uma landing page que converteu 340% mais leads que a anterior. O investimento se pagou na primeira semana.",
+      quote: "A Workflow transformou completamente nossa presença digital. Em até 15 dias, tivemos uma landing page que converteu 340% mais leads que a anterior. O investimento se pagou na primeira semana.",
       rating: 5,
       industry: "SaaS B2B"
     },
@@ -153,7 +153,7 @@ const TestimonialTheater = () => {
           </div>
           <div className="text-center group">
             <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">⚡</div>
-            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">8 dias</div>
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">até 15 dias</div>
             <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Tempo Médio de Entrega</div>
           </div>
         </div>

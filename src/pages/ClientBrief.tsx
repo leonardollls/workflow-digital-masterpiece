@@ -833,7 +833,7 @@ const ClientBrief = () => {
                           <SelectItem value="5">5 dias</SelectItem>
                           <SelectItem value="6">6 dias</SelectItem>
                           <SelectItem value="7">7 dias (1 semana)</SelectItem>
-                          <SelectItem value="8">8 dias</SelectItem>
+                          <SelectItem value="15">até 15 dias</SelectItem>
                           <SelectItem value="9">9 dias</SelectItem>
                           <SelectItem value="10">10 dias</SelectItem>
                           <SelectItem value="11">11 dias</SelectItem>

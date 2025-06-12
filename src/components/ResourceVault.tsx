@@ -318,16 +318,7 @@ const ResourceVault = () => {
                       </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="flex items-center justify-between mb-4 sm:mb-6 text-xs sm:text-sm">
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-400">⭐</span>
-                        <span className="font-semibold text-white">{resource.rating}</span>
-                      </div>
-                      <div className="text-workflow-zen/60">
-                        {resource.downloadCount} usuários
-                      </div>
-                    </div>
+
 
                     {/* Status Badge */}
                     <div className="w-full bg-gradient-to-r from-workflow-zen/20 to-workflow-accent/20 border border-workflow-zen/30 rounded-xl py-2 sm:py-3 px-4 sm:px-6 text-center hover:bg-gradient-to-r hover:from-workflow-zen/30 hover:to-workflow-accent/30 transition-all duration-300">

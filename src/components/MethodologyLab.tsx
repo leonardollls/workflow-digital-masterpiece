@@ -282,7 +282,7 @@ const MethodologyLab = () => {
             <div className="hidden sm:block w-1 h-1 bg-workflow-zen/40 rounded-full" />
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-workflow-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-              <span>Entrega garantida em 8 dias</span>
+                              <span>Entrega garantida em até 15 dias</span>
             </div>
           </div>
         </div>
