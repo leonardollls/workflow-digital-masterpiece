@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send } from 'lucide-react';
+import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send, Upload } from 'lucide-react';
 
 // Schema de validação
 const clientBriefSchema = z.object({
@@ -22,8 +22,6 @@ const clientBriefSchema = z.object({
 
   // Informações de Contato
   responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
-  email: z.string().email('Email inválido'),
-  phone: z.string().min(10, 'Telefone é obrigatório'),
   currentWebsite: z.string().optional(),
 
   // Produto/Serviço
@@ -38,7 +36,9 @@ const clientBriefSchema = z.object({
   leadDestination: z.string().min(1, 'Destino dos leads é obrigatório'),
   brandColors: z.string().optional(),
   hasLogo: z.string().min(1, 'Informar sobre logo é obrigatório'),
+  logoFiles: z.any().optional(),
   visualReferences: z.string().optional(),
+  visualFiles: z.any().optional(),
 
   // Técnico
   desiredDomain: z.string().optional(),
@@ -357,37 +357,6 @@ const ClientBrief = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Email *
-                      </label>
-                      <Input 
-                        {...register('email')}
-                        type="email"
-                        placeholder="seu@email.com"
-                        className={errors.email ? 'border-red-500' : ''}
-                      />
-                      {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        WhatsApp/Telefone *
-                      </label>
-                      <Input 
-                        {...register('phone')}
-                        placeholder="(11) 99999-9999"
-                        className={errors.phone ? 'border-red-500' : ''}
-                      />
-                      {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
                         Site Atual (se houver)
                       </label>
                       <Input 
@@ -553,6 +522,31 @@ const ClientBrief = () => {
                     {errors.hasLogo && (
                       <p className="text-red-500 text-sm mt-1">{errors.hasLogo.message}</p>
                     )}
+                    
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Upload do Logo (se tiver)
+                      </label>
+                      <div className="border-2 border-dashed border-workflow-deep/20 rounded-lg p-6 text-center hover:border-workflow-energy/50 transition-colors">
+                        <Upload className="w-8 h-8 text-workflow-deep/40 mx-auto mb-2" />
+                        <input
+                          type="file"
+                          accept="image/*,.pdf,.ai,.eps,.svg"
+                          multiple
+                          className="hidden"
+                          id="logo-upload"
+                          onChange={(e) => setValue('logoFiles', e.target.files)}
+                        />
+                        <label htmlFor="logo-upload" className="cursor-pointer">
+                          <span className="text-sm text-workflow-deep/70">
+                            Clique para fazer upload ou arraste arquivos aqui
+                          </span>
+                          <p className="text-xs text-workflow-deep/50 mt-1">
+                            PNG, JPG, PDF, AI, EPS, SVG (máx. 10MB cada)
+                          </p>
+                        </label>
+                      </div>
+                    </div>
                   </div>
 
                   <div>
@@ -564,6 +558,31 @@ const ClientBrief = () => {
                       placeholder="Sites, landing pages ou empresas que você admira o design. Cole links ou descreva o estilo..."
                       rows={3}
                     />
+                    
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Upload de Referências Visuais
+                      </label>
+                      <div className="border-2 border-dashed border-workflow-deep/20 rounded-lg p-6 text-center hover:border-workflow-energy/50 transition-colors">
+                        <Upload className="w-8 h-8 text-workflow-deep/40 mx-auto mb-2" />
+                        <input
+                          type="file"
+                          accept="image/*,.pdf"
+                          multiple
+                          className="hidden"
+                          id="visual-upload"
+                          onChange={(e) => setValue('visualFiles', e.target.files)}
+                        />
+                        <label htmlFor="visual-upload" className="cursor-pointer">
+                          <span className="text-sm text-workflow-deep/70">
+                            Clique para fazer upload ou arraste imagens aqui
+                          </span>
+                          <p className="text-xs text-workflow-deep/50 mt-1">
+                            PNG, JPG, PDF - Screenshots de sites/designs que você gosta
+                          </p>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -692,35 +711,32 @@ const ClientBrief = () => {
                     />
                   </div>
 
-                  <div className="bg-workflow-energy/10 rounded-2xl p-6">
+                  <div className="bg-gradient-to-r from-workflow-energy/10 to-workflow-zen/10 rounded-2xl p-6 border border-workflow-energy/20">
                     <h3 className="font-semibold text-workflow-deep mb-3 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5" />
-                      O que está incluído no seu projeto:
+                      <Calendar className="w-5 h-5 text-workflow-energy" />
+                      Próximos Passos após o Envio:
                     </h3>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">Design responsivo mobile/desktop</span>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                        <div>
+                          <p className="font-medium text-workflow-deep">Análise Detalhada (24h)</p>
+                          <p className="text-sm text-workflow-deep/70">Nossa equipe analisará seu briefing e criará a estratégia personalizada</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">Otimização para conversão</span>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                        <div>
+                          <p className="font-medium text-workflow-deep">Proposta & Cronograma</p>
+                          <p className="text-sm text-workflow-deep/70">Enviaremos proposta detalhada com timeline e marcos do projeto</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">SEO básico implementado</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">Integração com ferramentas</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">Hospedagem por 1 ano grátis</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">Suporte pós-entrega</span>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                        <div>
+                          <p className="font-medium text-workflow-deep">Início do Desenvolvimento</p>
+                          <p className="text-sm text-workflow-deep/70">Após aprovação, iniciamos a criação da sua landing page de alta conversão</p>
+                        </div>
                       </div>
                     </div>
                   </div>
