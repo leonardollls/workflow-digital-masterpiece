@@ -206,8 +206,8 @@ const MethodologyLab = () => {
           explanation: "Documentação detalhada de todas as otimizações implementadas, métricas de performance, configurações técnicas e guia de melhores práticas para manter a qualidade ao longo do tempo."
         },
         {
-          name: "Training session",
-          explanation: "Sessão de treinamento personalizada para sua equipe, explicando como gerenciar, atualizar e monitorar a landing page, incluindo uso do painel administrativo e ferramentas de analytics."
+          name: "Access credentials",
+          explanation: "Entrega de todas as credenciais de acesso, senhas e configurações necessárias para que você tenha controle total sobre domínio, hospedagem, analytics e demais ferramentas utilizadas."
         },
         {
           name: "Growth recommendations",
