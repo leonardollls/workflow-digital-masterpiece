@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send, Upload } from 'lucide-react';
+import { FileUpload } from '@/components/ui/FileUpload';
 
 // Schema de validação
 const clientBriefSchema = z.object({
@@ -19,6 +20,12 @@ const clientBriefSchema = z.object({
   targetAudience: z.string().min(20, 'Público-alvo deve ser descrito'),
   competitiveDifferential: z.string().min(20, 'Diferencial competitivo é obrigatório'),
   landingPageGoal: z.string().min(1, 'Objetivo é obrigatório'),
+  
+  // Novos campos para agregar valor
+  mainCompetitors: z.string().optional(),
+  customerPainPoints: z.string().optional(),
+  successStories: z.string().optional(),
+  socialProof: z.string().optional(),
 
   // Informações de Contato
   responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
@@ -30,6 +37,11 @@ const clientBriefSchema = z.object({
   mainBenefits: z.string().min(30, 'Benefícios principais são obrigatórios'),
   priceRange: z.string().min(1, 'Faixa de preço é obrigatória'),
   guarantees: z.string().optional(),
+  
+  // Novos campos para produto/serviço
+  targetResults: z.string().optional(),
+  urgencyFactors: z.string().optional(),
+  objections: z.string().optional(),
 
   // Marketing
   callToAction: z.string().min(1, 'Call-to-action é obrigatório'),
@@ -41,15 +53,19 @@ const clientBriefSchema = z.object({
   visualFiles: z.any().optional(),
   contentMaterials: z.string().optional(),
   materialFiles: z.any().optional(),
+  
+  // Novos campos para marketing
+  brandPersonality: z.string().optional(),
+  communicationTone: z.string().optional(),
+  keyMessages: z.string().optional(),
 
   // Técnico
   desiredDomain: z.string().optional(),
   integrations: z.string().optional(),
   analytics: z.string().optional(),
 
-  // Timeline
+  // Timeline - alterado para dias específicos
   deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
-  budget: z.string().min(1, 'Orçamento é obrigatório'),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
   additionalNotes: z.string().optional(),
 });
@@ -94,8 +110,9 @@ const ClientBrief = () => {
     } catch (error) {
       console.error('Erro ao enviar briefing:', error);
       
-      // Mostrar erro para o usuário
-      alert('Erro ao enviar briefing. Por favor, tente novamente.');
+      // Mostrar erro específico para o usuário
+      const errorMessage = error instanceof Error ? error.message : 'Erro inesperado. Por favor, tente novamente.';
+      alert(errorMessage);
       
     } finally {
       setIsSubmitting(false);
@@ -343,6 +360,62 @@ const ClientBrief = () => {
                       <p className="text-red-500 text-sm mt-1">{errors.landingPageGoal.message}</p>
                     )}
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Principais Concorrentes
+                    </label>
+                    <Textarea 
+                      {...register('mainCompetitors')}
+                      placeholder="Liste seus principais concorrentes e o que eles fazem de diferente..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Isso nos ajuda a criar uma proposta única e diferenciada
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Principais Dores do Cliente
+                    </label>
+                    <Textarea 
+                      {...register('customerPainPoints')}
+                      placeholder="Quais são os maiores problemas que seu público enfrenta? O que os mantém acordados à noite?"
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Entender as dores nos ajuda a criar uma mensagem mais persuasiva
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Histórias de Sucesso
+                    </label>
+                    <Textarea 
+                      {...register('successStories')}
+                      placeholder="Conte casos de sucesso de clientes, resultados obtidos, transformações..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Cases reais aumentam muito a credibilidade da landing page
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Prova Social Disponível
+                    </label>
+                    <Textarea 
+                      {...register('socialProof')}
+                      placeholder="Depoimentos, avaliações, certificações, prêmios, números impressionantes..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Prova social é fundamental para aumentar a conversão
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -459,6 +532,48 @@ const ClientBrief = () => {
                       />
                     </div>
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Resultados Esperados pelo Cliente
+                    </label>
+                    <Textarea 
+                      {...register('targetResults')}
+                      placeholder="Que transformação específica o cliente terá? Números, prazos, resultados concretos..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Resultados específicos geram mais interesse e urgência
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Fatores de Urgência
+                    </label>
+                    <Textarea 
+                      {...register('urgencyFactors')}
+                      placeholder="Por que o cliente precisa agir agora? Promoções, vagas limitadas, problemas que pioram com o tempo..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Urgência é um dos maiores motivadores de conversão
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Principais Objeções dos Clientes
+                    </label>
+                    <Textarea 
+                      {...register('objections')}
+                      placeholder="Que dúvidas ou resistências os clientes costumam ter? 'É muito caro', 'Não tenho tempo', 'Já tentei antes'..."
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Conhecer as objeções nos permite respondê-las na landing page
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -538,30 +653,15 @@ const ClientBrief = () => {
                       <p className="text-red-500 text-sm mt-1">{errors.hasLogo.message}</p>
                     )}
                     
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Upload do Logo (se tiver)
-                      </label>
-                      <div className="border-2 border-dashed border-workflow-deep/20 rounded-lg p-6 text-center hover:border-workflow-energy/50 transition-colors">
-                        <Upload className="w-8 h-8 text-workflow-deep/40 mx-auto mb-2" />
-                        <input
-                          type="file"
-                          accept="image/*,.pdf,.ai,.eps,.svg"
-                          multiple
-                          className="hidden"
-                          id="logo-upload"
-                          onChange={(e) => setValue('logoFiles', e.target.files)}
-                        />
-                        <label htmlFor="logo-upload" className="cursor-pointer">
-                          <span className="text-sm text-workflow-deep/70">
-                            Clique para fazer upload ou arraste arquivos aqui
-                          </span>
-                          <p className="text-xs text-workflow-deep/50 mt-1">
-                            PNG, JPG, PDF, AI, EPS, SVG (máx. 10MB cada)
-                          </p>
-                        </label>
-                      </div>
-                    </div>
+                    <FileUpload
+                      id="logo-upload"
+                      accept="image/*,.pdf,.ai,.eps,.svg"
+                      multiple
+                      onChange={(files) => setValue('logoFiles', files)}
+                      label="Upload do Logo (se tiver)"
+                      description="PNG, JPG, PDF, AI, EPS, SVG (máx. 10MB cada)"
+                      className="mt-4"
+                    />
                   </div>
 
                   <div>
@@ -574,30 +674,15 @@ const ClientBrief = () => {
                       rows={3}
                     />
                     
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Upload de Referências Visuais
-                      </label>
-                      <div className="border-2 border-dashed border-workflow-deep/20 rounded-lg p-6 text-center hover:border-workflow-energy/50 transition-colors">
-                        <Upload className="w-8 h-8 text-workflow-deep/40 mx-auto mb-2" />
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          multiple
-                          className="hidden"
-                          id="visual-upload"
-                          onChange={(e) => setValue('visualFiles', e.target.files)}
-                        />
-                        <label htmlFor="visual-upload" className="cursor-pointer">
-                          <span className="text-sm text-workflow-deep/70">
-                            Clique para fazer upload ou arraste imagens aqui
-                          </span>
-                          <p className="text-xs text-workflow-deep/50 mt-1">
-                            PNG, JPG, PDF - Screenshots de sites/designs que você gosta
-                          </p>
-                        </label>
-                      </div>
-                    </div>
+                    <FileUpload
+                      id="visual-upload"
+                      accept="image/*,.pdf"
+                      multiple
+                      onChange={(files) => setValue('visualFiles', files)}
+                      label="Upload de Referências Visuais"
+                      description="PNG, JPG, PDF - Screenshots de sites/designs que você gosta"
+                      className="mt-4"
+                    />
                   </div>
 
                   <div>
@@ -610,38 +695,68 @@ const ClientBrief = () => {
                       rows={3}
                     />
                     
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Upload dos Seus Materiais
-                      </label>
-                      <div className="border-2 border-dashed border-workflow-energy/30 rounded-lg p-8 text-center hover:border-workflow-energy/60 transition-colors bg-gradient-to-br from-workflow-energy/5 to-workflow-zen/5">
-                        <Upload className="w-10 h-10 text-workflow-energy mx-auto mb-3" />
-                        <input
-                          type="file"
-                          accept="image/*,video/*,.pdf,.doc,.docx"
-                          multiple
-                          className="hidden"
-                          id="materials-upload"
-                          onChange={(e) => setValue('materialFiles', e.target.files)}
-                        />
-                        <label htmlFor="materials-upload" className="cursor-pointer">
-                          <span className="text-base font-medium text-workflow-deep">
-                            Envie seus materiais próprios
-                          </span>
-                          <p className="text-sm text-workflow-deep/70 mt-2">
-                            Clique para fazer upload ou arraste seus arquivos aqui
-                          </p>
-                          <div className="mt-3 text-xs text-workflow-deep/60">
-                            <p><strong>Aceitos:</strong> Imagens (PNG, JPG, WEBP), Vídeos (MP4, MOV), Documentos (PDF, DOC)</p>
-                            <p><strong>Exemplos:</strong> Fotos de produtos, imagens da equipe, vídeos promocionais, certificados, depoimentos</p>
-                            <p className="text-workflow-energy font-medium mt-1">Máximo 50MB por arquivo</p>
-                          </div>
-                        </label>
-                      </div>
-                      <p className="text-sm text-workflow-deep/60 mt-2">
-                        💡 <strong>Dica:</strong> Quanto mais materiais de qualidade você fornecer, mais personalizada e impactante será sua landing page!
-                      </p>
-                    </div>
+                    <FileUpload
+                      id="materials-upload"
+                      accept="image/*,video/*,.pdf,.doc,.docx"
+                      multiple
+                      onChange={(files) => setValue('materialFiles', files)}
+                      label="Upload dos Seus Materiais"
+                      description="Imagens (PNG, JPG, WEBP), Vídeos (MP4, MOV), Documentos (PDF, DOC) - Máximo 50MB por arquivo"
+                      className="mt-4"
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-2">
+                      💡 <strong>Dica:</strong> Quanto mais materiais de qualidade você fornecer, mais personalizada e impactante será sua landing page!
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Personalidade da Marca
+                    </label>
+                    <Textarea 
+                      {...register('brandPersonality')}
+                      placeholder="Como você quer que sua marca seja percebida? Séria, descontraída, inovadora, confiável, jovem..."
+                      rows={2}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Isso define o tom visual e textual da landing page
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Tom de Comunicação
+                    </label>
+                    <Select onValueChange={(value) => setValue('communicationTone', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Como prefere se comunicar?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="formal">Formal e profissional</SelectItem>
+                        <SelectItem value="informal">Informal e próximo</SelectItem>
+                        <SelectItem value="tecnico">Técnico e especializado</SelectItem>
+                        <SelectItem value="emocional">Emocional e inspirador</SelectItem>
+                        <SelectItem value="direto">Direto e objetivo</SelectItem>
+                        <SelectItem value="educativo">Educativo e didático</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Define como os textos serão escritos
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Mensagens-Chave
+                    </label>
+                    <Textarea 
+                      {...register('keyMessages')}
+                      placeholder="Quais são as 3 mensagens mais importantes que você quer transmitir? O que não pode faltar na landing page?"
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Essas mensagens serão destacadas estrategicamente
+                    </p>
                   </div>
                 </div>
               )}
@@ -704,36 +819,47 @@ const ClientBrief = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Prazo de Entrega *
+                        Prazo de Entrega (em dias) *
                       </label>
                       <Select onValueChange={(value) => setValue('deliveryDeadline', value)}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Quando precisa ficar pronto?" />
+                          <SelectValue placeholder="Quantos dias para entrega?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="7-dias">Até 7 dias (urgente)</SelectItem>
-                          <SelectItem value="15-dias">Até 15 dias</SelectItem>
-                          <SelectItem value="30-dias">Até 30 dias</SelectItem>
-                          <SelectItem value="45-dias">Até 45 dias</SelectItem>
-                          <SelectItem value="sem-pressa">Sem pressa específica</SelectItem>
+                          <SelectItem value="1">1 dia (super urgente)</SelectItem>
+                          <SelectItem value="2">2 dias</SelectItem>
+                          <SelectItem value="3">3 dias</SelectItem>
+                          <SelectItem value="4">4 dias</SelectItem>
+                          <SelectItem value="5">5 dias</SelectItem>
+                          <SelectItem value="6">6 dias</SelectItem>
+                          <SelectItem value="7">7 dias (1 semana)</SelectItem>
+                          <SelectItem value="8">8 dias</SelectItem>
+                          <SelectItem value="9">9 dias</SelectItem>
+                          <SelectItem value="10">10 dias</SelectItem>
+                          <SelectItem value="11">11 dias</SelectItem>
+                          <SelectItem value="12">12 dias</SelectItem>
+                          <SelectItem value="13">13 dias</SelectItem>
+                          <SelectItem value="14">14 dias (2 semanas)</SelectItem>
+                          <SelectItem value="15">15 dias</SelectItem>
+                          <SelectItem value="16">16 dias</SelectItem>
+                          <SelectItem value="17">17 dias</SelectItem>
+                          <SelectItem value="18">18 dias</SelectItem>
+                          <SelectItem value="19">19 dias</SelectItem>
+                          <SelectItem value="20">20 dias</SelectItem>
+                          <SelectItem value="21">21 dias (3 semanas)</SelectItem>
+                          <SelectItem value="22">22 dias</SelectItem>
+                          <SelectItem value="23">23 dias</SelectItem>
+                          <SelectItem value="24">24 dias</SelectItem>
+                          <SelectItem value="25">25 dias</SelectItem>
+                          <SelectItem value="26">26 dias</SelectItem>
+                          <SelectItem value="27">27 dias</SelectItem>
+                          <SelectItem value="28">28 dias (4 semanas)</SelectItem>
+                          <SelectItem value="29">29 dias</SelectItem>
+                          <SelectItem value="30">30 dias (1 mês)</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.deliveryDeadline && (
                         <p className="text-red-500 text-sm mt-1">{errors.deliveryDeadline.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Orçamento Aprovado *
-                      </label>
-                      <Input 
-                        {...register('budget')}
-                        placeholder="R$ 0,00"
-                        className={errors.budget ? 'border-red-500' : ''}
-                      />
-                      {errors.budget && (
-                        <p className="text-red-500 text-sm mt-1">{errors.budget.message}</p>
                       )}
                     </div>
                   </div>
