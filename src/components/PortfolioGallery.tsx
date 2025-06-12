@@ -88,7 +88,7 @@ const PortfolioGallery = () => {
       id: 9,
       title: "Product Landing",
       description: "Landing page de produto com foco em conversão e apresentação visual impactante",
-      image: "/Images/9ffefc227662493.68444f2354b35 (1).webp",
+      image: "/Images/0cbb7d227466547.68406a44b0343.webp",
       category: "product"
     }
   ];
