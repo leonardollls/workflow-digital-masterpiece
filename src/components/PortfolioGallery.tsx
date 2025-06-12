@@ -30,66 +30,66 @@ const PortfolioGallery = () => {
   const projects: Project[] = [
     {
       id: 1,
-      title: "Design Agency Portfolio",
-      description: "Portfolio moderno para agência de design com showcase interativo e animações elegantes",
+      title: "Wood Home - Móveis Planejados",
+      description: "Landing page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
       image: "/Images/landing-page-demonstracao-1.webp",
       category: "design"
     },
     {
       id: 2,
-      title: "Creative Studio",
-      description: "Landing page criativa para estúdio com foco em branding e identidade visual",
+      title: "Teacher Mary - Curso de Inglês",
+      description: "Página de captura para professora de inglês com método exclusivo, aulas personalizadas e resultados comprovados",
       image: "/Images/landing-page-demonstracao-2.webp",
-      category: "creative"
+      category: "education"
     },
     {
       id: 3,
-      title: "Corporate Business",
-      description: "Site corporativo empresarial com design profissional e layout institucional",
+      title: "Plataforma de Design Interativo",
+      description: "Landing page para ferramenta de criação de interfaces UI com gráficos vetoriais em tempo real e multiplataforma",
       image: "/Images/landing-page-demonstracao-3.png",
-      category: "corporate"
-    },
-    {
-      id: 4,
-      title: "Fashion Brand",
-      description: "E-commerce de moda com galeria visual impactante e experiência de compra premium",
-      image: "/Images/landing-page-demonstracao-4.webp",
-      category: "fashion"
-    },
-    {
-      id: 5,
-      title: "Technology Startup",
-      description: "Landing page tech com design futurista e foco em inovação tecnológica",
-      image: "/Images/landing-page-demonstracao-5.webp",
       category: "tech"
     },
     {
+      id: 4,
+      title: "Desenvolvimento Pessoal & Relacionamentos",
+      description: "Página de conversão para programa de autoconhecimento e relacionamentos saudáveis voltado para mulheres",
+      image: "/Images/landing-page-demonstracao-4.webp",
+      category: "lifestyle"
+    },
+    {
+      id: 5,
+      title: "Checklist Produto Digital",
+      description: "Landing page para método de lançamento de produtos digitais em 3 dias, ideal para iniciantes sem audiência",
+      image: "/Images/landing-page-demonstracao-5.webp",
+      category: "digital"
+    },
+    {
       id: 6,
-      title: "Luxury Restaurant",
-      description: "Site gastronômico premium com apresentação visual sofisticada e menu interativo",
+      title: "Grupo Dharma - Arquitetura",
+      description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais",
       image: "/Images/landing-page-demonstracao-6.webp",
-      category: "restaurant"
+      category: "architecture"
     },
     {
       id: 7,
-      title: "Digital Agency",
-      description: "Agência digital moderna com portfólio de serviços e cases de sucesso",
+      title: "Oasis Corp - Presença Digital",
+      description: "Landing page para agência especializada em criar sites profissionais para pequenas empresas e empreendedores",
       image: "/Images/landing-page-demonstracao-7.webp",
       category: "agency"
     },
     {
       id: 8,
-      title: "Creative Portfolio",
-      description: "Portfolio pessoal criativo com galeria de trabalhos e biografia interativa",
+      title: "Turtle Fast - Autoridade Digital",
+      description: "Página de vendas para metodologia que transforma especialistas em autoridades digitais lucrativas em 120 dias",
       image: "/Images/landing-page-demonstracao-8.webp",
-      category: "portfolio"
+      category: "business"
     },
     {
       id: 9,
-      title: "Product Landing",
-      description: "Landing page de produto com foco em conversão e apresentação visual impactante",
+      title: "Automação Financeira Empresarial",
+      description: "Plataforma de gestão financeira inteligente para pequenas empresas com IA, insights em tempo real e integração bancária",
       image: "/Images/landing-page-demonstracao-9.png",
-      category: "product"
+      category: "fintech"
     }
   ];
 
