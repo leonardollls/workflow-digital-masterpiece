@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 // ⚠️ CONFIGURAÇÃO PARA DEPLOY MANUAL NA HOSTINGER
 // Substitua as URLs abaixo pelas suas credenciais do Supabase
 
-const supabaseUrl = 'https://SEU_PROJETO.supabase.co'
-const supabaseAnonKey = 'SUA_CHAVE_ANONIMA_AQUI'
+const supabaseUrl = 'https://sphiqzwnkuzfiwejjlav.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwaGlxendua3V6Zml3ZWpqbGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2OTQxMjMsImV4cCI6MjA2NTI3MDEyM30.-R19Vv3EgGxjeb0PoqaU4-SMi46E3PE-7FnFIyxWUds'
 
 // ⚠️ IMPORTANTE: 
 // 1. Substitua 'SEU_PROJETO' pela URL real do seu projeto Supabase

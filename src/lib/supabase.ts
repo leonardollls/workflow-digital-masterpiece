@@ -1,7 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// ⚠️ CONFIGURAÇÃO PARA DEPLOY MANUAL NA HOSTINGER
+// Substitua as URLs abaixo pelas suas credenciais do Supabase
+
+const supabaseUrl = 'https://sphiqzwnkuzfiwejjlav.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwaGlxendua3V6Zml3ZWpqbGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2OTQxMjMsImV4cCI6MjA2NTI3MDEyM30.-R19Vv3EgGxjeb0PoqaU4-SMi46E3PE-7FnFIyxWUds'
+
+// ⚠️ IMPORTANTE: 
+// 1. Substitua 'SEU_PROJETO' pela URL real do seu projeto Supabase
+// 2. Substitua 'SUA_CHAVE_ANONIMA_AQUI' pela chave anônima real
+// 3. Após configurar, renomeie este arquivo para 'supabase.ts' 
+//    (substitua o arquivo original)
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
