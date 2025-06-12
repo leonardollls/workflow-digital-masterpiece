@@ -47,7 +47,7 @@ export interface ClientBriefing {
   integrations?: string
   analytics_tracking?: string
   deadline: string
-  budget: string
+  budget?: string
   start_date?: string
   additional_notes?: string
   created_at?: string

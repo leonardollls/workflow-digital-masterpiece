@@ -10,15 +10,25 @@ const uploadFiles = async (files: FileList | null, bucket: string, folder: strin
     const fileName = `${folder}/${timestamp}_${index}_${file.name}`
     
     try {
+      // Verificar tamanho do arquivo (máx 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        throw new Error(`Arquivo ${file.name} é muito grande. Máximo 50MB.`)
+      }
+      
       await uploadFile(file, bucket, fileName)
       return getPublicUrl(bucket, fileName)
     } catch (error) {
       console.error(`Erro ao fazer upload do arquivo ${file.name}:`, error)
-      throw error
+      throw new Error(`Falha no upload de ${file.name}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
     }
   })
 
-  return Promise.all(uploadPromises)
+  try {
+    return await Promise.all(uploadPromises)
+  } catch (error) {
+    console.error('Erro no upload de arquivos:', error)
+    throw new Error(`Erro no upload de arquivos: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
+  }
 }
 
 // Função principal para processar e enviar o briefing
@@ -35,9 +45,9 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
     const briefingData: Omit<ClientBriefing, 'id' | 'created_at' | 'updated_at'> = {
       company_name: formData.companyName,
       business_segment: formData.businessSegment,
-      company_description: formData.companyDescription,
+      company_description: formData.businessDescription,
       target_audience: formData.targetAudience,
-      competitive_advantage: formData.competitiveAdvantage,
+      competitive_advantage: formData.competitiveDifferential,
       landing_page_goal: formData.landingPageGoal,
       responsible_name: formData.responsibleName,
       current_website: formData.currentWebsite,
@@ -55,11 +65,10 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       visual_files: visualUrls,
       content_materials: formData.contentMaterials,
       material_files: materialUrls,
-      domain_info: formData.domainInfo,
+      domain_info: formData.desiredDomain || '',
       integrations: formData.integrations,
-      analytics_tracking: formData.analyticsTracking,
-      deadline: formData.deadline,
-      budget: formData.budget,
+      analytics_tracking: formData.analytics,
+      deadline: formData.deliveryDeadline,
       start_date: formData.startDate,
       additional_notes: formData.additionalNotes
     }
@@ -74,7 +83,14 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
 
   } catch (error) {
     console.error('Erro ao processar briefing:', error)
-    throw new Error('Falha ao enviar briefing. Tente novamente.')
+    
+    if (error instanceof Error) {
+      // Se é um erro específico (upload, validação, etc), manter a mensagem
+      throw error
+    } else {
+      // Erro genérico
+      throw new Error('Falha ao enviar briefing. Verifique sua conexão e tente novamente.')
+    }
   }
 }
 
