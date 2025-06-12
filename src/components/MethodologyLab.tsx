@@ -405,7 +405,7 @@ const MethodologyLab = () => {
                 
                 <div className="text-center group cursor-pointer">
                   <div className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-orange-400 mb-1 sm:mb-2 lg:mb-4 group-hover:scale-110 transition-transform duration-300">
-                    8
+                    15
                   </div>
                   <div className="text-white/80 font-medium text-xs sm:text-sm lg:text-base">Dias de Entrega</div>
                   <div className="w-6 sm:w-8 lg:w-12 h-0.5 bg-orange-400/50 mx-auto mt-1 sm:mt-2 group-hover:bg-orange-400 transition-colors duration-300" />
