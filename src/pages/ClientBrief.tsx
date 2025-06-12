@@ -39,6 +39,8 @@ const clientBriefSchema = z.object({
   logoFiles: z.any().optional(),
   visualReferences: z.string().optional(),
   visualFiles: z.any().optional(),
+  contentMaterials: z.string().optional(),
+  materialFiles: z.any().optional(),
 
   // Técnico
   desiredDomain: z.string().optional(),
@@ -582,6 +584,50 @@ const ClientBrief = () => {
                           </p>
                         </label>
                       </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Materiais Próprios para a Landing Page
+                    </label>
+                    <Textarea 
+                      {...register('contentMaterials')}
+                      placeholder="Descreva os materiais que você tem e gostaria de incluir na landing page (fotos de produtos, imagens da empresa, vídeos, depoimentos, certificados, etc.)"
+                      rows={3}
+                    />
+                    
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Upload dos Seus Materiais
+                      </label>
+                      <div className="border-2 border-dashed border-workflow-energy/30 rounded-lg p-8 text-center hover:border-workflow-energy/60 transition-colors bg-gradient-to-br from-workflow-energy/5 to-workflow-zen/5">
+                        <Upload className="w-10 h-10 text-workflow-energy mx-auto mb-3" />
+                        <input
+                          type="file"
+                          accept="image/*,video/*,.pdf,.doc,.docx"
+                          multiple
+                          className="hidden"
+                          id="materials-upload"
+                          onChange={(e) => setValue('materialFiles', e.target.files)}
+                        />
+                        <label htmlFor="materials-upload" className="cursor-pointer">
+                          <span className="text-base font-medium text-workflow-deep">
+                            Envie seus materiais próprios
+                          </span>
+                          <p className="text-sm text-workflow-deep/70 mt-2">
+                            Clique para fazer upload ou arraste seus arquivos aqui
+                          </p>
+                          <div className="mt-3 text-xs text-workflow-deep/60">
+                            <p><strong>Aceitos:</strong> Imagens (PNG, JPG, WEBP), Vídeos (MP4, MOV), Documentos (PDF, DOC)</p>
+                            <p><strong>Exemplos:</strong> Fotos de produtos, imagens da equipe, vídeos promocionais, certificados, depoimentos</p>
+                            <p className="text-workflow-energy font-medium mt-1">Máximo 50MB por arquivo</p>
+                          </div>
+                        </label>
+                      </div>
+                      <p className="text-sm text-workflow-deep/60 mt-2">
+                        💡 <strong>Dica:</strong> Quanto mais materiais de qualidade você fornecer, mais personalizada e impactante será sua landing page!
+                      </p>
                     </div>
                   </div>
                 </div>
