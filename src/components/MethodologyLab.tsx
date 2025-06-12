@@ -193,30 +193,30 @@ const MethodologyLab = () => {
     },
     {
       number: 7,
-      title: "Growth Optimization",
-      duration: "ongoing",
-      description: "Otimização contínua para crescimento e performance máxima",
+      title: "Final Delivery",
+      duration: "1 dia",
+      description: "Entrega completa com documentação e treinamento para autonomia total",
       activities: [
         {
-          name: "Performance monitoring",
-          explanation: "Monitoramento 24/7 de performance, uptime, velocidade e métricas de conversão com alertas automáticos para qualquer anomalia, garantindo máxima disponibilidade e experiência consistente."
+          name: "Complete handover",
+          explanation: "Transferência completa de todos os arquivos, códigos-fonte, assets e documentação técnica, garantindo que você tenha controle total sobre sua landing page e possa fazer futuras modificações."
         },
         {
-          name: "A/B testing execution",
-          explanation: "Execução sistemática de testes A/B baseados em dados, testando headlines, CTAs, layouts e elementos de conversão para otimização contínua e crescimento sustentável das taxas de conversão."
+          name: "Performance documentation",
+          explanation: "Documentação detalhada de todas as otimizações implementadas, métricas de performance, configurações técnicas e guia de melhores práticas para manter a qualidade ao longo do tempo."
         },
         {
-          name: "Conversion optimization",
-          explanation: "Análise contínua de dados de usuários, heat maps, session recordings e métricas para identificar oportunidades de otimização e implementar melhorias que aumentem consistentemente as conversões."
+          name: "Training session",
+          explanation: "Sessão de treinamento personalizada para sua equipe, explicando como gerenciar, atualizar e monitorar a landing page, incluindo uso do painel administrativo e ferramentas de analytics."
         },
         {
-          name: "Monthly reporting",
-          explanation: "Relatórios mensais detalhados com insights acionáveis, análise de performance, recomendações de otimização e roadmap de melhorias para crescimento contínuo e ROI maximizado."
+          name: "Growth recommendations",
+          explanation: "Relatório estratégico com recomendações específicas para crescimento futuro, oportunidades de otimização identificadas e roadmap sugerido para expansão e melhorias contínuas."
         }
       ],
-      color: "from-pink-500 to-rose-500",
-      accentColor: "bg-pink-400",
-      icon: "📈"
+      color: "from-green-500 to-emerald-500",
+      accentColor: "bg-green-400",
+      icon: "✅"
     }
   ];
 

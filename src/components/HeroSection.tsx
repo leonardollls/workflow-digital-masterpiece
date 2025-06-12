@@ -125,7 +125,7 @@ const HeroSection = () => {
         {/* Main Headline with Enhanced Typography */}
         <div className={`mb-6 sm:mb-8 md:mb-10 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8 leading-tight">
-            Não criamos <span className="text-gradient-rainbow animate-pulse">landing pages</span>.<br />
+            Não criamos <span className="text-gradient-rainbow">landing pages</span>.<br />
             Criamos <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
           </h1>
           
