@@ -32,63 +32,63 @@ const PortfolioGallery = () => {
       id: 1,
       title: "Design Agency Portfolio",
       description: "Portfolio moderno para agência de design com showcase interativo e animações elegantes",
-      image: "/Images/ee1872227308933.683debf336d7e.webp",
+      image: "/Images/landing-page-demonstracao-1.webp",
       category: "design"
     },
     {
       id: 2,
       title: "Creative Studio",
       description: "Landing page criativa para estúdio com foco em branding e identidade visual",
-      image: "/Images/a07726227325915.683e384f30c96.webp",
+      image: "/Images/landing-page-demonstracao-2.webp",
       category: "creative"
     },
     {
       id: 3,
       title: "Corporate Business",
       description: "Site corporativo empresarial com design profissional e layout institucional",
-      image: "/Images/6355c2227386813.683f241d5b2f9.webp",
+      image: "/Images/landing-page-demonstracao-3.png",
       category: "corporate"
     },
     {
       id: 4,
       title: "Fashion Brand",
       description: "E-commerce de moda com galeria visual impactante e experiência de compra premium",
-      image: "/Images/d1f278227408887.683f856b97a03.webp",
+      image: "/Images/landing-page-demonstracao-4.webp",
       category: "fashion"
     },
     {
       id: 5,
       title: "Technology Startup",
       description: "Landing page tech com design futurista e foco em inovação tecnológica",
-      image: "/Images/4683bc227571641.684237771bde1.webp",
+      image: "/Images/landing-page-demonstracao-5.webp",
       category: "tech"
     },
     {
       id: 6,
       title: "Luxury Restaurant",
       description: "Site gastronômico premium com apresentação visual sofisticada e menu interativo",
-      image: "/Images/d45ff7227834569.6848166f2acfe.webp",
+      image: "/Images/landing-page-demonstracao-6.webp",
       category: "restaurant"
     },
     {
       id: 7,
       title: "Digital Agency",
       description: "Agência digital moderna com portfólio de serviços e cases de sucesso",
-      image: "/Images/e953da227530013.6841891c2230b.webp",
+      image: "/Images/landing-page-demonstracao-7.webp",
       category: "agency"
     },
     {
       id: 8,
       title: "Creative Portfolio",
       description: "Portfolio pessoal criativo com galeria de trabalhos e biografia interativa",
-      image: "/Images/14f8a8227635329.68437fc4b7069.webp",
+      image: "/Images/landing-page-demonstracao-8.webp",
       category: "portfolio"
     },
     {
       id: 9,
       title: "Product Landing",
       description: "Landing page de produto com foco em conversão e apresentação visual impactante",
-      image: "/Images/0cbb7d227466547.68406a44b0343.webp",
+      image: "/Images/landing-page-demonstracao-9.png",
       category: "product"
     }
   ];
