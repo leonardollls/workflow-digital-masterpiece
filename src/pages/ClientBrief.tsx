@@ -81,12 +81,25 @@ const ClientBrief = () => {
   const onSubmit = async (data: ClientBriefForm) => {
     setIsSubmitting(true);
     
-    // Simular envio para o backend
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Dados do briefing:', data);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+    try {
+      // Importar o serviço dinamicamente para evitar problemas de build
+      const { submitBriefing } = await import('@/services/briefingService');
+      
+      // Enviar briefing para o backend
+      const savedBriefing = await submitBriefing(data);
+      
+      console.log('Briefing salvo com sucesso:', savedBriefing);
+      setIsSubmitted(true);
+      
+    } catch (error) {
+      console.error('Erro ao enviar briefing:', error);
+      
+      // Mostrar erro para o usuário
+      alert('Erro ao enviar briefing. Por favor, tente novamente.');
+      
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const nextStep = () => {
