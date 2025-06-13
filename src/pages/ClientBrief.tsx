@@ -99,6 +99,16 @@ const ClientBrief = () => {
     setIsSubmitting(true);
     
     try {
+      // Debug: verificar dados antes do envio
+      console.log('Dados do formulário:', data);
+      console.log('Tipo de entrega:', deliveryType);
+      console.log('Prazo de entrega:', data.deliveryDeadline);
+      
+      // Validar se o prazo foi definido
+      if (!data.deliveryDeadline) {
+        throw new Error('Prazo de entrega não foi definido. Por favor, selecione uma opção.');
+      }
+      
       // Importar o serviço dinamicamente para evitar problemas de build
       const { submitBriefing } = await import('@/services/briefingService');
       
@@ -810,7 +820,9 @@ const ClientBrief = () => {
                       <Select onValueChange={(value) => {
                         setDeliveryType(value as 'standard' | 'custom');
                         if (value === 'standard') {
-                          setValue('deliveryDeadline', '15');
+                          setValue('deliveryDeadline', '15', { shouldValidate: true });
+                        } else if (value === 'custom') {
+                          setValue('deliveryDeadline', '', { shouldValidate: true });
                         }
                       }}>
                         <SelectTrigger>
@@ -831,7 +843,7 @@ const ClientBrief = () => {
                         <label className="block text-sm font-medium text-workflow-deep mb-2">
                           Quantos dias para entrega? *
                         </label>
-                        <Select onValueChange={(value) => setValue('deliveryDeadline', value)}>
+                        <Select onValueChange={(value) => setValue('deliveryDeadline', value, { shouldValidate: true })}>
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione os dias" />
                           </SelectTrigger>
