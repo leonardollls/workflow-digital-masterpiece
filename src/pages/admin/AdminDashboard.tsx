@@ -68,9 +68,30 @@ const AdminDashboard = () => {
   }
 
   const handleBriefingDelete = async (briefingId: string) => {
-    setBriefings(prev => prev.filter(briefing => briefing.id !== briefingId))
-    // Recarregar dados para garantir consistência
-    await loadBriefings()
+    console.log('🗑️ AdminDashboard: Processando exclusão do briefing:', briefingId)
+    
+    // Remover do estado local imediatamente
+    setBriefings(prev => {
+      const filtered = prev.filter(briefing => briefing.id !== briefingId)
+      console.log('📊 Briefings restantes após exclusão:', filtered.length)
+      return filtered
+    })
+    
+    // Também limpar do localStorage para garantir consistência
+    try {
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const filteredLocal = localBriefings.filter((b: any) => b.id !== briefingId)
+      localStorage.setItem('briefings', JSON.stringify(filteredLocal))
+      console.log('✅ Briefing também removido do localStorage')
+    } catch (error) {
+      console.warn('⚠️ Erro ao limpar localStorage:', error)
+    }
+    
+    // Aguardar um pouco antes de recarregar para evitar conflitos
+    setTimeout(async () => {
+      console.log('🔄 Recarregando dados após exclusão...')
+      await loadBriefings()
+    }, 1000)
   }
 
   const filterBriefings = () => {

@@ -120,6 +120,8 @@ const sendNotificationEmail = async (briefing: ClientBriefing) => {
 // Função para listar briefings (para painel admin futuro)
 export const getBriefings = async () => {
   try {
+    console.log('🔄 Buscando briefings do Supabase...')
+    
     // Primeiro tentar buscar do Supabase
     const { data, error } = await supabase
       .from('client_briefings')
@@ -127,19 +129,31 @@ export const getBriefings = async () => {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Erro ao buscar briefings do Supabase:', error)
-      // Fallback: buscar do localStorage
+      console.error('❌ Erro ao buscar briefings do Supabase:', error)
+      
+      // Fallback: buscar do localStorage apenas se Supabase falhar completamente
       const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
-      console.log('Usando briefings do localStorage:', localBriefings)
+      console.log('⚠️ Usando briefings do localStorage como fallback:', localBriefings.length)
       return localBriefings
     }
 
-    return data
+    console.log('✅ Briefings carregados do Supabase:', data?.length || 0)
+    
+    // Atualizar localStorage com dados do Supabase para sincronização
+    try {
+      localStorage.setItem('briefings', JSON.stringify(data || []))
+      console.log('🔄 localStorage sincronizado com Supabase')
+    } catch (localError) {
+      console.warn('⚠️ Erro ao sincronizar localStorage:', localError)
+    }
+    
+    return data || []
   } catch (error) {
-    console.error('Erro geral ao buscar briefings:', error)
-    // Fallback: buscar do localStorage
+    console.error('❌ Erro geral ao buscar briefings:', error)
+    
+    // Fallback final: buscar do localStorage
     const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
-    console.log('Usando briefings do localStorage (fallback):', localBriefings)
+    console.log('⚠️ Usando briefings do localStorage (fallback final):', localBriefings.length)
     return localBriefings
   }
 }
