@@ -84,6 +84,7 @@ const ClientBrief = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [deliveryType, setDeliveryType] = useState<'standard' | 'custom' | null>(null);
 
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
@@ -801,50 +802,71 @@ const ClientBrief = () => {
                     <p className="text-workflow-deep/70">Prazos e investimento</p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Prazo de Entrega (em dias) *
+                        Prazo de Entrega *
                       </label>
-                      <Select onValueChange={(value) => setValue('deliveryDeadline', value)}>
+                      <Select onValueChange={(value) => {
+                        setDeliveryType(value as 'standard' | 'custom');
+                        if (value === 'standard') {
+                          setValue('deliveryDeadline', '15');
+                        }
+                      }}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Quantos dias para entrega?" />
+                          <SelectValue placeholder="Escolha o tipo de prazo" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="3">3 dias (urgente)</SelectItem>
-                          <SelectItem value="4">4 dias</SelectItem>
-                          <SelectItem value="5">5 dias</SelectItem>
-                          <SelectItem value="6">6 dias</SelectItem>
-                          <SelectItem value="7">7 dias (1 semana)</SelectItem>
-                          <SelectItem value="15">até 15 dias</SelectItem>
-                          <SelectItem value="9">9 dias</SelectItem>
-                          <SelectItem value="10">10 dias</SelectItem>
-                          <SelectItem value="11">11 dias</SelectItem>
-                          <SelectItem value="12">12 dias</SelectItem>
-                          <SelectItem value="13">13 dias</SelectItem>
-                          <SelectItem value="14">14 dias (2 semanas)</SelectItem>
-                          <SelectItem value="15">15 dias</SelectItem>
-                          <SelectItem value="16">16 dias</SelectItem>
-                          <SelectItem value="17">17 dias</SelectItem>
-                          <SelectItem value="18">18 dias</SelectItem>
-                          <SelectItem value="19">19 dias</SelectItem>
-                          <SelectItem value="20">20 dias</SelectItem>
-                          <SelectItem value="21">21 dias (3 semanas)</SelectItem>
-                          <SelectItem value="22">22 dias</SelectItem>
-                          <SelectItem value="23">23 dias</SelectItem>
-                          <SelectItem value="24">24 dias</SelectItem>
-                          <SelectItem value="25">25 dias</SelectItem>
-                          <SelectItem value="26">26 dias</SelectItem>
-                          <SelectItem value="27">27 dias</SelectItem>
-                          <SelectItem value="28">28 dias (4 semanas)</SelectItem>
-                          <SelectItem value="29">29 dias</SelectItem>
-                          <SelectItem value="30">30 dias (1 mês)</SelectItem>
+                          <SelectItem value="standard">Padrão (até 15 dias)</SelectItem>
+                          <SelectItem value="custom">Personalizado</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.deliveryDeadline && (
                         <p className="text-red-500 text-sm mt-1">{errors.deliveryDeadline.message}</p>
                       )}
                     </div>
+
+                    {deliveryType === 'custom' && (
+                      <div>
+                        <label className="block text-sm font-medium text-workflow-deep mb-2">
+                          Quantos dias para entrega? *
+                        </label>
+                        <Select onValueChange={(value) => setValue('deliveryDeadline', value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione os dias" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="3">3 dias (urgente)</SelectItem>
+                            <SelectItem value="4">4 dias</SelectItem>
+                            <SelectItem value="5">5 dias</SelectItem>
+                            <SelectItem value="6">6 dias</SelectItem>
+                            <SelectItem value="7">7 dias (1 semana)</SelectItem>
+                            <SelectItem value="8">8 dias</SelectItem>
+                            <SelectItem value="9">9 dias</SelectItem>
+                            <SelectItem value="10">10 dias</SelectItem>
+                            <SelectItem value="11">11 dias</SelectItem>
+                            <SelectItem value="12">12 dias</SelectItem>
+                            <SelectItem value="13">13 dias</SelectItem>
+                            <SelectItem value="14">14 dias (2 semanas)</SelectItem>
+                            <SelectItem value="16">16 dias</SelectItem>
+                            <SelectItem value="17">17 dias</SelectItem>
+                            <SelectItem value="18">18 dias</SelectItem>
+                            <SelectItem value="19">19 dias</SelectItem>
+                            <SelectItem value="20">20 dias</SelectItem>
+                            <SelectItem value="21">21 dias (3 semanas)</SelectItem>
+                            <SelectItem value="22">22 dias</SelectItem>
+                            <SelectItem value="23">23 dias</SelectItem>
+                            <SelectItem value="24">24 dias</SelectItem>
+                            <SelectItem value="25">25 dias</SelectItem>
+                            <SelectItem value="26">26 dias</SelectItem>
+                            <SelectItem value="27">27 dias</SelectItem>
+                            <SelectItem value="28">28 dias (4 semanas)</SelectItem>
+                            <SelectItem value="29">29 dias</SelectItem>
+                            <SelectItem value="30">30 dias (1 mês)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
 
                   <div>
