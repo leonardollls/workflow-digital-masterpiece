@@ -75,14 +75,32 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
   const urgency = getDeadlineUrgency(briefing.deadline)
 
   const handleDelete = async () => {
+    if (!briefing.id) {
+      console.error('❌ ID do briefing não encontrado para exclusão')
+      alert('Erro: ID do briefing não encontrado')
+      return
+    }
+
     setIsDeleting(true)
+    
     try {
-      await deleteBriefing(briefing.id!)
-      onDelete?.(briefing.id!)
-      console.log('✅ Briefing excluído com sucesso')
+      console.log('🗑️ Iniciando exclusão do briefing:', {
+        id: briefing.id,
+        company: briefing.company_name
+      })
+      
+      await deleteBriefing(briefing.id)
+      
+      console.log('✅ Briefing excluído com sucesso, notificando componente pai')
+      onDelete?.(briefing.id)
+      
+      alert('Briefing excluído com sucesso!')
+      
     } catch (error) {
-      console.error('❌ Erro ao excluir briefing:', error)
-      alert('Erro ao excluir briefing. Tente novamente.')
+      console.error('❌ Erro completo ao excluir briefing:', error)
+      
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+      alert(`Erro ao excluir briefing: ${errorMessage}`)
     } finally {
       setIsDeleting(false)
     }

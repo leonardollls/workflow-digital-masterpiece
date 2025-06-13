@@ -174,6 +174,8 @@ export const getBriefing = async (id: string) => {
 // Nova função para atualizar um briefing
 export const updateBriefing = async (id: string, updates: Partial<ClientBriefing>): Promise<ClientBriefing> => {
   try {
+    console.log('🔄 Atualizando briefing:', { id, updates })
+    
     const { data, error } = await supabase
       .from('client_briefings')
       .update({
@@ -185,12 +187,15 @@ export const updateBriefing = async (id: string, updates: Partial<ClientBriefing
       .single()
 
     if (error) {
-      console.error('Erro ao atualizar briefing no Supabase:', error)
+      console.error('❌ Erro ao atualizar briefing no Supabase:', error)
+      
       // Fallback: atualizar no localStorage
+      console.log('🔄 Tentando fallback no localStorage...')
       const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
       const briefingIndex = localBriefings.findIndex((b: any) => b.id === id)
       
       if (briefingIndex === -1) {
+        console.error('❌ Briefing não encontrado no localStorage')
         throw new Error('Briefing não encontrado')
       }
       
@@ -201,12 +206,14 @@ export const updateBriefing = async (id: string, updates: Partial<ClientBriefing
       }
       
       localStorage.setItem('briefings', JSON.stringify(localBriefings))
+      console.log('✅ Briefing atualizado no localStorage')
       return localBriefings[briefingIndex]
     }
 
+    console.log('✅ Briefing atualizado no Supabase:', data)
     return data
   } catch (error) {
-    console.error('Erro ao atualizar briefing:', error)
+    console.error('❌ Erro geral ao atualizar briefing:', error)
     throw error
   }
 }
@@ -214,7 +221,7 @@ export const updateBriefing = async (id: string, updates: Partial<ClientBriefing
 // Nova função para excluir um briefing
 export const deleteBriefing = async (id: string): Promise<void> => {
   try {
-    console.log('🗑️ Tentando excluir briefing:', id)
+    console.log('🗑️ Tentando excluir briefing do Supabase:', id)
     
     const { error } = await supabase
       .from('client_briefings')
@@ -222,10 +229,19 @@ export const deleteBriefing = async (id: string): Promise<void> => {
       .eq('id', id)
 
     if (error) {
-      console.error('Erro ao excluir briefing do Supabase:', error)
+      console.error('❌ Erro ao excluir briefing do Supabase:', error)
+      
       // Fallback: excluir do localStorage
+      console.log('🔄 Tentando fallback no localStorage...')
       const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const originalLength = localBriefings.length
       const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
+      
+      if (filteredBriefings.length === originalLength) {
+        console.error('❌ Briefing não encontrado no localStorage')
+        throw new Error('Briefing não encontrado para exclusão')
+      }
+      
       localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
       console.log('✅ Briefing excluído do localStorage')
       return
@@ -234,21 +250,33 @@ export const deleteBriefing = async (id: string): Promise<void> => {
     console.log('✅ Briefing excluído do Supabase com sucesso')
     
     // Também remover do localStorage para garantir consistência
-    const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
-    const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
-    localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
-    
-  } catch (error) {
-    console.error('Erro geral ao excluir briefing:', error)
-    
-    // Fallback final: tentar excluir do localStorage
     try {
       const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
       const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
       localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
-      console.log('✅ Briefing excluído do localStorage (fallback)')
+      console.log('✅ Briefing também removido do localStorage')
     } catch (localError) {
-      console.error('Erro ao excluir do localStorage:', localError)
+      console.warn('⚠️ Erro ao limpar localStorage:', localError)
+    }
+    
+  } catch (error) {
+    console.error('❌ Erro geral ao excluir briefing:', error)
+    
+    // Fallback final: tentar excluir do localStorage
+    try {
+      console.log('🔄 Tentando fallback final no localStorage...')
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const originalLength = localBriefings.length
+      const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
+      
+      if (filteredBriefings.length === originalLength) {
+        throw new Error('Briefing não encontrado para exclusão')
+      }
+      
+      localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
+      console.log('✅ Briefing excluído do localStorage (fallback final)')
+    } catch (localError) {
+      console.error('❌ Erro ao excluir do localStorage:', localError)
       throw new Error('Falha ao excluir briefing')
     }
   }
@@ -257,14 +285,18 @@ export const deleteBriefing = async (id: string): Promise<void> => {
 // Nova função para adicionar valor da proposta
 export const addProposalValue = async (id: string, proposalValue: number): Promise<ClientBriefing> => {
   try {
+    console.log('💰 Adicionando valor da proposta:', { id, proposalValue })
+    
     const updates = {
       proposal_value: proposalValue,
       proposal_date: new Date().toISOString()
     }
 
-    return await updateBriefing(id, updates)
+    const result = await updateBriefing(id, updates)
+    console.log('✅ Valor da proposta adicionado com sucesso:', result)
+    return result
   } catch (error) {
-    console.error('Erro ao adicionar valor da proposta:', error)
+    console.error('❌ Erro ao adicionar valor da proposta:', error)
     throw error
   }
 } 

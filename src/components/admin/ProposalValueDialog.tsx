@@ -37,20 +37,46 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
       // Converter valor para número
       const numericValue = parseFloat(value)
       
+      console.log('📝 Dados do formulário:', {
+        briefingId: briefing.id,
+        inputValue: value,
+        numericValue: numericValue,
+        isValid: !isNaN(numericValue) && numericValue > 0
+      })
+      
       if (isNaN(numericValue) || numericValue <= 0) {
-        alert('Por favor, insira um valor válido')
+        console.error('❌ Valor inválido:', value)
+        alert('Por favor, insira um valor válido maior que zero')
         setIsLoading(false)
         return
       }
 
-      console.log('Enviando valor:', numericValue)
-      const updatedBriefing = await addProposalValue(briefing.id!, numericValue)
+      if (!briefing.id) {
+        console.error('❌ ID do briefing não encontrado')
+        alert('Erro: ID do briefing não encontrado')
+        setIsLoading(false)
+        return
+      }
+
+      console.log('🔄 Enviando valor da proposta:', {
+        id: briefing.id,
+        value: numericValue
+      })
+      
+      const updatedBriefing = await addProposalValue(briefing.id, numericValue)
+      
+      console.log('✅ Resposta recebida:', updatedBriefing)
+      
       onUpdate(updatedBriefing)
       setIsOpen(false)
-      console.log('✅ Valor da proposta adicionado com sucesso')
+      alert('Valor da proposta adicionado com sucesso!')
+      
     } catch (error) {
-      console.error('❌ Erro ao adicionar valor da proposta:', error)
-      alert('Erro ao adicionar valor da proposta. Tente novamente.')
+      console.error('❌ Erro completo ao adicionar valor da proposta:', error)
+      
+      // Mostrar erro mais detalhado
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+      alert(`Erro ao adicionar valor da proposta: ${errorMessage}`)
     } finally {
       setIsLoading(false)
     }
