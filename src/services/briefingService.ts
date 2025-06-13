@@ -315,31 +315,22 @@ export const deleteBriefing = async (id: string): Promise<void> => {
     console.log('✅ Briefing encontrado no Supabase:', existingBriefing)
     
     // Agora excluir o briefing
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from('client_briefings')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('id', id)
 
     if (error) {
       console.error('❌ Erro ao excluir briefing do Supabase:', error)
-      
-      // Fallback: excluir do localStorage
-      console.log('🔄 Tentando fallback no localStorage após erro de delete...')
-      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
-      const originalLength = localBriefings.length
-      const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
-      
-      if (filteredBriefings.length === originalLength) {
-        console.error('❌ Briefing não encontrado no localStorage')
-        throw new Error('Briefing não encontrado para exclusão')
-      }
-      
-      localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
-      console.log('✅ Briefing excluído do localStorage (fallback)')
-      return
+      throw new Error(`Erro do Supabase: ${error.message}`)
     }
 
-    console.log('✅ Briefing excluído do Supabase com sucesso')
+    console.log('✅ Briefing excluído do Supabase com sucesso. Registros afetados:', count)
+    
+    if (count === 0) {
+      console.warn('⚠️ Nenhum registro foi excluído. Briefing pode não existir.')
+      throw new Error('Nenhum registro foi excluído')
+    }
     
     // Também remover do localStorage para garantir consistência
     try {

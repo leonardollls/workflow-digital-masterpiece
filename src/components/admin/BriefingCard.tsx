@@ -92,9 +92,12 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
       await deleteBriefing(briefing.id)
       
       console.log('✅ Briefing excluído com sucesso, notificando componente pai')
-      onDelete?.(briefing.id)
       
-      alert('Briefing excluído com sucesso!')
+      // Aguardar um pouco para garantir que a exclusão foi processada
+      setTimeout(() => {
+        onDelete?.(briefing.id!)
+        alert('Briefing excluído com sucesso!')
+      }, 500)
       
     } catch (error) {
       console.error('❌ Erro completo ao excluir briefing:', error)
