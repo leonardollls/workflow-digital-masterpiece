@@ -41,7 +41,8 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
         briefingId: briefing.id,
         inputValue: value,
         numericValue: numericValue,
-        isValid: !isNaN(numericValue) && numericValue > 0
+        isValid: !isNaN(numericValue) && numericValue > 0,
+        briefingData: briefing
       })
       
       if (isNaN(numericValue) || numericValue <= 0) {
@@ -53,6 +54,7 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
 
       if (!briefing.id) {
         console.error('❌ ID do briefing não encontrado')
+        console.log('🔍 Dados do briefing completo:', briefing)
         alert('Erro: ID do briefing não encontrado')
         setIsLoading(false)
         return
