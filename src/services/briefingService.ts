@@ -119,29 +119,133 @@ const sendNotificationEmail = async (briefing: ClientBriefing) => {
 
 // Função para listar briefings (para painel admin futuro)
 export const getBriefings = async () => {
-  const { data, error } = await supabase
-    .from('client_briefings')
-    .select('*')
-    .order('created_at', { ascending: false })
+  try {
+    // Primeiro tentar buscar do Supabase
+    const { data, error } = await supabase
+      .from('client_briefings')
+      .select('*')
+      .order('created_at', { ascending: false })
 
-  if (error) {
-    throw error
+    if (error) {
+      console.error('Erro ao buscar briefings do Supabase:', error)
+      // Fallback: buscar do localStorage
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      console.log('Usando briefings do localStorage:', localBriefings)
+      return localBriefings
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro geral ao buscar briefings:', error)
+    // Fallback: buscar do localStorage
+    const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+    console.log('Usando briefings do localStorage (fallback):', localBriefings)
+    return localBriefings
   }
-
-  return data
 }
 
 // Função para obter um briefing específico
 export const getBriefing = async (id: string) => {
-  const { data, error } = await supabase
-    .from('client_briefings')
-    .select('*')
-    .eq('id', id)
-    .single()
+  try {
+    const { data, error } = await supabase
+      .from('client_briefings')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-  if (error) {
+    if (error) {
+      console.error('Erro ao buscar briefing do Supabase:', error)
+      // Fallback: buscar do localStorage
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const briefing = localBriefings.find((b: any) => b.id === id)
+      if (!briefing) {
+        throw new Error('Briefing não encontrado')
+      }
+      return briefing
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro ao buscar briefing:', error)
     throw error
   }
+}
 
-  return data
+// Nova função para atualizar um briefing
+export const updateBriefing = async (id: string, updates: Partial<ClientBriefing>): Promise<ClientBriefing> => {
+  try {
+    const { data, error } = await supabase
+      .from('client_briefings')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Erro ao atualizar briefing no Supabase:', error)
+      // Fallback: atualizar no localStorage
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const briefingIndex = localBriefings.findIndex((b: any) => b.id === id)
+      
+      if (briefingIndex === -1) {
+        throw new Error('Briefing não encontrado')
+      }
+      
+      localBriefings[briefingIndex] = {
+        ...localBriefings[briefingIndex],
+        ...updates,
+        updated_at: new Date().toISOString()
+      }
+      
+      localStorage.setItem('briefings', JSON.stringify(localBriefings))
+      return localBriefings[briefingIndex]
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro ao atualizar briefing:', error)
+    throw error
+  }
+}
+
+// Nova função para excluir um briefing
+export const deleteBriefing = async (id: string): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('client_briefings')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Erro ao excluir briefing do Supabase:', error)
+      // Fallback: excluir do localStorage
+      const localBriefings = JSON.parse(localStorage.getItem('briefings') || '[]')
+      const filteredBriefings = localBriefings.filter((b: any) => b.id !== id)
+      localStorage.setItem('briefings', JSON.stringify(filteredBriefings))
+      return
+    }
+
+    console.log('Briefing excluído com sucesso')
+  } catch (error) {
+    console.error('Erro ao excluir briefing:', error)
+    throw error
+  }
+}
+
+// Nova função para adicionar valor da proposta
+export const addProposalValue = async (id: string, proposalValue: number): Promise<ClientBriefing> => {
+  try {
+    const updates = {
+      proposal_value: proposalValue,
+      proposal_date: new Date().toISOString()
+    }
+
+    return await updateBriefing(id, updates)
+  } catch (error) {
+    console.error('Erro ao adicionar valor da proposta:', error)
+    throw error
+  }
 } 

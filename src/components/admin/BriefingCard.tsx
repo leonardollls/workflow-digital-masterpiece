@@ -14,6 +14,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import {
   Building2,
   Target,
   DollarSign,
@@ -23,18 +34,26 @@ import {
   FileText,
   Clock,
   User,
-  Globe
+  Globe,
+  Trash2,
+  Edit
 } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { EditBriefingDialog } from './EditBriefingDialog'
+import { ProposalValueDialog } from './ProposalValueDialog'
+import { deleteBriefing } from '@/services/briefingService'
 
 interface BriefingCardProps {
   briefing: ClientBriefing
+  onUpdate?: (updatedBriefing: ClientBriefing) => void
+  onDelete?: (briefingId: string) => void
 }
 
-export const BriefingCard = ({ briefing }: BriefingCardProps) => {
+export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const formatDate = (dateString: string) => {
     try {
@@ -54,6 +73,24 @@ export const BriefingCard = ({ briefing }: BriefingCardProps) => {
   }
 
   const urgency = getDeadlineUrgency(briefing.deadline)
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    try {
+      await deleteBriefing(briefing.id!)
+      onDelete?.(briefing.id!)
+      console.log('✅ Briefing excluído com sucesso')
+    } catch (error) {
+      console.error('❌ Erro ao excluir briefing:', error)
+      alert('Erro ao excluir briefing. Tente novamente.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleUpdate = (updatedBriefing: ClientBriefing) => {
+    onUpdate?.(updatedBriefing)
+  }
 
   return (
     <>
@@ -100,17 +137,29 @@ export const BriefingCard = ({ briefing }: BriefingCardProps) => {
 
           <Separator />
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">
-              {briefing.created_at && formatDate(briefing.created_at)}
-            </span>
-            <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Eye className="w-4 h-4" />
-                  Ver Detalhes
-                </Button>
-              </DialogTrigger>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">
+                {briefing.created_at && formatDate(briefing.created_at)}
+              </span>
+              {briefing.proposal_value && (
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(briefing.proposal_value)}
+                </Badge>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 flex-1">
+                    <Eye className="w-4 h-4" />
+                    Ver Detalhes
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-4xl max-h-[90vh]">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
@@ -358,7 +407,56 @@ export const BriefingCard = ({ briefing }: BriefingCardProps) => {
                 </ScrollArea>
               </DialogContent>
             </Dialog>
+            
+            {onUpdate && (
+              <EditBriefingDialog 
+                briefing={briefing} 
+                onUpdate={handleUpdate} 
+              />
+            )}
+            
+            {onUpdate && (
+              <ProposalValueDialog 
+                briefing={briefing} 
+                onUpdate={handleUpdate} 
+              />
+            )}
+            
+            {onDelete && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    className="gap-2"
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    {isDeleting ? 'Excluindo...' : 'Excluir'}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza que deseja excluir o briefing de <strong>{briefing.company_name}</strong>? 
+                      Esta ação não pode ser desfeita.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleDelete}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      Excluir Briefing
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
+        </div>
         </CardContent>
       </Card>
     </>

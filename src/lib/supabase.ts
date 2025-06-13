@@ -50,6 +50,8 @@ export interface ClientBriefing {
   budget?: string
   start_date?: string
   additional_notes?: string
+  proposal_value?: number
+  proposal_date?: string
   created_at?: string
   updated_at?: string
 }

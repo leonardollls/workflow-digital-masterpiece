@@ -59,6 +59,18 @@ const AdminDashboard = () => {
     }
   }
 
+  const handleBriefingUpdate = (updatedBriefing: ClientBriefing) => {
+    setBriefings(prev => 
+      prev.map(briefing => 
+        briefing.id === updatedBriefing.id ? updatedBriefing : briefing
+      )
+    )
+  }
+
+  const handleBriefingDelete = (briefingId: string) => {
+    setBriefings(prev => prev.filter(briefing => briefing.id !== briefingId))
+  }
+
   const filterBriefings = () => {
     let filtered = briefings
 
@@ -115,12 +127,13 @@ const AdminDashboard = () => {
       return days <= 10
     }).length
     
-    // Calcular orçamento total apenas se o campo existir
-    const totalBudget = briefings.reduce((sum, b) => {
-      if (!b.budget) return sum
-      const budget = b.budget.match(/R\$ ([\d.]+)/)?.[1]?.replace('.', '')
-      return sum + (parseInt(budget || '0') || 0)
+    // Calcular valor total das propostas
+    const totalProposalValue = briefings.reduce((sum, b) => {
+      return sum + (b.proposal_value || 0)
     }, 0)
+
+    // Contar briefings com propostas
+    const briefingsWithProposals = briefings.filter(b => b.proposal_value).length
 
     const segmentCounts = briefings.reduce((acc, b) => {
       acc[b.business_segment] = (acc[b.business_segment] || 0) + 1
@@ -134,10 +147,11 @@ const AdminDashboard = () => {
     return {
       totalBriefings,
       urgentCount,
-      totalBudget: new Intl.NumberFormat('pt-BR', {
+      totalProposalValue: new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL'
-      }).format(totalBudget),
+      }).format(totalProposalValue),
+      briefingsWithProposals,
       topSegment: topSegment[0] || 'N/A'
     }
   }
@@ -249,13 +263,13 @@ const AdminDashboard = () => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Valor Total</CardTitle>
+              <CardTitle className="text-sm font-medium">Valor das Propostas</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.totalBudget}</div>
+              <div className="text-2xl font-bold text-green-600">{stats.totalProposalValue}</div>
               <p className="text-xs text-muted-foreground">
-                Orçamento estimado
+                {stats.briefingsWithProposals} de {stats.totalBriefings} briefings
               </p>
             </CardContent>
           </Card>
@@ -365,7 +379,12 @@ const AdminDashboard = () => {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredBriefings.map((briefing) => (
-                <BriefingCard key={briefing.id} briefing={briefing} />
+                <BriefingCard 
+                  key={briefing.id} 
+                  briefing={briefing} 
+                  onUpdate={handleBriefingUpdate}
+                  onDelete={handleBriefingDelete}
+                />
               ))}
             </div>
           )}
