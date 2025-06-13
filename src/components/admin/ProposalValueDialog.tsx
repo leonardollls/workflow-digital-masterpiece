@@ -23,20 +23,27 @@ interface ProposalValueDialogProps {
 export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [value, setValue] = useState(briefing.proposal_value?.toString() || '')
+  const [value, setValue] = useState(
+    briefing.proposal_value 
+      ? briefing.proposal_value.toString() 
+      : ''
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const numericValue = parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.'))
+      // Converter valor para número
+      const numericValue = parseFloat(value)
       
       if (isNaN(numericValue) || numericValue <= 0) {
         alert('Por favor, insira um valor válido')
+        setIsLoading(false)
         return
       }
 
+      console.log('Enviando valor:', numericValue)
       const updatedBriefing = await addProposalValue(briefing.id!, numericValue)
       onUpdate(updatedBriefing)
       setIsOpen(false)
@@ -49,22 +56,10 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
     }
   }
 
-  const formatCurrency = (value: string) => {
-    // Remove tudo que não é dígito
-    const numericValue = value.replace(/\D/g, '')
-    
-    // Converte para número e formata
-    const number = parseFloat(numericValue) / 100
-    
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(number)
-  }
-
   const handleValueChange = (inputValue: string) => {
-    const formatted = formatCurrency(inputValue)
-    setValue(formatted)
+    // Permitir apenas números e vírgula/ponto
+    const cleanValue = inputValue.replace(/[^\d.,]/g, '')
+    setValue(cleanValue)
   }
 
   const currentValue = briefing.proposal_value 
@@ -106,9 +101,12 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
               <Label htmlFor="proposal_value">Valor da Proposta *</Label>
               <Input
                 id="proposal_value"
+                type="number"
+                step="0.01"
+                min="0"
                 value={value}
                 onChange={(e) => handleValueChange(e.target.value)}
-                placeholder="R$ 0,00"
+                placeholder="5000.00"
                 required
               />
               <p className="text-sm text-gray-500 mt-1">

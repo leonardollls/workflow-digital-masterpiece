@@ -67,7 +67,7 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
           Editar
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh]">
+      <DialogContent className="max-w-4xl max-h-[95vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Edit className="w-5 h-5" />
@@ -78,9 +78,9 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <ScrollArea className="max-h-[60vh] pr-4">
-            <div className="space-y-6">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <ScrollArea className="flex-1 max-h-[70vh] pr-4">
+            <div className="space-y-6 pb-4">
               {/* Informações da Empresa */}
               <section>
                 <h3 className="text-lg font-semibold mb-3">Informações da Empresa</h3>

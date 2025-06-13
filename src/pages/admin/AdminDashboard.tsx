@@ -67,8 +67,10 @@ const AdminDashboard = () => {
     )
   }
 
-  const handleBriefingDelete = (briefingId: string) => {
+  const handleBriefingDelete = async (briefingId: string) => {
     setBriefings(prev => prev.filter(briefing => briefing.id !== briefingId))
+    // Recarregar dados para garantir consistência
+    await loadBriefings()
   }
 
   const filterBriefings = () => {
