@@ -147,27 +147,12 @@ const ClientBrief = () => {
                 Recebemos todas as informações do seu projeto. Nossa equipe irá analisar seu briefing e entrar em contato em até 24 horas com o cronograma detalhado e próximos passos.
               </p>
               
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-workflow-energy/10 rounded-2xl p-6">
-                  <h3 className="font-semibold text-workflow-deep mb-2">Próximo Passo</h3>
-                  <p className="text-sm text-workflow-deep/70">
-                    Análise do briefing e estruturação do projeto
-                  </p>
-                </div>
-                <div className="bg-workflow-zen/10 rounded-2xl p-6">
-                  <h3 className="font-semibold text-workflow-deep mb-2">Contato</h3>
-                  <p className="text-sm text-workflow-deep/70">
-                    Retorno em até 24h via WhatsApp ou email
-                  </p>
-                </div>
+              <div className="bg-workflow-energy/10 rounded-2xl p-6 mb-8">
+                <h3 className="font-semibold text-workflow-deep mb-2">Próximo Passo</h3>
+                <p className="text-sm text-workflow-deep/70">
+                  Análise do briefing e estruturação do projeto
+                </p>
               </div>
-
-              <Button 
-                onClick={() => window.location.href = '/'}
-                className="btn-primary"
-              >
-                Voltar ao Início
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -826,9 +811,7 @@ const ClientBrief = () => {
                           <SelectValue placeholder="Quantos dias para entrega?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1">1 dia (super urgente)</SelectItem>
-                          <SelectItem value="2">2 dias</SelectItem>
-                          <SelectItem value="3">3 dias</SelectItem>
+                          <SelectItem value="3">3 dias (urgente)</SelectItem>
                           <SelectItem value="4">4 dias</SelectItem>
                           <SelectItem value="5">5 dias</SelectItem>
                           <SelectItem value="6">6 dias</SelectItem>
