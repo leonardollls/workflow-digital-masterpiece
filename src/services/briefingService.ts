@@ -1,5 +1,53 @@
 import { supabase, uploadFile, getPublicUrl, saveBriefing, type ClientBriefing } from '@/lib/supabase'
-import type { ClientBriefForm } from '@/pages/ClientBrief'
+
+// Tipo para o formulário
+export interface ClientBriefForm {
+  companyName: string
+  businessSegment: string
+  businessDescription: string
+  targetAudience: string
+  competitiveDifferential: string
+  landingPageGoal: string
+  mainCompetitors?: string
+  customerPainPoints?: string
+  successStories?: string
+  socialProof?: string
+  responsibleName: string
+  contactEmail: string
+  contactPhone: string
+  currentWebsite?: string
+  productName: string
+  productDescription: string
+  mainBenefits: string
+  priceRange: string
+  guarantees?: string
+  targetResults?: string
+  urgencyFactors?: string
+  objections?: string
+  callToAction: string
+  leadDestination: string
+  landingPageSections?: string
+  hasTestimonials?: string
+  hasFAQ?: string
+  hasAboutSection?: string
+  specificRequirements?: string
+  brandColors?: string
+  hasLogo: string
+  logoFiles?: FileList | null
+  visualReferences?: string
+  visualFiles?: FileList | null
+  contentMaterials?: string
+  materialFiles?: FileList | null
+  brandPersonality?: string
+  communicationTone?: string
+  keyMessages?: string
+  desiredDomain?: string
+  integrations?: string
+  analytics?: string
+  deliveryDeadline: string
+  startDate: string
+  additionalNotes?: string
+}
 
 // Função para fazer upload de múltiplos arquivos
 const uploadFiles = async (files: FileList | null, bucket: string, folder: string): Promise<string[]> => {
@@ -50,6 +98,8 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       competitive_advantage: formData.competitiveDifferential,
       landing_page_goal: formData.landingPageGoal,
       responsible_name: formData.responsibleName,
+      contact_email: formData.contactEmail,
+      contact_phone: formData.contactPhone,
       current_website: formData.currentWebsite,
       product_name: formData.productName,
       product_description: formData.productDescription,
@@ -58,6 +108,11 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       guarantees: formData.guarantees,
       call_to_action: formData.callToAction,
       lead_destination: formData.leadDestination,
+      landing_page_sections: formData.landingPageSections,
+      has_testimonials: formData.hasTestimonials,
+      has_faq: formData.hasFAQ,
+      has_about_section: formData.hasAboutSection,
+      specific_requirements: formData.specificRequirements,
       brand_colors: formData.brandColors,
       has_logo: formData.hasLogo,
       logo_files: logoUrls,

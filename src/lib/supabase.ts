@@ -28,6 +28,8 @@ export interface ClientBriefing {
   competitive_advantage: string
   landing_page_goal: string
   responsible_name: string
+  contact_email: string
+  contact_phone: string
   current_website?: string
   product_name: string
   product_description: string
@@ -36,6 +38,11 @@ export interface ClientBriefing {
   guarantees?: string
   call_to_action: string
   lead_destination: string
+  landing_page_sections?: string
+  has_testimonials?: string
+  has_faq?: string
+  has_about_section?: string
+  specific_requirements?: string
   brand_colors?: string
   has_logo: string
   logo_files?: string[]

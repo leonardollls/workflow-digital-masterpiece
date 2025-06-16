@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send, Upload } from 'lucide-react';
 import { FileUpload } from '@/components/ui/FileUpload';
+import type { ClientBriefForm } from '@/services/briefingService';
 
 // Schema de validação
 const clientBriefSchema = z.object({
@@ -29,6 +30,8 @@ const clientBriefSchema = z.object({
 
   // Informações de Contato
   responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
+  contactEmail: z.string().email('Email válido é obrigatório').min(1, 'Email é obrigatório'),
+  contactPhone: z.string().min(10, 'Telefone/WhatsApp é obrigatório'),
   currentWebsite: z.string().optional(),
 
   // Produto/Serviço
@@ -46,6 +49,16 @@ const clientBriefSchema = z.object({
   // Marketing
   callToAction: z.string().min(1, 'Call-to-action é obrigatório'),
   leadDestination: z.string().min(1, 'Destino dos leads é obrigatório'),
+  
+  // NOVO CAMPO SOLICITADO - Seções da Landing Page
+  landingPageSections: z.string().optional(),
+  
+  // Novos campos importantes para estrutura da página
+  hasTestimonials: z.string().optional(),
+  hasFAQ: z.string().optional(),
+  hasAboutSection: z.string().optional(),
+  specificRequirements: z.string().optional(),
+  
   brandColors: z.string().optional(),
   hasLogo: z.string().min(1, 'Informar sobre logo é obrigatório'),
   logoFiles: z.any().optional(),
@@ -70,7 +83,7 @@ const clientBriefSchema = z.object({
   additionalNotes: z.string().optional(),
 });
 
-type ClientBriefForm = z.infer<typeof clientBriefSchema>;
+// type ClientBriefForm = z.infer<typeof clientBriefSchema>; // Agora importado do service
 
 const steps = [
   { id: 1, title: 'Empresa', description: 'Informações da sua empresa', icon: Sparkles },
@@ -118,6 +131,8 @@ const ClientBrief = () => {
         { field: 'competitiveDifferential', label: 'Diferencial competitivo' },
         { field: 'landingPageGoal', label: 'Objetivo da landing page' },
         { field: 'responsibleName', label: 'Nome do responsável' },
+        { field: 'contactEmail', label: 'Email de contato' },
+        { field: 'contactPhone', label: 'Telefone/WhatsApp' },
         { field: 'productName', label: 'Nome do produto/serviço' },
         { field: 'productDescription', label: 'Descrição do produto' },
         { field: 'mainBenefits', label: 'Benefícios principais' },
@@ -488,6 +503,37 @@ const ClientBrief = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Email de Contato *
+                      </label>
+                      <Input 
+                        {...register('contactEmail')}
+                        type="email"
+                        placeholder="seu@email.com"
+                        className={errors.contactEmail ? 'border-red-500' : ''}
+                      />
+                      {errors.contactEmail && (
+                        <p className="text-red-500 text-sm mt-1">{errors.contactEmail.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Telefone/WhatsApp *
+                      </label>
+                      <Input 
+                        {...register('contactPhone')}
+                        placeholder="(11) 99999-9999"
+                        className={errors.contactPhone ? 'border-red-500' : ''}
+                      />
+                      {errors.contactPhone && (
+                        <p className="text-red-500 text-sm mt-1">{errors.contactPhone.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
                         Site Atual (se houver)
                       </label>
                       <Input 
@@ -799,6 +845,96 @@ const ClientBrief = () => {
                     />
                     <p className="text-sm text-workflow-deep/60 mt-1">
                       💡 Essas mensagens serão destacadas estrategicamente
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Seções da Landing Page 📋
+                    </label>
+                    <Textarea 
+                      {...register('landingPageSections')}
+                      placeholder="Tem em mente quantas e quais seções aproximadamente terá a página? (hero, benefícios, depoimentos, FAQ, formulário, sobre nós, portfólio, etc.)"
+                      rows={4}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 <strong>Importante:</strong> Nos ajude a estruturar a página da forma ideal para seus objetivos
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Tem Depoimentos para Usar?
+                      </label>
+                      <Select onValueChange={(value) => setValue('hasTestimonials', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sim-muitos">Sim, tenho vários depoimentos</SelectItem>
+                          <SelectItem value="sim-poucos">Sim, tenho alguns</SelectItem>
+                          <SelectItem value="nao-mas-posso">Não, mas posso conseguir</SelectItem>
+                          <SelectItem value="nao">Não tenho</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-sm text-workflow-deep/60 mt-1">
+                        Depoimentos aumentam muito a credibilidade
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-workflow-deep mb-2">
+                        Precisa de Seção FAQ?
+                      </label>
+                      <Select onValueChange={(value) => setValue('hasFAQ', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sim-essencial">Sim, é essencial</SelectItem>
+                          <SelectItem value="sim-seria-bom">Sim, seria bom ter</SelectItem>
+                          <SelectItem value="talvez">Talvez, não tenho certeza</SelectItem>
+                          <SelectItem value="nao">Não precisa</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-sm text-workflow-deep/60 mt-1">
+                        FAQ remove objeções e dúvidas
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Precisa de Seção "Sobre Nós"?
+                    </label>
+                    <Select onValueChange={(value) => setValue('hasAboutSection', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sim-historia">Sim, história da empresa/fundador</SelectItem>
+                        <SelectItem value="sim-credenciais">Sim, credenciais e certificações</SelectItem>
+                        <SelectItem value="sim-ambos">Sim, história e credenciais</SelectItem>
+                        <SelectItem value="nao">Não precisa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Ajuda a criar conexão e confiança com o público
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Requisitos Específicos
+                    </label>
+                    <Textarea 
+                      {...register('specificRequirements')}
+                      placeholder="Alguma funcionalidade específica que você precisa? (calculadora, quiz, vídeo em popup, chat, agendamento, etc.)"
+                      rows={3}
+                    />
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Funcionalidades especiais podem aumentar muito a conversão
                     </p>
                   </div>
                 </div>
