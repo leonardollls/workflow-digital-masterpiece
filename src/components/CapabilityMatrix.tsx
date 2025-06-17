@@ -19,16 +19,7 @@ const CapabilityMatrix = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Partículas otimizadas para background
-  const particles = useMemo(() => 
-    [...Array(12)].map((_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 8,
-      animationDuration: 6 + Math.random() * 3
-    })), []
-  );
+  // Removido para melhor performance mobile
 
   const capabilities = [
     {
@@ -107,34 +98,12 @@ const CapabilityMatrix = () => {
       className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden"
       id="capability-matrix"
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-workflow-zen/5 via-transparent to-workflow-accent/5" />
-        
-        {/* Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {particles.map((particle) => (
-            <div
-              key={particle.id}
-              className="absolute w-3 h-3 bg-workflow-zen/10 rounded-full animate-float"
-              style={{
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-                animationDelay: `${particle.animationDelay}s`,
-                animationDuration: `${particle.animationDuration}s`
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Geometric Shapes */}
-        <div className="absolute top-20 right-20 w-32 h-32 bg-workflow-zen/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-20 left-20 w-24 h-24 bg-workflow-accent/10 rounded-full blur-lg animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+      {/* Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-workflow-zen/5 via-transparent to-workflow-accent/5" />
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-16 sm:mb-20 md:mb-24 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`text-center mb-16 sm:mb-20 md:mb-24 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="inline-flex items-center gap-2 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
             <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
             <span className="text-workflow-zen font-mono text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase font-medium">
@@ -161,7 +130,7 @@ const CapabilityMatrix = () => {
           
           <div className="flex items-center justify-center gap-4 md:gap-6 text-sm sm:text-base md:text-lg text-workflow-deep/60">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-workflow-zen rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-workflow-zen rounded-full" />
               <span>Foco em resultados comprovados</span>
             </div>
           </div>
@@ -172,17 +141,16 @@ const CapabilityMatrix = () => {
           {capabilities.map((capability, categoryIndex) => (
             <div
               key={categoryIndex}
-              className={`relative transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-12'}`}
-              style={{ animationDelay: `${categoryIndex * 0.2}s` }}
+              className={`relative transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
               onMouseEnter={() => setActiveCategory(categoryIndex)}
               onMouseLeave={() => setActiveCategory(null)}
             >
               <div className="relative group h-full">
-                {/* Background Glow */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${capability.color} rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
+                {/* Simple Background */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${capability.color} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`} />
                 
                 {/* Main Card */}
-                <div className="relative bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 h-full">
+                <div className="relative bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300 h-full">
                   
                   {/* Category Header */}
                   <div className={`bg-gradient-to-r ${capability.color} p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
@@ -213,7 +181,7 @@ const CapabilityMatrix = () => {
                           onMouseLeave={() => setHoveredTech(null)}
                         >
                           <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white rounded-xl shadow-lg group-hover/tech:scale-110 transition-transform duration-300">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white rounded-xl shadow-lg group-hover/tech:scale-105 transition-transform duration-200">
                               <span className="text-lg sm:text-xl">{tech.icon}</span>
                             </div>
                             <div className="flex-1 min-w-0">
@@ -234,20 +202,19 @@ const CapabilityMatrix = () => {
                           <div className="mb-2 sm:mb-3">
                             <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
                               <div
-                                className={`bg-gradient-to-r ${capability.color} h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
+                                className={`bg-gradient-to-r ${capability.color} h-full rounded-full transition-all duration-500 ease-out relative overflow-hidden`}
                                 style={{ 
-                                  width: `${tech.level}%`,
-                                  animationDelay: `${(categoryIndex * 6 + techIndex) * 0.1}s`
+                                  width: `${tech.level}%`
                                 }}
                               >
-                                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                                <div className="absolute inset-0 bg-white/20" />
                               </div>
                             </div>
                           </div>
 
                           {/* Tech Description */}
                           {hoveredTech === `${categoryIndex}-${techIndex}` && (
-                            <div className="animate-fade-in">
+                            <div className="transition-opacity duration-300">
                               <p className="text-workflow-deep/70 text-xs sm:text-sm leading-relaxed">
                                 {tech.description}
                               </p>
@@ -264,13 +231,13 @@ const CapabilityMatrix = () => {
         </div>
 
         {/* Enhanced Stats Summary */}
-        <div className={`mt-20 sm:mt-24 px-4 sm:px-0 transition-all duration-1000 delay-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`mt-20 sm:mt-24 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 via-workflow-accent/10 to-workflow-energy/10 rounded-3xl blur-xl" />
             <div className="relative bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 lg:p-12">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                 <div className="text-center group cursor-pointer">
-                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-zen mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-zen mb-2 sm:mb-4">
                     {totalTechnologies}
                   </div>
                   <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Tecnologias Dominadas</div>
@@ -278,7 +245,7 @@ const CapabilityMatrix = () => {
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-energy mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-energy mb-2 sm:mb-4">
                     100%
                   </div>
                   <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Implementação Garantida</div>
@@ -286,7 +253,7 @@ const CapabilityMatrix = () => {
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-accent mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-workflow-accent mb-2 sm:mb-4">
                     150+
                   </div>
                   <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Projetos Criados</div>
@@ -294,7 +261,7 @@ const CapabilityMatrix = () => {
                 </div>
                 
                 <div className="text-center group cursor-pointer">
-                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-green-500 mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-green-500 mb-2 sm:mb-4">
                     0
                   </div>
                   <div className="text-workflow-deep/80 font-medium text-xs sm:text-sm lg:text-base">Limitações Técnicas</div>
@@ -306,11 +273,11 @@ const CapabilityMatrix = () => {
         </div>
 
         {/* Call to Action */}
-        <div className={`mt-12 sm:mt-16 text-center px-4 sm:px-0 transition-all duration-1000 delay-1200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full text-white font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer shadow-lg hover:shadow-xl">
-            <span className="text-sm sm:text-base">Pronto para criarmos sua landing page perfeita?</span>
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-          </div>
+        <div className={`mt-12 sm:mt-16 text-center px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full text-white font-semibold hover:scale-105 transition-transform duration-200 cursor-pointer shadow-lg hover:shadow-xl">
+              <span className="text-sm sm:text-base">Pronto para criarmos sua landing page perfeita?</span>
+              <div className="w-2 h-2 bg-white rounded-full" />
+            </div>
         </div>
       </div>
     </section>
