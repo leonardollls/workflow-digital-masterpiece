@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import ClientBrief from "./pages/ClientBrief";
+import InstitutionalBrief from "./pages/InstitutionalBrief";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/privacidade" element={<Privacy />} />
           <Route path="/termos" element={<Terms />} />
           <Route path="/briefing" element={<ClientBrief />} />
+          <Route path="/briefing-institucional" element={<InstitutionalBrief />} />
           
           {/* Rotas Administrativas */}
           <Route path="/admin/login" element={<AdminLogin />} />
