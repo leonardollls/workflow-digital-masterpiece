@@ -79,7 +79,7 @@ const clientBriefSchema = z.object({
 
   // Timeline - alterado para dias específicos
   deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
-  startDate: z.string().min(1, 'Data de início é obrigatória'),
+  startDate: z.string().optional(), // Removido da interface
   budget: z.string().optional(), // Agora é um valor fixo
   additionalNotes: z.string().optional(),
 });
@@ -141,7 +141,7 @@ const ClientBrief = () => {
         { field: 'callToAction', label: 'Call-to-action' },
         { field: 'leadDestination', label: 'Destino dos leads' },
         { field: 'hasLogo', label: 'Informação sobre logo' },
-        { field: 'startDate', label: 'Data de início' }
+
       ];
       
       for (const { field, label } of requiredFields) {
@@ -953,8 +953,12 @@ Inclua o que está incluso em cada uma."
                       </label>
                       <Select onValueChange={(value) => {
                         setDeliveryType(value as 'standard' | 'custom');
-                        if (value === 'standard') {
-                          setValue('deliveryDeadline', '15', { shouldValidate: true });
+                        if (value === 'express') {
+                          setValue('deliveryDeadline', '5', { shouldValidate: true });
+                        } else if (value === 'fast') {
+                          setValue('deliveryDeadline', '7', { shouldValidate: true });
+                        } else if (value === 'standard') {
+                          setValue('deliveryDeadline', '10', { shouldValidate: true });
                         } else if (value === 'custom') {
                           setValue('deliveryDeadline', '', { shouldValidate: true });
                         }
@@ -963,7 +967,9 @@ Inclua o que está incluso em cada uma."
                           <SelectValue placeholder="Escolha o tipo de prazo" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="standard">Padrão (até 15 dias)</SelectItem>
+                          <SelectItem value="express">Express (até 5 dias)</SelectItem>
+                          <SelectItem value="fast">Rápido (até 7 dias)</SelectItem>
+                          <SelectItem value="standard">Padrão (até 10 dias)</SelectItem>
                           <SelectItem value="custom">Personalizado</SelectItem>
                         </SelectContent>
                       </Select>
@@ -1015,26 +1021,7 @@ Inclua o que está incluso em cada uma."
                     )}
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-workflow-deep mb-2">
-                      Data de Início Desejada *
-                    </label>
-                    <Select onValueChange={(value) => setValue('startDate', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Quando podemos começar?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="imediatamente">Imediatamente</SelectItem>
-                        <SelectItem value="esta-semana">Esta semana</SelectItem>
-                        <SelectItem value="proxima-semana">Próxima semana</SelectItem>
-                        <SelectItem value="proximo-mes">Próximo mês</SelectItem>
-                        <SelectItem value="a-definir">A definir</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.startDate && (
-                      <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>
-                    )}
-                  </div>
+
 
                   <div>
                     <label className="block text-sm font-medium text-workflow-deep mb-2">
