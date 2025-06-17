@@ -19,7 +19,7 @@ Este é um **briefing personalizado e pré-preenchido** criado especificamente p
 
 ## 🚀 Acesso ao Briefing Personalizado
 
-**Rota:** `/briefing-personalizado`
+**Rota:** `/briefing-personalizado-atividades-infantis-2`
 
 ## ✨ Características Especiais
 
@@ -127,7 +127,7 @@ src/pages/CustomBrief.tsx
 
 ## 📞 Como Usar
 
-1. **Acesse:** `https://seudominio.com/briefing-personalizado`
+1. **Acesse:** `https://seudominio.com/briefing-personalizado-atividades-infantis-2`
 2. **Revise:** Todos os dados já estarão preenchidos
 3. **Edite:** Ajuste campos conforme necessário
 4. **Envie:** Submeta o briefing completo

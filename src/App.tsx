@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/termos" element={<Terms />} />
           <Route path="/briefing" element={<ClientBrief />} />
           <Route path="/briefing-institucional" element={<InstitutionalBrief />} />
-          <Route path="/briefing-personalizado" element={<CustomBrief />} />
+          <Route path="/briefing-personalizado-atividades-infantis-2" element={<CustomBrief />} />
           
           {/* Rotas Administrativas */}
           <Route path="/admin/login" element={<AdminLogin />} />
