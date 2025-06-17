@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import logoWorkflow from '@/assets/logo-workflow.png';
@@ -9,6 +9,15 @@ const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoWorkflow);
   const [logoAttempts, setLogoAttempts] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     console.log('🔍 Logo inicial carregado:', logoWorkflow);
@@ -30,17 +39,35 @@ const HeroSection = () => {
     };
   }, []);
 
-  const trustBadges = [
+  // Memoizar dados estáticos para evitar re-renders
+  const trustBadges = useMemo(() => [
     { text: "Alta Performance", icon: "🔥", color: "from-yellow-400 to-orange-500" },
     { text: "Clutch 5.0★", icon: "⭐", color: "from-blue-400 to-purple-500" },
     { text: "Awwwards Winner", icon: "🎯", color: "from-green-400 to-cyan-500" }
-  ];
+  ], []);
 
-  const stats = [
+  const stats = useMemo(() => [
     { number: "247%", label: "ROI Médio", icon: "📈" },
     { number: "98%", label: "Satisfação", icon: "❤️" },
     { number: "150+", label: "Projetos", icon: "🚀" }
-  ];
+  ], []);
+
+  // Reduzir elementos flutuantes em mobile
+  const floatingElements = useMemo(() => {
+    const count = isMobile ? 8 : 20;
+    return [...Array(count)].map((_, i) => (
+      <div
+        key={i}
+        className="absolute w-1.5 h-1.5 md:w-2 md:h-2 bg-workflow-energy/20 rounded-full animate-float"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 3}s`,
+          animationDuration: `${3 + Math.random() * 2}s`
+        }}
+      />
+    ));
+  }, [isMobile]);
 
   return (
     <section 
@@ -50,31 +77,21 @@ const HeroSection = () => {
       {/* Animated Background */}
       <AnimatedBackground />
       
-      {/* Floating Elements */}
+      {/* Floating Elements - reduzido em mobile */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-workflow-energy/20 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
+        {floatingElements}
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 text-center max-w-7xl mx-auto px-6">
+      <div className="relative z-10 text-center max-w-7xl mx-auto px-4 sm:px-6">
         {/* Logo */}
-        <div className={`flex justify-center mb-10 sm:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex justify-center mb-8 sm:mb-10 md:mb-12 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           <img 
             src={logoSrc} 
             alt="Workflow Digital Masterpiece" 
-            className="h-24 sm:h-28 md:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300"
-                                      onError={(e) => {
+            className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300"
+            loading="eager"
+            onError={(e) => {
               const currentAttempt = logoAttempts + 1;
               setLogoAttempts(currentAttempt);
               console.error(`❌ Tentativa ${currentAttempt} falhou para:`, logoSrc);
@@ -104,14 +121,14 @@ const HeroSection = () => {
         </div>
 
         {/* Trust Layer */}
-        <div className={`flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12 md:mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-6 sm:mb-8 md:mb-12 lg:mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {trustBadges.map((badge, index) => (
             <div 
               key={index}
-              className={`group flex items-center gap-2 sm:gap-3 md:gap-4 glass-workflow px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}
+              className={`group flex items-center gap-2 sm:gap-3 glass-workflow px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 lg:py-4 rounded-full hover:scale-105 transition-all duration-300 cursor-pointer`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <span className="text-lg sm:text-xl md:text-2xl group-hover:scale-110 transition-transform duration-300">
+              <span className="text-base sm:text-lg md:text-xl lg:text-2xl group-hover:scale-110 transition-transform duration-300">
                 {badge.icon}
               </span>
               <span className="text-xs sm:text-sm md:text-base font-semibold text-workflow-deep">
@@ -123,28 +140,28 @@ const HeroSection = () => {
         </div>
 
         {/* Main Headline with Enhanced Typography */}
-        <div className={`mb-6 sm:mb-8 md:mb-10 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-12'}`}>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8 leading-tight">
+        <div className={`mb-4 sm:mb-6 md:mb-8 lg:mb-10 px-2 sm:px-4 md:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-scale-in' : 'opacity-0 translate-y-12'}`}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-display font-bold text-workflow-deep mb-3 sm:mb-4 md:mb-6 lg:mb-8 leading-tight">
             Não criamos<br />
             <span className="text-gradient-rainbow">landing pages</span>.<br />
             Criamos <span className="text-gradient text-glow-subtle">máquinas de conversão</span>.
           </h1>
           
-          <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 mb-4 sm:mb-6">
-            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
+          <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-3 sm:mb-4 md:mb-6">
+            <div className="w-6 sm:w-12 md:w-16 lg:w-20 h-0.5 bg-gradient-to-r from-transparent to-workflow-energy" />
             <span className="text-workflow-energy font-mono text-xs sm:text-sm md:text-base tracking-wider">DIGITAL MASTERPIECE</span>
-            <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
+            <div className="w-6 sm:w-12 md:w-16 lg:w-20 h-0.5 bg-gradient-to-l from-transparent to-workflow-energy" />
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className={`grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16 max-w-xs sm:max-w-md md:max-w-lg mx-auto px-4 sm:px-0 transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-8 mb-6 sm:mb-8 md:mb-12 lg:mb-16 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-2 sm:px-4 md:px-0 transition-all duration-1000 delay-300 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center group">
-              <div className="text-2xl sm:text-3xl md:text-4xl mb-1 md:mb-2 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 md:mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.icon}
               </div>
-              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-workflow-energy mb-1">
+              <div className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-workflow-energy mb-1">
                 {stat.number}
               </div>
               <div className="text-xs sm:text-sm md:text-base text-workflow-deep/70 font-medium">
@@ -155,26 +172,26 @@ const HeroSection = () => {
         </div>
 
         {/* Enhanced CTA Ecosystem */}
-        <div className={`flex flex-col gap-4 sm:gap-6 md:gap-8 justify-center items-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
+        <div className={`flex flex-col gap-3 sm:gap-4 md:gap-6 lg:gap-8 justify-center items-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 px-2 sm:px-4 md:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-scale-in' : 'opacity-0 scale-90'}`}>
           <Button 
             className="btn-primary btn-magnetic group relative overflow-hidden w-full sm:w-auto md:min-w-[280px] min-w-[240px]"
             onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
           >
             <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
-              <span className="md:text-lg">Criações Recentes</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300 md:text-xl">🎨</span>
+              <span className="text-sm sm:text-base md:text-lg">Criações Recentes</span>
+              <span className="group-hover:translate-x-1 transition-transform duration-300 text-lg sm:text-xl md:text-xl">🎨</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/20 to-workflow-energy/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Button>
           
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 w-full sm:w-auto">
             <Button 
               className="btn-secondary btn-magnetic w-full sm:w-auto md:min-w-[220px] min-w-[200px]"
               onClick={() => document.getElementById('methodology-lab')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span className="flex items-center justify-center gap-2 md:gap-3">
-                <span className="md:text-base">Metodologia Científica</span>
-                <span className="text-workflow-energy md:text-lg">🔬</span>
+                <span className="text-sm sm:text-base md:text-base">Metodologia Científica</span>
+                <span className="text-workflow-energy text-base sm:text-lg md:text-lg">🔬</span>
               </span>
             </Button>
             
@@ -183,49 +200,29 @@ const HeroSection = () => {
               onClick={() => document.getElementById('capability-matrix')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span className="flex items-center justify-center gap-2 md:gap-3">
-                <span className="w-8 h-8 md:w-10 md:h-10 bg-workflow-energy/20 rounded-full flex items-center justify-center">
-                  <span className="md:text-lg">⚡</span>
+                <span className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-workflow-energy/20 rounded-full flex items-center justify-center">
+                  <span className="text-sm sm:text-base md:text-lg">⚡</span>
                 </span>
-                <span className="md:text-base">Arsenal Tecnológico</span>
+                <span className="text-sm sm:text-base md:text-base">Arsenal Tecnológico</span>
               </span>
             </Button>
           </div>
         </div>
       </div>
 
-
-
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle">
-        <div className="w-6 h-10 border-2 border-workflow-energy/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-workflow-energy rounded-full mt-2 animate-bounce" />
+      <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-subtle">
+        <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-workflow-energy/50 rounded-full flex justify-center">
+          <div className="w-1 h-2 sm:w-1 sm:h-3 bg-workflow-energy/70 rounded-full mt-2 animate-bounce"></div>
         </div>
       </div>
 
-      {/* Enhanced Demo Modal */}
+      {/* Modal placeholder - mantido para compatibilidade */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-6 animate-fade-in">
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 max-w-4xl w-full relative shadow-workflow-xl">
-            <button 
-              onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 w-10 h-10 bg-workflow-energy/10 hover:bg-workflow-energy/20 rounded-full flex items-center justify-center text-workflow-deep hover:text-workflow-energy transition-all duration-300 text-xl font-semibold"
-            >
-              ×
-            </button>
-            <div className="aspect-video bg-gradient-mesh rounded-2xl flex flex-col items-center justify-center text-workflow-deep relative overflow-hidden">
-              <div className="absolute inset-0 bg-workflow-energy/5" />
-              <div className="relative z-10 text-center">
-                <div className="text-6xl mb-4">🎬</div>
-                <h3 className="text-2xl font-bold mb-2">Demo Workflow</h3>
-                <p className="text-workflow-deep/70">Experiência completa em 60 segundos</p>
-                <Button className="btn-primary mt-6">
-                  <span className="flex items-center gap-2">
-                    <span>▶</span>
-                    <span>Reproduzir Demo</span>
-                  </span>
-                </Button>
-              </div>
-            </div>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Modal Content</h3>
+            <Button onClick={() => setShowModal(false)}>Fechar</Button>
           </div>
         </div>
       )}
