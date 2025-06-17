@@ -35,6 +35,13 @@ const WorkflowFooter = () => {
               Briefing Site Institucional
             </Link>
             <Link 
+              to="/briefing-personalizado" 
+              className="hover:text-workflow-zen transition-colors"
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              Portal Materno
+            </Link>
+            <Link 
               to="/privacidade" 
               className="hover:text-workflow-zen transition-colors"
               onContextMenu={(e) => e.preventDefault()}
