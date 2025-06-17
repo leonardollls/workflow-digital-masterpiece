@@ -120,15 +120,12 @@ const PortfolioGallery = () => {
       id="portfolio" 
       className="section-padding bg-gradient-to-br from-workflow-50 via-white to-workflow-100 relative overflow-hidden"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-mesh opacity-20 animate-gradient-shift" />
-        <div className="absolute inset-0 bg-noise opacity-10" />
-      </div>
+      {/* Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-workflow-50 via-white to-workflow-100 opacity-50" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section */}
-        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
             <div className="w-8 sm:w-12 md:w-16 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
             <span className="text-workflow-energy font-mono text-xs sm:text-sm md:text-base tracking-wider uppercase">Portfolio</span>
@@ -146,13 +143,12 @@ const PortfolioGallery = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className={`transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 px-4 sm:px-0">
             {projects.map((project, index) => (
               <div
                 key={project.id}
-                className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-2"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
                 onMouseEnter={() => setHoveredProject(project.id)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
@@ -161,12 +157,12 @@ const PortfolioGallery = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
                   />
                   
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
                 
                 {/* Ícone de olho SEMPRE VISÍVEL e clicável */}
@@ -233,17 +229,13 @@ const PortfolioGallery = () => {
                   
                   {/* Category Badge */}
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
-                    <span className="w-2 h-2 bg-workflow-energy rounded-full animate-glow-pulse" />
+                    <span className="w-2 h-2 bg-workflow-energy rounded-full" />
                     <span className="capitalize">{project.category}</span>
                   </div>
                 </div>
 
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-500" />
-                
-                {/* Floating Elements */}
-                <div className="absolute top-4 right-4 w-2 h-2 bg-workflow-energy/30 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-4 left-4 w-1 h-1 bg-workflow-zen/40 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ animationDelay: '0.5s' }} />
+                {/* Simple Border */}
+                <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
               </div>
             ))}
           </div>
@@ -319,12 +311,7 @@ const PortfolioGallery = () => {
         </div>
       )}
 
-      {/* Floating Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/6 w-32 h-32 bg-workflow-energy/5 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/6 w-24 h-24 bg-workflow-zen/5 rounded-full blur-lg animate-float-delayed" />
-        <div className="absolute top-3/4 left-3/4 w-20 h-20 bg-workflow-accent/5 rounded-full blur-md animate-float" style={{ animationDelay: '2s' }} />
-      </div>
+
     </section>
   );
 };

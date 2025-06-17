@@ -55,15 +55,12 @@ const TestimonialTheater = () => {
       ref={sectionRef}
       className="section-padding bg-gradient-to-br from-workflow-50 via-white to-workflow-100 relative overflow-hidden"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-mesh opacity-20 animate-gradient-shift" />
-        <div className="absolute inset-0 bg-noise opacity-10" />
-      </div>
+      {/* Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-workflow-50 via-white to-workflow-100 opacity-30" />
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`text-center mb-16 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-12 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
             <span className="text-workflow-energy font-mono text-sm tracking-wider uppercase">Depoimentos</span>
@@ -80,12 +77,11 @@ const TestimonialTheater = () => {
         </div>
 
         {/* Testimonials Grid - Todos visíveis juntos */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-all duration-1000 delay-200 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-2"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
             >
               {/* Card Content */}
               <div className="p-4 sm:p-6 md:p-7 lg:p-8">
@@ -130,41 +126,33 @@ const TestimonialTheater = () => {
                 </div>
               </div>
 
-              {/* Hover Effect */}
-              <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-500" />
-              
-              {/* Background Glow */}
-              <div className="absolute top-4 right-4 w-2 h-2 bg-workflow-energy/30 rounded-full animate-glow-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Simple Hover Effect */}
+              <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
             </div>
           ))}
         </div>
 
         {/* Trust Indicators */}
-        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-12 px-4 sm:px-0 transition-all duration-1000 delay-400 ${isVisible ? 'animate-fade-in' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-12 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="text-center group">
-            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">🏆</div>
+                          <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6">🏆</div>
             <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">98%</div>
             <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Taxa de Satisfação</div>
           </div>
-          <div className="text-center group">
-            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">💎</div>
+                      <div className="text-center group">
+              <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6">💎</div>
             <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">150+</div>
             <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Projetos Entregues</div>
           </div>
-          <div className="text-center group">
-            <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">⚡</div>
+                      <div className="text-center group">
+              <div className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 md:mb-6">⚡</div>
                             <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-workflow-energy mb-1 sm:mb-2">até 10 dias</div>
             <div className="text-sm sm:text-base md:text-lg text-workflow-deep/70">Tempo Médio de Entrega</div>
           </div>
         </div>
       </div>
 
-      {/* Floating Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/6 w-32 h-32 bg-workflow-energy/5 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/6 w-24 h-24 bg-workflow-zen/5 rounded-full blur-lg animate-float-delayed" />
-        <div className="absolute top-3/4 left-3/4 w-20 h-20 bg-workflow-accent/5 rounded-full blur-md animate-float" style={{ animationDelay: '2s' }} />
-      </div>
+
     </section>
   );
 };
