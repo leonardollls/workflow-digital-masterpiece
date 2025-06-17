@@ -19,7 +19,9 @@ export interface ClientBriefForm {
   productName: string
   productDescription: string
   mainBenefits: string
-  priceRange: string
+  numberOfOffers: string
+  offerDetails: string
+  pricingModel: string
   guarantees?: string
   targetResults?: string
   urgencyFactors?: string
@@ -27,9 +29,6 @@ export interface ClientBriefForm {
   callToAction: string
   leadDestination: string
   landingPageSections?: string
-  hasTestimonials?: string
-  hasFAQ?: string
-  hasAboutSection?: string
   specificRequirements?: string
   brandColors?: string
   hasLogo: string
@@ -46,6 +45,7 @@ export interface ClientBriefForm {
   analytics?: string
   deliveryDeadline: string
   startDate: string
+  workanaAgreedValue: string
   additionalNotes?: string
 }
 
@@ -104,14 +104,13 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       product_name: formData.productName,
       product_description: formData.productDescription,
       main_benefits: formData.mainBenefits,
-      price_range: formData.priceRange,
+      number_of_offers: formData.numberOfOffers,
+      offer_details: formData.offerDetails,
+      pricing_model: formData.pricingModel,
       guarantees: formData.guarantees,
       call_to_action: formData.callToAction,
       lead_destination: formData.leadDestination,
       landing_page_sections: formData.landingPageSections,
-      has_testimonials: formData.hasTestimonials,
-      has_faq: formData.hasFAQ,
-      has_about_section: formData.hasAboutSection,
       specific_requirements: formData.specificRequirements,
       brand_colors: formData.brandColors,
       has_logo: formData.hasLogo,
@@ -125,6 +124,7 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       analytics_tracking: formData.analytics,
       deadline: formData.deliveryDeadline,
       start_date: formData.startDate,
+      workana_agreed_value: formData.workanaAgreedValue,
       additional_notes: formData.additionalNotes
     }
 

@@ -38,7 +38,7 @@ const clientBriefSchema = z.object({
   productName: z.string().min(2, 'Nome do produto/serviço é obrigatório'),
   productDescription: z.string().min(50, 'Descrição detalhada é obrigatória'),
   mainBenefits: z.string().min(30, 'Benefícios principais são obrigatórios'),
-  priceRange: z.string().min(1, 'Faixa de preço é obrigatória'),
+
   guarantees: z.string().optional(),
   
   // Novos campos para produto/serviço
@@ -54,10 +54,12 @@ const clientBriefSchema = z.object({
   landingPageSections: z.string().optional(),
   
   // Novos campos importantes para estrutura da página
-  hasTestimonials: z.string().optional(),
-  hasFAQ: z.string().optional(),
-  hasAboutSection: z.string().optional(),
   specificRequirements: z.string().optional(),
+  
+  // Novos campos para ofertas e preços
+  numberOfOffers: z.string().min(1, 'Número de ofertas é obrigatório'),
+  offerDetails: z.string().min(20, 'Detalhes das ofertas são obrigatórios'),
+  pricingModel: z.string().min(1, 'Modelo de precificação é obrigatório'),
   
   brandColors: z.string().optional(),
   hasLogo: z.string().min(1, 'Informar sobre logo é obrigatório'),
@@ -80,6 +82,7 @@ const clientBriefSchema = z.object({
   // Timeline - alterado para dias específicos
   deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
+  workanaAgreedValue: z.string().min(1, 'Valor acordado na Workana é obrigatório'),
   additionalNotes: z.string().optional(),
 });
 
@@ -136,11 +139,14 @@ const ClientBrief = () => {
         { field: 'productName', label: 'Nome do produto/serviço' },
         { field: 'productDescription', label: 'Descrição do produto' },
         { field: 'mainBenefits', label: 'Benefícios principais' },
-        { field: 'priceRange', label: 'Faixa de preço' },
+        { field: 'numberOfOffers', label: 'Número de ofertas' },
+        { field: 'offerDetails', label: 'Detalhes das ofertas' },
+        { field: 'pricingModel', label: 'Modelo de cobrança' },
         { field: 'callToAction', label: 'Call-to-action' },
         { field: 'leadDestination', label: 'Destino dos leads' },
         { field: 'hasLogo', label: 'Informação sobre logo' },
-        { field: 'startDate', label: 'Data de início' }
+        { field: 'startDate', label: 'Data de início' },
+        { field: 'workanaAgreedValue', label: 'Valor acordado na Workana' }
       ];
       
       for (const { field, label } of requiredFields) {
@@ -587,27 +593,68 @@ const ClientBrief = () => {
                     )}
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Quantas Ofertas Terá na Landing Page? *
+                    </label>
+                    <Select onValueChange={(value) => setValue('numberOfOffers', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 oferta (mais simples)</SelectItem>
+                        <SelectItem value="2">2 ofertas (básica + premium)</SelectItem>
+                        <SelectItem value="3">3 ofertas (básica + intermediária + premium)</SelectItem>
+                        <SelectItem value="4+">4 ou mais ofertas</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.numberOfOffers && (
+                      <p className="text-red-500 text-sm mt-1">{errors.numberOfOffers.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Detalhes das Ofertas e Valores Exatos *
+                    </label>
+                    <Textarea 
+                      {...register('offerDetails')}
+                      placeholder="Descreva cada oferta com o valor exato. Ex: 
+Oferta 1: Curso Básico - R$ 297,00
+Oferta 2: Curso Premium - R$ 497,00 
+Oferta 3: Mentoria VIP - R$ 1.497,00
+
+Inclua o que está incluso em cada uma."
+                      rows={6}
+                      className={errors.offerDetails ? 'border-red-500' : ''}
+                    />
+                    {errors.offerDetails && (
+                      <p className="text-red-500 text-sm mt-1">{errors.offerDetails.message}</p>
+                    )}
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Faixa de Preço *
+                        Modelo de Cobrança *
                       </label>
-                      <Select onValueChange={(value) => setValue('priceRange', value)}>
+                      <Select onValueChange={(value) => setValue('pricingModel', value)}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione a faixa" />
+                          <SelectValue placeholder="Como será cobrado?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ate-100">Até R$ 100</SelectItem>
-                          <SelectItem value="100-500">R$ 100 - R$ 500</SelectItem>
-                          <SelectItem value="500-1000">R$ 500 - R$ 1.000</SelectItem>
-                          <SelectItem value="1000-5000">R$ 1.000 - R$ 5.000</SelectItem>
-                          <SelectItem value="5000-10000">R$ 5.000 - R$ 10.000</SelectItem>
-                          <SelectItem value="acima-10000">Acima de R$ 10.000</SelectItem>
-                          <SelectItem value="gratuito">Gratuito</SelectItem>
+                          <SelectItem value="valor-unico">Valor único (pagamento à vista)</SelectItem>
+                          <SelectItem value="mensal">Mensalidade</SelectItem>
+                          <SelectItem value="trimestral">Trimestral</SelectItem>
+                          <SelectItem value="semestral">Semestral</SelectItem>
+                          <SelectItem value="anual">Anual</SelectItem>
+                          <SelectItem value="vitalicio">Vitalício</SelectItem>
+                          <SelectItem value="parcelado">Parcelado (valor único dividido)</SelectItem>
+                          <SelectItem value="misto">Misto (diferentes modelos por oferta)</SelectItem>
                         </SelectContent>
                       </Select>
-                      {errors.priceRange && (
-                        <p className="text-red-500 text-sm mt-1">{errors.priceRange.message}</p>
+                      {errors.pricingModel && (
+                        <p className="text-red-500 text-sm mt-1">{errors.pricingModel.message}</p>
                       )}
                     </div>
 
@@ -862,67 +909,7 @@ const ClientBrief = () => {
                     </p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Tem Depoimentos para Usar?
-                      </label>
-                      <Select onValueChange={(value) => setValue('hasTestimonials', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="sim-muitos">Sim, tenho vários depoimentos</SelectItem>
-                          <SelectItem value="sim-poucos">Sim, tenho alguns</SelectItem>
-                          <SelectItem value="nao-mas-posso">Não, mas posso conseguir</SelectItem>
-                          <SelectItem value="nao">Não tenho</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-sm text-workflow-deep/60 mt-1">
-                        Depoimentos aumentam muito a credibilidade
-                      </p>
-                    </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Precisa de Seção FAQ?
-                      </label>
-                      <Select onValueChange={(value) => setValue('hasFAQ', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="sim-essencial">Sim, é essencial</SelectItem>
-                          <SelectItem value="sim-seria-bom">Sim, seria bom ter</SelectItem>
-                          <SelectItem value="talvez">Talvez, não tenho certeza</SelectItem>
-                          <SelectItem value="nao">Não precisa</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-sm text-workflow-deep/60 mt-1">
-                        FAQ remove objeções e dúvidas
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-workflow-deep mb-2">
-                      Precisa de Seção "Sobre Nós"?
-                    </label>
-                    <Select onValueChange={(value) => setValue('hasAboutSection', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sim-historia">Sim, história da empresa/fundador</SelectItem>
-                        <SelectItem value="sim-credenciais">Sim, credenciais e certificações</SelectItem>
-                        <SelectItem value="sim-ambos">Sim, história e credenciais</SelectItem>
-                        <SelectItem value="nao">Não precisa</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <p className="text-sm text-workflow-deep/60 mt-1">
-                      💡 Ajuda a criar conexão e confiança com o público
-                    </p>
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-workflow-deep mb-2">
@@ -1083,6 +1070,23 @@ const ClientBrief = () => {
                     {errors.startDate && (
                       <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>
                     )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-workflow-deep mb-2">
+                      Valor Acordado na Workana *
+                    </label>
+                    <Input 
+                      {...register('workanaAgreedValue')}
+                      placeholder="Ex: R$ 1.500,00"
+                      className={errors.workanaAgreedValue ? 'border-red-500' : ''}
+                    />
+                    {errors.workanaAgreedValue && (
+                      <p className="text-red-500 text-sm mt-1">{errors.workanaAgreedValue.message}</p>
+                    )}
+                    <p className="text-sm text-workflow-deep/60 mt-1">
+                      💡 Valor que foi combinado na proposta da Workana para este projeto
+                    </p>
                   </div>
 
                   <div>

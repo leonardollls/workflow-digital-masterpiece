@@ -34,14 +34,13 @@ export interface ClientBriefing {
   product_name: string
   product_description: string
   main_benefits: string
-  price_range?: string
+  number_of_offers?: string
+  offer_details?: string
+  pricing_model?: string
   guarantees?: string
   call_to_action: string
   lead_destination: string
   landing_page_sections?: string
-  has_testimonials?: string
-  has_faq?: string
-  has_about_section?: string
   specific_requirements?: string
   brand_colors?: string
   has_logo: string
@@ -56,6 +55,7 @@ export interface ClientBriefing {
   deadline: string
   budget?: string
   start_date?: string
+  workana_agreed_value?: string
   additional_notes?: string
   proposal_value?: number
   proposal_date?: string
