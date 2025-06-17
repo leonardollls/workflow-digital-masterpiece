@@ -28,8 +28,6 @@ export interface ClientBriefing {
   competitive_advantage: string
   landing_page_goal: string
   responsible_name: string
-  contact_email: string
-  contact_phone: string
   current_website?: string
   product_name: string
   product_description: string
@@ -53,9 +51,8 @@ export interface ClientBriefing {
   integrations?: string
   analytics_tracking?: string
   deadline: string
-  budget?: string
   start_date?: string
-  workana_agreed_value?: string
+  budget?: string
   additional_notes?: string
   proposal_value?: number
   proposal_date?: string

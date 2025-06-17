@@ -30,8 +30,6 @@ const clientBriefSchema = z.object({
 
   // Informações de Contato
   responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
-  contactEmail: z.string().email('Email válido é obrigatório').min(1, 'Email é obrigatório'),
-  contactPhone: z.string().min(10, 'Telefone/WhatsApp é obrigatório'),
   currentWebsite: z.string().optional(),
 
   // Produto/Serviço
@@ -82,7 +80,7 @@ const clientBriefSchema = z.object({
   // Timeline - alterado para dias específicos
   deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
-  workanaAgreedValue: z.string().min(1, 'Valor acordado na Workana é obrigatório'),
+  budget: z.string().optional(), // Agora é um valor fixo
   additionalNotes: z.string().optional(),
 });
 
@@ -134,8 +132,6 @@ const ClientBrief = () => {
         { field: 'competitiveDifferential', label: 'Diferencial competitivo' },
         { field: 'landingPageGoal', label: 'Objetivo da landing page' },
         { field: 'responsibleName', label: 'Nome do responsável' },
-        { field: 'contactEmail', label: 'Email de contato' },
-        { field: 'contactPhone', label: 'Telefone/WhatsApp' },
         { field: 'productName', label: 'Nome do produto/serviço' },
         { field: 'productDescription', label: 'Descrição do produto' },
         { field: 'mainBenefits', label: 'Benefícios principais' },
@@ -145,8 +141,7 @@ const ClientBrief = () => {
         { field: 'callToAction', label: 'Call-to-action' },
         { field: 'leadDestination', label: 'Destino dos leads' },
         { field: 'hasLogo', label: 'Informação sobre logo' },
-        { field: 'startDate', label: 'Data de início' },
-        { field: 'workanaAgreedValue', label: 'Valor acordado na Workana' }
+        { field: 'startDate', label: 'Data de início' }
       ];
       
       for (const { field, label } of requiredFields) {
@@ -504,37 +499,6 @@ const ClientBrief = () => {
                       />
                       {errors.responsibleName && (
                         <p className="text-red-500 text-sm mt-1">{errors.responsibleName.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Email de Contato *
-                      </label>
-                      <Input 
-                        {...register('contactEmail')}
-                        type="email"
-                        placeholder="seu@email.com"
-                        className={errors.contactEmail ? 'border-red-500' : ''}
-                      />
-                      {errors.contactEmail && (
-                        <p className="text-red-500 text-sm mt-1">{errors.contactEmail.message}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-workflow-deep mb-2">
-                        Telefone/WhatsApp *
-                      </label>
-                      <Input 
-                        {...register('contactPhone')}
-                        placeholder="(11) 99999-9999"
-                        className={errors.contactPhone ? 'border-red-500' : ''}
-                      />
-                      {errors.contactPhone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.contactPhone.message}</p>
                       )}
                     </div>
 
@@ -1074,18 +1038,15 @@ Inclua o que está incluso em cada uma."
 
                   <div>
                     <label className="block text-sm font-medium text-workflow-deep mb-2">
-                      Valor Acordado na Workana *
+                      Orçamento
                     </label>
                     <Input 
-                      {...register('workanaAgreedValue')}
-                      placeholder="Ex: R$ 1.500,00"
-                      className={errors.workanaAgreedValue ? 'border-red-500' : ''}
+                      value="Valor Acordado na Workana"
+                      readOnly
+                      className="bg-gray-50 cursor-not-allowed"
                     />
-                    {errors.workanaAgreedValue && (
-                      <p className="text-red-500 text-sm mt-1">{errors.workanaAgreedValue.message}</p>
-                    )}
                     <p className="text-sm text-workflow-deep/60 mt-1">
-                      💡 Valor que foi combinado na proposta da Workana para este projeto
+                      💡 O orçamento já foi definido conforme acordo na Workana
                     </p>
                   </div>
 

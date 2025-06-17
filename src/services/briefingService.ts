@@ -13,8 +13,6 @@ export interface ClientBriefForm {
   successStories?: string
   socialProof?: string
   responsibleName: string
-  contactEmail: string
-  contactPhone: string
   currentWebsite?: string
   productName: string
   productDescription: string
@@ -45,7 +43,7 @@ export interface ClientBriefForm {
   analytics?: string
   deliveryDeadline: string
   startDate: string
-  workanaAgreedValue: string
+  budget?: string
   additionalNotes?: string
 }
 
@@ -98,8 +96,6 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       competitive_advantage: formData.competitiveDifferential,
       landing_page_goal: formData.landingPageGoal,
       responsible_name: formData.responsibleName,
-      contact_email: formData.contactEmail,
-      contact_phone: formData.contactPhone,
       current_website: formData.currentWebsite,
       product_name: formData.productName,
       product_description: formData.productDescription,
@@ -124,7 +120,7 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       analytics_tracking: formData.analytics,
       deadline: formData.deliveryDeadline,
       start_date: formData.startDate,
-      workana_agreed_value: formData.workanaAgreedValue,
+      budget: "Valor Acordado na Workana",
       additional_notes: formData.additionalNotes
     }
 
