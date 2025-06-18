@@ -68,53 +68,60 @@ const CustomBrief = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitAllowed, setSubmitAllowed] = useState(false);
 
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
-    mode: 'onChange',
+    mode: 'onBlur',
+    defaultValues: {
+      companyName: 'Portal de Atividades Materno',
+      businessSegment: 'educacao',
+      businessDescription: 'Portal online dedicado a oferecer atividades educativas e recreativas para crianças, com foco especial no desenvolvimento infantil e apoio às mães. Nossa plataforma conecta famílias com atividades de qualidade, proporcionando momentos especiais de aprendizado e diversão.',
+      targetAudience: 'Mães modernas, ativas e preocupadas com o desenvolvimento dos filhos. Mulheres entre 25-45 anos, que buscam atividades de qualidade para seus filhos e valorizam momentos de conexão familiar. Público que aprecia conteúdo acolhedor e tem interesse em educação infantil.',
+      competitiveDifferential: 'Abordagem acolhedora e feminina que entende as necessidades específicas das mães. Portal curado com atividades de alta qualidade, design emocional que transmite carinho e cuidado, foco na experiência materno-infantil.',
+      landingPageGoal: 'vendas',
+      mainCompetitors: 'Outros portais de atividades infantis, blogs educativos, aplicativos de entretenimento infantil',
+      customerPainPoints: 'Mães sobrecarregadas que buscam atividades de qualidade, falta de tempo para pesquisar atividades adequadas, necessidade de conteúdo confiável e seguro para os filhos',
+      successStories: 'Casos de famílias que usaram as atividades para fortalecer laços, crianças que desenvolveram habilidades através das atividades propostas',
+      socialProof: 'Depoimentos de mães satisfeitas, casos de sucesso de famílias que usaram o portal, avaliações positivas sobre a qualidade das atividades',
+      responsibleName: '',
+      productName: 'Portal de Atividades Materno',
+      productDescription: 'Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade. Oferecemos uma experiência digital acolhedora com atividades que promovem o desenvolvimento infantil e fortalecem os laços familiares.',
+      mainBenefits: 'Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas, conteúdo que fortalece vínculos familiares, praticidade no acesso via mobile, qualidade garantida em todas as atividades',
+      numberOfOffers: '1',
+      offerDetails: 'Acesso completo ao Portal de Atividades Materno com atividades ilimitadas, suporte especializado e atualizações constantes de conteúdo',
+      pricingModel: 'assinatura',
+      callToAction: 'Acessar Portal Agora',
+      leadDestination: 'checkout',
+      brandColors: 'Tons suaves e acolhedores (rosas, lavanda, bege, branco)',
+      hasLogo: 'logo-simples',
+      visualReferences: 'Design clean e feminino, cores suaves, elementos que remetem ao carinho materno e educação',
+      brandPersonality: 'Acolhedora, feminina, carinhosa, profissional, confiável',
+      communicationTone: 'emocional',
+      keyMessages: 'Momentos especiais com seus filhos, atividades de qualidade para o desenvolvimento infantil, apoio às mães modernas, experiência acolhedora e confiável',
+      landingPageSections: 'Header com proposta de valor forte; Seção de benefícios emocionais; Depoimentos de mães; Prévia das atividades disponíveis; Seção sobre a criadora/especialista; Oferta irresistível; FAQ focado em dúvidas maternas; Checkout simplificado',
+      specificRequirements: 'Design que transmita confiança e carinho materno; Botões com efeito glow; Galeria de atividades com carousel; Seção de depoimentos de mães com fotos',
+      desiredDomain: 'portalatividadesmaterno.com.br',
+      deliveryDeadline: '5-8-dias',
+      additionalNotes: 'Foco total na experiência feminina/materna. A página deve transmitir acolhimento e carinho. Priorizar performance mobile. Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas).',
+    }
   });
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = form;
   const progressPercentage = (currentStep / steps.length) * 100;
 
-  // Preencher campos automaticamente com dados da proposta
-  useEffect(() => {
-    setValue('companyName', 'Portal de Atividades Materno');
-    setValue('businessSegment', 'educacao');
-    setValue('businessDescription', 'Portal online dedicado a oferecer atividades educativas e recreativas para crianças, com foco especial no desenvolvimento infantil e apoio às mães. Nossa plataforma conecta famílias com atividades de qualidade, proporcionando momentos especiais de aprendizado e diversão.');
-    setValue('targetAudience', 'Mães modernas, ativas e preocupadas com o desenvolvimento dos filhos. Mulheres entre 25-45 anos, que buscam atividades de qualidade para seus filhos e valorizam momentos de conexão familiar. Público que aprecia conteúdo acolhedor e tem interesse em educação infantil.');
-    setValue('competitiveDifferential', 'Abordagem acolhedora e feminina que entende as necessidades específicas das mães. Portal curado com atividades de alta qualidade, design emocional que transmite carinho e cuidado, foco na experiência materno-infantil.');
-    setValue('landingPageGoal', 'vendas');
-    setValue('mainCompetitors', 'Outros portais de atividades infantis, blogs educativos, aplicativos de entretenimento infantil');
-    setValue('customerPainPoints', 'Mães sobrecarregadas que buscam atividades de qualidade, falta de tempo para pesquisar atividades adequadas, necessidade de conteúdo confiável e seguro para os filhos');
-    setValue('successStories', 'Casos de famílias que usaram as atividades para fortalecer laços, crianças que desenvolveram habilidades através das atividades propostas');
-    setValue('socialProof', 'Depoimentos de mães satisfeitas, casos de sucesso de famílias que usaram o portal, avaliações positivas sobre a qualidade das atividades');
-    setValue('responsibleName', '');
-    setValue('productName', 'Portal de Atividades Materno');
-    setValue('productDescription', 'Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade. Oferecemos uma experiência digital acolhedora com atividades que promovem o desenvolvimento infantil e fortalecem os laços familiares.');
-    setValue('mainBenefits', 'Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas, conteúdo que fortalece vínculos familiares, praticidade no acesso via mobile, qualidade garantida em todas as atividades');
-    setValue('numberOfOffers', '1');
-    setValue('offerDetails', 'Acesso completo ao Portal de Atividades Materno com atividades ilimitadas, suporte especializado e atualizações constantes de conteúdo');
-    setValue('pricingModel', 'assinatura');
-    setValue('callToAction', 'Acessar Portal Agora');
-    setValue('leadDestination', 'checkout');
-    setValue('brandColors', 'Tons suaves e acolhedores (rosas, lavanda, bege, branco)');
-    setValue('hasLogo', 'logo-simples');
-    setValue('visualReferences', 'Design clean e feminino, cores suaves, elementos que remetem ao carinho materno e educação');
-    setValue('brandPersonality', 'Acolhedora, feminina, carinhosa, profissional, confiável');
-    setValue('communicationTone', 'emocional');
-    setValue('keyMessages', 'Momentos especiais com seus filhos, atividades de qualidade para o desenvolvimento infantil, apoio às mães modernas, experiência acolhedora e confiável');
-    setValue('landingPageSections', 'Header com proposta de valor forte; Seção de benefícios emocionais; Depoimentos de mães; Prévia das atividades disponíveis; Seção sobre a criadora/especialista; Oferta irresistível; FAQ focado em dúvidas maternas; Checkout simplificado');
-    setValue('specificRequirements', 'Design que transmita confiança e carinho materno; Botões com efeito glow; Galeria de atividades com carousel; Seção de depoimentos de mães com fotos');
-    setValue('desiredDomain', 'portalatividadesmaterno.com.br');
-    setValue('deliveryDeadline', '5-8-dias');
-    setValue('additionalNotes', 'Foco total na experiência feminina/materna. A página deve transmitir acolhimento e carinho. Priorizar performance mobile. Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas).');
-  }, [setValue]);
+
 
   const onSubmit = async (data: ClientBriefForm) => {
     // Verificação adicional para garantir que estamos na página 5
     if (currentStep !== 5) {
       console.log('Envio bloqueado: não está na página final');
+      return;
+    }
+
+    // Verificação de segurança: só permite envio se explicitamente autorizado
+    if (!submitAllowed) {
+      console.log('Envio bloqueado: envio não autorizado pelo usuário');
       return;
     }
 
@@ -149,7 +156,12 @@ const CustomBrief = () => {
 
   const nextStep = () => {
     if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1);
+      const newStep = currentStep + 1;
+      console.log(`📄 Navegando para step ${newStep}`);
+      setCurrentStep(newStep);
+      if (newStep === 5) {
+        console.log('🎯 Chegou na página final (Timeline)');
+      }
     }
   };
 
@@ -170,7 +182,12 @@ const CustomBrief = () => {
   // Handler seguro para envio do briefing
   const handleSafeSubmit = () => {
     if (currentStep === 5 && !isSubmitting) {
-      handleSubmit(onSubmit)();
+      console.log('🔐 Autorizando envio pelo clique do botão');
+      setSubmitAllowed(true);
+      setTimeout(() => {
+        handleSubmit(onSubmit)();
+        setSubmitAllowed(false); // Reset após tentativa de envio
+      }, 100);
     }
   };
 
@@ -248,7 +265,12 @@ const CustomBrief = () => {
         </div>
 
         <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
-          <form onSubmit={(e) => e.preventDefault()} onKeyDown={handleKeyDown}>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🚫 Submit interceptado e bloqueado');
+            return false;
+          }} onKeyDown={handleKeyDown}>
             <CardContent className="p-8">
               
               {/* Step 1: Empresa */}
