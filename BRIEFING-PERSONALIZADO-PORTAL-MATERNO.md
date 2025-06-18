@@ -1,15 +1,79 @@
 # 🌸 Briefing Personalizado - Portal de Atividades Materno
 
-## 📋 Resumo das Alterações
+## 🎯 Objetivo do Projeto
+Criar uma landing page com design feminino e acolhedor para o Portal de Atividades Materno, focando na experiência das mães e desenvolvimento infantil.
 
-O briefing personalizado foi atualizado para:
+## 📋 Dados Pré-preenchidos
 
-1. ✅ **Campos vazios** - Removidos todos os textos pré-preenchidos
-2. ✅ **Estrutura igual ao briefing original** - Todas as seções e campos do briefing padrão
-3. ✅ **Uploads de arquivos completos** - Logo, referências visuais e materiais próprios
-4. ✅ **Prazo fixo** - 5 a 8 dias úteis (não editável pelo cliente)
-5. ✅ **Removida integração com email marketing** - Foco apenas na landing page
-6. ✅ **Tema feminino mantido** - Design rosa/acolhedor preservado
+### Informações da Empresa
+- **Nome da Empresa**: Portal de Atividades Materno
+- **Segmento**: Educação
+- **Descrição**: Portal online dedicado a oferecer atividades educativas e recreativas para crianças, com foco especial no desenvolvimento infantil e apoio às mães. Nossa plataforma conecta famílias com atividades de qualidade, proporcionando momentos especiais de aprendizado e diversão.
+- **Público-alvo**: Mães modernas, ativas e preocupadas com o desenvolvimento dos filhos. Mulheres entre 25-45 anos, que buscam atividades de qualidade para seus filhos e valorizam momentos de conexão familiar.
+- **Diferencial Competitivo**: Abordagem acolhedora e feminina que entende as necessidades específicas das mães. Portal curado com atividades de alta qualidade, design emocional que transmite carinho e cuidado.
+- **Objetivo**: Aumentar Vendas
+
+### Produto/Serviço
+- **Nome do Produto**: Portal de Atividades Materno
+- **Descrição**: Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade.
+- **Benefícios**: Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas
+- **Número de Ofertas**: 1 oferta
+- **Detalhes da Oferta**: Acesso completo ao Portal de Atividades Materno com atividades ilimitadas
+- **Modelo de Precificação**: Assinatura
+- **Call-to-Action**: Acessar Portal Agora
+- **Destino dos Leads**: Página de checkout
+
+### Visual & Design
+- **Cores**: Tons suaves e acolhedores (rosas, lavanda, bege, branco)
+- **Logo**: Logo simples que pode ser melhorado
+- **Personalidade da Marca**: Acolhedora, feminina, carinhosa, profissional, confiável
+- **Tom de Comunicação**: Emocional
+- **Seções da Landing Page**: Header com proposta de valor forte; Seção de benefícios emocionais; Depoimentos de mães; Prévia das atividades; Oferta irresistível; FAQ; Checkout simplificado
+
+### Configurações Técnicas
+- **Domínio Desejado**: portalatividadesmaterno.com.br
+- **Prazo**: 5 a 8 dias úteis (fixo, não editável)
+
+### Observações Adicionais
+- Foco total na experiência feminina/materna
+- A página deve transmitir acolhimento e carinho
+- Priorizar performance mobile
+- Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas)
+
+## 💖 Características do Design
+- **Tema**: Feminino e maternal
+- **Ícones**: Corações em todo o formulário
+- **Cores**: Gradiente rosa/roxo com elementos em tons de rosa
+- **Visual**: Cards com backdrop blur e sombras suaves
+- **UX**: Formulário em 5 etapas com progress bar
+- **Responsivo**: Otimizado para mobile
+
+## 📂 Upload de Arquivos
+O formulário suporta upload de:
+- **Logo**: PNG, JPG, PDF, AI, EPS, SVG (máx. 10MB)
+- **Referências Visuais**: PNG, JPG, PDF
+- **Materiais Próprios**: Imagens, vídeos, documentos (máx. 50MB)
+
+## 🔄 Integração Backend
+- Conectado ao Supabase projeto "Workflow Services"
+- Fallback para localStorage se Supabase falhar
+- Dados enviados para tabela `client_briefings`
+- Campos específicos para o briefing personalizado
+
+## 🎯 Campos Únicos ao Briefing Personalizado
+- Campos completamente pré-preenchidos (exceto nome do responsável)
+- Prazo fixo não editável
+- Foco em experiência maternal
+- Design com elementos femininos (corações, cores suaves)
+- Campo de observações já preenchido com requisitos específicos
+
+## 🚀 Próximos Passos
+1. **Análise (24h)**: Análise do briefing e estratégia personalizada
+2. **Desenvolvimento (5-8 dias)**: Criação da landing page
+
+## 📱 Acesso
+- **Rota**: `/briefing-personalizado-atividades-infantis-2`
+- **Navegação**: Disponível no footer da landing page principal
 
 ## 🎨 Características Visuais
 

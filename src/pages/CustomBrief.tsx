@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -53,7 +53,6 @@ const clientBriefSchema = z.object({
   integrations: z.string().optional(),
   analytics: z.string().optional(),
   deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
-  budget: z.string().optional(),
   additionalNotes: z.string().optional(),
 });
 
@@ -62,7 +61,7 @@ const steps = [
   { id: 2, title: 'Produto', description: 'Detalhes do produto/serviço', icon: Target },
   { id: 3, title: 'Visual', description: 'Design e estratégia', icon: Palette },
   { id: 4, title: 'Técnico', description: 'Integrações', icon: Settings },
-  { id: 5, title: 'Timeline', description: 'Prazos e orçamento', icon: Calendar },
+  { id: 5, title: 'Timeline', description: 'Prazos', icon: Calendar },
 ];
 
 const CustomBrief = () => {
@@ -73,13 +72,44 @@ const CustomBrief = () => {
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
     mode: 'onChange',
-    defaultValues: {
-      deliveryDeadline: '5-8-dias'
-    }
   });
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = form;
   const progressPercentage = (currentStep / steps.length) * 100;
+
+  // Preencher campos automaticamente com dados da proposta
+  useEffect(() => {
+    setValue('companyName', 'Portal de Atividades Materno');
+    setValue('businessSegment', 'educacao');
+    setValue('businessDescription', 'Portal online dedicado a oferecer atividades educativas e recreativas para crianças, com foco especial no desenvolvimento infantil e apoio às mães. Nossa plataforma conecta famílias com atividades de qualidade, proporcionando momentos especiais de aprendizado e diversão.');
+    setValue('targetAudience', 'Mães modernas, ativas e preocupadas com o desenvolvimento dos filhos. Mulheres entre 25-45 anos, que buscam atividades de qualidade para seus filhos e valorizam momentos de conexão familiar. Público que aprecia conteúdo acolhedor e tem interesse em educação infantil.');
+    setValue('competitiveDifferential', 'Abordagem acolhedora e feminina que entende as necessidades específicas das mães. Portal curado com atividades de alta qualidade, design emocional que transmite carinho e cuidado, foco na experiência materno-infantil.');
+    setValue('landingPageGoal', 'vendas');
+    setValue('mainCompetitors', 'Outros portais de atividades infantis, blogs educativos, aplicativos de entretenimento infantil');
+    setValue('customerPainPoints', 'Mães sobrecarregadas que buscam atividades de qualidade, falta de tempo para pesquisar atividades adequadas, necessidade de conteúdo confiável e seguro para os filhos');
+    setValue('successStories', 'Casos de famílias que usaram as atividades para fortalecer laços, crianças que desenvolveram habilidades através das atividades propostas');
+    setValue('socialProof', 'Depoimentos de mães satisfeitas, casos de sucesso de famílias que usaram o portal, avaliações positivas sobre a qualidade das atividades');
+    setValue('responsibleName', '');
+    setValue('productName', 'Portal de Atividades Materno');
+    setValue('productDescription', 'Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade. Oferecemos uma experiência digital acolhedora com atividades que promovem o desenvolvimento infantil e fortalecem os laços familiares.');
+    setValue('mainBenefits', 'Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas, conteúdo que fortalece vínculos familiares, praticidade no acesso via mobile, qualidade garantida em todas as atividades');
+    setValue('numberOfOffers', '1');
+    setValue('offerDetails', 'Acesso completo ao Portal de Atividades Materno com atividades ilimitadas, suporte especializado e atualizações constantes de conteúdo');
+    setValue('pricingModel', 'assinatura');
+    setValue('callToAction', 'Acessar Portal Agora');
+    setValue('leadDestination', 'checkout');
+    setValue('brandColors', 'Tons suaves e acolhedores (rosas, lavanda, bege, branco)');
+    setValue('hasLogo', 'logo-simples');
+    setValue('visualReferences', 'Design clean e feminino, cores suaves, elementos que remetem ao carinho materno e educação');
+    setValue('brandPersonality', 'Acolhedora, feminina, carinhosa, profissional, confiável');
+    setValue('communicationTone', 'emocional');
+    setValue('keyMessages', 'Momentos especiais com seus filhos, atividades de qualidade para o desenvolvimento infantil, apoio às mães modernas, experiência acolhedora e confiável');
+    setValue('landingPageSections', 'Header com proposta de valor forte; Seção de benefícios emocionais; Depoimentos de mães; Prévia das atividades disponíveis; Seção sobre a criadora/especialista; Oferta irresistível; FAQ focado em dúvidas maternas; Checkout simplificado');
+    setValue('specificRequirements', 'Design que transmita confiança e carinho materno; Botões com efeito glow; Galeria de atividades com carousel; Seção de depoimentos de mães com fotos');
+    setValue('desiredDomain', 'portalatividadesmaterno.com.br');
+    setValue('deliveryDeadline', '5-8-dias');
+    setValue('additionalNotes', 'Foco total na experiência feminina/materna. A página deve transmitir acolhimento e carinho. Priorizar performance mobile. Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas).');
+  }, [setValue]);
 
   const onSubmit = async (data: ClientBriefForm) => {
     setIsSubmitting(true);
@@ -541,8 +571,8 @@ const CustomBrief = () => {
                 <div className="space-y-6">
                   <div className="text-center mb-8">
                     <Calendar className="w-12 h-12 text-pink-600 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-pink-900 mb-2">Timeline & Orçamento</h2>
-                    <p className="text-pink-700/70">Prazos e investimento</p>
+                    <h2 className="text-2xl font-bold text-pink-900 mb-2">Timeline</h2>
+                    <p className="text-pink-700/70">Prazos de entrega</p>
                   </div>
 
                   <div>
@@ -550,12 +580,6 @@ const CustomBrief = () => {
                     <Input value="5 a 8 dias úteis (prazo fixo)" readOnly
                       className="bg-pink-50 border-pink-200 cursor-not-allowed text-pink-800" />
                     <p className="text-sm text-pink-600 mt-1">💡 Prazo otimizado para garantir qualidade máxima</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Orçamento</label>
-                    <Input {...register('budget')} placeholder="Ex: R$ 2.500,00"
-                      className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
@@ -579,13 +603,6 @@ const CustomBrief = () => {
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
-                        <div>
-                          <p className="font-medium text-pink-900">Proposta</p>
-                          <p className="text-sm text-pink-700">Proposta detalhada com timeline</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
                         <div>
                           <p className="font-medium text-pink-900">Desenvolvimento (5-8 dias)</p>
                           <p className="text-sm text-pink-700">Criação da landing page</p>
