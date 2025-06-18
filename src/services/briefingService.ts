@@ -77,15 +77,46 @@ const uploadFiles = async (files: FileList | null, bucket: string, folder: strin
   }
 }
 
+// Função auxiliar para retry
+const retryOperation = async <T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000
+): Promise<T> => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      console.log(`❌ Tentativa ${attempt}/${maxRetries} falhou:`, error);
+      
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      
+      // Esperar antes da próxima tentativa
+      await new Promise(resolve => setTimeout(resolve, delay * attempt));
+    }
+  }
+  throw new Error('Máximo de tentativas excedido');
+};
+
 // Função principal para processar e enviar o briefing
 export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientBriefing> => {
+  console.log('🔄 Iniciando submitBriefing...', { 
+    device: navigator.userAgent,
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  });
+  
   try {
     // 1. Upload dos arquivos
+    console.log('📁 Fazendo upload de arquivos...');
     const [logoUrls, visualUrls, materialUrls] = await Promise.all([
       uploadFiles(formData.logoFiles, 'briefing-files', 'logos'),
       uploadFiles(formData.visualFiles, 'briefing-files', 'visual-references'),
       uploadFiles(formData.materialFiles, 'briefing-files', 'materials')
     ])
+    console.log('✅ Upload de arquivos concluído:', { logoUrls, visualUrls, materialUrls });
 
     // 2. Preparar dados para o banco
     const briefingData: Omit<ClientBriefing, 'id' | 'created_at' | 'updated_at'> = {
@@ -107,6 +138,7 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       number_of_offers: formData.numberOfOffers || '',
       offer_details: formData.offerDetails || '',
       pricing_model: formData.pricingModel || '',
+      price_range: formData.budget || null, // Mapear budget para price_range do banco
       guarantees: formData.guarantees || '',
       target_results: formData.targetResults || '',
       urgency_factors: formData.urgencyFactors || '',
@@ -135,16 +167,33 @@ export const submitBriefing = async (formData: ClientBriefForm): Promise<ClientB
       additional_notes: formData.additionalNotes || ''
     }
 
-    // 3. Salvar no banco de dados
-    const savedBriefing = await saveBriefing(briefingData)
+    // 3. Salvar no banco de dados com retry
+    console.log('💾 Salvando no Supabase...', { companyName: briefingData.company_name });
+    const savedBriefing = await retryOperation(() => saveBriefing(briefingData), 3, 2000);
+    console.log('✅ Briefing salvo no Supabase com sucesso!', { id: savedBriefing.id });
 
     // 4. Enviar notificação por email (opcional)
-    await sendNotificationEmail(savedBriefing)
+    try {
+      console.log('📧 Enviando notificação por email...');
+      await sendNotificationEmail(savedBriefing)
+      console.log('✅ Email de notificação enviado!');
+    } catch (emailError) {
+      console.warn('⚠️ Falha no envio do email (não crítico):', emailError);
+    }
 
     return savedBriefing
 
   } catch (error) {
-    console.error('Erro ao processar briefing:', error)
+    console.error('❌ Erro ao processar briefing:', error)
+    
+    // Log detalhado do erro
+    if (error instanceof Error) {
+      console.error('Detalhes do erro:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+    }
     
     if (error instanceof Error) {
       // Se é um erro específico (upload, validação, etc), manter a mensagem

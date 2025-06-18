@@ -131,6 +131,13 @@ const CustomBrief = () => {
     }
 
     console.log('✅ Iniciando envio do briefing...');
+    
+    // Verificar conectividade
+    if (!navigator.onLine) {
+      alert('Sem conexão com a internet. Verifique sua conexão e tente novamente.');
+      return;
+    }
+    
     setIsSubmitting(true);
     setAllowSubmit(false); // Reset flag
     
@@ -144,12 +151,21 @@ const CustomBrief = () => {
       
       try {
         const { submitBriefing } = await import('@/services/briefingService');
+        console.log('📤 Enviando para Supabase...', data);
         await submitBriefing(data);
+        console.log('✅ Briefing enviado com sucesso para Supabase!');
         setIsSubmitted(true);
       } catch (supabaseError) {
+        console.error('❌ Erro ao enviar para Supabase:', supabaseError);
+        
+        // Fallback: salvar no localStorage apenas como backup
         const existingBriefings = JSON.parse(localStorage.getItem('briefings') || '[]');
         existingBriefings.push(briefingData);
         localStorage.setItem('briefings', JSON.stringify(existingBriefings));
+        console.log('💾 Briefing salvo no localStorage como fallback');
+        
+        // Mostrar erro específico para o usuário
+        alert(`Erro de conectividade: ${supabaseError.message || 'Verifique sua conexão com a internet'}. Seus dados foram salvos e serão enviados automaticamente quando a conexão for restabelecida.`);
         setIsSubmitted(true);
       }
       

@@ -84,19 +84,44 @@ export const getPublicUrl = (bucket: string, path: string) => {
 
 // Função para salvar briefing
 export const saveBriefing = async (briefingData: Omit<ClientBriefing, 'id' | 'created_at' | 'updated_at'>) => {
-  const { data, error } = await supabase
-    .from('client_briefings')
-    .insert({
-      ...briefingData,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    })
-    .select()
-    .single()
+  console.log('🔄 Tentando salvar no Supabase...', { 
+    url: supabaseUrl,
+    company: briefingData.company_name,
+    timestamp: new Date().toISOString()
+  });
 
-  if (error) {
-    throw error
+  try {
+    const { data, error } = await supabase
+      .from('client_briefings')
+      .insert({
+        ...briefingData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('❌ Erro do Supabase:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
+      throw new Error(`Erro de banco de dados: ${error.message}`);
+    }
+
+    console.log('✅ Dados salvos com sucesso no Supabase:', data);
+    return data;
+    
+  } catch (networkError) {
+    console.error('❌ Erro de rede/conectividade:', networkError);
+    
+    // Verificar se é erro de conectividade
+    if (!navigator.onLine) {
+      throw new Error('Sem conexão com a internet. Verifique sua conexão e tente novamente.');
+    }
+    
+    throw networkError;
   }
-
-  return data
 } 
