@@ -215,37 +215,16 @@ const CustomBrief = () => {
     }
   };
 
-  // Handler direto para envio do briefing
-  const handleDirectSubmit = async () => {
-    console.log('🎯 Botão clicado!', { currentStep, isSubmitting });
+  // Handler direto para envio do briefing - VERSÃO ULTRA SIMPLIFICADA
+  const handleDirectSubmit = () => {
+    console.log('🔥 FUNÇÃO handleDirectSubmit EXECUTADA!');
+    console.log('Estado atual:', { currentStep, isSubmitting });
+    alert(`Função executada! Step: ${currentStep}, Enviando: ${isSubmitting}`);
     
-    if (currentStep !== 5) {
-      console.log('❌ Não está na página final');
-      return;
-    }
-    
-    if (isSubmitting) {
-      console.log('❌ Já está enviando');
-      return;
-    }
-
-    console.log('🚀 Iniciando envio direto...');
-    
-    // Primeiro testar a conexão
-    const connectionOk = await testSupabaseConnection();
-    console.log('🔗 Status da conexão:', connectionOk ? 'OK' : 'FALHOU');
-    
-    try {
-      // Chama diretamente a função onSubmit com os dados do formulário
-      const formData = form.getValues();
-      console.log('📋 Dados do formulário:', formData);
-      
-      await onSubmit(formData);
-      console.log('✅ Envio concluído com sucesso!');
-    } catch (error) {
-      console.error('❌ Erro no handleDirectSubmit:', error);
-      alert(`Erro ao enviar briefing: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-    }
+    // Remover todas as verificações por enquanto
+    console.log('🚀 Definindo como enviado...');
+    setIsSubmitted(true);
+    alert('Estado alterado para enviado!');
   };
 
   if (isSubmitted) {
@@ -735,11 +714,29 @@ const CustomBrief = () => {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button type="button" disabled={isSubmitting} onClick={handleDirectSubmit}
-                    className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
-                    {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
-                    <Send className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        console.log('🔥 BOTÃO TESTE CLICADO!');
+                        alert('Botão de teste funcionou!');
+                      }}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                      TESTE
+                    </button>
+                    
+                    <Button 
+                      type="button" 
+                      disabled={isSubmitting} 
+                      onClick={() => {
+                        console.log('🔥 CLIQUE DETECTADO!');
+                        handleDirectSubmit();
+                      }}
+                      className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
+                      {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
                 )}
               </div>
             </CardContent>
