@@ -89,7 +89,7 @@ const CronogramaBasicoProjetoAOficinaAzul = () => {
         "⚡ Otimização de performance",
         "🛡️ Implementação de segurança",
         "🧪 Testes de funcionalidade",
-        "🔄 Configuração de backup automático"
+        "🔌 Integração com ferramentas externas"
       ]
     },
     {
@@ -164,7 +164,7 @@ const CronogramaBasicoProjetoAOficinaAzul = () => {
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-6">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                📅 Cronograma Personalizado
+                <span className="mr-3 text-purple-600">📅</span>Cronograma Personalizado
               </h1>
             </div>
             
