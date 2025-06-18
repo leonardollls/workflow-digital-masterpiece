@@ -21,27 +21,6 @@ const WorkflowFooter = () => {
           {/* Simple Links */}
           <div className="flex items-center gap-6 text-sm text-white/60">
             <Link 
-              to="/briefing" 
-              className="hover:text-workflow-zen transition-colors"
-              onContextMenu={(e) => e.preventDefault()}
-            >
-              Briefing Landing Page
-            </Link>
-            <Link 
-              to="/briefing-institucional" 
-              className="hover:text-workflow-zen transition-colors"
-              onContextMenu={(e) => e.preventDefault()}
-            >
-              Briefing Site Institucional
-            </Link>
-            <Link 
-              to="/briefing-personalizado-atividades-infantis-2" 
-              className="hover:text-workflow-zen transition-colors"
-              onContextMenu={(e) => e.preventDefault()}
-            >
-              Portal Materno
-            </Link>
-            <Link 
               to="/privacidade" 
               className="hover:text-workflow-zen transition-colors"
               onContextMenu={(e) => e.preventDefault()}
