@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { FileUpload } from '@/components/ui/FileUpload';
-import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send, Heart } from 'lucide-react';
+import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings, Calendar, Send, Star } from 'lucide-react';
 import type { ClientBriefForm } from '@/services/briefingService';
 
 const clientBriefSchema = z.object({
@@ -57,7 +57,7 @@ const clientBriefSchema = z.object({
 });
 
 const steps = [
-  { id: 1, title: 'Empresa', description: 'Informações do negócio', icon: Heart },
+  { id: 1, title: 'Empresa', description: 'Informações do negócio', icon: Star },
   { id: 2, title: 'Produto', description: 'Detalhes do produto/serviço', icon: Target },
   { id: 3, title: 'Visual', description: 'Design e estratégia', icon: Palette },
   { id: 4, title: 'Técnico', description: 'Integrações', icon: Settings },
@@ -159,14 +159,22 @@ const CustomBrief = () => {
         <Card className="max-w-2xl w-full text-center bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
           <CardContent className="p-8 md:p-12">
             <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="w-10 h-10 text-pink-600" />
+              <Star className="w-10 h-10 text-pink-600" />
             </div>
             <h1 className="text-3xl font-bold text-workflow-deep mb-4">
-              Briefing Enviado! 💝
+              Briefing Enviado!
             </h1>
-            <p className="text-lg text-workflow-deep/70 mb-8">
+            <p className="text-lg text-workflow-deep/70 mb-4">
               Recebemos seu briefing personalizado. Desenvolvimento em 5 a 8 dias úteis!
             </p>
+            <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl p-6 mb-8">
+              <p className="text-pink-900 font-medium">
+                Responsável pela criação: <span className="font-bold text-pink-700">Leonardo Lopes</span>
+              </p>
+              <p className="text-sm text-pink-600 mt-2">
+                Desenvolvedor Especialista em Landing Pages
+              </p>
+            </div>
             <Button onClick={() => window.location.href = '/'} className="btn-primary">
               Voltar ao Início
             </Button>
@@ -181,11 +189,16 @@ const CustomBrief = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Heart className="w-8 h-8 text-pink-300" />
+            <Star className="w-8 h-8 text-pink-300" />
             <h1 className="text-3xl font-bold text-white">Briefing Personalizado</h1>
-            <Heart className="w-8 h-8 text-pink-300" />
+            <Star className="w-8 h-8 text-pink-300" />
           </div>
           <p className="text-pink-100 text-lg">Landing page com design feminino e acolhedor</p>
+          <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 inline-block">
+            <p className="text-pink-200 text-sm">
+              Desenvolvido por <span className="font-semibold text-white">Leonardo Lopes</span>
+            </p>
+          </div>
         </div>
 
         <div className="mb-8">
@@ -221,7 +234,7 @@ const CustomBrief = () => {
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="text-center mb-8">
-                    <Heart className="w-12 h-12 text-pink-600 mx-auto mb-4" />
+                    <Star className="w-12 h-12 text-pink-600 mx-auto mb-4" />
                     <h2 className="text-2xl font-bold text-pink-900 mb-2">Sua Empresa</h2>
                     <p className="text-pink-700/70">Conte-nos sobre seu negócio</p>
                   </div>
@@ -579,7 +592,7 @@ const CustomBrief = () => {
                     <label className="block text-sm font-medium text-pink-800 mb-2">Prazo de Entrega</label>
                     <Input value="5 a 8 dias úteis (prazo fixo)" readOnly
                       className="bg-pink-50 border-pink-200 cursor-not-allowed text-pink-800" />
-                    <p className="text-sm text-pink-600 mt-1">💡 Prazo otimizado para garantir qualidade máxima</p>
+                    <p className="text-sm text-pink-600 mt-1">Prazo otimizado para garantir qualidade máxima</p>
                   </div>
 
                   <div>
@@ -590,7 +603,7 @@ const CustomBrief = () => {
 
                   <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 border border-pink-200">
                     <h3 className="font-semibold text-pink-900 mb-3 flex items-center gap-2">
-                      <Heart className="w-5 h-5 text-pink-600" />
+                      <Star className="w-5 h-5 text-pink-600" />
                       Próximos Passos:
                     </h3>
                     <div className="space-y-3">
@@ -608,6 +621,11 @@ const CustomBrief = () => {
                           <p className="text-sm text-pink-700">Criação da landing page</p>
                         </div>
                       </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-pink-200">
+                      <p className="text-sm text-pink-700">
+                        <span className="font-medium">Responsável:</span> Leonardo Lopes - Desenvolvedor Especialista
+                      </p>
                     </div>
                   </div>
                 </div>
