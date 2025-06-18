@@ -227,7 +227,7 @@ const CustomBrief = () => {
         </div>
 
         <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <CardContent className="p-8">
               
               {/* Step 1: Empresa */}
@@ -630,7 +630,7 @@ const CustomBrief = () => {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isSubmitting}
+                  <Button type="button" disabled={isSubmitting} onClick={handleSubmit(onSubmit)}
                     className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
                     {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
                     <Send className="w-4 h-4" />
