@@ -13,32 +13,32 @@ import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings
 import type { ClientBriefForm } from '@/services/briefingService';
 
 const clientBriefSchema = z.object({
-  companyName: z.string().min(2, 'Nome da empresa é obrigatório'),
-  businessSegment: z.string().min(1, 'Segmento é obrigatório'),
-  businessDescription: z.string().min(50, 'Descrição deve ter pelo menos 50 caracteres'),
-  targetAudience: z.string().min(20, 'Público-alvo deve ser descrito'),
-  competitiveDifferential: z.string().min(20, 'Diferencial competitivo é obrigatório'),
-  landingPageGoal: z.string().min(1, 'Objetivo é obrigatório'),
+  companyName: z.string().optional(),
+  businessSegment: z.string().optional(),
+  businessDescription: z.string().optional(),
+  targetAudience: z.string().optional(),
+  competitiveDifferential: z.string().optional(),
+  landingPageGoal: z.string().optional(),
   mainCompetitors: z.string().optional(),
   customerPainPoints: z.string().optional(),
   successStories: z.string().optional(),
   socialProof: z.string().optional(),
-  responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
+  responsibleName: z.string().optional(),
   currentWebsite: z.string().optional(),
-  productName: z.string().min(2, 'Nome do produto/serviço é obrigatório'),
-  productDescription: z.string().min(50, 'Descrição detalhada é obrigatória'),
-  mainBenefits: z.string().min(30, 'Benefícios principais são obrigatórios'),
+  productName: z.string().optional(),
+  productDescription: z.string().optional(),
+  mainBenefits: z.string().optional(),
   guarantees: z.string().optional(),
   targetResults: z.string().optional(),
   urgencyFactors: z.string().optional(),
   objections: z.string().optional(),
-  numberOfOffers: z.string().min(1, 'Número de ofertas é obrigatório'),
-  offerDetails: z.string().min(20, 'Detalhes das ofertas são obrigatórios'),
-  pricingModel: z.string().min(1, 'Modelo de precificação é obrigatório'),
-  callToAction: z.string().min(1, 'Call-to-action é obrigatório'),
-  leadDestination: z.string().min(1, 'Destino dos leads é obrigatório'),
+  numberOfOffers: z.string().optional(),
+  offerDetails: z.string().optional(),
+  pricingModel: z.string().optional(),
+  callToAction: z.string().optional(),
+  leadDestination: z.string().optional(),
   brandColors: z.string().optional(),
-  hasLogo: z.string().min(1, 'Informar sobre logo é obrigatório'),
+  hasLogo: z.string().optional(),
   logoFiles: z.any().optional(),
   visualReferences: z.string().optional(),
   visualFiles: z.any().optional(),
@@ -52,7 +52,7 @@ const clientBriefSchema = z.object({
   desiredDomain: z.string().optional(),
   integrations: z.string().optional(),
   analytics: z.string().optional(),
-  deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
+  deliveryDeadline: z.string().optional(),
   additionalNotes: z.string().optional(),
 });
 
@@ -241,13 +241,12 @@ const CustomBrief = () => {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-pink-800 mb-2">Nome da Empresa *</label>
+                      <label className="block text-sm font-medium text-pink-800 mb-2">Nome da Empresa</label>
                       <Input {...register('companyName')} placeholder="Digite o nome da sua empresa"
-                        className={`border-pink-200 focus:border-pink-400 ${errors.companyName ? 'border-red-500' : ''}`} />
-                      {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>}
+                        className="border-pink-200 focus:border-pink-400" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-pink-800 mb-2">Segmento de Atuação *</label>
+                      <label className="block text-sm font-medium text-pink-800 mb-2">Segmento de Atuação</label>
                       <Select onValueChange={(value) => setValue('businessSegment', value)}>
                         <SelectTrigger className="border-pink-200 focus:border-pink-400">
                           <SelectValue placeholder="Selecione o segmento" />
@@ -261,33 +260,29 @@ const CustomBrief = () => {
                           <SelectItem value="servicos">Serviços</SelectItem>
                         </SelectContent>
                       </Select>
-                      {errors.businessSegment && <p className="text-red-500 text-sm mt-1">{errors.businessSegment.message}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Descrição da Empresa *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Descrição da Empresa</label>
                     <Textarea {...register('businessDescription')} placeholder="Descreva sua empresa, o que faz, missão..."
-                      rows={4} className={`border-pink-200 focus:border-pink-400 ${errors.businessDescription ? 'border-red-500' : ''}`} />
-                    {errors.businessDescription && <p className="text-red-500 text-sm mt-1">{errors.businessDescription.message}</p>}
+                      rows={4} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Público-Alvo *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Público-Alvo</label>
                     <Textarea {...register('targetAudience')} placeholder="Quem é seu cliente ideal? Idade, interesses, dores..."
-                      rows={3} className={`border-pink-200 focus:border-pink-400 ${errors.targetAudience ? 'border-red-500' : ''}`} />
-                    {errors.targetAudience && <p className="text-red-500 text-sm mt-1">{errors.targetAudience.message}</p>}
+                      rows={3} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Diferencial Competitivo *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Diferencial Competitivo</label>
                     <Textarea {...register('competitiveDifferential')} placeholder="O que te diferencia da concorrência?"
-                      rows={3} className={`border-pink-200 focus:border-pink-400 ${errors.competitiveDifferential ? 'border-red-500' : ''}`} />
-                    {errors.competitiveDifferential && <p className="text-red-500 text-sm mt-1">{errors.competitiveDifferential.message}</p>}
+                      rows={3} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Objetivo da Landing Page *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Objetivo da Landing Page</label>
                     <Select onValueChange={(value) => setValue('landingPageGoal', value)}>
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Qual o principal objetivo?" />
@@ -300,7 +295,6 @@ const CustomBrief = () => {
                         <SelectItem value="awareness">Brand Awareness</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.landingPageGoal && <p className="text-red-500 text-sm mt-1">{errors.landingPageGoal.message}</p>}
                   </div>
 
                   <div>
@@ -340,10 +334,9 @@ const CustomBrief = () => {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-pink-800 mb-2">Nome do Responsável *</label>
+                      <label className="block text-sm font-medium text-pink-800 mb-2">Nome do Responsável</label>
                       <Input {...register('responsibleName')} placeholder="Seu nome completo"
-                        className={`border-pink-200 focus:border-pink-400 ${errors.responsibleName ? 'border-red-500' : ''}`} />
-                      {errors.responsibleName && <p className="text-red-500 text-sm mt-1">{errors.responsibleName.message}</p>}
+                        className="border-pink-200 focus:border-pink-400" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-pink-800 mb-2">Site Atual (se houver)</label>
@@ -353,28 +346,25 @@ const CustomBrief = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Nome do Produto/Serviço Principal *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Nome do Produto/Serviço Principal</label>
                     <Input {...register('productName')} placeholder="Ex: Curso de Marketing Digital"
-                      className={`border-pink-200 focus:border-pink-400 ${errors.productName ? 'border-red-500' : ''}`} />
-                    {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
+                      className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Descrição Detalhada do Produto/Serviço *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Descrição Detalhada do Produto/Serviço</label>
                     <Textarea {...register('productDescription')} placeholder="O que é, como funciona, metodologia..."
-                      rows={4} className={`border-pink-200 focus:border-pink-400 ${errors.productDescription ? 'border-red-500' : ''}`} />
-                    {errors.productDescription && <p className="text-red-500 text-sm mt-1">{errors.productDescription.message}</p>}
+                      rows={4} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Principais Benefícios *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Principais Benefícios</label>
                     <Textarea {...register('mainBenefits')} placeholder="Quais resultados o cliente vai ter?"
-                      rows={3} className={`border-pink-200 focus:border-pink-400 ${errors.mainBenefits ? 'border-red-500' : ''}`} />
-                    {errors.mainBenefits && <p className="text-red-500 text-sm mt-1">{errors.mainBenefits.message}</p>}
+                      rows={3} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Quantas Ofertas Terá na Landing Page? *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Quantas Ofertas Terá na Landing Page?</label>
                     <Select onValueChange={(value) => setValue('numberOfOffers', value)}>
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Selecione" />
@@ -385,18 +375,16 @@ const CustomBrief = () => {
                         <SelectItem value="3">3 ofertas (básica + intermediária + premium)</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.numberOfOffers && <p className="text-red-500 text-sm mt-1">{errors.numberOfOffers.message}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Detalhes das Ofertas e Valores Exatos *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Detalhes das Ofertas e Valores Exatos</label>
                     <Textarea {...register('offerDetails')} placeholder="Descreva cada oferta com valor exato..."
-                      rows={6} className={`border-pink-200 focus:border-pink-400 ${errors.offerDetails ? 'border-red-500' : ''}`} />
-                    {errors.offerDetails && <p className="text-red-500 text-sm mt-1">{errors.offerDetails.message}</p>}
+                      rows={6} className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Modelo de Precificação *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Modelo de Precificação</label>
                     <Select onValueChange={(value) => setValue('pricingModel', value)}>
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Como será a precificação?" />
@@ -408,18 +396,16 @@ const CustomBrief = () => {
                         <SelectItem value="assinatura-anual">Assinatura anual</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.pricingModel && <p className="text-red-500 text-sm mt-1">{errors.pricingModel.message}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Call-to-Action Principal *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Call-to-Action Principal</label>
                     <Input {...register('callToAction')} placeholder="Ex: Comprar Agora, Solicitar Orçamento"
-                      className={`border-pink-200 focus:border-pink-400 ${errors.callToAction ? 'border-red-500' : ''}`} />
-                    {errors.callToAction && <p className="text-red-500 text-sm mt-1">{errors.callToAction.message}</p>}
+                      className="border-pink-200 focus:border-pink-400" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Para onde direcionar os leads? *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Para onde direcionar os leads?</label>
                     <Select onValueChange={(value) => setValue('leadDestination', value)}>
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Escolha o destino" />
@@ -432,7 +418,6 @@ const CustomBrief = () => {
                         <SelectItem value="agendamento">Sistema de agendamento</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.leadDestination && <p className="text-red-500 text-sm mt-1">{errors.leadDestination.message}</p>}
                   </div>
                 </div>
               )}
@@ -453,7 +438,7 @@ const CustomBrief = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-pink-800 mb-2">Logo da Empresa *</label>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Logo da Empresa</label>
                     <Select onValueChange={(value) => setValue('hasLogo', value)}>
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Você tem logo?" />
@@ -464,7 +449,6 @@ const CustomBrief = () => {
                         <SelectItem value="sem-logo">Não tenho logo, preciso criar</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.hasLogo && <p className="text-red-500 text-sm mt-1">{errors.hasLogo.message}</p>}
                     
                     <FileUpload
                       id="logo-upload"
