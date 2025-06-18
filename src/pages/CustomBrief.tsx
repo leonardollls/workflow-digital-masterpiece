@@ -313,22 +313,22 @@ const CustomBrief = () => {
                       <Input {...register('companyName')} placeholder="Digite o nome da sua empresa"
                         className="border-pink-200 focus:border-pink-400" />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-pink-800 mb-2">Segmento de Atuação</label>
-                      <Select onValueChange={(value) => setValue('businessSegment', value)}>
-                        <SelectTrigger className="border-pink-200 focus:border-pink-400">
-                          <SelectValue placeholder="Selecione o segmento" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="educacao">Educação</SelectItem>
-                          <SelectItem value="saude">Saúde e Bem-estar</SelectItem>
-                          <SelectItem value="consultoria">Consultoria</SelectItem>
-                          <SelectItem value="tecnologia">Tecnologia</SelectItem>
-                          <SelectItem value="e-commerce">E-commerce</SelectItem>
-                          <SelectItem value="servicos">Serviços</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                                      <div>
+                    <label className="block text-sm font-medium text-pink-800 mb-2">Segmento de Atuação</label>
+                    <Select onValueChange={(value) => setValue('businessSegment', value)} defaultValue="educacao">
+                      <SelectTrigger className="border-pink-200 focus:border-pink-400">
+                        <SelectValue placeholder="Selecione o segmento" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="educacao">Educação</SelectItem>
+                        <SelectItem value="saude">Saúde e Bem-estar</SelectItem>
+                        <SelectItem value="consultoria">Consultoria</SelectItem>
+                        <SelectItem value="tecnologia">Tecnologia</SelectItem>
+                        <SelectItem value="e-commerce">E-commerce</SelectItem>
+                        <SelectItem value="servicos">Serviços</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   </div>
 
                   <div>
@@ -351,7 +351,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Objetivo da Landing Page</label>
-                    <Select onValueChange={(value) => setValue('landingPageGoal', value)}>
+                    <Select onValueChange={(value) => setValue('landingPageGoal', value)} defaultValue="vendas">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Qual o principal objetivo?" />
                       </SelectTrigger>
@@ -433,7 +433,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Quantas Ofertas Terá na Landing Page?</label>
-                    <Select onValueChange={(value) => setValue('numberOfOffers', value)}>
+                    <Select onValueChange={(value) => setValue('numberOfOffers', value)} defaultValue="1">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
@@ -453,7 +453,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Modelo de Precificação</label>
-                    <Select onValueChange={(value) => setValue('pricingModel', value)}>
+                    <Select onValueChange={(value) => setValue('pricingModel', value)} defaultValue="assinatura">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Como será a precificação?" />
                       </SelectTrigger>
@@ -474,7 +474,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Para onde direcionar os leads?</label>
-                    <Select onValueChange={(value) => setValue('leadDestination', value)}>
+                    <Select onValueChange={(value) => setValue('leadDestination', value)} defaultValue="checkout">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Escolha o destino" />
                       </SelectTrigger>
@@ -507,7 +507,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Logo da Empresa</label>
-                    <Select onValueChange={(value) => setValue('hasLogo', value)}>
+                    <Select onValueChange={(value) => setValue('hasLogo', value)} defaultValue="logo-simples">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Você tem logo?" />
                       </SelectTrigger>
@@ -569,7 +569,7 @@ const CustomBrief = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Tom de Comunicação</label>
-                    <Select onValueChange={(value) => setValue('communicationTone', value)}>
+                    <Select onValueChange={(value) => setValue('communicationTone', value)} defaultValue="emocional">
                       <SelectTrigger className="border-pink-200 focus:border-pink-400">
                         <SelectValue placeholder="Como prefere se comunicar?" />
                       </SelectTrigger>
