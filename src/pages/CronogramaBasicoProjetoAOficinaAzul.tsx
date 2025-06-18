@@ -89,7 +89,7 @@ const CronogramaBasicoProjetoAOficinaAzul = () => {
         "⚡ Otimização de performance",
         "🛡️ Implementação de segurança",
         "🧪 Testes de funcionalidade",
-        "🔌 Integração com ferramentas externas"
+        "🔒 Implementação de LGPD e cookies"
       ]
     },
     {
