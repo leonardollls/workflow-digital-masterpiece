@@ -9,7 +9,6 @@ const TestimonialTheater = lazy(() => import('@/components/TestimonialTheater'))
 const MethodologyLab = lazy(() => import('@/components/MethodologyLab'));
 const CapabilityMatrix = lazy(() => import('@/components/CapabilityMatrix'));
 const ResourceVault = lazy(() => import('@/components/ResourceVault'));
-const BriefingCTA = lazy(() => import('@/components/BriefingCTA'));
 const WorkflowFooter = lazy(() => import('@/components/WorkflowFooter'));
 
 // Componente de loading otimizado
@@ -80,12 +79,6 @@ const Index = () => {
       {sectionsLoaded && (
         <Suspense fallback={<SectionLoader />}>
           <ResourceVault />
-        </Suspense>
-      )}
-      
-      {sectionsLoaded && (
-        <Suspense fallback={<SectionLoader />}>
-          <BriefingCTA />
         </Suspense>
       )}
       
