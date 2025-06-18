@@ -68,7 +68,6 @@ const CustomBrief = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitAllowed, setSubmitAllowed] = useState(false);
 
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
@@ -113,18 +112,17 @@ const CustomBrief = () => {
 
 
   const onSubmit = async (data: ClientBriefForm) => {
+    console.log('🚀 onSubmit chamado!', { currentStep, isSubmitting });
+    
     // Verificação adicional para garantir que estamos na página 5
     if (currentStep !== 5) {
-      console.log('Envio bloqueado: não está na página final');
+      console.log('❌ Envio bloqueado: não está na página final');
       return;
     }
 
-    // Verificação de segurança: só permite envio se explicitamente autorizado
-    if (!submitAllowed) {
-      console.log('Envio bloqueado: envio não autorizado pelo usuário');
-      return;
-    }
+    // Verificação removida - usando abordagem direta
 
+    console.log('✅ Todas as verificações passaram, iniciando envio...');
     setIsSubmitting(true);
     
     try {
@@ -179,16 +177,25 @@ const CustomBrief = () => {
     }
   };
 
-  // Handler seguro para envio do briefing
-  const handleSafeSubmit = () => {
-    if (currentStep === 5 && !isSubmitting) {
-      console.log('🔐 Autorizando envio pelo clique do botão');
-      setSubmitAllowed(true);
-      setTimeout(() => {
-        handleSubmit(onSubmit)();
-        setSubmitAllowed(false); // Reset após tentativa de envio
-      }, 100);
+  // Handler direto para envio do briefing
+  const handleDirectSubmit = async () => {
+    console.log('🎯 Botão clicado!', { currentStep, isSubmitting });
+    
+    if (currentStep !== 5) {
+      console.log('❌ Não está na página final');
+      return;
     }
+    
+    if (isSubmitting) {
+      console.log('❌ Já está enviando');
+      return;
+    }
+
+    console.log('🚀 Iniciando envio direto...');
+    
+    // Chama diretamente a função onSubmit com os dados do formulário
+    const formData = form.getValues();
+    await onSubmit(formData);
   };
 
   if (isSubmitted) {
@@ -678,7 +685,7 @@ const CustomBrief = () => {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button type="button" disabled={isSubmitting} onClick={handleSafeSubmit}
+                  <Button type="button" disabled={isSubmitting} onClick={handleDirectSubmit}
                     className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
                     {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
                     <Send className="w-4 h-4" />
