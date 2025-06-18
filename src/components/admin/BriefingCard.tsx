@@ -225,6 +225,30 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                           <label className="text-sm font-medium text-gray-700">Objetivo da Landing Page</label>
                           <p className="text-gray-900 mt-1">{briefing.landing_page_goal}</p>
                         </div>
+                        {briefing.main_competitors && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Principais Concorrentes</label>
+                            <p className="text-gray-900 mt-1">{briefing.main_competitors}</p>
+                          </div>
+                        )}
+                        {briefing.customer_pain_points && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Dores do Público-Alvo</label>
+                            <p className="text-gray-900 mt-1">{briefing.customer_pain_points}</p>
+                          </div>
+                        )}
+                        {briefing.success_stories && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Casos de Sucesso</label>
+                            <p className="text-gray-900 mt-1">{briefing.success_stories}</p>
+                          </div>
+                        )}
+                        {briefing.social_proof && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Prova Social</label>
+                            <p className="text-gray-900 mt-1">{briefing.social_proof}</p>
+                          </div>
+                        )}
                       </div>
                     </section>
 
@@ -239,6 +263,16 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                           <label className="text-sm font-medium text-gray-700">Responsável</label>
                           <p className="text-gray-900">{briefing.responsible_name}</p>
                         </div>
+                        {briefing.current_website && (
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Site Atual</label>
+                            <p className="text-gray-900">
+                              <a href={briefing.current_website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                {briefing.current_website}
+                              </a>
+                            </p>
+                          </div>
+                        )}
                         <div>
                           <label className="text-sm font-medium text-gray-700">Nome do Produto</label>
                           <p className="text-gray-900">{briefing.product_name}</p>
@@ -251,6 +285,24 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                           <label className="text-sm font-medium text-gray-700">Principais Benefícios</label>
                           <p className="text-gray-900 mt-1">{briefing.main_benefits}</p>
                         </div>
+                        {briefing.number_of_offers && (
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Quantidade de Ofertas</label>
+                            <p className="text-gray-900">{briefing.number_of_offers}</p>
+                          </div>
+                        )}
+                        {briefing.offer_details && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Detalhes das Ofertas</label>
+                            <p className="text-gray-900 mt-1">{briefing.offer_details}</p>
+                          </div>
+                        )}
+                        {briefing.pricing_model && (
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Modelo de Cobrança</label>
+                            <p className="text-gray-900">{briefing.pricing_model}</p>
+                          </div>
+                        )}
                         {briefing.price_range && (
                           <div>
                             <label className="text-sm font-medium text-gray-700">Faixa de Preço</label>
@@ -291,10 +343,34 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                           <label className="text-sm font-medium text-gray-700">Possui Logo</label>
                           <p className="text-gray-900">{briefing.has_logo}</p>
                         </div>
+                        {briefing.brand_personality && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Personalidade da Marca</label>
+                            <p className="text-gray-900 mt-1">{briefing.brand_personality}</p>
+                          </div>
+                        )}
+                        {briefing.communication_tone && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Tom de Comunicação</label>
+                            <p className="text-gray-900 mt-1">{briefing.communication_tone}</p>
+                          </div>
+                        )}
+                        {briefing.key_messages && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Mensagens-Chave</label>
+                            <p className="text-gray-900 mt-1">{briefing.key_messages}</p>
+                          </div>
+                        )}
                         {briefing.visual_references && (
                           <div className="md:col-span-2">
                             <label className="text-sm font-medium text-gray-700">Referências Visuais</label>
                             <p className="text-gray-900 mt-1">{briefing.visual_references}</p>
+                          </div>
+                        )}
+                        {briefing.content_materials && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Materiais de Conteúdo</label>
+                            <p className="text-gray-900 mt-1">{briefing.content_materials}</p>
                           </div>
                         )}
                       </div>
@@ -311,6 +387,24 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                           <label className="text-sm font-medium text-gray-700">Informações do Domínio</label>
                           <p className="text-gray-900 mt-1">{briefing.domain_info}</p>
                         </div>
+                        {briefing.desired_domain && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Domínio Desejado</label>
+                            <p className="text-gray-900 mt-1">{briefing.desired_domain}</p>
+                          </div>
+                        )}
+                        {briefing.landing_page_sections && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Seções da Landing Page</label>
+                            <p className="text-gray-900 mt-1">{briefing.landing_page_sections}</p>
+                          </div>
+                        )}
+                        {briefing.specific_requirements && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-gray-700">Requisitos Específicos</label>
+                            <p className="text-gray-900 mt-1">{briefing.specific_requirements}</p>
+                          </div>
+                        )}
                         {briefing.integrations && (
                           <div className="md:col-span-2">
                             <label className="text-sm font-medium text-gray-700">Integrações</label>

@@ -138,6 +138,26 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
                       required
                     />
                   </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="competitive_advantage">Diferencial Competitivo *</Label>
+                    <Textarea
+                      id="competitive_advantage"
+                      value={formData.competitive_advantage || ''}
+                      onChange={(e) => handleInputChange('competitive_advantage', e.target.value)}
+                      rows={2}
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="landing_page_goal">Objetivo da Landing Page *</Label>
+                    <Textarea
+                      id="landing_page_goal"
+                      value={formData.landing_page_goal || ''}
+                      onChange={(e) => handleInputChange('landing_page_goal', e.target.value)}
+                      rows={2}
+                      required
+                    />
+                  </div>
                 </div>
               </section>
 
@@ -202,6 +222,152 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
                       required
                     />
                   </div>
+                  <div>
+                    <Label htmlFor="lead_destination">Destino dos Leads *</Label>
+                    <Input
+                      id="lead_destination"
+                      value={formData.lead_destination || ''}
+                      onChange={(e) => handleInputChange('lead_destination', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="number_of_offers">Quantidade de Ofertas</Label>
+                    <Input
+                      id="number_of_offers"
+                      value={formData.number_of_offers || ''}
+                      onChange={(e) => handleInputChange('number_of_offers', e.target.value)}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="offer_details">Detalhes das Ofertas</Label>
+                    <Textarea
+                      id="offer_details"
+                      value={formData.offer_details || ''}
+                      onChange={(e) => handleInputChange('offer_details', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="pricing_model">Modelo de Cobrança</Label>
+                    <Input
+                      id="pricing_model"
+                      value={formData.pricing_model || ''}
+                      onChange={(e) => handleInputChange('pricing_model', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="guarantees">Garantias</Label>
+                    <Input
+                      id="guarantees"
+                      value={formData.guarantees || ''}
+                      onChange={(e) => handleInputChange('guarantees', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <Separator />
+
+              {/* Design & Branding */}
+              <section>
+                <h3 className="text-lg font-semibold mb-3">Design & Branding</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="brand_colors">Cores da Marca</Label>
+                    <Input
+                      id="brand_colors"
+                      value={formData.brand_colors || ''}
+                      onChange={(e) => handleInputChange('brand_colors', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="has_logo">Possui Logo</Label>
+                    <Select
+                      value={formData.has_logo || ''}
+                      onValueChange={(value) => handleInputChange('has_logo', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sim">Sim</SelectItem>
+                        <SelectItem value="nao">Não</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="brand_personality">Personalidade da Marca</Label>
+                    <Textarea
+                      id="brand_personality"
+                      value={formData.brand_personality || ''}
+                      onChange={(e) => handleInputChange('brand_personality', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="communication_tone">Tom de Comunicação</Label>
+                    <Textarea
+                      id="communication_tone"
+                      value={formData.communication_tone || ''}
+                      onChange={(e) => handleInputChange('communication_tone', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="visual_references">Referências Visuais</Label>
+                    <Textarea
+                      id="visual_references"
+                      value={formData.visual_references || ''}
+                      onChange={(e) => handleInputChange('visual_references', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <Separator />
+
+              {/* Configurações Técnicas */}
+              <section>
+                <h3 className="text-lg font-semibold mb-3">Configurações Técnicas</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="domain_info">Informações do Domínio *</Label>
+                    <Textarea
+                      id="domain_info"
+                      value={formData.domain_info || ''}
+                      onChange={(e) => handleInputChange('domain_info', e.target.value)}
+                      rows={2}
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="desired_domain">Domínio Desejado</Label>
+                    <Input
+                      id="desired_domain"
+                      value={formData.desired_domain || ''}
+                      onChange={(e) => handleInputChange('desired_domain', e.target.value)}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="integrations">Integrações</Label>
+                    <Textarea
+                      id="integrations"
+                      value={formData.integrations || ''}
+                      onChange={(e) => handleInputChange('integrations', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="analytics_tracking">Analytics & Tracking</Label>
+                    <Textarea
+                      id="analytics_tracking"
+                      value={formData.analytics_tracking || ''}
+                      onChange={(e) => handleInputChange('analytics_tracking', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
                 </div>
               </section>
 
@@ -226,6 +392,14 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
                       id="start_date"
                       value={formData.start_date || ''}
                       onChange={(e) => handleInputChange('start_date', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="budget">Orçamento</Label>
+                    <Input
+                      id="budget"
+                      value={formData.budget || ''}
+                      onChange={(e) => handleInputChange('budget', e.target.value)}
                     />
                   </div>
                 </div>
