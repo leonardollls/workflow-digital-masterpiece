@@ -83,7 +83,7 @@ const CustomBrief = () => {
       customerPainPoints: 'Mães sobrecarregadas que buscam atividades de qualidade, falta de tempo para pesquisar atividades adequadas, necessidade de conteúdo confiável e seguro para os filhos',
       successStories: 'Casos de famílias que usaram as atividades para fortalecer laços, crianças que desenvolveram habilidades através das atividades propostas',
       socialProof: 'Depoimentos de mães satisfeitas, casos de sucesso de famílias que usaram o portal, avaliações positivas sobre a qualidade das atividades',
-      responsibleName: '',
+      responsibleName: 'Administrador Portal Materno',
       productName: 'Portal de Atividades Materno',
       productDescription: 'Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade. Oferecemos uma experiência digital acolhedora com atividades que promovem o desenvolvimento infantil e fortalecem os laços familiares.',
       mainBenefits: 'Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas, conteúdo que fortalece vínculos familiares, praticidade no acesso via mobile, qualidade garantida em todas as atividades',
@@ -102,6 +102,7 @@ const CustomBrief = () => {
       specificRequirements: 'Design que transmita confiança e carinho materno; Botões com efeito glow; Galeria de atividades com carousel; Seção de depoimentos de mães com fotos',
       desiredDomain: 'portalatividadesmaterno.com.br',
       deliveryDeadline: '5-8-dias',
+      startDate: new Date().toISOString().split('T')[0],
       additionalNotes: 'Foco total na experiência feminina/materna. A página deve transmitir acolhimento e carinho. Priorizar performance mobile. Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas).',
     }
   });
@@ -133,15 +134,28 @@ const CustomBrief = () => {
         created_at: new Date().toISOString()
       };
       
+      console.log('📤 Tentando enviar para Supabase...');
+      
       try {
         const { submitBriefing } = await import('@/services/briefingService');
-        await submitBriefing(data);
+        console.log('📦 Serviço carregado, enviando dados...');
+        
+        const result = await submitBriefing(data);
+        console.log('✅ Briefing enviado para Supabase com sucesso!', result);
+        
         setIsSubmitted(true);
+        console.log('🎉 Estado atualizado para enviado!');
+        
       } catch (supabaseError) {
+        console.error('❌ Erro no Supabase, salvando no localStorage:', supabaseError);
+        
         const existingBriefings = JSON.parse(localStorage.getItem('briefings') || '[]');
         existingBriefings.push(briefingData);
         localStorage.setItem('briefings', JSON.stringify(existingBriefings));
+        
+        console.log('💾 Briefing salvo no localStorage como fallback');
         setIsSubmitted(true);
+        console.log('🎉 Estado atualizado para enviado (localStorage)!');
       }
       
     } catch (error) {
@@ -177,6 +191,30 @@ const CustomBrief = () => {
     }
   };
 
+  // Teste de conectividade com Supabase
+  const testSupabaseConnection = async () => {
+    try {
+      console.log('🔍 Testando conexão com Supabase...');
+      const { supabase } = await import('@/lib/supabase');
+      
+      const { data, error } = await supabase
+        .from('client_briefings')
+        .select('count(*)')
+        .limit(1);
+        
+      if (error) {
+        console.error('❌ Erro de conexão Supabase:', error);
+        return false;
+      }
+      
+      console.log('✅ Conexão Supabase OK:', data);
+      return true;
+    } catch (error) {
+      console.error('❌ Erro ao testar Supabase:', error);
+      return false;
+    }
+  };
+
   // Handler direto para envio do briefing
   const handleDirectSubmit = async () => {
     console.log('🎯 Botão clicado!', { currentStep, isSubmitting });
@@ -193,9 +231,21 @@ const CustomBrief = () => {
 
     console.log('🚀 Iniciando envio direto...');
     
-    // Chama diretamente a função onSubmit com os dados do formulário
-    const formData = form.getValues();
-    await onSubmit(formData);
+    // Primeiro testar a conexão
+    const connectionOk = await testSupabaseConnection();
+    console.log('🔗 Status da conexão:', connectionOk ? 'OK' : 'FALHOU');
+    
+    try {
+      // Chama diretamente a função onSubmit com os dados do formulário
+      const formData = form.getValues();
+      console.log('📋 Dados do formulário:', formData);
+      
+      await onSubmit(formData);
+      console.log('✅ Envio concluído com sucesso!');
+    } catch (error) {
+      console.error('❌ Erro no handleDirectSubmit:', error);
+      alert(`Erro ao enviar briefing: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    }
   };
 
   if (isSubmitted) {
