@@ -1,8 +1,111 @@
 # 🌸 Briefing Personalizado - Portal de Atividades Materno
 
-## 📋 Visão Geral
+## 📋 Resumo das Alterações
 
-Este é um **briefing personalizado e pré-preenchido** criado especificamente para atender à proposta de um cliente que precisa de uma landing page para um **Portal de Atividades Materno**.
+O briefing personalizado foi atualizado para:
+
+1. ✅ **Campos vazios** - Removidos todos os textos pré-preenchidos
+2. ✅ **Estrutura igual ao briefing original** - Todas as seções e campos do briefing padrão
+3. ✅ **Uploads de arquivos completos** - Logo, referências visuais e materiais próprios
+4. ✅ **Prazo fixo** - 5 a 8 dias úteis (não editável pelo cliente)
+5. ✅ **Removida integração com email marketing** - Foco apenas na landing page
+6. ✅ **Tema feminino mantido** - Design rosa/acolhedor preservado
+
+## 🎨 Características Visuais
+
+- **Cores**: Tons de rosa (#F8BBD9, #E91E63) com gradientes femininos
+- **Ícones**: Corações como elemento principal
+- **Visual**: Design acolhedor e maternal
+- **Responsivo**: Otimizado para mobile
+
+## 📂 Estrutura Completa
+
+### Etapa 1: Empresa
+- Nome da empresa
+- Segmento de atuação
+- Descrição da empresa
+- Público-alvo
+- Diferencial competitivo
+- Objetivo da landing page
+- Principais concorrentes
+- Dores do cliente
+- Histórias de sucesso
+- Prova social
+
+### Etapa 2: Produto/Serviço
+- Nome do responsável
+- Site atual
+- Nome do produto/serviço
+- Descrição detalhada
+- Principais benefícios
+- Quantidade de ofertas
+- Detalhes das ofertas e valores
+- Modelo de precificação
+- Call-to-action principal
+- Destino dos leads
+
+### Etapa 3: Visual & Marketing
+- Cores da marca
+- Logo da empresa + **Upload de arquivos**
+- Referências visuais + **Upload de arquivos**
+- Materiais próprios + **Upload de arquivos**
+- Personalidade da marca
+- Tom de comunicação
+- Mensagens-chave
+- Seções da landing page
+- Requisitos específicos
+
+### Etapa 4: Técnico
+- Domínio desejado
+- Integrações necessárias
+- Analytics e tracking
+
+### Etapa 5: Timeline & Orçamento
+- **Prazo fixo**: 5 a 8 dias úteis
+- Orçamento
+- Observações adicionais
+
+## 🔧 Funcionalidades Técnicas
+
+### Upload de Arquivos
+- **Logo**: PNG, JPG, PDF, AI, EPS, SVG (máx. 10MB)
+- **Referências**: PNG, JPG, PDF
+- **Materiais**: Imagens, vídeos, documentos (máx. 50MB)
+
+### Validação
+- Campos obrigatórios marcados com *
+- Validação em tempo real
+- Mensagens de erro em português
+
+### Armazenamento
+- Primário: Supabase
+- Fallback: LocalStorage
+- Identificador único por briefing
+
+## 🌐 Rota de Acesso
+
+```
+/briefing-personalizado-atividades-infantis-2
+```
+
+## 📝 Próximos Passos
+
+1. **Análise (24h)**: Análise do briefing e estratégia personalizada
+2. **Proposta**: Proposta detalhada com timeline
+3. **Desenvolvimento (5-8 dias)**: Criação da landing page
+
+## 💡 Diferenciais
+
+- **Tema feminino/maternal**: Design que conecta emocionalmente
+- **Campos não pré-preenchidos**: Cliente preenche manualmente
+- **Prazo otimizado**: 5-8 dias para qualidade máxima
+- **Upload completo**: Todos os tipos de arquivo necessários
+- **Interface acolhedora**: Rosa, corações e linguagem carinhosa
+
+---
+
+**Status**: ✅ Implementado e funcional  
+**Última atualização**: Janeiro 2025
 
 ## 🎯 Proposta Original do Cliente
 
