@@ -112,6 +112,12 @@ const CustomBrief = () => {
   }, [setValue]);
 
   const onSubmit = async (data: ClientBriefForm) => {
+    // Verificação adicional para garantir que estamos na página 5
+    if (currentStep !== 5) {
+      console.log('Envio bloqueado: não está na página final');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -150,6 +156,21 @@ const CustomBrief = () => {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  // Prevenir envio automático com Enter
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && currentStep === 5) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  // Handler seguro para envio do briefing
+  const handleSafeSubmit = () => {
+    if (currentStep === 5 && !isSubmitting) {
+      handleSubmit(onSubmit)();
     }
   };
 
@@ -227,7 +248,7 @@ const CustomBrief = () => {
         </div>
 
         <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()} onKeyDown={handleKeyDown}>
             <CardContent className="p-8">
               
               {/* Step 1: Empresa */}
@@ -582,7 +603,12 @@ const CustomBrief = () => {
                   <div>
                     <label className="block text-sm font-medium text-pink-800 mb-2">Observações Adicionais</label>
                     <Textarea {...register('additionalNotes')} placeholder="Informações importantes que não foram mencionadas..."
-                      rows={4} className="border-pink-200 focus:border-pink-400" />
+                      rows={4} className="border-pink-200 focus:border-pink-400"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.ctrlKey === false && e.shiftKey === false) {
+                          e.preventDefault();
+                        }
+                      }} />
                   </div>
 
                   <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 border border-pink-200">
@@ -630,7 +656,7 @@ const CustomBrief = () => {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button type="button" disabled={isSubmitting} onClick={handleSubmit(onSubmit)}
+                  <Button type="button" disabled={isSubmitting} onClick={handleSafeSubmit}
                     className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
                     {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
                     <Send className="w-4 h-4" />
