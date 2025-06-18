@@ -68,10 +68,11 @@ const CustomBrief = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [allowSubmit, setAllowSubmit] = useState(false);
 
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
     defaultValues: {
       companyName: 'Portal de Atividades Materno',
       businessSegment: 'educacao',
@@ -83,7 +84,7 @@ const CustomBrief = () => {
       customerPainPoints: 'Mães sobrecarregadas que buscam atividades de qualidade, falta de tempo para pesquisar atividades adequadas, necessidade de conteúdo confiável e seguro para os filhos',
       successStories: 'Casos de famílias que usaram as atividades para fortalecer laços, crianças que desenvolveram habilidades através das atividades propostas',
       socialProof: 'Depoimentos de mães satisfeitas, casos de sucesso de famílias que usaram o portal, avaliações positivas sobre a qualidade das atividades',
-      responsibleName: 'Administrador Portal Materno',
+      responsibleName: '',
       productName: 'Portal de Atividades Materno',
       productDescription: 'Um portal completo com atividades cuidadosamente selecionadas para crianças, criado especialmente para mães que buscam qualidade e praticidade. Oferecemos uma experiência digital acolhedora com atividades que promovem o desenvolvimento infantil e fortalecem os laços familiares.',
       mainBenefits: 'Atividades curadas por especialistas, design acolhedor e feminino, experiência otimizada para mães ocupadas, conteúdo que fortalece vínculos familiares, praticidade no acesso via mobile, qualidade garantida em todas as atividades',
@@ -102,18 +103,16 @@ const CustomBrief = () => {
       specificRequirements: 'Design que transmita confiança e carinho materno; Botões com efeito glow; Galeria de atividades com carousel; Seção de depoimentos de mães com fotos',
       desiredDomain: 'portalatividadesmaterno.com.br',
       deliveryDeadline: '5-8-dias',
-      startDate: new Date().toISOString().split('T')[0],
       additionalNotes: 'Foco total na experiência feminina/materna. A página deve transmitir acolhimento e carinho. Priorizar performance mobile. Incluir efeitos visuais sutis que agreguem valor (carrossel suave, hover effects, animações delicadas).',
-    }
+      startDate: '',
+    },
   });
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = form;
   const progressPercentage = (currentStep / steps.length) * 100;
 
-
-
   const onSubmit = async (data: ClientBriefForm) => {
-    console.log('🚀 onSubmit chamado!', { currentStep, isSubmitting });
+    console.log('🚨 onSubmit foi chamado!', { currentStep, isSubmitting, allowSubmit });
     
     // Verificação adicional para garantir que estamos na página 5
     if (currentStep !== 5) {
@@ -121,10 +120,19 @@ const CustomBrief = () => {
       return;
     }
 
-    // Verificação removida - usando abordagem direta
+    if (isSubmitting) {
+      console.log('❌ Envio bloqueado: já está enviando');
+      return;
+    }
 
-    console.log('✅ Todas as verificações passaram, iniciando envio...');
+    if (!allowSubmit) {
+      console.log('❌ Envio bloqueado: não foi autorizado via botão');
+      return;
+    }
+
+    console.log('✅ Iniciando envio do briefing...');
     setIsSubmitting(true);
+    setAllowSubmit(false); // Reset flag
     
     try {
       const briefingData = {
@@ -134,28 +142,15 @@ const CustomBrief = () => {
         created_at: new Date().toISOString()
       };
       
-      console.log('📤 Tentando enviar para Supabase...');
-      
       try {
         const { submitBriefing } = await import('@/services/briefingService');
-        console.log('📦 Serviço carregado, enviando dados...');
-        
-        const result = await submitBriefing(data);
-        console.log('✅ Briefing enviado para Supabase com sucesso!', result);
-        
+        await submitBriefing(data);
         setIsSubmitted(true);
-        console.log('🎉 Estado atualizado para enviado!');
-        
       } catch (supabaseError) {
-        console.error('❌ Erro no Supabase, salvando no localStorage:', supabaseError);
-        
         const existingBriefings = JSON.parse(localStorage.getItem('briefings') || '[]');
         existingBriefings.push(briefingData);
         localStorage.setItem('briefings', JSON.stringify(existingBriefings));
-        
-        console.log('💾 Briefing salvo no localStorage como fallback');
         setIsSubmitted(true);
-        console.log('🎉 Estado atualizado para enviado (localStorage)!');
       }
       
     } catch (error) {
@@ -168,12 +163,7 @@ const CustomBrief = () => {
 
   const nextStep = () => {
     if (currentStep < steps.length) {
-      const newStep = currentStep + 1;
-      console.log(`📄 Navegando para step ${newStep}`);
-      setCurrentStep(newStep);
-      if (newStep === 5) {
-        console.log('🎯 Chegou na página final (Timeline)');
-      }
+      setCurrentStep(currentStep + 1);
     }
   };
 
@@ -191,40 +181,28 @@ const CustomBrief = () => {
     }
   };
 
-  // Teste de conectividade com Supabase
-  const testSupabaseConnection = async () => {
-    try {
-      console.log('🔍 Testando conexão com Supabase...');
-      const { supabase } = await import('@/lib/supabase');
-      
-      const { data, error } = await supabase
-        .from('client_briefings')
-        .select('count(*)')
-        .limit(1);
-        
-      if (error) {
-        console.error('❌ Erro de conexão Supabase:', error);
-        return false;
-      }
-      
-      console.log('✅ Conexão Supabase OK:', data);
-      return true;
-    } catch (error) {
-      console.error('❌ Erro ao testar Supabase:', error);
-      return false;
-    }
-  };
-
-  // Handler direto para envio do briefing - VERSÃO ULTRA SIMPLIFICADA
-  const handleDirectSubmit = () => {
-    console.log('🔥 FUNÇÃO handleDirectSubmit EXECUTADA!');
-    console.log('Estado atual:', { currentStep, isSubmitting });
-    alert(`Função executada! Step: ${currentStep}, Enviando: ${isSubmitting}`);
+  // Handler seguro para envio do briefing
+  const handleSafeSubmit = (e?: React.MouseEvent) => {
+    console.log('🔘 Botão clicado!', { currentStep, isSubmitting });
     
-    // Remover todas as verificações por enquanto
-    console.log('🚀 Definindo como enviado...');
-    setIsSubmitted(true);
-    alert('Estado alterado para enviado!');
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    if (currentStep !== 5) {
+      console.log('❌ Botão bloqueado: não está na página 5');
+      return;
+    }
+    
+    if (isSubmitting) {
+      console.log('❌ Botão bloqueado: já está enviando');
+      return;
+    }
+    
+    console.log('✅ Autorizando e executando envio via botão...');
+    setAllowSubmit(true); // Autorizar envio
+    handleSubmit(onSubmit)();
   };
 
   if (isSubmitted) {
@@ -301,12 +279,7 @@ const CustomBrief = () => {
         </div>
 
         <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('🚫 Submit interceptado e bloqueado');
-            return false;
-          }} onKeyDown={handleKeyDown}>
+          <form onSubmit={(e) => e.preventDefault()} onKeyDown={handleKeyDown}>
             <CardContent className="p-8">
               
               {/* Step 1: Empresa */}
@@ -714,29 +687,11 @@ const CustomBrief = () => {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        console.log('🔥 BOTÃO TESTE CLICADO!');
-                        alert('Botão de teste funcionou!');
-                      }}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
-                      TESTE
-                    </button>
-                    
-                    <Button 
-                      type="button" 
-                      disabled={isSubmitting} 
-                      onClick={() => {
-                        console.log('🔥 CLIQUE DETECTADO!');
-                        handleDirectSubmit();
-                      }}
-                      className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
-                      {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
-                      <Send className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  <Button type="button" disabled={isSubmitting} onClick={handleSafeSubmit}
+                    className="bg-pink-600 hover:bg-pink-700 text-white flex items-center gap-2">
+                    {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
+                    <Send className="w-4 h-4" />
+                  </Button>
                 )}
               </div>
             </CardContent>
