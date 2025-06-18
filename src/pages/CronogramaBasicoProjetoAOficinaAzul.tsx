@@ -14,7 +14,6 @@ import {
   TestTube, 
   Upload, 
   Gift,
-  ArrowLeft,
   Sparkles
 } from 'lucide-react';
 
@@ -291,16 +290,7 @@ const CronogramaBasicoProjetoAOficinaAzul = () => {
            </Card>
          </div>
 
-        {/* Back Button */}
-        <div className="mt-12 text-center">
-                     <Button 
-             onClick={() => window.history.back()}
-             className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Voltar
-          </Button>
-        </div>
+        
       </div>
 
       {/* Custom Styles */}
