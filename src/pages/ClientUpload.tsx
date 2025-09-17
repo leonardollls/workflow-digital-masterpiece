@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FileUpload } from '@/components/ui/FileUpload';
-import { supabase, uploadFile, uploadFileResumable } from '@/lib/supabase';
+import { supabase, uploadFile, uploadFileResumable, uploadLargeFileInParts } from '@/lib/supabase';
 import { 
   Upload, 
   CheckCircle, 
@@ -95,14 +95,15 @@ const ClientUpload = () => {
 
       console.log('📁 Iniciando upload:', { fileName, size: `${(file.size / 1024 / 1024).toFixed(2)}MB` });
 
-      // Usar upload resumível para arquivos grandes (>100MB) ou upload padrão para menores
-      const isLargeFile = file.size > 100 * 1024 * 1024; // 100MB
+      // Estratégia de upload baseada no tamanho do arquivo
+      const fileSize = file.size;
+      const fileSizeMB = fileSize / 1024 / 1024;
       let publicUrl: string;
       
-      if (isLargeFile) {
-        console.log(`📦 Arquivo grande detectado (${(file.size / 1024 / 1024).toFixed(2)}MB), usando upload resumível`);
+      if (fileSize > 200 * 1024 * 1024) { // >200MB - Upload em partes
+        console.log(`🔄 Arquivo muito grande detectado (${fileSizeMB.toFixed(2)}MB), usando upload em partes`);
         
-        publicUrl = await uploadFileResumable(
+        publicUrl = await uploadLargeFileInParts(
           file, 
           'client-uploads', 
           filePath,
@@ -114,8 +115,39 @@ const ClientUpload = () => {
             ));
           }
         );
-      } else {
-        console.log(`📄 Arquivo pequeno (${(file.size / 1024 / 1024).toFixed(2)}MB), usando upload padrão`);
+      } else if (fileSize > 50 * 1024 * 1024) { // 50-200MB - Upload resumível
+        console.log(`📦 Arquivo grande detectado (${fileSizeMB.toFixed(2)}MB), usando upload resumível`);
+        
+        try {
+          publicUrl = await uploadFileResumable(
+            file, 
+            'client-uploads', 
+            filePath,
+            (bytesUploaded, bytesTotal) => {
+              // Atualizar progresso
+              const progress = Math.round((bytesUploaded / bytesTotal) * 100);
+              setUploadedFiles(prev => prev.map((f, i) => 
+                i === index ? { ...f, progress } : f
+              ));
+            }
+          );
+        } catch (tusError) {
+          console.log(`⚠️ TUS falhou, tentando upload em partes...`);
+          // Fallback para upload em partes se TUS falhar
+          publicUrl = await uploadLargeFileInParts(
+            file, 
+            'client-uploads', 
+            filePath,
+            (bytesUploaded, bytesTotal) => {
+              const progress = Math.round((bytesUploaded / bytesTotal) * 100);
+              setUploadedFiles(prev => prev.map((f, i) => 
+                i === index ? { ...f, progress } : f
+              ));
+            }
+          );
+        }
+      } else { // <50MB - Upload padrão
+        console.log(`📄 Arquivo pequeno (${fileSizeMB.toFixed(2)}MB), usando upload padrão`);
         
         // Upload para o Supabase Storage
         await uploadFile(file, 'client-uploads', filePath);

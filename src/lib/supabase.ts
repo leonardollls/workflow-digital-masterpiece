@@ -80,6 +80,77 @@ export interface ClientBriefing {
   updated_at?: string
 }
 
+// Função para upload de arquivos muito grandes em partes
+export const uploadLargeFileInParts = async (
+  file: File, 
+  bucket: string, 
+  path: string,
+  onProgress?: (bytesUploaded: number, bytesTotal: number) => void
+): Promise<string> => {
+  try {
+    console.log('🔄 [PARTS] Iniciando upload em partes:', { 
+      file: file.name, 
+      size: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
+      bucket, 
+      path 
+    });
+
+    const chunkSize = 50 * 1024 * 1024; // 50MB por parte
+    const totalChunks = Math.ceil(file.size / chunkSize);
+    let uploadedBytes = 0;
+    
+    // Criar array para armazenar URLs das partes
+    const partUrls: string[] = [];
+    
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * chunkSize;
+      const end = Math.min(start + chunkSize, file.size);
+      const chunk = file.slice(start, end);
+      
+      // Criar nome único para cada parte
+      const partPath = `${path}_part_${i.toString().padStart(3, '0')}`;
+      
+      console.log(`📦 [PARTS] Enviando parte ${i + 1}/${totalChunks} (${(chunk.size / 1024 / 1024).toFixed(2)}MB)`);
+      
+      // Upload da parte usando método padrão
+      await uploadFile(chunk, bucket, partPath);
+      
+      // Obter URL da parte
+      const { data } = supabase.storage.from(bucket).getPublicUrl(partPath);
+      partUrls.push(data.publicUrl);
+      
+      uploadedBytes += chunk.size;
+      
+      // Atualizar progresso
+      if (onProgress) {
+        onProgress(uploadedBytes, file.size);
+      }
+    }
+    
+    // Salvar metadata do arquivo dividido
+    const metadata = {
+      originalName: file.name,
+      totalSize: file.size,
+      totalParts: totalChunks,
+      partUrls: partUrls,
+      contentType: file.type
+    };
+    
+    // Criar arquivo de metadata
+    const metadataBlob = new Blob([JSON.stringify(metadata)], { type: 'application/json' });
+    const metadataPath = `${path}_metadata.json`;
+    await uploadFile(metadataBlob, bucket, metadataPath);
+    
+    // Retornar URL do metadata
+    const { data } = supabase.storage.from(bucket).getPublicUrl(metadataPath);
+    return data.publicUrl;
+    
+  } catch (error) {
+    console.error('❌ [PARTS] Erro no upload em partes:', error);
+    throw error;
+  }
+};
+
 // Função para upload resumível de arquivos grandes usando TUS
 export const uploadFileResumable = async (
   file: File, 
@@ -105,8 +176,8 @@ export const uploadFileResumable = async (
       
       // Criar upload TUS
       const upload = new Upload(file, {
-        // Endpoint TUS do Supabase (usando hostname direto para melhor performance)
-        endpoint: `${supabaseUrl.replace('.supabase.co', '.storage.supabase.co')}/storage/v1/upload/resumable`,
+        // Endpoint TUS do Supabase
+        endpoint: `${supabaseUrl}/storage/v1/upload/resumable`,
         retryDelays: [0, 3000, 5000, 10000, 20000],
         headers: {
           authorization: `Bearer ${session?.access_token || supabaseAnonKey}`,
@@ -120,7 +191,7 @@ export const uploadFileResumable = async (
           contentType: file.type || 'application/octet-stream',
           cacheControl: '3600',
         },
-        chunkSize: 6 * 1024 * 1024, // 6MB chunks (obrigatório pelo Supabase)
+        chunkSize: 2 * 1024 * 1024, // 2MB chunks (reduzido para evitar erro 413)
         onError: function (error) {
           console.error('❌ [TUS] Erro no upload:', error);
           reject(new Error(`Falha no upload: ${error.message}`));
