@@ -1,54 +1,63 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import ClientBrief from "./pages/ClientBrief";
-import InstitutionalBrief from "./pages/InstitutionalBrief";
-import CustomBrief from "./pages/CustomBrief";
-import CronogramaBasicoProjetoAOficinaAzul from "./pages/CronogramaBasicoProjetoAOficinaAzul";
-import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
-const queryClient = new QueryClient();
+const Index = lazy(() => import("./pages/Index"));
+const Portfolio = lazy(() => import("./pages/Portfolio"));
+const ClientBrief = lazy(() => import("./pages/ClientBrief"));
+const CustomBrief = lazy(() => import("./pages/CustomBrief"));
+const InstitutionalBrief = lazy(() => import("./pages/InstitutionalBrief"));
+const ClientUpload = lazy(() => import("./pages/ClientUpload"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/privacidade" element={<Privacy />} />
-          <Route path="/termos" element={<Terms />} />
-          <Route path="/briefing" element={<ClientBrief />} />
-          <Route path="/briefing-institucional" element={<InstitutionalBrief />} />
-          <Route path="/briefing-personalizado-atividades-infantis-2" element={<CustomBrief />} />
-          <Route path="/cronograma-basico-projeto-a-oficina-azul" element={<CronogramaBasicoProjetoAOficinaAzul />} />
-          
-          {/* Rotas Administrativas */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route 
-            path="/admin/dashboard" 
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/briefing" element={<Navigate to="/briefing-cliente" replace />} />
+              <Route path="/briefing-cliente" element={<ClientBrief />} />
+              <Route path="/briefing-personalizado" element={<CustomBrief />} />
+              <Route path="/briefing-institucional" element={<InstitutionalBrief />} />
+              <Route path="/upload-cliente" element={<ClientUpload />} />
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/termos-de-uso" element={<Terms />} />
+              <Route path="/politica-de-privacidade" element={<Privacy />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
