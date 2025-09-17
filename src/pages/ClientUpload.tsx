@@ -15,13 +15,11 @@ import {
   FileText,
   User,
   Building,
-  Mail
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface UploadFormData {
   clientName: string;
-  clientEmail: string;
   clientCompany: string;
   projectDescription: string;
   notes: string;
@@ -38,7 +36,6 @@ interface UploadedFile {
 const ClientUpload = () => {
   const [formData, setFormData] = useState<UploadFormData>({
     clientName: '',
-    clientEmail: '',
     clientCompany: '',
     projectDescription: '',
     notes: ''
@@ -184,7 +181,7 @@ const ClientUpload = () => {
   const saveUploadRecord = async (file: File, fileUrl: string) => {
     const uploadRecord = {
       client_name: formData.clientName,
-      client_email: formData.clientEmail,
+      client_email: null, // Campo removido do formulário
       client_company: formData.clientCompany || null,
       project_description: formData.projectDescription || null,
       file_name: file.name.replace(/[^a-zA-Z0-9.-]/g, '_').toLowerCase(),
@@ -217,15 +214,6 @@ const ClientUpload = () => {
       toast({
         title: "Nome obrigatório",
         description: "Por favor, informe seu nome completo.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!formData.clientEmail.trim()) {
-      toast({
-        title: "Email obrigatório", 
-        description: "Por favor, informe seu email para contato.",
         variant: "destructive"
       });
       return;
@@ -269,14 +257,13 @@ const ClientUpload = () => {
       setSubmitSuccess(true);
       toast({
         title: "Upload realizado com sucesso!",
-        description: `${uploadedFiles.length} arquivo(s) enviado(s). Nossa equipe entrará em contato em breve.`,
+        description: `${uploadedFiles.length} arquivo(s) enviado(s). Nossa equipe analisará os arquivos.`,
         variant: "default"
       });
 
       // Limpar formulário
       setFormData({
         clientName: '',
-        clientEmail: '',
         clientCompany: '',
         projectDescription: '',
         notes: ''
@@ -309,7 +296,7 @@ const ClientUpload = () => {
                 Upload Concluído!
               </h2>
               <p className="text-gray-600 mb-6">
-                Seus arquivos foram enviados com sucesso. Nossa equipe entrará em contato em breve através do email informado.
+                Seus arquivos foram enviados com sucesso. Nossa equipe analisará os materiais e dará continuidade ao projeto.
               </p>
               <Button 
                 onClick={() => {
@@ -366,28 +353,15 @@ const ClientUpload = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="clientName">Nome Completo *</Label>
-                  <Input
-                    id="clientName"
-                    value={formData.clientName}
-                    onChange={(e) => handleInputChange('clientName', e.target.value)}
-                    placeholder="Seu nome completo"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="clientEmail">Email *</Label>
-                  <Input
-                    id="clientEmail"
-                    type="email"
-                    value={formData.clientEmail}
-                    onChange={(e) => handleInputChange('clientEmail', e.target.value)}
-                    placeholder="seu.email@exemplo.com"
-                    required
-                  />
-                </div>
+              <div>
+                <Label htmlFor="clientName">Nome Completo *</Label>
+                <Input
+                  id="clientName"
+                  value={formData.clientName}
+                  onChange={(e) => handleInputChange('clientName', e.target.value)}
+                  placeholder="Seu nome completo"
+                  required
+                />
               </div>
               
               <div>
