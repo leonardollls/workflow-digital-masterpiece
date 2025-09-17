@@ -22,7 +22,8 @@ import {
   Users,
   Calendar,
   Globe,
-  MapPin
+  MapPin,
+  Upload
 } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
 import type { InstitutionalBriefing } from '@/services/briefingService'
