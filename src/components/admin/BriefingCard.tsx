@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -39,19 +38,27 @@ import {
   Edit,
   Star,
   Palette,
-  Settings
+  Settings,
+  Monitor,
+  Users
 } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
+import type { InstitutionalBriefing } from '@/services/briefingService'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { EditBriefingDialog } from './EditBriefingDialog'
 import { ProposalValueDialog } from './ProposalValueDialog'
-import { deleteBriefing } from '@/services/briefingService'
+import { deleteBriefing, deleteInstitutionalBriefing } from '@/services/briefingService'
 
 interface BriefingCardProps {
-  briefing: ClientBriefing
-  onUpdate?: (updatedBriefing: ClientBriefing) => void
+  briefing: ClientBriefing | InstitutionalBriefing
+  onUpdate?: (updatedBriefing: ClientBriefing | InstitutionalBriefing) => void
   onDelete?: (briefingId: string) => void
+}
+
+// Type guard para verificar se é um briefing institucional
+const isInstitutionalBriefing = (briefing: ClientBriefing | InstitutionalBriefing): briefing is InstitutionalBriefing => {
+  return 'website_goal' in briefing && 'website_type' in briefing
 }
 
 export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps) => {
@@ -68,14 +75,21 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
     }
   }
 
-  const getDeadlineUrgency = (deadline: string) => {
-    const days = parseInt(deadline.match(/\d+/)?.[0] || '0')
-    if (days <= 10) return { color: 'bg-red-500', text: 'Urgente' }
-    if (days <= 20) return { color: 'bg-yellow-500', text: 'Moderado' }
-    return { color: 'bg-green-500', text: 'Flexível' }
+  // Calcular urgência baseado no deadline
+  const getUrgency = () => {
+    if (!briefing.deadline) return { text: 'Sem prazo', color: 'bg-gray-500' }
+    
+    const deadline = new Date(briefing.deadline)
+    const today = new Date()
+    const diffTime = deadline.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays <= 10) return { text: 'Urgente', color: 'bg-red-500' }
+    if (diffDays <= 20) return { text: 'Moderado', color: 'bg-yellow-500' }
+    return { text: 'Flexível', color: 'bg-green-500' }
   }
 
-  const urgency = getDeadlineUrgency(briefing.deadline)
+  const urgency = getUrgency()
 
   const handleDelete = async () => {
     if (!briefing.id) {
@@ -92,7 +106,11 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
         company: briefing.company_name
       })
       
+      if (isInstitutionalBriefing(briefing)) {
+        await deleteInstitutionalBriefing(briefing.id)
+      } else {
       await deleteBriefing(briefing.id)
+      }
       
       console.log('✅ Briefing excluído com sucesso, notificando componente pai')
       
@@ -112,7 +130,7 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
     }
   }
 
-  const handleUpdate = (updatedBriefing: ClientBriefing) => {
+  const handleUpdate = (updatedBriefing: ClientBriefing | InstitutionalBriefing) => {
     onUpdate?.(updatedBriefing)
   }
 
@@ -123,11 +141,25 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
-                {briefing.company_name}
+                {briefing.company_name || 'Nome não informado'}
               </CardTitle>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Building2 className="w-4 h-4" />
-                <span>{briefing.business_segment}</span>
+                <span>{briefing.business_segment || 'Segmento não informado'}</span>
+              </div>
+              {/* Mostrar tipo de projeto */}
+              <div className="flex items-center gap-2 mt-1">
+                {isInstitutionalBriefing(briefing) ? (
+                  <>
+                    <Globe className="w-4 h-4 text-blue-600" />
+                    <span className="text-xs text-blue-600 font-medium">Site Institucional</span>
+                  </>
+                ) : (
+                  <>
+                    <Target className="w-4 h-4 text-purple-600" />
+                    <span className="text-xs text-purple-600 font-medium">Landing Page</span>
+                  </>
+                )}
               </div>
             </div>
             <Badge className={`${urgency.color} text-white`}>
@@ -140,22 +172,31 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-green-600" />
-              <span className="font-medium">{briefing.budget}</span>
+              <span className="font-medium">{briefing.budget || 'Não informado'}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-blue-600" />
-              <span>{briefing.deadline}</span>
+              <span>{briefing.deadline || 'Prazo não informado'}</span>
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
               <User className="w-4 h-4 text-purple-600" />
-              <span className="font-medium">{briefing.responsible_name}</span>
+              <span className="font-medium">{briefing.responsible_name || 'Responsável não informado'}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
+              {isInstitutionalBriefing(briefing) ? (
+                <>
+                  <Globe className="w-4 h-4 text-blue-600" />
+                  <span className="text-gray-600 truncate">{briefing.website_goal || 'Objetivo não informado'}</span>
+                </>
+              ) : (
+                <>
               <Target className="w-4 h-4 text-orange-600" />
-              <span className="text-gray-600 truncate">{briefing.landing_page_goal}</span>
+              <span className="text-gray-600 truncate">{briefing.landing_page_goal || 'Objetivo não informado'}</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -190,310 +231,705 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
                     <Building2 className="w-5 h-5" />
                     {briefing.company_name}
                   </DialogTitle>
-                  <DialogDescription>
-                    Briefing completo recebido em {briefing.created_at && formatDate(briefing.created_at)}
+                  <DialogDescription className="space-y-1">
+                    <div>Briefing completo recebido em {briefing.created_at && formatDate(briefing.created_at)}</div>
+                    <div className="text-xs text-blue-600 font-medium">Desenvolvedor: Leonardo Lopes</div>
                   </DialogDescription>
                 </DialogHeader>
 
                 <ScrollArea className="max-h-[70vh]">
                   <div className="space-y-6 pr-4">
-                    {/* Página 1: Sua Empresa */}
+                    {isInstitutionalBriefing(briefing) ? (
+                      // Detalhes para briefing institucional
+                      <>
+                        {/* Informações da Empresa */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Building2 className="w-5 h-5 text-blue-600" />
+                            Informações da Empresa
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Nome da Empresa</label>
+                              <p className="text-gray-900">{briefing.company_name || 'Não informado'}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Segmento de Atuação</label>
+                              <p className="text-gray-900">{briefing.business_segment || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Descrição da Empresa</label>
+                              <p className="text-gray-900 mt-1">{briefing.company_description || 'Não informado'}</p>
+                            </div>
+                            {briefing.company_history && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">História da Empresa</label>
+                                <p className="text-gray-900 mt-1">{briefing.company_history}</p>
+                              </div>
+                            )}
+                            {briefing.mission && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Missão</label>
+                                <p className="text-gray-900 mt-1">{briefing.mission}</p>
+                              </div>
+                            )}
+                            {briefing.vision && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Visão</label>
+                                <p className="text-gray-900 mt-1">{briefing.vision}</p>
+                              </div>
+                            )}
+                            {briefing.values && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Valores</label>
+                                <p className="text-gray-900 mt-1">{briefing.values}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* Objetivos do Site */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Globe className="w-5 h-5 text-green-600" />
+                            Objetivos do Site Institucional
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Objetivo Principal</label>
+                              <p className="text-gray-900">{briefing.website_goal || 'Não informado'}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Tipo de Site</label>
+                              <p className="text-gray-900">{briefing.website_type || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Funcionalidades Principais</label>
+                              <p className="text-gray-900 mt-1">{briefing.main_functionalities || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Páginas Necessárias</label>
+                              <p className="text-gray-900 mt-1">{briefing.required_pages || 'Não informado'}</p>
+                            </div>
+                            {briefing.navigation_structure && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Estrutura de Navegação</label>
+                                <p className="text-gray-900 mt-1">{briefing.navigation_structure}</p>
+                              </div>
+                            )}
+                            {briefing.content_hierarchy && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Hierarquia de Conteúdo</label>
+                                <p className="text-gray-900 mt-1">{briefing.content_hierarchy}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* Público e Diferencial */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Users className="w-5 h-5 text-purple-600" />
+                            Público e Diferencial
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Público-Alvo</label>
+                              <p className="text-gray-900 mt-1">{briefing.target_audience || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Diferencial Competitivo</label>
+                              <p className="text-gray-900 mt-1">{briefing.competitive_advantage || 'Não informado'}</p>
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* Informações de Contato */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <User className="w-5 h-5 text-orange-600" />
+                            Informações de Contato
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Responsável</label>
+                              <p className="text-gray-900">{briefing.responsible_name || 'Não informado'}</p>
+                            </div>
+                            {briefing.current_website && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Site Atual</label>
+                                <p className="text-gray-900">
+                                  <a href={briefing.current_website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                    {briefing.current_website}
+                                  </a>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* Conteúdo do Site */}
+                        {(briefing.services_products || briefing.team_info || briefing.certifications || 
+                          briefing.awards_recognition || briefing.case_studies || briefing.testimonials) && (
+                          <section>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              <FileText className="w-5 h-5 text-green-600" />
+                              Conteúdo do Site
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                              {briefing.services_products && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Serviços/Produtos</label>
+                                  <p className="text-gray-900 mt-1">{briefing.services_products}</p>
+                                </div>
+                              )}
+                              {briefing.team_info && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Informações da Equipe</label>
+                                  <p className="text-gray-900 mt-1">{briefing.team_info}</p>
+                                </div>
+                              )}
+                              {briefing.certifications && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Certificações</label>
+                                  <p className="text-gray-900 mt-1">{briefing.certifications}</p>
+                                </div>
+                              )}
+                              {briefing.awards_recognition && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Prêmios e Reconhecimentos</label>
+                                  <p className="text-gray-900 mt-1">{briefing.awards_recognition}</p>
+                                </div>
+                              )}
+                              {briefing.case_studies && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Casos de Sucesso</label>
+                                  <p className="text-gray-900 mt-1">{briefing.case_studies}</p>
+                                </div>
+                              )}
+                              {briefing.testimonials && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Depoimentos</label>
+                                  <p className="text-gray-900 mt-1">{briefing.testimonials}</p>
+                                </div>
+                              )}
+                            </div>
+                          </section>
+                        )}
+
+                        {/* Design e Identidade Visual */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Palette className="w-5 h-5 text-pink-600" />
+                            Design e Identidade Visual
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            {briefing.brand_colors && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Cores da Marca</label>
+                                <p className="text-gray-900 mt-1">{briefing.brand_colors}</p>
+                              </div>
+                            )}
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Logo da Empresa</label>
+                              <p className="text-gray-900 mt-1">{briefing.has_logo}</p>
+                            </div>
+                            {briefing.logo_files && briefing.logo_files.length > 0 && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Arquivos de Logo</label>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {briefing.logo_files.map((url, index) => (
+                                    <a
+                                      key={index}
+                                      href={url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline text-sm"
+                                    >
+                                      Logo {index + 1}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {briefing.visual_references && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Referências Visuais</label>
+                                <p className="text-gray-900 mt-1">{briefing.visual_references}</p>
+                              </div>
+                            )}
+                            {briefing.visual_files && briefing.visual_files.length > 0 && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Arquivos de Referências Visuais</label>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {briefing.visual_files.map((url, index) => (
+                                    <a
+                                      key={index}
+                                      href={url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline text-sm"
+                                    >
+                                      Referência {index + 1}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {briefing.design_style && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Estilo de Design</label>
+                                <p className="text-gray-900 mt-1">{briefing.design_style}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* Funcionalidades Técnicas */}
+                        {(briefing.contact_forms || briefing.integrations || briefing.seo_requirements || 
+                          briefing.analytics_tracking || briefing.domain_info || briefing.hosting_preferences) && (
+                          <section>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              <Settings className="w-5 h-5 text-gray-600" />
+                              Funcionalidades Técnicas
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                              {briefing.contact_forms && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Formulários de Contato</label>
+                                  <p className="text-gray-900 mt-1">{briefing.contact_forms}</p>
+                                </div>
+                              )}
+                              {briefing.integrations && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Integrações Necessárias</label>
+                                  <p className="text-gray-900 mt-1">{briefing.integrations}</p>
+                                </div>
+                              )}
+                              {briefing.seo_requirements && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Requisitos de SEO</label>
+                                  <p className="text-gray-900 mt-1">{briefing.seo_requirements}</p>
+                                </div>
+                              )}
+                              {briefing.analytics_tracking && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Ferramentas de Analytics</label>
+                                  <p className="text-gray-900 mt-1">{briefing.analytics_tracking}</p>
+                                </div>
+                              )}
+                              {briefing.domain_info && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Informações sobre Domínio</label>
+                                  <p className="text-gray-900 mt-1">{briefing.domain_info}</p>
+                                </div>
+                              )}
+                              {briefing.hosting_preferences && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Preferências de Hospedagem</label>
+                                  <p className="text-gray-900 mt-1">{briefing.hosting_preferences}</p>
+                                </div>
+                              )}
+                            </div>
+                          </section>
+                        )}
+
+                        {/* Marketing e Comunicação */}
+                        {(briefing.main_competitors || briefing.customer_pain_points || briefing.customer_objections || 
+                          briefing.communication_tone || briefing.key_messages) && (
+                          <section>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              <Target className="w-5 h-5 text-indigo-600" />
+                              Marketing e Comunicação
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                              {briefing.main_competitors && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Principais Concorrentes</label>
+                                  <p className="text-gray-900 mt-1">{briefing.main_competitors}</p>
+                                </div>
+                              )}
+                              {briefing.customer_pain_points && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Dores do Cliente</label>
+                                  <p className="text-gray-900 mt-1">{briefing.customer_pain_points}</p>
+                                </div>
+                              )}
+                              {briefing.customer_objections && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Objeções dos Clientes</label>
+                                  <p className="text-gray-900 mt-1">{briefing.customer_objections}</p>
+                                </div>
+                              )}
+                              {briefing.communication_tone && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Tom de Comunicação</label>
+                                  <p className="text-gray-900 mt-1">{briefing.communication_tone}</p>
+                                </div>
+                              )}
+                              {briefing.key_messages && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-medium text-gray-700">Mensagens-Chave</label>
+                                  <p className="text-gray-900 mt-1">{briefing.key_messages}</p>
+                                </div>
+                              )}
+                            </div>
+                          </section>
+                        )}
+
+                        {/* Requisitos e Materiais */}
+                        {(briefing.specific_requirements || briefing.content_materials || briefing.material_files) && (
+                          <section>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              <Settings className="w-5 h-5 text-teal-600" />
+                              Requisitos e Materiais
+                            </h3>
+                            <div className="grid grid-cols-1 gap-4 bg-gray-50 p-4 rounded-lg">
+                              {briefing.specific_requirements && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Requisitos Específicos</label>
+                                  <p className="text-gray-900 mt-1">{briefing.specific_requirements}</p>
+                                </div>
+                              )}
+                              {briefing.content_materials && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Materiais Próprios</label>
+                                  <p className="text-gray-900 mt-1">{briefing.content_materials}</p>
+                                </div>
+                              )}
+                              {briefing.material_files && briefing.material_files.length > 0 && (
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Arquivos de Materiais</label>
+                                  <div className="flex flex-wrap gap-2 mt-1">
+                                    {briefing.material_files.map((url, index) => (
+                                      <a
+                                        key={index}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline text-sm"
+                                      >
+                                        Material {index + 1}
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </section>
+                        )}
+
+                        {/* Timeline */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Calendar className="w-5 h-5 text-red-600" />
+                            Timeline
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Prazo de Entrega</label>
+                              <p className="text-gray-900">{briefing.deadline}</p>
+                            </div>
+                            {briefing.budget && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Orçamento</label>
+                                <p className="text-gray-900">{briefing.budget}</p>
+                              </div>
+                            )}
+                            {briefing.start_date && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Data de Início</label>
+                                <p className="text-gray-900">{briefing.start_date}</p>
+                              </div>
+                            )}
+                            {briefing.additional_notes && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Observações Adicionais</label>
+                                <p className="text-gray-900 mt-1">{briefing.additional_notes}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+                      </>
+                    ) : (
+                      // Detalhes para briefing de landing page - REORGANIZADO NA ORDEM DO FORMULÁRIO
+                      <>
+                    {/* STEP 1: INFORMAÇÕES DA EMPRESA */}
                     <section>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <Star className="w-5 h-5 text-pink-600" />
-                        Página 1: Sua Empresa
+                        <Building2 className="w-5 h-5 text-blue-600" />
+                        Step 1: Informações da Empresa
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Nome da Empresa</label>
-                          <p className="text-gray-900">{briefing.company_name}</p>
+                          <label className="text-sm font-medium text-gray-700">1. Nome da Empresa/Marca</label>
+                          <p className="text-gray-900">{briefing.company_name || 'Não informado'}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Segmento de Atuação</label>
-                          <p className="text-gray-900">{briefing.business_segment}</p>
+                          <label className="text-sm font-medium text-gray-700">2. Segmento/Nicho</label>
+                          <p className="text-gray-900">{briefing.business_segment || 'Não informado'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Descrição da Empresa</label>
-                          <p className="text-gray-900 mt-1">{briefing.company_description}</p>
+                          <label className="text-sm font-medium text-gray-700">3. Descrição do Negócio</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.company_description || 'Não informado'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Público-Alvo</label>
-                          <p className="text-gray-900 mt-1">{briefing.target_audience}</p>
+                          <label className="text-sm font-medium text-gray-700">4. Público-Alvo</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.target_audience || 'Não informado'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Diferencial Competitivo</label>
-                          <p className="text-gray-900 mt-1">{briefing.competitive_advantage}</p>
+                          <label className="text-sm font-medium text-gray-700">5. Diferencial Competitivo</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.competitive_advantage || 'Não informado'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Objetivo da Landing Page</label>
-                          <p className="text-gray-900 mt-1">{briefing.landing_page_goal}</p>
+                          <label className="text-sm font-medium text-gray-700">6. Objetivo da Landing Page</label>
+                          <p className="text-gray-900 mt-1">{briefing.landing_page_goal || 'Não informado'}</p>
                         </div>
-                        {briefing.main_competitors && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Principais Concorrentes</label>
-                            <p className="text-gray-900 mt-1">{briefing.main_competitors}</p>
-                          </div>
-                        )}
-                        {briefing.customer_pain_points && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Principais Dores do Cliente</label>
-                            <p className="text-gray-900 mt-1">{briefing.customer_pain_points}</p>
-                          </div>
-                        )}
-                        {briefing.success_stories && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Histórias de Sucesso</label>
-                            <p className="text-gray-900 mt-1">{briefing.success_stories}</p>
-                          </div>
-                        )}
-                        {briefing.social_proof && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Prova Social Disponível</label>
-                            <p className="text-gray-900 mt-1">{briefing.social_proof}</p>
-                          </div>
-                        )}
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">7. Principais Concorrentes</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.main_competitors || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">8. Principais Dores do Cliente</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.customer_pain_points || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">9. Histórias de Sucesso</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.success_stories || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">10. Prova Social Disponível</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.social_proof || 'Não informado'}</p>
+                        </div>
                       </div>
                     </section>
 
-                    {/* Página 2: Produto/Serviço */}
+                    {/* STEP 2: PRODUTO/SERVIÇO */}
                     <section>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <Target className="w-5 h-5 text-green-600" />
-                        Página 2: Produto/Serviço
+                        <Target className="w-5 h-5 text-purple-600" />
+                        Step 2: Produto/Serviço
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Nome do Responsável</label>
-                          <p className="text-gray-900">{briefing.responsible_name}</p>
+                          <label className="text-sm font-medium text-gray-700">11. Nome do Responsável</label>
+                          <p className="text-gray-900">{briefing.responsible_name || 'Não informado'}</p>
                         </div>
-                        {briefing.current_website && (
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">Site Atual (se houver)</label>
-                            <p className="text-gray-900">
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">12. Site Atual (se houver)</label>
+                          <p className="text-gray-900">
+                            {briefing.current_website ? (
                               <a href={briefing.current_website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                 {briefing.current_website}
                               </a>
-                            </p>
-                          </div>
-                        )}
-                        <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Nome do Produto/Serviço Principal</label>
-                          <p className="text-gray-900">{briefing.product_name}</p>
+                            ) : 'Não informado'}
+                          </p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Descrição Detalhada do Produto/Serviço</label>
-                          <p className="text-gray-900 mt-1">{briefing.product_description}</p>
+                          <label className="text-sm font-medium text-gray-700">13. Nome do Produto/Serviço Principal</label>
+                          <p className="text-gray-900">{briefing.product_name || 'Não informado'}</p>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="text-sm font-medium text-gray-700">Principais Benefícios</label>
-                          <p className="text-gray-900 mt-1">{briefing.main_benefits}</p>
+                          <label className="text-sm font-medium text-gray-700">14. Descrição Detalhada do Produto/Serviço</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.product_description || 'Não informado'}</p>
                         </div>
-                        {briefing.number_of_offers && (
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">Quantas Ofertas Terá na Landing Page?</label>
-                            <p className="text-gray-900">{briefing.number_of_offers}</p>
-                          </div>
-                        )}
-                        {briefing.offer_details && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Detalhes das Ofertas e Valores Exatos</label>
-                            <p className="text-gray-900 mt-1">{briefing.offer_details}</p>
-                          </div>
-                        )}
-                        {briefing.pricing_model && (
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">Modelo de Precificação</label>
-                            <p className="text-gray-900">{briefing.pricing_model}</p>
-                          </div>
-                        )}
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Call-to-Action Principal</label>
-                          <p className="text-gray-900">{briefing.call_to_action}</p>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">15. Principais Benefícios</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.main_benefits || 'Não informado'}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Para onde direcionar os leads?</label>
-                          <p className="text-gray-900">{briefing.lead_destination}</p>
+                          <label className="text-sm font-medium text-gray-700">16. Quantas Ofertas Terá na Landing Page?</label>
+                          <p className="text-gray-900">{briefing.number_of_offers || 'Não informado'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">18. Modelo de Cobrança</label>
+                          <p className="text-gray-900">{briefing.pricing_model || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">17. Detalhes das Ofertas e Valores Exatos</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.offer_details || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">19. Garantias Oferecidas</label>
+                          <p className="text-gray-900 mt-1">{briefing.guarantees || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">20. Resultados Esperados pelo Cliente</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.target_results || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">21. Fatores de Urgência</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.urgency_factors || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">22. Principais Objeções dos Clientes</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.objections || 'Não informado'}</p>
                         </div>
                       </div>
                     </section>
 
-                    {/* Página 3: Visual & Marketing */}
+                    {/* STEP 3: MARKETING & DESIGN */}
                     <section>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <Palette className="w-5 h-5 text-purple-600" />
-                        Página 3: Visual & Marketing
+                        <Palette className="w-5 h-5 text-orange-600" />
+                        Step 3: Marketing & Design
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-                        {briefing.brand_colors && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Cores da Marca</label>
-                            <p className="text-gray-900">{briefing.brand_colors}</p>
-                          </div>
-                        )}
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Logo da Empresa</label>
-                          <p className="text-gray-900">{briefing.has_logo}</p>
+                          <label className="text-sm font-medium text-gray-700">23. Call-to-Action Principal</label>
+                          <p className="text-gray-900">{briefing.call_to_action || 'Não informado'}</p>
                         </div>
-                        {briefing.visual_references && (
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">24. Para onde direcionar os leads?</label>
+                          <p className="text-gray-900">{briefing.lead_destination || 'Não informado'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">25. Cores da Marca</label>
+                          <p className="text-gray-900">{briefing.brand_colors || 'Não informado'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">26. Logo da Empresa</label>
+                          <p className="text-gray-900">{briefing.has_logo || 'Não informado'}</p>
+                        </div>
+                        {briefing.logo_files && briefing.logo_files.length > 0 && (
                           <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Referências Visuais</label>
-                            <p className="text-gray-900 mt-1">{briefing.visual_references}</p>
+                            <label className="text-sm font-medium text-gray-700">27. Upload do Logo</label>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {briefing.logo_files.map((url, index) => (
+                                <a
+                                  key={index}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline text-sm"
+                                >
+                                  Logo {index + 1}
+                                </a>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {briefing.content_materials && (
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">28. Referências Visuais</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.visual_references || 'Não informado'}</p>
+                        </div>
+                        {briefing.visual_files && briefing.visual_files.length > 0 && (
                           <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Materiais Próprios para a Landing Page</label>
-                            <p className="text-gray-900 mt-1">{briefing.content_materials}</p>
+                            <label className="text-sm font-medium text-gray-700">29. Upload de Referências Visuais</label>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {briefing.visual_files.map((url, index) => (
+                                <a
+                                  key={index}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline text-sm"
+                                >
+                                  Referência {index + 1}
+                                </a>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {briefing.brand_personality && (
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">30. Materiais Próprios para a Landing Page</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.content_materials || 'Não informado'}</p>
+                        </div>
+                        {briefing.material_files && briefing.material_files.length > 0 && (
                           <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Personalidade da Marca</label>
-                            <p className="text-gray-900 mt-1">{briefing.brand_personality}</p>
+                            <label className="text-sm font-medium text-gray-700">31. Upload dos Seus Materiais</label>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {briefing.material_files.map((url, index) => (
+                                <a
+                                  key={index}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline text-sm"
+                                >
+                                  Material {index + 1}
+                                </a>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {briefing.communication_tone && (
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">Tom de Comunicação</label>
-                            <p className="text-gray-900">{briefing.communication_tone}</p>
-                          </div>
-                        )}
-                        {briefing.key_messages && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Mensagens-Chave</label>
-                            <p className="text-gray-900 mt-1">{briefing.key_messages}</p>
-                          </div>
-                        )}
-                        {briefing.landing_page_sections && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Seções da Landing Page</label>
-                            <p className="text-gray-900 mt-1">{briefing.landing_page_sections}</p>
-                          </div>
-                        )}
-                        {briefing.specific_requirements && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Requisitos Específicos</label>
-                            <p className="text-gray-900 mt-1">{briefing.specific_requirements}</p>
-                          </div>
-                        )}
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">32. Personalidade da Marca</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.brand_personality || 'Não informado'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">33. Tom de Comunicação</label>
+                          <p className="text-gray-900">{briefing.communication_tone || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">34. Mensagens-Chave</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.key_messages || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">35. Seções da Landing Page</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.landing_page_sections || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">36. Requisitos Específicos</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.specific_requirements || 'Não informado'}</p>
+                        </div>
                       </div>
                     </section>
 
-                    {/* Página 4: Configurações Técnicas */}
+                    {/* STEP 4: CONFIGURAÇÕES TÉCNICAS */}
                     <section>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <Settings className="w-5 h-5 text-orange-600" />
-                        Página 4: Configurações Técnicas
+                        <Settings className="w-5 h-5 text-gray-600" />
+                        Step 4: Configurações Técnicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-                        {briefing.desired_domain && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Domínio Desejado</label>
-                            <p className="text-gray-900 mt-1">{briefing.desired_domain}</p>
-                          </div>
-                        )}
-                        {briefing.integrations && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Integrações Necessárias</label>
-                            <p className="text-gray-900 mt-1">{briefing.integrations}</p>
-                          </div>
-                        )}
-                        {briefing.analytics_tracking && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Analytics e Tracking</label>
-                            <p className="text-gray-900 mt-1">{briefing.analytics_tracking}</p>
-                          </div>
-                        )}
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">37. Domínio Desejado</label>
+                          <p className="text-gray-900">{briefing.desired_domain || 'Não informado'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Informações de Domínio (Sistema)</label>
+                          <p className="text-gray-900">{briefing.domain_info || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">38. Integrações Necessárias</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.integrations || 'Não informado'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">39. Analytics e Tracking</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.analytics_tracking || 'Não informado'}</p>
+                        </div>
                       </div>
                     </section>
 
-                    {/* Página 5: Timeline */}
+                    {/* STEP 5: TIMELINE & ORÇAMENTO */}
                     <section>
                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                         <Calendar className="w-5 h-5 text-red-600" />
-                        Página 5: Timeline
+                        Step 5: Timeline & Orçamento
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Prazo de Entrega</label>
-                          <p className="text-gray-900">{briefing.deadline}</p>
+                          <label className="text-sm font-medium text-gray-700">40. Prazo de Entrega</label>
+                          <p className="text-gray-900">{briefing.deadline || 'Não informado'}</p>
                         </div>
-                        {briefing.additional_notes && (
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-gray-700">Observações Adicionais</label>
-                            <p className="text-gray-900 mt-1">{briefing.additional_notes}</p>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">41. Orçamento</label>
+                          <p className="text-gray-900">{briefing.budget || 'Não informado'}</p>
+                        </div>
+                        {briefing.start_date && (
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">Data de Início</label>
+                            <p className="text-gray-900">{briefing.start_date}</p>
                           </div>
                         )}
+                        <div className="md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">42. Observações Adicionais</label>
+                          <p className="text-gray-900 mt-1 whitespace-pre-wrap">{briefing.additional_notes || 'Não informado'}</p>
+                        </div>
                       </div>
                     </section>
-
-                    {/* Arquivos */}
-                    {(briefing.logo_files?.length || briefing.visual_files?.length || briefing.material_files?.length) && (
-                      <section>
-                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                          <Download className="w-5 h-5 text-indigo-600" />
-                          Arquivos Enviados
-                        </h3>
-                        <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-                          {briefing.logo_files?.length && (
-                            <div>
-                              <label className="text-sm font-medium text-gray-700 mb-2 block">Logos</label>
-                              <div className="flex flex-wrap gap-2">
-                                {briefing.logo_files.map((file, index) => (
-                                  <Button
-                                    key={index}
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-2"
-                                    onClick={() => window.open(file, '_blank')}
-                                  >
-                                    <Download className="w-4 h-4" />
-                                    Logo {index + 1}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          {briefing.visual_files?.length && (
-                            <div>
-                              <label className="text-sm font-medium text-gray-700 mb-2 block">Referências Visuais</label>
-                              <div className="flex flex-wrap gap-2">
-                                {briefing.visual_files.map((file, index) => (
-                                  <Button
-                                    key={index}
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-2"
-                                    onClick={() => window.open(file, '_blank')}
-                                  >
-                                    <Download className="w-4 h-4" />
-                                    Referência {index + 1}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          {briefing.material_files?.length && (
-                            <div>
-                              <label className="text-sm font-medium text-gray-700 mb-2 block">Materiais</label>
-                              <div className="flex flex-wrap gap-2">
-                                {briefing.material_files.map((file, index) => (
-                                  <Button
-                                    key={index}
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-2"
-                                    onClick={() => window.open(file, '_blank')}
-                                  >
-                                    <Download className="w-4 h-4" />
-                                    Material {index + 1}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </section>
+                      </>
                     )}
                   </div>
                 </ScrollArea>

@@ -23,24 +23,35 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Edit, Save, X } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
-import { updateBriefing } from '@/services/briefingService'
+import type { InstitutionalBriefing } from '@/services/briefingService'
+import { updateBriefing, updateInstitutionalBriefing } from '@/services/briefingService'
 
 interface EditBriefingDialogProps {
-  briefing: ClientBriefing
-  onUpdate: (updatedBriefing: ClientBriefing) => void
+  briefing: ClientBriefing | InstitutionalBriefing
+  onUpdate: (updatedBriefing: ClientBriefing | InstitutionalBriefing) => void
+}
+
+// Type guard para verificar se é um briefing institucional
+const isInstitutionalBriefing = (briefing: ClientBriefing | InstitutionalBriefing): briefing is InstitutionalBriefing => {
+  return 'website_goal' in briefing && 'website_type' in briefing
 }
 
 export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState<Partial<ClientBriefing>>(briefing)
+  const [formData, setFormData] = useState<Partial<ClientBriefing | InstitutionalBriefing>>(briefing)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const updatedBriefing = await updateBriefing(briefing.id!, formData)
+      let updatedBriefing
+      if (isInstitutionalBriefing(briefing)) {
+        updatedBriefing = await updateInstitutionalBriefing(briefing.id!, formData as Partial<InstitutionalBriefing>)
+      } else {
+        updatedBriefing = await updateBriefing(briefing.id!, formData as Partial<ClientBriefing>)
+      }
       onUpdate(updatedBriefing)
       setIsOpen(false)
       console.log('✅ Briefing atualizado com sucesso')
@@ -52,7 +63,7 @@ export const EditBriefingDialog = ({ briefing, onUpdate }: EditBriefingDialogPro
     }
   }
 
-  const handleInputChange = (field: keyof ClientBriefing, value: string) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

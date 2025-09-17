@@ -13,11 +13,17 @@ import {
 } from '@/components/ui/dialog'
 import { DollarSign, Save, X } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
-import { addProposalValue } from '@/services/briefingService'
+import type { InstitutionalBriefing } from '@/services/briefingService'
+import { addProposalValue, addInstitutionalProposalValue } from '@/services/briefingService'
 
 interface ProposalValueDialogProps {
-  briefing: ClientBriefing
-  onUpdate: (updatedBriefing: ClientBriefing) => void
+  briefing: ClientBriefing | InstitutionalBriefing
+  onUpdate: (updatedBriefing: ClientBriefing | InstitutionalBriefing) => void
+}
+
+// Type guard para verificar se é um briefing institucional
+const isInstitutionalBriefing = (briefing: ClientBriefing | InstitutionalBriefing): briefing is InstitutionalBriefing => {
+  return 'website_goal' in briefing && 'website_type' in briefing
 }
 
 export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogProps) => {
@@ -62,10 +68,16 @@ export const ProposalValueDialog = ({ briefing, onUpdate }: ProposalValueDialogP
 
       console.log('🔄 Enviando valor da proposta:', {
         id: briefing.id,
-        value: numericValue
+        value: numericValue,
+        type: isInstitutionalBriefing(briefing) ? 'institucional' : 'landing-page'
       })
       
-      const updatedBriefing = await addProposalValue(briefing.id, numericValue)
+      let updatedBriefing
+      if (isInstitutionalBriefing(briefing)) {
+        updatedBriefing = await addInstitutionalProposalValue(briefing.id, numericValue)
+      } else {
+        updatedBriefing = await addProposalValue(briefing.id, numericValue)
+      }
       
       console.log('✅ Resposta recebida:', updatedBriefing)
       

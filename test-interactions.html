@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Interações - Workflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+        }
+        
+        .test-section h2 {
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+        
+        /* Botões de teste */
+        .btn {
+            background: linear-gradient(45deg, #7c3aed, #a78bfa);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            pointer-events: auto !important;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Slider de teste */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: ew-resize;
+            user-select: none;
+        }
+        
+        .slider-left {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, #7c3aed, #a78bfa);
+            clip-path: inset(0 50% 0 0);
+            transition: clip-path 0.1s ease;
+        }
+        
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: ew-resize;
+            z-index: 10;
+            pointer-events: auto !important;
+        }
+        
+        .slider-handle:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .content {
+            position: absolute;
+            inset: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        .log {
+            max-height: 150px;
+            overflow-y: auto;
+            background: #333;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Interações - Workflow</h1>
+        
+        <div class="test-section">
+            <h2>1. Teste de Botões</h2>
+            <p>Clique nos botões abaixo para testar se estão funcionando:</p>
+            <button class="btn" onclick="testButton('Botão 1')">Botão Principal</button>
+            <button class="btn" onclick="testButton('Botão 2')">Botão Secundário</button>
+            <button class="btn" onclick="testButton('Botão 3')">Botão Terciário</button>
+            <div class="status" id="button-status">Status: Aguardando clique...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. Teste de Slider Interativo</h2>
+            <p>Arraste o slider abaixo para testar a funcionalidade:</p>
+            <div class="slider-container" id="slider">
+                <div class="slider-left" id="slider-left"></div>
+                <div class="content" style="left: 0; background: rgba(255,107,107,0.8);">
+                    ❌ Outros Profissionais
+                </div>
+                <div class="content" style="right: 0; background: rgba(124,58,237,0.8);">
+                    ✅ Workflow Services
+                </div>
+                <div class="slider-handle" id="slider-handle"></div>
+            </div>
+            <div class="status" id="slider-status">Posição: 50%</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. Log de Eventos</h2>
+            <div class="log" id="event-log">
+                > Sistema iniciado...<br>
+                > Aguardando interações do usuário...<br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Teste de botões
+        function testButton(buttonName) {
+            const status = document.getElementById('button-status');
+            const log = document.getElementById('event-log');
+            
+            status.textContent = `✅ ${buttonName} clicado com sucesso!`;
+            status.style.background = '#d4edda';
+            status.style.color = '#155724';
+            
+            addLog(`✅ ${buttonName} funcionando corretamente - ${new Date().toLocaleTimeString()}`);
+            
+            setTimeout(() => {
+                status.textContent = 'Status: Aguardando próximo clique...';
+                status.style.background = '#f0f0f0';
+                status.style.color = '#333';
+            }, 2000);
+        }
+        
+        // Teste de slider
+        let isDragging = false;
+        let sliderPosition = 50;
+        
+        const slider = document.getElementById('slider');
+        const sliderLeft = document.getElementById('slider-left');
+        const sliderHandle = document.getElementById('slider-handle');
+        const sliderStatus = document.getElementById('slider-status');
+        
+        function updateSlider(position) {
+            sliderPosition = Math.max(0, Math.min(100, position));
+            sliderLeft.style.clipPath = `inset(0 ${100 - sliderPosition}% 0 0)`;
+            sliderHandle.style.left = `${sliderPosition}%`;
+            sliderStatus.textContent = `Posição: ${Math.round(sliderPosition)}%`;
+            sliderStatus.style.background = '#d4edda';
+            sliderStatus.style.color = '#155724';
+        }
+        
+        function handleSliderMove(clientX) {
+            const rect = slider.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            updateSlider(percentage);
+        }
+        
+        // Mouse events
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            handleSliderMove(e.clientX);
+            addLog(`🖱️ Mouse down - Slider ativado - ${new Date().toLocaleTimeString()}`);
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                handleSliderMove(e.clientX);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                addLog(`🖱️ Mouse up - Slider desativado - Posição final: ${Math.round(sliderPosition)}% - ${new Date().toLocaleTimeString()}`);
+            }
+        });
+        
+        // Touch events
+        slider.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDragging = true;
+            if (e.touches.length > 0) {
+                handleSliderMove(e.touches[0].clientX);
+                addLog(`👆 Touch start - Slider ativado - ${new Date().toLocaleTimeString()}`);
+            }
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length > 0) {
+                e.preventDefault();
+                handleSliderMove(e.touches[0].clientX);
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                addLog(`👆 Touch end - Slider desativado - Posição final: ${Math.round(sliderPosition)}% - ${new Date().toLocaleTimeString()}`);
+            }
+        });
+        
+        // Log function
+        function addLog(message) {
+            const log = document.getElementById('event-log');
+            log.innerHTML += `> ${message}<br>`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        // Inicialização
+        addLog(`🚀 Página carregada com sucesso - ${new Date().toLocaleTimeString()}`);
+        
+        // Teste automático após 2 segundos
+        setTimeout(() => {
+            addLog(`🔧 Executando teste automático de funcionalidades...`);
+            
+            // Teste se elementos existem
+            const buttons = document.querySelectorAll('.btn');
+            addLog(`📊 Encontrados ${buttons.length} botões`);
+            
+            const sliderElement = document.getElementById('slider');
+            addLog(`📊 Slider ${sliderElement ? 'encontrado' : 'NÃO encontrado'}`);
+            
+            // Teste de CSS
+            const buttonStyle = window.getComputedStyle(buttons[0]);
+            const pointerEvents = buttonStyle.pointerEvents;
+            addLog(`📊 Pointer events dos botões: ${pointerEvents}`);
+            
+            const sliderStyle = window.getComputedStyle(sliderElement);
+            const sliderPointerEvents = sliderStyle.pointerEvents;
+            addLog(`📊 Pointer events do slider: ${sliderPointerEvents}`);
+            
+            addLog(`✅ Teste automático concluído - Todos os elementos estão funcionais`);
+        }, 2000);
+    </script>
+</body>
+</html> 

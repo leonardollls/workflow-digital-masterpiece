@@ -4,6 +4,8 @@ const CapabilityMatrix = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -18,6 +20,66 @@ const CapabilityMatrix = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  // Detectar mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleCardExpansion = (categoryIndex: number) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      
+      // No desktop, implementar expansão em pares
+      if (!isMobile) {
+        if (categoryIndex === 0) { // Frontend Excellence
+          if (newSet.has(0)) {
+            newSet.delete(0);
+            newSet.delete(1); // Backend & Database
+          } else {
+            newSet.add(0);
+            newSet.add(1); // Backend & Database
+          }
+        } else if (categoryIndex === 1) { // Backend & Database
+          if (newSet.has(1)) {
+            newSet.delete(0); // Frontend Excellence
+            newSet.delete(1);
+          } else {
+            newSet.add(0); // Frontend Excellence
+            newSet.add(1);
+          }
+        } else if (categoryIndex === 2) { // State & Forms
+          if (newSet.has(2)) {
+            newSet.delete(2);
+            newSet.delete(3); // Integrations & Deploy
+          } else {
+            newSet.add(2);
+            newSet.add(3); // Integrations & Deploy
+          }
+        } else if (categoryIndex === 3) { // Integrations & Deploy
+          if (newSet.has(3)) {
+            newSet.delete(2); // State & Forms
+            newSet.delete(3);
+          } else {
+            newSet.add(2); // State & Forms
+            newSet.add(3);
+          }
+        }
+      } else {
+        // No mobile, comportamento individual
+        if (newSet.has(categoryIndex)) {
+          newSet.delete(categoryIndex);
+        } else {
+          newSet.add(categoryIndex);
+        }
+      }
+      
+      return newSet;
+    });
+  };
 
   // Removido para melhor performance mobile
 
@@ -112,7 +174,7 @@ const CapabilityMatrix = () => {
             <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-6 sm:mb-8 md:mb-10 leading-tight">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-6 sm:mb-8 md:mb-10 leading-tight">
             Capability{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-energy bg-clip-text text-transparent">
@@ -142,8 +204,8 @@ const CapabilityMatrix = () => {
             <div
               key={categoryIndex}
               className={`relative transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-              onMouseEnter={() => setActiveCategory(categoryIndex)}
-              onMouseLeave={() => setActiveCategory(null)}
+              onMouseEnter={() => !isMobile && setActiveCategory(categoryIndex)}
+              onMouseLeave={() => !isMobile && setActiveCategory(null)}
             >
               <div className="relative group h-full">
                 {/* Simple Background */}
@@ -152,8 +214,11 @@ const CapabilityMatrix = () => {
                 {/* Main Card */}
                 <div className="relative bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300 h-full">
                   
-                  {/* Category Header */}
-                  <div className={`bg-gradient-to-r ${capability.color} p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
+                  {/* Category Header - Clicável */}
+                  <div 
+                    className={`bg-gradient-to-r ${capability.color} p-4 sm:p-6 lg:p-8 relative overflow-hidden cursor-pointer`}
+                    onClick={() => toggleCardExpansion(categoryIndex)}
+                  >
                     <div className="absolute inset-0 bg-white/10" />
                     <div className="relative z-10">
                       <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
@@ -163,6 +228,12 @@ const CapabilityMatrix = () => {
                             {capability.category}
                           </h3>
                         </div>
+                        {/* Indicador de expansão */}
+                        <div className="text-white/80 transition-transform duration-300" style={{
+                          transform: expandedCards.has(categoryIndex) ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}>
+                          ▼
+                        </div>
                       </div>
                       <p className="text-white/90 text-xs sm:text-sm lg:text-base leading-relaxed">
                         {capability.description}
@@ -170,8 +241,10 @@ const CapabilityMatrix = () => {
                     </div>
                   </div>
 
-                  {/* Technologies */}
-                  <div className="p-4 sm:p-6 lg:p-8">
+                  {/* Technologies - Colapsável */}
+                  <div className={`transition-all duration-300 overflow-hidden ${
+                    expandedCards.has(categoryIndex) ? 'max-h-none opacity-100 p-4 sm:p-6 lg:p-8' : 'max-h-0 opacity-0 p-0'
+                  }`}>
                     <div className="space-y-3 sm:space-y-4">
                       {capability.technologies.map((tech, techIndex) => (
                         <div 
@@ -212,14 +285,12 @@ const CapabilityMatrix = () => {
                             </div>
                           </div>
 
-                          {/* Tech Description */}
-                          {hoveredTech === `${categoryIndex}-${techIndex}` && (
+                          {/* Tech Description - Always Visible */}
                             <div className="transition-opacity duration-300">
                               <p className="text-workflow-deep/70 text-xs sm:text-sm leading-relaxed">
                                 {tech.description}
                               </p>
                             </div>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -274,9 +345,40 @@ const CapabilityMatrix = () => {
 
         {/* Call to Action */}
         <div className={`mt-12 sm:mt-16 text-center px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-                      <div className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-full text-white font-semibold hover:scale-105 transition-transform duration-200 cursor-pointer shadow-lg hover:shadow-xl">
-              <span className="text-sm sm:text-base">Pronto para criarmos sua landing page perfeita?</span>
-              <div className="w-2 h-2 bg-white rounded-full" />
+          <div className="space-y-6">
+            <h3 className="text-2xl sm:text-3xl font-bold text-workflow-deep mb-8">
+              Pronto para começar seu projeto?
+            </h3>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
+              {/* Landing Page CTA */}
+              <div 
+                className="flex-1 cursor-pointer group"
+                onClick={() => window.location.href = '/briefing-cliente'}
+              >
+                <div className="bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-2xl p-6 text-white hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <div className="text-3xl mb-3">🚀</div>
+                  <h4 className="font-bold text-lg mb-2">Landing Page</h4>
+                  <p className="text-sm opacity-90">Para vendas e conversões</p>
+                </div>
+              </div>
+
+              {/* Site Institucional CTA */}
+              <div 
+                className="flex-1 cursor-pointer group"
+                onClick={() => window.location.href = '/briefing-institucional'}
+              >
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <div className="text-3xl mb-3">🏢</div>
+                  <h4 className="font-bold text-lg mb-2">Site Institucional</h4>
+                  <p className="text-sm opacity-90">Para presença corporativa</p>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-workflow-deep/60 text-sm">
+              Escolha o tipo de projeto e preencha nosso briefing detalhado
+            </p>
             </div>
         </div>
       </div>

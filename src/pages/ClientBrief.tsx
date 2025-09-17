@@ -12,15 +12,15 @@ import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Target, Palette, Settings
 import { FileUpload } from '@/components/ui/FileUpload';
 import type { ClientBriefForm } from '@/services/briefingService';
 
-// Schema de validação
+// Schema de validação - TODAS AS VALIDAÇÕES OBRIGATÓRIAS REMOVIDAS
 const clientBriefSchema = z.object({
   // Informações da Empresa
-  companyName: z.string().min(2, 'Nome da empresa é obrigatório'),
-  businessSegment: z.string().min(1, 'Segmento é obrigatório'),
-  businessDescription: z.string().min(50, 'Descrição deve ter pelo menos 50 caracteres'),
-  targetAudience: z.string().min(20, 'Público-alvo deve ser descrito'),
-  competitiveDifferential: z.string().min(20, 'Diferencial competitivo é obrigatório'),
-  landingPageGoal: z.string().min(1, 'Objetivo é obrigatório'),
+  companyName: z.string().optional(),
+  businessSegment: z.string().optional(),
+  businessDescription: z.string().optional(),
+  targetAudience: z.string().optional(),
+  competitiveDifferential: z.string().optional(),
+  landingPageGoal: z.string().optional(),
   
   // Novos campos para agregar valor
   mainCompetitors: z.string().optional(),
@@ -29,13 +29,13 @@ const clientBriefSchema = z.object({
   socialProof: z.string().optional(),
 
   // Informações de Contato
-  responsibleName: z.string().min(2, 'Nome do responsável é obrigatório'),
+  responsibleName: z.string().optional(),
   currentWebsite: z.string().optional(),
 
   // Produto/Serviço
-  productName: z.string().min(2, 'Nome do produto/serviço é obrigatório'),
-  productDescription: z.string().min(50, 'Descrição detalhada é obrigatória'),
-  mainBenefits: z.string().min(30, 'Benefícios principais são obrigatórios'),
+  productName: z.string().optional(),
+  productDescription: z.string().optional(),
+  mainBenefits: z.string().optional(),
 
   guarantees: z.string().optional(),
   
@@ -45,8 +45,8 @@ const clientBriefSchema = z.object({
   objections: z.string().optional(),
 
   // Marketing
-  callToAction: z.string().min(1, 'Call-to-action é obrigatório'),
-  leadDestination: z.string().min(1, 'Destino dos leads é obrigatório'),
+  callToAction: z.string().optional(),
+  leadDestination: z.string().optional(),
   
   // NOVO CAMPO SOLICITADO - Seções da Landing Page
   landingPageSections: z.string().optional(),
@@ -55,12 +55,12 @@ const clientBriefSchema = z.object({
   specificRequirements: z.string().optional(),
   
   // Novos campos para ofertas e preços
-  numberOfOffers: z.string().min(1, 'Número de ofertas é obrigatório'),
-  offerDetails: z.string().min(20, 'Detalhes das ofertas são obrigatórios'),
-  pricingModel: z.string().min(1, 'Modelo de precificação é obrigatório'),
+  numberOfOffers: z.string().optional(),
+  offerDetails: z.string().optional(),
+  pricingModel: z.string().optional(),
   
   brandColors: z.string().optional(),
-  hasLogo: z.string().min(1, 'Informar sobre logo é obrigatório'),
+  hasLogo: z.string().optional(),
   logoFiles: z.any().optional(),
   visualReferences: z.string().optional(),
   visualFiles: z.any().optional(),
@@ -77,8 +77,8 @@ const clientBriefSchema = z.object({
   integrations: z.string().optional(),
   analytics: z.string().optional(),
 
-  // Timeline - alterado para dias específicos
-  deliveryDeadline: z.string().min(1, 'Prazo de entrega é obrigatório'),
+  // Timeline - valor fixo
+  deliveryDeadline: z.string().optional(),
   startDate: z.string().optional(), // Removido da interface
   budget: z.string().optional(), // Agora é um valor fixo
   additionalNotes: z.string().optional(),
@@ -98,7 +98,7 @@ const ClientBrief = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [deliveryType, setDeliveryType] = useState<'standard' | 'custom' | null>(null);
+  // Removido deliveryType pois agora é valor fixo
 
   const form = useForm<ClientBriefForm>({
     resolver: zodResolver(clientBriefSchema),
@@ -110,61 +110,57 @@ const ClientBrief = () => {
   const progressPercentage = (currentStep / steps.length) * 100;
 
   const onSubmit = async (data: ClientBriefForm) => {
+    // Prevenir envio automático - só permitir se estiver na última etapa
+    if (currentStep !== steps.length) {
+      console.log('⚠️ [CLIENT-DEBUG] Tentativa de envio automático bloqueada - etapa atual:', currentStep);
+      return;
+    }
+    
+    console.log('✅ [CLIENT-DEBUG] Envio autorizado - usuário está na última etapa');
     setIsSubmitting(true);
     
     try {
       // Debug: verificar dados antes do envio
-      console.log('🔍 Dados do formulário:', data);
-      console.log('🔍 Tipo de entrega:', deliveryType);
-      console.log('🔍 Prazo de entrega:', data.deliveryDeadline);
+      console.log('🔍 [CLIENT-DEBUG] Dados do formulário:', data);
+      console.log('🔍 [CLIENT-DEBUG] Prazo fixo: Valor Acordado na Workana');
       
-      // Validar se o prazo foi definido
-      if (!data.deliveryDeadline) {
-        throw new Error('Prazo de entrega não foi definido. Por favor, selecione uma opção.');
-      }
+      // Definir prazo fixo
+      data.deliveryDeadline = 'Valor Acordado na Workana';
       
-      // Validar campos obrigatórios principais
-      const requiredFields = [
-        { field: 'companyName', label: 'Nome da empresa' },
-        { field: 'businessSegment', label: 'Segmento' },
-        { field: 'businessDescription', label: 'Descrição do negócio' },
-        { field: 'targetAudience', label: 'Público-alvo' },
-        { field: 'competitiveDifferential', label: 'Diferencial competitivo' },
-        { field: 'landingPageGoal', label: 'Objetivo da landing page' },
-        { field: 'responsibleName', label: 'Nome do responsável' },
-        { field: 'productName', label: 'Nome do produto/serviço' },
-        { field: 'productDescription', label: 'Descrição do produto' },
-        { field: 'mainBenefits', label: 'Benefícios principais' },
-        { field: 'numberOfOffers', label: 'Número de ofertas' },
-        { field: 'offerDetails', label: 'Detalhes das ofertas' },
-        { field: 'pricingModel', label: 'Modelo de cobrança' },
-        { field: 'callToAction', label: 'Call-to-action' },
-        { field: 'leadDestination', label: 'Destino dos leads' },
-        { field: 'hasLogo', label: 'Informação sobre logo' },
-
-      ];
-      
-      for (const { field, label } of requiredFields) {
-        if (!data[field as keyof ClientBriefForm]) {
-          throw new Error(`Campo obrigatório não preenchido: ${label}`);
-        }
-      }
-      
-      console.log('✅ Validação dos campos obrigatórios passou');
+      // VALIDAÇÕES OBRIGATÓRIAS REMOVIDAS - Agora todos os campos são opcionais
+      console.log('✅ [CLIENT-DEBUG] Prosseguindo sem validações obrigatórias');
       
       // Tentar enviar para o Supabase
-      try {
-        console.log('🚀 Tentando enviar para o Supabase...');
+      console.log('🚀 [CLIENT-DEBUG] Importando submitBriefing...');
         const { submitBriefing } = await import('@/services/briefingService');
+      
+      console.log('🚀 [CLIENT-DEBUG] Chamando submitBriefing com dados:', {
+        companyName: data.companyName,
+        responsibleName: data.responsibleName,
+        deliveryDeadline: data.deliveryDeadline,
+        totalFields: Object.keys(data).length
+      });
+      
         const savedBriefing = await submitBriefing(data);
-        console.log('✅ Briefing salvo no Supabase:', savedBriefing);
+      console.log('✅ [CLIENT-DEBUG] submitBriefing retornou:', savedBriefing);
+      
+      console.log('✅ [CLIENT-DEBUG] Briefing salvo com sucesso! Definindo isSubmitted = true');
         setIsSubmitted(true);
         return;
-      } catch (supabaseError) {
-        console.error('❌ Erro no Supabase:', supabaseError);
+      
+    } catch (error) {
+      console.error('❌ [CLIENT-DEBUG] Erro capturado no onSubmit:', error);
+      console.error('❌ [CLIENT-DEBUG] Tipo do erro:', typeof error);
+      console.error('❌ [CLIENT-DEBUG] Stack trace:', error instanceof Error ? error.stack : 'Sem stack trace');
         
-        // Fallback: salvar localmente e mostrar sucesso
-        console.log('💾 Salvando briefing localmente como fallback...');
+      // Se deu erro no Supabase, usar fallback local
+      if (error instanceof Error && (
+        error.message.includes('Supabase') || 
+        error.message.includes('fetch') || 
+        error.message.includes('network') ||
+        error.message.includes('database')
+      )) {
+        console.log('💾 [CLIENT-DEBUG] Erro do Supabase detectado, salvando localmente como fallback...');
         const briefingData = {
           ...data,
           id: `local_${Date.now()}`,
@@ -176,19 +172,18 @@ const ClientBrief = () => {
         existingBriefings.push(briefingData);
         localStorage.setItem('briefings', JSON.stringify(existingBriefings));
         
-        console.log('✅ Briefing salvo localmente');
+        console.log('✅ [CLIENT-DEBUG] Briefing salvo localmente, definindo isSubmitted = true');
         setIsSubmitted(true);
         return;
       }
       
-    } catch (error) {
-      console.error('❌ Erro geral ao enviar briefing:', error);
-      
       // Mostrar erro específico para o usuário
       const errorMessage = error instanceof Error ? error.message : 'Erro inesperado. Por favor, tente novamente.';
+      console.error('❌ [CLIENT-DEBUG] Mostrando erro para usuário:', errorMessage);
       alert(`Erro: ${errorMessage}`);
       
     } finally {
+      console.log('🔄 [CLIENT-DEBUG] Finalizando onSubmit, setIsSubmitting(false)');
       setIsSubmitting(false);
     }
   };
@@ -235,25 +230,30 @@ const ClientBrief = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-workflow-deep via-purple-900 to-workflow-deep py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-workflow-deep via-purple-900 to-workflow-deep py-4 md:py-8 px-2 md:px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 md:mb-4">
             Briefing <span className="text-gradient-rainbow">Completo</span>
           </h1>
-          <p className="text-xl text-workflow-zen/80 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-workflow-zen/80 max-w-2xl mx-auto px-2">
             Vamos coletar todas as informações necessárias para criar sua landing page perfeita
           </p>
+          <div className="mt-3 md:mt-4 inline-block bg-white/10 backdrop-blur-sm rounded-full px-3 md:px-4 py-2 border border-white/20">
+            <p className="text-xs md:text-sm text-white font-medium">
+              👨‍💻 Desenvolvedor: Leonardo Lopes
+          </p>
+          </div>
         </div>
 
         {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm text-workflow-zen/80">
+        <div className="mb-6 md:mb-8 px-2">
+          <div className="flex justify-between items-center mb-3 md:mb-4">
+            <span className="text-xs md:text-sm text-workflow-zen/80">
               Etapa {currentStep} de {steps.length}
             </span>
-            <span className="text-sm text-workflow-zen/80">
+            <span className="text-xs md:text-sm text-workflow-zen/80">
               {Math.round(progressPercentage)}% completo
             </span>
           </div>
@@ -261,8 +261,8 @@ const ClientBrief = () => {
         </div>
 
         {/* Steps Navigation */}
-        <div className="flex justify-center mb-8 overflow-x-auto pb-4">
-          <div className="flex space-x-4 min-w-max">
+        <div className="flex justify-center mb-6 md:mb-8 overflow-x-auto pb-4 px-2">
+          <div className="flex space-x-2 md:space-x-4 min-w-max">
             {steps.map((step) => {
               const Icon = step.icon;
               const isActive = currentStep === step.id;
@@ -271,24 +271,24 @@ const ClientBrief = () => {
               return (
                 <div
                   key={step.id}
-                  className={`flex flex-col items-center p-4 rounded-2xl transition-all duration-300 cursor-pointer
+                  className={`flex flex-col items-center p-2 md:p-4 rounded-xl md:rounded-2xl transition-all duration-300 cursor-pointer min-w-[80px] md:min-w-auto
                     ${isActive ? 'bg-white/20 text-white scale-105' : 
                       isCompleted ? 'bg-green-500/20 text-green-300' : 
                       'bg-white/10 text-workflow-zen/60 hover:bg-white/15'}`}
                   onClick={() => setCurrentStep(step.id)}
                 >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2
+                  <div className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center mb-1 md:mb-2
                     ${isActive ? 'bg-workflow-energy' : 
                       isCompleted ? 'bg-green-500' : 
                       'bg-white/20'}`}>
                     {isCompleted ? (
-                      <CheckCircle className="w-6 h-6" />
+                      <CheckCircle className="w-4 h-4 md:w-6 md:h-6" />
                     ) : (
-                      <Icon className="w-6 h-6" />
+                      <Icon className="w-4 h-4 md:w-6 md:h-6" />
                     )}
                   </div>
-                  <span className="text-sm font-medium text-center">{step.title}</span>
-                  <span className="text-xs opacity-70 text-center">{step.description}</span>
+                  <span className="text-xs md:text-sm font-medium text-center">{step.title}</span>
+                  <span className="text-xs opacity-70 text-center hidden md:block">{step.description}</span>
                 </div>
               );
             })}
@@ -296,20 +296,20 @@ const ClientBrief = () => {
         </div>
 
         {/* Form */}
-        <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl">
+        <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-workflow-xl mx-2 md:mx-0">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <CardContent className="p-8">
+            <CardContent className="p-4 md:p-8">
               
               {/* Step 1: Informações da Empresa */}
               {currentStep === 1 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Sparkles className="w-12 h-12 text-workflow-energy mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-workflow-deep mb-2">Informações da Empresa</h2>
-                    <p className="text-workflow-deep/70">Conte-nos sobre sua empresa e negócio</p>
+                <div className="space-y-4 md:space-y-6">
+                  <div className="text-center mb-6 md:mb-8">
+                    <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-workflow-energy mx-auto mb-3 md:mb-4" />
+                    <h2 className="text-xl md:text-2xl font-bold text-workflow-deep mb-2">Informações da Empresa</h2>
+                    <p className="text-sm md:text-base text-workflow-deep/70">Conte-nos sobre sua empresa e negócio</p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
                         Nome da Empresa/Marca *
@@ -480,14 +480,14 @@ const ClientBrief = () => {
 
               {/* Step 2: Produto/Serviço */}
               {currentStep === 2 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Target className="w-12 h-12 text-workflow-energy mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-workflow-deep mb-2">Produto/Serviço</h2>
-                    <p className="text-workflow-deep/70">Detalhes sobre o que você oferece</p>
+                <div className="space-y-4 md:space-y-6">
+                  <div className="text-center mb-6 md:mb-8">
+                    <Target className="w-10 h-10 md:w-12 md:h-12 text-workflow-energy mx-auto mb-3 md:mb-4" />
+                    <h2 className="text-xl md:text-2xl font-bold text-workflow-deep mb-2">Produto/Serviço</h2>
+                    <p className="text-sm md:text-base text-workflow-deep/70">Detalhes sobre o que você oferece</p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
                         Nome do Responsável *
@@ -679,11 +679,11 @@ Inclua o que está incluso em cada uma."
 
               {/* Step 3: Marketing */}
               {currentStep === 3 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Palette className="w-12 h-12 text-workflow-energy mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-workflow-deep mb-2">Marketing & Design</h2>
-                    <p className="text-workflow-deep/70">Estratégia e identidade visual</p>
+                <div className="space-y-4 md:space-y-6">
+                  <div className="text-center mb-6 md:mb-8">
+                    <Palette className="w-10 h-10 md:w-12 md:h-12 text-workflow-energy mx-auto mb-3 md:mb-4" />
+                    <h2 className="text-xl md:text-2xl font-bold text-workflow-deep mb-2">Marketing & Design</h2>
+                    <p className="text-sm md:text-base text-workflow-deep/70">Estratégia e identidade visual</p>
                   </div>
 
                   <div>
@@ -873,8 +873,6 @@ Inclua o que está incluso em cada uma."
                     </p>
                   </div>
 
-
-
                   <div>
                     <label className="block text-sm font-medium text-workflow-deep mb-2">
                       Requisitos Específicos
@@ -893,11 +891,11 @@ Inclua o que está incluso em cada uma."
 
               {/* Step 4: Técnico */}
               {currentStep === 4 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Settings className="w-12 h-12 text-workflow-energy mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-workflow-deep mb-2">Configurações Técnicas</h2>
-                    <p className="text-workflow-deep/70">Integrações e funcionalidades</p>
+                <div className="space-y-4 md:space-y-6">
+                  <div className="text-center mb-6 md:mb-8">
+                    <Settings className="w-10 h-10 md:w-12 md:h-12 text-workflow-energy mx-auto mb-3 md:mb-4" />
+                    <h2 className="text-xl md:text-2xl font-bold text-workflow-deep mb-2">Configurações Técnicas</h2>
+                    <p className="text-sm md:text-base text-workflow-deep/70">Integrações e funcionalidades</p>
                   </div>
 
                   <div>
@@ -939,89 +937,28 @@ Inclua o que está incluso em cada uma."
 
               {/* Step 5: Timeline */}
               {currentStep === 5 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <Calendar className="w-12 h-12 text-workflow-energy mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-workflow-deep mb-2">Timeline & Orçamento</h2>
-                    <p className="text-workflow-deep/70">Prazos e investimento</p>
+                <div className="space-y-4 md:space-y-6">
+                  <div className="text-center mb-6 md:mb-8">
+                    <Calendar className="w-10 h-10 md:w-12 md:h-12 text-workflow-energy mx-auto mb-3 md:mb-4" />
+                    <h2 className="text-xl md:text-2xl font-bold text-workflow-deep mb-2">Timeline & Orçamento</h2>
+                    <p className="text-sm md:text-base text-workflow-deep/70">Prazos e investimento</p>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-workflow-deep mb-2">
                         Prazo de Entrega *
                       </label>
-                      <Select onValueChange={(value) => {
-                        setDeliveryType(value as 'standard' | 'custom');
-                        if (value === 'express') {
-                          setValue('deliveryDeadline', '5', { shouldValidate: true });
-                        } else if (value === 'fast') {
-                          setValue('deliveryDeadline', '7', { shouldValidate: true });
-                        } else if (value === 'standard') {
-                          setValue('deliveryDeadline', '10', { shouldValidate: true });
-                        } else if (value === 'custom') {
-                          setValue('deliveryDeadline', '', { shouldValidate: true });
-                        }
-                      }}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Escolha o tipo de prazo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="express">Express (até 5 dias)</SelectItem>
-                          <SelectItem value="fast">Rápido (até 7 dias)</SelectItem>
-                          <SelectItem value="standard">Padrão (até 10 dias)</SelectItem>
-                          <SelectItem value="custom">Personalizado</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {errors.deliveryDeadline && (
-                        <p className="text-red-500 text-sm mt-1">{errors.deliveryDeadline.message}</p>
-                      )}
+                      <Input 
+                        value="Valor Acordado na Workana"
+                        readOnly
+                        className="bg-gray-50 cursor-not-allowed"
+                      />
+                      <p className="text-sm text-workflow-deep/60 mt-1">
+                        💡 O prazo de entrega já foi definido conforme acordo na Workana
+                      </p>
                     </div>
-
-                    {deliveryType === 'custom' && (
-                      <div>
-                        <label className="block text-sm font-medium text-workflow-deep mb-2">
-                          Quantos dias para entrega? *
-                        </label>
-                        <Select onValueChange={(value) => setValue('deliveryDeadline', value, { shouldValidate: true })}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione os dias" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="3">3 dias (urgente)</SelectItem>
-                            <SelectItem value="4">4 dias</SelectItem>
-                            <SelectItem value="5">5 dias</SelectItem>
-                            <SelectItem value="6">6 dias</SelectItem>
-                            <SelectItem value="7">7 dias (1 semana)</SelectItem>
-                            <SelectItem value="8">8 dias</SelectItem>
-                            <SelectItem value="9">9 dias</SelectItem>
-                            <SelectItem value="10">10 dias</SelectItem>
-                            <SelectItem value="11">11 dias</SelectItem>
-                            <SelectItem value="12">12 dias</SelectItem>
-                            <SelectItem value="13">13 dias</SelectItem>
-                            <SelectItem value="14">14 dias (2 semanas)</SelectItem>
-                            <SelectItem value="16">16 dias</SelectItem>
-                            <SelectItem value="17">17 dias</SelectItem>
-                            <SelectItem value="18">18 dias</SelectItem>
-                            <SelectItem value="19">19 dias</SelectItem>
-                            <SelectItem value="20">20 dias</SelectItem>
-                            <SelectItem value="21">21 dias (3 semanas)</SelectItem>
-                            <SelectItem value="22">22 dias</SelectItem>
-                            <SelectItem value="23">23 dias</SelectItem>
-                            <SelectItem value="24">24 dias</SelectItem>
-                            <SelectItem value="25">25 dias</SelectItem>
-                            <SelectItem value="26">26 dias</SelectItem>
-                            <SelectItem value="27">27 dias</SelectItem>
-                            <SelectItem value="28">28 dias (4 semanas)</SelectItem>
-                            <SelectItem value="29">29 dias</SelectItem>
-                            <SelectItem value="30">30 dias (1 mês)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
                   </div>
-
-
 
                   <div>
                     <label className="block text-sm font-medium text-workflow-deep mb-2">
@@ -1048,46 +985,18 @@ Inclua o que está incluso em cada uma."
                     />
                   </div>
 
-                  <div className="bg-gradient-to-r from-workflow-energy/10 to-workflow-zen/10 rounded-2xl p-6 border border-workflow-energy/20">
-                    <h3 className="font-semibold text-workflow-deep mb-3 flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-workflow-energy" />
-                      Próximos Passos após o Envio:
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
-                        <div>
-                          <p className="font-medium text-workflow-deep">Análise Detalhada (24h)</p>
-                          <p className="text-sm text-workflow-deep/70">Nossa equipe analisará seu briefing e criará a estratégia personalizada</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
-                        <div>
-                          <p className="font-medium text-workflow-deep">Proposta & Cronograma</p>
-                          <p className="text-sm text-workflow-deep/70">Enviaremos proposta detalhada com timeline e marcos do projeto</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-workflow-energy text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
-                        <div>
-                          <p className="font-medium text-workflow-deep">Início do Desenvolvimento</p>
-                          <p className="text-sm text-workflow-deep/70">Após aprovação, iniciamos a criação da sua landing page de alta conversão</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                 </div>
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-between pt-8">
+              <div className="flex flex-col sm:flex-row justify-between gap-3 pt-6 md:pt-8">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className="flex items-center gap-2"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Anterior
@@ -1097,16 +1006,17 @@ Inclua o que está incluso em cada uma."
                   <Button
                     type="button"
                     onClick={nextStep}
-                    className="btn-primary flex items-center gap-2"
+                    className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     Próximo
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
                   <Button
-                    type="submit"
+                    type="button"
+                    onClick={handleSubmit(onSubmit)}
                     disabled={isSubmitting}
-                    className="btn-primary flex items-center gap-2"
+                    className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     {isSubmitting ? 'Enviando...' : 'Enviar Briefing'}
                     <Send className="w-4 h-4" />

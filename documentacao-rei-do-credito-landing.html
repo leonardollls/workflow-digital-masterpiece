@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Técnica - Landing Page Rei do Crédito</title>
+    <style>
+        :root {
+            /* Paleta baseada na Workflow Services */
+            --primary-purple: #7c3aed;
+            --secondary-purple: #a78bfa;
+            --dark-bg: #1a0d2e;
+            --darker-bg: #0f0517;
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.9);
+            --accent-cyan: #06b6d4;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --glass-bg: rgba(167, 139, 250, 0.1);
+            --border-glass: rgba(167, 139, 250, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-white);
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Branding Section */
+        .branding {
+            background: rgba(26, 13, 46, 0.8);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .branding-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .workflow-logo {
+            height: clamp(70px, 12vw, 120px);
+            width: auto;
+            max-width: 450px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 100%);
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.3);
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            opacity: 0.95;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .url {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.8;
+            background: #1a0c2e;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(26, 13, 46, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: clamp(1rem, 3vw, 2.5rem);
+        }
+
+        .nav a {
+            color: var(--text-white);
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            white-space: nowrap;
+        }
+
+        .nav a:hover {
+            background: var(--glass-bg);
+            color: var(--secondary-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Main Content */
+        .main {
+            padding: clamp(2rem, 5vw, 4rem) 0;
+        }
+
+        section {
+            margin-bottom: clamp(3rem, 6vw, 5rem);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: clamp(1.5rem, 4vw, 3rem);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            color: var(--secondary-purple);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary-purple);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+            flex-wrap: wrap;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            color: var(--accent-cyan);
+            margin: 2.5rem 0 1.5rem 0;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--secondary-purple);
+            margin: 2rem 0 1rem 0;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: clamp(0.9rem, 2vw, 1.02rem);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--darker-bg);
+            border: 1px solid var(--primary-purple);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 2rem);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            line-height: 1.6;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #f3f0ff;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5rem 0;
+            padding-left: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: clamp(0.8rem, 2vw, 1.2rem);
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+        }
+
+        th {
+            background: var(--primary-purple);
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 25px;
+            font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+            font-weight: 600;
+            margin: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary { background: var(--primary-purple); color: var(--text-white); }
+        .badge-success { background: var(--success-green); color: var(--text-white); }
+        .badge-warning { background: var(--warning-orange); color: var(--text-white); }
+        .badge-info { background: var(--accent-cyan); color: var(--text-white); }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-glass);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 2rem);
+            margin: 1.5rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            margin: 2.5rem 0;
+        }
+
+        /* Icons */
+        .icon {
+            width: clamp(20px, 4vw, 28px);
+            height: clamp(20px, 4vw, 28px);
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* Highlights - sem background */
+        .highlight {
+            color: var(--secondary-purple);
+            font-weight: 600;
+        }
+
+        /* Builder.io Section - Fundo padrão igual outras seções */
+        .builder-section {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-white);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .builder-section h2 {
+            color: var(--secondary-purple);
+            border-bottom-color: var(--primary-purple);
+        }
+
+        .builder-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .builder-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .branding-content {
+                justify-content: center;
+                text-align: center;
+                align-items: center;
+            }
+
+            .workflow-logo {
+                margin: 0 auto;
+            }
+
+            /* Mobile navigation - sem sticky/fixed */
+            .nav {
+                position: static;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav a {
+                padding: 0.8rem 1rem;
+                text-align: center;
+            }
+
+            h2 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                text-align: center;
+                justify-content: center;
+            }
+
+            h3 {
+                text-align: center;
+                margin: 2rem 0 1.5rem 0;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Seções específicas - centralização mobile */
+            .table-container {
+                margin: 1.5rem 0;
+                padding: 0;
+                text-align: center;
+            }
+
+            table {
+                margin: 0 auto;
+                min-width: auto;
+                width: 100%;
+                font-size: clamp(0.7rem, 2vw, 0.85rem);
+            }
+
+            th, td {
+                padding: clamp(0.5rem, 2vw, 0.8rem);
+                text-align: center;
+            }
+
+            th {
+                font-size: clamp(0.7rem, 2vw, 0.85rem);
+            }
+
+            .code-block {
+                margin: 1rem 0;
+                border-radius: 10px;
+                padding: 1rem;
+                text-align: left;
+            }
+
+            /* Centralização específica para seções mencionadas */
+            #structure .table-container,
+            #responsive .table-container,
+            #deploy .table-container {
+                text-align: center;
+            }
+
+            #structure h3,
+            #responsive h3,
+            #deploy h3 {
+                text-align: center;
+                margin: 2rem auto 1.5rem auto;
+            }
+
+            /* Ajustes específicos para as seções solicitadas */
+            #structure h2,
+            #responsive h2,
+            #deploy h2 {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) {
+            /* Desktop navigation - uma linha horizontal */
+            .nav ul {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: center;
+                gap: 2.5rem;
+            }
+
+            .nav a {
+                white-space: nowrap;
+            }
+
+            .branding-content {
+                justify-content: center;
+            }
+
+            .workflow-logo {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            section {
+                padding: 1.5rem 1rem;
+            }
+
+            .nav a {
+                font-size: 0.9rem;
+                padding: 0.6rem 0.8rem;
+            }
+
+            .table-container {
+                font-size: 0.8rem;
+                margin: 1rem 0;
+            }
+
+            th, td {
+                padding: 0.4rem 0.2rem;
+                font-size: 0.75rem;
+            }
+
+            /* Ajustes específicos para mobile pequeno */
+            h2 {
+                text-align: center;
+                justify-content: center;
+            }
+
+            h3 {
+                text-align: center;
+            }
+
+            .workflow-logo {
+                height: clamp(60px, 15vw, 80px);
+                max-width: 320px;
+            }
+
+            .branding-content {
+                gap: 1.5rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--darker-bg); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--primary-purple); 
+            border-radius: 4px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary-purple); }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        section { animation: fadeInUp 0.8s ease-out; }
+
+        /* Footer */
+        .footer {
+            background: var(--darker-bg);
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+            margin-top: 5rem;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+        }
+    </style>
+</head>
+<body>
+    <div class="branding">
+        <div class="container">
+            <div class="branding-content">
+                <img src="https://i.ibb.co/dw1vvptq/logo-workflow-sem-fundo2.png" alt="Workflow Services" class="workflow-logo">
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <h1>📄 Documentação Técnica</h1>
+            <p class="subtitle">Landing Page - Rei do Crédito</p>
+            <div class="url">🌐 reidocreditoficial.com.br</div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#overview">📋 Visão Geral</a></li>
+                <li><a href="#structure">📁 Estrutura</a></li>
+                <li><a href="#components">🧩 Componentes</a></li>
+                <li><a href="#builder">🎨 Builder.io</a></li>
+                <li><a href="#responsive">📱 Responsividade</a></li>
+                <li><a href="#deploy">🚀 Deploy</a></li>
+                <li><a href="#maintenance">🔧 Manutenção</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <section id="overview">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    Visão Geral da Landing Page
+                </h2>
+                
+                <p>A <span class="highlight">Landing Page do Rei do Crédito</span> é uma página de conversão otimizada para captação de leads interessados em empréstimos do Bolsa Família. A página foi desenvolvida com foco em conversão e experiência do usuário, utilizando tecnologias web modernas.</p>
+
+                <h3>🎯 Objetivos Principais</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>💰 Geração de Leads</h4>
+                        <p>Captar interessados em empréstimos do Bolsa Família através de formulários otimizados e CTAs estratégicos.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔗 Conversão para WhatsApp</h4>
+                        <p>Direcionar usuários qualificados para atendimento humanizado via WhatsApp.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🏆 Construção de Confiança</h4>
+                        <p>Demonstrar credibilidade através de depoimentos reais, avaliações e presença física.</p>
+                    </div>
+                </div>
+
+                <h3>✨ Características Técnicas</h3>
+                <ul>
+                    <li><strong>SPA (Single Page Application):</strong> Construída como aplicação React</li>
+                    <li><strong>Design Responsivo:</strong> Otimizada para todos os dispositivos</li>
+                    <li><strong>SEO Otimizado:</strong> Meta tags e structured data implementados</li>
+                    <li><strong>Performance:</strong> Lazy loading e otimizações de carregamento</li>
+                    <li><strong>Integração WhatsApp:</strong> Links diretos para atendimento</li>
+                    <li><strong>Analytics:</strong> Tracking de conversões e comportamento</li>
+                </ul>
+            </section>
+
+            <section id="structure">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7z"/>
+                        <path d="M8 21l4-7 4 7"/>
+                    </svg>
+                    Estrutura de Arquivos
+                </h2>
+
+                <p>A landing page está organizada em uma estrutura simples e otimizada para hospedagem estática:</p>
+
+                <div class="code-block">
+                    <pre>
+rei-do-credito-build/
+├── 📄 index.html              # Página principal (SPA)
+├── 📄 index.php              # Compatibilidade Locaweb
+├── ⚙️ .htaccess              # Configurações Apache
+├── 🤖 robots.txt             # SEO e crawlers
+├── 🎨 favicon.ico            # Ícone do site
+├── 📊 test.php               # Diagnóstico do servidor
+├── 📋 README_DEPLOY_CORRIGIDO.md
+├── 📋 DEPLOY_INFO_FIXED.json
+├── 📁 assets/                # CSS e JavaScript compilados
+│   ├── index-Zgpm63NY.js     # Bundle JavaScript
+│   └── index-B9E8CC6u.css    # Estilos compilados
+└── 📁 images/                # Assets visuais
+    ├── logo-rei-do-credito1.2.svg
+    ├── image-model-section-hero1.png
+    ├── loja-sc-rei-do-credito-1.webp
+    ├── person-model-requisitos[1-5].png
+    └── tik-tok-icone-laranja1.png
+                    </pre>
+                </div>
+
+                <h3>📋 Arquivos Principais</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Arquivo</th>
+                                <th>Função</th>
+                                <th>Tecnologia</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>index.html</code></td>
+                                <td>Página principal</td>
+                                <td>HTML5 + React</td>
+                                <td>SPA com root div</td>
+                            </tr>
+                            <tr>
+                                <td><code>index.php</code></td>
+                                <td>Compatibilidade</td>
+                                <td>PHP</td>
+                                <td>Redirecionamento para HTML</td>
+                            </tr>
+                            <tr>
+                                <td><code>.htaccess</code></td>
+                                <td>Configuração servidor</td>
+                                <td>Apache</td>
+                                <td>Cache, GZIP, Security</td>
+                            </tr>
+                            <tr>
+                                <td><code>assets/</code></td>
+                                <td>Recursos compilados</td>
+                                <td>JS/CSS</td>
+                                <td>Versionados com hash</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🖼️ Assets e Imagens</h3>
+                <p>As imagens estão otimizadas para web com diferentes formatos:</p>
+                <ul>
+                    <li><strong>SVG:</strong> Logo e ícones vetoriais</li>
+                    <li><strong>PNG:</strong> Imagens com transparência</li>
+                    <li><strong>WebP:</strong> Fotos otimizadas para web</li>
+                    <li><strong>ICO:</strong> Favicon multiplataforma</li>
+                </ul>
+            </section>
+
+            <section id="components">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Componentes e Seções
+                </h2>
+
+                <p>A landing page é estruturada em seções estratégicas para maximizar a conversão:</p>
+
+                <h3>🎯 Seções Principais</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🏆 Header + Hero Section</h4>
+                        <span class="badge badge-primary">Alta Conversão</span>
+                        <ul>
+                            <li>Logo "Rei do Crédito"</li>
+                            <li>Navegação âncora</li>
+                            <li>Headline impactante</li>
+                            <li>CTA principal "Simular Agora"</li>
+                            <li>Indicadores sociais</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>💎 Vantagens do Produto</h4>
+                        <span class="badge badge-info">Educativa</span>
+                        <ul>
+                            <li>Crédito rápido (48h)</li>
+                            <li>Desconto automático</li>
+                            <li>Parcelamento flexível</li>
+                            <li>Processo sem burocracia</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📋 Requisitos</h4>
+                        <span class="badge badge-warning">Qualificação</span>
+                        <ul>
+                            <li>Idade mínima (18 anos)</li>
+                            <li>Renda mínima (R$ 400)</li>
+                            <li>Benefício livre</li>
+                            <li>App Caixa Tem</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📄 Documentos</h4>
+                        <span class="badge badge-info">Transparência</span>
+                        <ul>
+                            <li>RG ou CNH</li>
+                            <li>CPF</li>
+                            <li>Extrato Caixa Tem</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🏢 Soluções de Crédito</h4>
+                        <span class="badge badge-success">Diversificação</span>
+                        <ul>
+                            <li>Crédito Bolsa Família</li>
+                            <li>Antecipação FGTS</li>
+                            <li>Crédito do Trabalhador</li>
+                            <li>Consignado INSS</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🏪 Presença Nacional</h4>
+                        <span class="badge badge-primary">Credibilidade</span>
+                        <ul>
+                            <li>6 lojas físicas em SC</li>
+                            <li>Atendimento nacional</li>
+                            <li>+300 avaliações 5⭐</li>
+                            <li>Atendimento WhatsApp</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>💬 Depoimentos</h4>
+                        <span class="badge badge-success">Prova Social</span>
+                        <ul>
+                            <li>Reviews Google reais</li>
+                            <li>Avaliação 5.0 estrelas</li>
+                            <li>+301 avaliações</li>
+                            <li>Carrossel de testimonials</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>❓ FAQ</h4>
+                        <span class="badge badge-info">Suporte</span>
+                        <ul>
+                            <li>Perguntas frequentes</li>
+                            <li>Accordion interativo</li>
+                            <li>Informações detalhadas</li>
+                            <li>Redução de objeções</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🔗 Integração WhatsApp</h3>
+                <p>A landing page possui múltiplos pontos de conversão para WhatsApp:</p>
+                <div class="code-block">
+                    <pre>
+// Link WhatsApp principal
+https://wa.link/bolsa_familia
+
+// Estratégia de conversão:
+- Botões "Simular Agora" em seções estratégicas
+- "Falar com Especialista" na seção de soluções
+- CTA final após FAQ
+- Links contextualizados por seção
+                    </pre>
+                </div>
+
+                <h3>⚡ Funcionalidades JavaScript</h3>
+                <ul>
+                    <li><strong>Navegação Suave:</strong> Scroll animado entre seções</li>
+                    <li><strong>Accordion FAQ:</strong> Expansão/contração de perguntas</li>
+                    <li><strong>Lazy Loading:</strong> Carregamento otimizado de imagens</li>
+                    <li><strong>Tracking:</strong> Eventos de conversão</li>
+                    <li><strong>Responsividade:</strong> Adaptação dinâmica de layout</li>
+                </ul>
+            </section>
+
+            <section id="builder" class="builder-section">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Integração Builder.io
+                </h2>
+                
+                <p>Este projeto possui <span class="highlight">integração completa com o Builder.io</span>, um CMS visual headless que permite edição de conteúdo em tempo real sem necessidade de conhecimento técnico.</p>
+
+                <div class="builder-features">
+                    <div class="builder-feature">
+                        <h4>🎨 Editor Visual</h4>
+                        <p>Interface drag-and-drop para edição de conteúdo, imagens e layout sem código.</p>
+                    </div>
+                    <div class="builder-feature">
+                        <h4>⚡ Atualizações em Tempo Real</h4>
+                        <p>Mudanças no Builder.io são refletidas instantaneamente na landing page.</p>
+                    </div>
+                    <div class="builder-feature">
+                        <h4>📱 Responsividade Automática</h4>
+                        <p>Edições mantêm automaticamente a responsividade em todos os dispositivos.</p>
+                    </div>
+                </div>
+
+                <h3>🛠️ Funcionalidades Builder.io</h3>
+                <ul>
+                    <li><strong>Edição de Textos:</strong> Alteração de headlines, descrições e CTAs</li>
+                    <li><strong>Gestão de Imagens:</strong> Upload e otimização automática de assets</li>
+                    <li><strong>A/B Testing:</strong> Testes de variações para otimização de conversão</li>
+                    <li><strong>Personalização:</strong> Conteúdo dinâmico baseado no usuário</li>
+                    <li><strong>Analytics:</strong> Métricas de performance integradas</li>
+                    <li><strong>SEO Dinâmico:</strong> Meta tags editáveis via interface visual</li>
+                </ul>
+
+                <h3>🎯 Benefícios para o Cliente</h3>
+                <div class="code-block">
+                    <pre>
+✅ Autonomia total para editar conteúdo
+✅ Não precisa de desenvolvedor para mudanças simples  
+✅ Preview em tempo real das alterações
+✅ Otimização contínua baseada em dados
+✅ Redução de custos de manutenção
+✅ Velocidade na implementação de mudanças
+                    </pre>
+                </div>
+            </section>
+
+            <section id="responsive">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    Design Responsivo e Compatibilidade
+                </h2>
+
+                <p>A landing page foi desenvolvida com abordagem <span class="highlight">mobile-first</span>, garantindo experiência otimizada em todos os dispositivos:</p>
+
+                <h3>📱 Breakpoints e Adaptações</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dispositivo</th>
+                                <th>Breakpoint</th>
+                                <th>Layout</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>📱 Mobile</td>
+                                <td>&lt; 768px</td>
+                                <td>Single Column</td>
+                                <td>CTAs full-width, navegação stack</td>
+                            </tr>
+                            <tr>
+                                <td>📟 Tablet</td>
+                                <td>768px - 1024px</td>
+                                <td>2 Columns</td>
+                                <td>Grid adaptativo, imagens médias</td>
+                            </tr>
+                            <tr>
+                                <td>🖥️ Desktop</td>
+                                <td>&gt; 1024px</td>
+                                <td>Multi Column</td>
+                                <td>Layout completo, hover effects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🌐 Compatibilidade Cross-Browser</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>✅ Suporte Completo</h4>
+                        <ul>
+                            <li>Chrome 80+</li>
+                            <li>Firefox 75+</li>
+                            <li>Safari 13+</li>
+                            <li>Edge 80+</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📱 Mobile Browsers</h4>
+                        <ul>
+                            <li>Chrome Mobile</li>
+                            <li>Safari iOS</li>
+                            <li>Samsung Internet</li>
+                            <li>Opera Mobile</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>⚡ Otimizações de Performance</h3>
+                <ul>
+                    <li><strong>Lazy Loading:</strong> Imagens carregadas sob demanda</li>
+                    <li><strong>WebP Format:</strong> Imagens otimizadas para web</li>
+                    <li><strong>GZIP Compression:</strong> Compressão de assets</li>
+                    <li><strong>Cache Headers:</strong> Cache de longa duração</li>
+                    <li><strong>Minificação:</strong> CSS e JS otimizados</li>
+                    <li><strong>CDN Ready:</strong> Assets preparados para CDN</li>
+                </ul>
+
+                <h3>🔍 SEO e Acessibilidade</h3>
+                <div class="code-block">
+                    <pre>
+// Meta tags otimizadas
+&lt;title&gt;Rei do Crédito - Empréstimo Bolsa Família até R$ 650&lt;/title&gt;
+&lt;meta name="description" content="Empréstimo Bolsa Família rápido..."&gt;
+&lt;meta name="keywords" content="empréstimo bolsa família, auxílio brasil..."&gt;
+
+// Open Graph
+&lt;meta property="og:title" content="Rei do Crédito - Empréstimo..."&gt;
+&lt;meta property="og:description" content="Empréstimo rápido..."&gt;
+&lt;meta property="og:type" content="website"&gt;
+
+// Twitter Cards
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+                    </pre>
+                </div>
+            </section>
+
+            <section id="deploy">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Instruções de Build e Deploy
+                </h2>
+
+                <p>A landing page está otimizada para deploy em hospedagem compartilhada, especialmente <span class="highlight">Locaweb</span>:</p>
+
+                <h3>📋 Pré-requisitos</h3>
+                <div class="card">
+                    <ul>
+                        <li>Hospedagem com suporte a <strong>Apache</strong></li>
+                        <li>Suporte a <strong>PHP</strong> (opcional, para compatibilidade)</li>
+                        <li>Acesso via <strong>FTP/SFTP</strong></li>
+                        <li>Painel de controle da hospedagem</li>
+                    </ul>
+                </div>
+
+                <h3>🚀 Processo de Deploy</h3>
+                <div class="code-block">
+                    <pre>
+# 1. Preparação do ambiente
+- Acesse o painel da Locaweb
+- Navegue até a pasta public_html
+- REMOVA todos os arquivos existentes (limpeza)
+
+# 2. Upload dos arquivos
+- Extraia TODO o conteúdo do ZIP rei-do-credito-build
+- Faça upload de TODOS os arquivos para public_html
+- Certifique-se que index.html está na RAIZ
+
+# 3. Verificação da estrutura
+public_html/
+├── index.html (OBRIGATÓRIO na raiz)
+├── index.php (compatibilidade)
+├── .htaccess (configurações)
+├── assets/ (CSS/JS)
+├── images/ (imagens)
+└── outros arquivos...
+
+# 4. Teste de funcionamento
+- Acesse seu domínio
+- Teste /test.php para diagnóstico
+- Verifique todos os CTAs WhatsApp
+                    </pre>
+                </div>
+
+                <h3>⚙️ Configurações do Servidor</h3>
+                <p>O arquivo <code>.htaccess</code> inclui configurações essenciais:</p>
+                <div class="code-block">
+                    <pre>
+# SPA Routing - redirecionar para index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# Cache Control para performance
+&lt;FilesMatch "\.(css|js|png|jpg|svg|webp|ico)$"&gt;
+    Header set Cache-Control "public, max-age=31536000"
+&lt;/FilesMatch&gt;
+
+# Compressão GZIP
+AddOutputFilterByType DEFLATE text/css application/javascript
+
+# Security Headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-XSS-Protection "1; mode=block"
+                    </pre>
+                </div>
+
+                <h3>🔧 Arquivo de Diagnóstico</h3>
+                <p>O arquivo <code>test.php</code> permite verificar o status do deploy:</p>
+                <div class="card">
+                    <h4>🩺 Verificações Incluídas:</h4>
+                    <ul>
+                        <li>Status do servidor Apache</li>
+                        <li>Arquivos encontrados</li>
+                        <li>Configuração PHP</li>
+                        <li>Permissões de arquivo</li>
+                        <li>Teste de conectividade</li>
+                    </ul>
+                </div>
+
+                <h3>🌐 Deploy Alternativo</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Plataforma</th>
+                                <th>Compatibilidade</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Netlify</td>
+                                <td>✅ Completa</td>
+                                <td>Deploy automático via Git</td>
+                            </tr>
+                            <tr>
+                                <td>Vercel</td>
+                                <td>✅ Completa</td>
+                                <td>Otimizado para SPA</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Pages</td>
+                                <td>✅ Completa</td>
+                                <td>Gratuito, sem PHP</td>
+                            </tr>
+                            <tr>
+                                <td>Hostinger</td>
+                                <td>✅ Completa</td>
+                                <td>Similar à Locaweb</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="maintenance">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Cronograma de Manutenção
+                </h2>
+
+                <h3>📅 Rotina de Manutenção</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🔄 Semanal</h4>
+                        <ul>
+                            <li>Verificar funcionamento dos links WhatsApp</li>
+                            <li>Testar formulários de contato</li>
+                            <li>Monitorar métricas de conversão</li>
+                            <li>Backup dos arquivos</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Mensal</h4>
+                        <ul>
+                            <li>Análise de performance (PageSpeed)</li>
+                            <li>Verificação de compatibilidade</li>
+                            <li>Atualização de depoimentos</li>
+                            <li>Review de métricas de conversão</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔧 Trimestral</h4>
+                        <ul>
+                            <li>Auditoria completa de SEO</li>
+                            <li>Teste em múltiplos dispositivos</li>
+                            <li>Otimização de imagens</li>
+                            <li>Revisão de conteúdo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>💡 Dicas de Manutenção</h4>
+                    <ul>
+                        <li>Sempre faça backup antes de atualizações</li>
+                        <li>Teste em ambiente de staging quando possível</li>
+                        <li>Monitore métricas de conversão após mudanças</li>
+                        <li>Mantenha documentação atualizada</li>
+                        <li>Use versionamento para controle de mudanças</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>📄 Documentação gerada pela <strong>Workflow Services</strong> • Julho 2025</p>
+            <p style="margin-top: 0.5rem; font-size: clamp(0.7rem, 1.8vw, 0.85rem);">🎯 Landing Page otimizada para conversão • 📱 Design responsivo • ⚡ Performance otimizada</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling para navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight seção ativa na navegação
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+
+        function highlightActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.background = '';
+                link.style.color = '';
+                link.style.transform = '';
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.style.background = 'var(--glass-bg)';
+                    link.style.color = 'var(--secondary-purple)';
+                    link.style.transform = 'translateY(-2px)';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightActiveSection);
+        highlightActiveSection();
+
+        // Animação de entrada para cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html> 

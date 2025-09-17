@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 
 const MethodologyLab = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [expandedPhases, setExpandedPhases] = useState<Set<number>>(new Set());
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -16,6 +17,18 @@ const MethodologyLab = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const togglePhaseExpansion = (phaseNumber: number) => {
+    setExpandedPhases(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(phaseNumber)) {
+        newSet.delete(phaseNumber);
+      } else {
+        newSet.add(phaseNumber);
+      }
+      return newSet;
+    });
+  };
 
   // Memoizar partículas para evitar recriação a cada render
   const particles = useMemo(() => 
@@ -259,7 +272,7 @@ const MethodologyLab = () => {
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight px-4 sm:px-0">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight px-4 sm:px-0">
             The{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
@@ -301,8 +314,11 @@ const MethodologyLab = () => {
                 
                 {/* Phase Content */}
                 <div className="w-full md:w-1/2 lg:w-1/2 space-y-4 sm:space-y-6 md:space-y-8 px-4 sm:px-0">
-                  {/* Phase Header Card */}
-                  <div className="relative group">
+                  {/* Phase Header Card - Clicável */}
+                  <div 
+                    className="relative group cursor-pointer"
+                    onClick={() => togglePhaseExpansion(phase.number)}
+                  >
                     <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/10 to-workflow-accent/10 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
                     <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 md:p-7 lg:p-8 hover:bg-white/8 transition-all duration-500">
                       <div className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-4 sm:mb-6">
@@ -319,6 +335,12 @@ const MethodologyLab = () => {
                             <span className="text-sm sm:text-base md:text-lg text-workflow-zen/80 font-medium">{phase.duration}</span>
                           </div>
                         </div>
+                        {/* Indicador de expansão */}
+                        <div className="text-white/80 transition-transform duration-300" style={{
+                          transform: expandedPhases.has(phase.number) ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}>
+                          ▼
+                        </div>
                       </div>
 
                       <p className="text-workflow-zen/90 text-base lg:text-lg leading-relaxed">
@@ -327,8 +349,10 @@ const MethodologyLab = () => {
                     </div>
                   </div>
 
-                  {/* Activities with Details */}
-                  <div className="space-y-4">
+                  {/* Activities with Details - Colapsável */}
+                  <div className={`space-y-4 transition-all duration-300 overflow-hidden ${
+                    expandedPhases.has(phase.number) ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
+                  }`}>
                     {phase.activities.map((activity, i) => (
                       <div key={i} className="group relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-workflow-zen/3 to-workflow-accent/3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -67,8 +67,14 @@ const TestimonialTheater = () => {
             <div className="w-12 h-0.5 bg-gradient-to-l from-workflow-energy to-workflow-zen rounded-full" />
           </div>
           
-          <h2 className="text-responsive-3xl font-display font-bold text-workflow-deep mb-6">
-            Feedbacks dos <span className="text-gradient">Líderes</span>
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-6 sm:mb-8 md:mb-10 leading-tight">
+            Feedbacks dos{' '}
+            <span className="relative">
+              <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-energy bg-clip-text text-transparent">
+                Líderes
+              </span>
+              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-workflow-zen/0 via-workflow-zen/60 to-workflow-zen/0 rounded-full" />
+            </span>
           </h2>
           
           <p className="text-responsive-lg text-workflow-deep/70 mb-8 max-w-3xl mx-auto">

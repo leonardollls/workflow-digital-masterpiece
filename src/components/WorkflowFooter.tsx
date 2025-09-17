@@ -1,10 +1,16 @@
-import { Link } from "react-router-dom";
-
 const WorkflowFooter = () => {
   const currentYear = new Date().getFullYear();
 
+  const handlePrivacyClick = () => {
+    window.location.href = '/politica-de-privacidade';
+  };
+
+  const handleTermsClick = () => {
+    window.location.href = '/termos-de-uso';
+  };
+
   return (
-    <footer className="bg-workflow-deep text-white py-8">
+    <footer className="bg-workflow-deep text-white py-8 relative z-10">
       <div className="container mx-auto px-6">
         {/* Simple Footer Content */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -20,20 +26,20 @@ const WorkflowFooter = () => {
           
           {/* Simple Links */}
           <div className="flex items-center gap-6 text-sm text-white/60">
-            <Link 
-              to="/privacidade" 
-              className="hover:text-workflow-zen transition-colors"
-              onContextMenu={(e) => e.preventDefault()}
+            <button
+              onClick={handlePrivacyClick}
+              className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
+              type="button"
             >
               Privacidade
-            </Link>
-            <Link 
-              to="/termos" 
-              className="hover:text-workflow-zen transition-colors"
-              onContextMenu={(e) => e.preventDefault()}
+            </button>
+            <button
+              onClick={handleTermsClick}
+              className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
+              type="button"
             >
               Termos
-            </Link>
+            </button>
           </div>
         </div>
       </div>

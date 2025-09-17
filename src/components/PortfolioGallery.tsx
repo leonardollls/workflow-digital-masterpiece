@@ -15,9 +15,15 @@ const PortfolioGallery = () => {
   const galleryRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    // Garantir que o conteúdo seja visível imediatamente para evitar problemas mobile
+    setIsVisible(true);
+    
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.1 }
+      { 
+        threshold: 0.1,
+        rootMargin: '50px' // Adicionar margem para melhorar detecção mobile
+      }
     );
 
     if (galleryRef.current) {
@@ -29,6 +35,20 @@ const PortfolioGallery = () => {
 
   const projects: Project[] = [
     {
+      id: 101,
+      title: "Plataforma de IA para Vendas",
+      description: "Landing page desenvolvida para uma plataforma inovadora de inteligência artificial focada em otimizar processos de vendas e atendimento ao cliente.",
+      image: "/Images/landing-page-demonstracao-workana-1.png",
+      category: "ai"
+    },
+    {
+      id: 102,
+      title: "Quart's - Móveis Sob Medida",
+      description: "Landing page desenvolvida para uma empresa especializada em móveis sob medida e design de interiores.",
+      image: "/Images/118d31229400769.686562b112afe.jpg",
+      category: "interiores"
+    },
+    {
       id: 1,
       title: "Wood Home - Móveis Planejados",
       description: "Landing page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
@@ -36,11 +56,39 @@ const PortfolioGallery = () => {
       category: "design"
     },
     {
+      id: 105,
+      title: "Valor Corretora - Seguro de Renda",
+      description: "Página de captura que apresenta o Seguro DIT para proteger a renda de trabalhadores contra afastamentos por acidente ou doença.",
+      image: "/Images/FireShot Capture 003 - Segura de Renda.webp",
+      category: "finance"
+    },
+    {
+      id: 106,
+      title: "Curso Nano Lips – Domine a Técnica Mais Lucrativa do Mercado",
+      description: "Página de captura para curso especializado em Nano Lips, apresentando benefícios, público-alvo, técnicas ensinadas, resultados alcançáveis e bônus exclusivos.",
+      image: "/Images/FireShotCaptureNanoLips.jpg",
+      category: "education"
+    },
+    {
+      id: 104,
+      title: "Rei do Crédito – Crédito Rápido e Seguro",
+      description: "Página de captura que apresenta soluções de crédito rápido e transparente (Antecipação FGTS, crédito pessoal e para trabalhadores).",
+      image: "/Images/FireShot Capture 001 - Rei do Crédito.webp",
+      category: "finance"
+    },
+    {
       id: 2,
       title: "Teacher Mary - Curso de Inglês",
       description: "Página de captura para professora de inglês com método exclusivo, aulas personalizadas e resultados comprovados",
       image: "/Images/landing-page-demonstracao-2.webp",
       category: "education"
+    },
+    {
+      id: 103,
+      title: "Evento de Imersão",
+      description: "Landing page desenvolvida para uma imersão de alto nível voltada para desenvolvimento pessoal e networking estratégico.",
+      image: "/Images/54478b229424237.68648848892d0_11zon%20(1).webp",
+      category: "evento"
     },
     {
       id: 3,
@@ -125,14 +173,14 @@ const PortfolioGallery = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section */}
-        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
             <div className="w-8 sm:w-12 md:w-16 h-0.5 bg-gradient-to-r from-workflow-energy to-workflow-zen rounded-full" />
             <span className="text-workflow-energy font-mono text-xs sm:text-sm md:text-base tracking-wider uppercase">Portfolio</span>
             <div className="w-8 sm:w-12 md:w-16 h-0.5 bg-gradient-to-l from-workflow-energy to-workflow-zen rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-workflow-deep mb-4 sm:mb-6 md:mb-8">
             Nossas <span className="text-gradient">Criações</span>
           </h2>
           
@@ -143,8 +191,8 @@ const PortfolioGallery = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className={`transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 px-4 sm:px-0">
+        <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
             {projects.map((project, index) => (
               <div
                 key={project.id}

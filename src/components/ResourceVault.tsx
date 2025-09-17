@@ -208,7 +208,7 @@ const ResourceVault = () => {
             <div className="w-8 sm:w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-workflow-zen to-transparent rounded-full" />
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight">
+          <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-white mb-6 sm:mb-8 md:mb-10 leading-tight">
             The{' '}
             <span className="relative">
               <span className="bg-gradient-to-r from-workflow-zen via-workflow-accent to-workflow-zen bg-clip-text text-transparent">
@@ -364,6 +364,43 @@ const ResourceVault = () => {
                       <div className="text-white/70 text-xs sm:text-sm">Todas as ferramentas são enviadas após a conclusão da landing page</div>
                     </div>
                   </div>
+                </div>
+
+                {/* CTA para Briefings */}
+                <div className="mt-12 space-y-6">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-8">
+                    Pronto para receber essas ferramentas?
+                  </h3>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
+                    {/* Landing Page CTA */}
+                    <div 
+                      className="flex-1 cursor-pointer group"
+                      onClick={() => window.location.href = '/briefing-cliente'}
+                    >
+                      <div className="bg-gradient-to-r from-workflow-zen to-workflow-accent rounded-2xl p-6 text-white hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-white/20">
+                        <div className="text-3xl mb-3">🚀</div>
+                        <h4 className="font-bold text-lg mb-2">Landing Page</h4>
+                        <p className="text-sm opacity-90">+ Ferramentas Premium</p>
+                      </div>
+                    </div>
+
+                    {/* Site Institucional CTA */}
+                    <div 
+                      className="flex-1 cursor-pointer group"
+                      onClick={() => window.location.href = '/briefing-institucional'}
+                    >
+                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl border border-white/20">
+                        <div className="text-3xl mb-3">🏢</div>
+                        <h4 className="font-bold text-lg mb-2">Site Institucional</h4>
+                        <p className="text-sm opacity-90">+ Ferramentas Premium</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-workflow-zen/80 text-sm">
+                    Escolha seu projeto e garante acesso a todas as ferramentas premium
+                  </p>
                 </div>
               </div>
             </div>

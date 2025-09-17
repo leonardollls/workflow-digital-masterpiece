@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Técnica - Rei do Crédito Landing Page</title>
+    <style>
+        :root {
+            --workflow-deep: #1a0d2e;
+            --workflow-energy: #7c3aed;
+            --workflow-zen: #a78bfa;
+            --workflow-pure: #ffffff;
+            --workflow-shadow: #0f0517;
+            --workflow-glow: #f3f0ff;
+            --workflow-accent: #06b6d4;
+            --workflow-warning: #f59e0b;
+            --workflow-success: #10b981;
+            --workflow-glass: rgba(167,139,250,0.1);
+            --workflow-neon: rgba(124,58,237,0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--workflow-pure);
+            background: linear-gradient(135deg, var(--workflow-deep) 0%, var(--workflow-shadow) 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--workflow-energy) 0%, var(--workflow-zen) 100%);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(26, 13, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--workflow-glass);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--workflow-pure);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            background: var(--workflow-glass);
+            color: var(--workflow-zen);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main {
+            padding: 3rem 0;
+        }
+
+        section {
+            margin-bottom: 4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--workflow-glass);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--workflow-zen);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--workflow-energy);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--workflow-accent);
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            color: var(--workflow-zen);
+            margin: 1.5rem 0 0.5rem 0;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--workflow-shadow);
+            border: 1px solid var(--workflow-energy);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: var(--workflow-glow);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--workflow-glass);
+        }
+
+        th {
+            background: var(--workflow-energy);
+            color: var(--workflow-pure);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 0.2rem;
+        }
+
+        .badge-primary {
+            background: var(--workflow-energy);
+            color: var(--workflow-pure);
+        }
+
+        .badge-success {
+            background: var(--workflow-success);
+            color: var(--workflow-pure);
+        }
+
+        .badge-warning {
+            background: var(--workflow-warning);
+            color: var(--workflow-pure);
+        }
+
+        .badge-info {
+            background: var(--workflow-accent);
+            color: var(--workflow-pure);
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--workflow-glass);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--workflow-shadow);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--workflow-energy);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--workflow-zen);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--workflow-shadow);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--workflow-glass);
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Documentação Técnica</h1>
+            <p class="subtitle">Rei do Crédito - Landing Page</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#overview">Visão Geral</a></li>
+                <li><a href="#technologies">Tecnologias</a></li>
+                <li><a href="#structure">Estrutura</a></li>
+                <li><a href="#features">Funcionalidades</a></li>
+                <li><a href="#responsive">Design Responsivo</a></li>
+                <li><a href="#build">Build & Deploy</a></li>
+                <li><a href="#maintenance">Manutenção</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <section id="overview">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    Visão Geral do Projeto
+                </h2>
+                
+                <p>O projeto <strong>Rei do Crédito</strong> é uma landing page moderna e responsiva desenvolvida para uma empresa especializada em crédito consignado. A página foi criada para captar leads qualificados e converter visitantes em clientes potenciais através de um design otimizado para conversão.</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🎯 Objetivo Principal</h4>
+                        <p>Gerar leads qualificados para empréstimos do Bolsa Família e outros produtos de crédito consignado.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🌐 Presença Digital</h4>
+                        <p>Landing page publicada em <a href="https://reidocreditoficial.com.br/" target="_blank" style="color: var(--workflow-accent);">reidocreditoficial.com.br</a></p>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Foco em Conversão</h4>
+                        <p>Design otimizado com CTAs estratégicos, depoimentos reais e processo simplificado.</p>
+                    </div>
+                </div>
+
+                <h3>Características Principais</h3>
+                <ul>
+                    <li><strong>Design Responsivo:</strong> Adaptado para todos os dispositivos</li>
+                    <li><strong>Performance Otimizada:</strong> Carregamento rápido e código otimizado</li>
+                    <li><strong>SEO Friendly:</strong> Meta tags otimizadas e structured data</li>
+                    <li><strong>Integração WhatsApp:</strong> Conexão direta com atendimento</li>
+                    <li><strong>Formulários Inteligentes:</strong> Captação de leads qualificados</li>
+                </ul>
+            </section>
+
+            <section id="technologies">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Tecnologias Utilizadas
+                </h2>
+
+                <p>O projeto utiliza uma stack moderna de desenvolvimento web, focada em performance e experiência do usuário:</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>⚛️ Frontend Framework</h4>
+                        <span class="badge badge-primary">React 18.3.1</span>
+                        <span class="badge badge-primary">TypeScript</span>
+                        <p>Interface reativa com tipagem estática para maior confiabilidade.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🎨 Estilização</h4>
+                        <span class="badge badge-info">Tailwind CSS 3.4.11</span>
+                        <span class="badge badge-info">shadcn/ui</span>
+                        <p>Sistema de design consistente com componentes reutilizáveis.</p>
+                    </div>
+                    <div class="card">
+                        <h4>⚡ Build Tool</h4>
+                        <span class="badge badge-success">Vite 5.4.1</span>
+                        <span class="badge badge-success">SWC</span>
+                        <p>Build ultrarrápido com hot module replacement.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🗄️ Backend</h4>
+                        <span class="badge badge-warning">Supabase 2.45.0</span>
+                        <p>Backend-as-a-Service para autenticação e banco de dados.</p>
+                    </div>
+                </div>
+
+                <h3>Dependências Principais</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Categoria</th>
+                                <th>Biblioteca</th>
+                                <th>Versão</th>
+                                <th>Propósito</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>UI Components</td>
+                                <td>@radix-ui/react-*</td>
+                                <td>~1.1.0</td>
+                                <td>Componentes acessíveis e customizáveis</td>
+                            </tr>
+                            <tr>
+                                <td>Routing</td>
+                                <td>react-router-dom</td>
+                                <td>6.26.2</td>
+                                <td>Navegação entre páginas</td>
+                            </tr>
+                            <tr>
+                                <td>Forms</td>
+                                <td>react-hook-form</td>
+                                <td>7.53.0</td>
+                                <td>Gerenciamento de formulários</td>
+                            </tr>
+                            <tr>
+                                <td>Animations</td>
+                                <td>framer-motion</td>
+                                <td>12.18.1</td>
+                                <td>Animações fluidas</td>
+                            </tr>
+                            <tr>
+                                <td>Data Fetching</td>
+                                <td>@tanstack/react-query</td>
+                                <td>5.56.2</td>
+                                <td>Cache e sincronização de dados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="structure">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7z"/>
+                        <path d="M8 21l4-7 4 7"/>
+                    </svg>
+                    Estrutura de Diretórios
+                </h2>
+
+                <p>O projeto segue uma estrutura organizacional clara e escalável:</p>
+
+                <div class="code-block">
+                    <pre>
+rei-do-credito-build/
+├── public/                     # Arquivos estáticos
+│   ├── Images/                # Imagens da landing page
+│   ├── favicon.ico            # Ícone do site
+│   ├── robots.txt             # Configuração para crawlers
+│   └── _headers               # Headers de segurança
+├── src/                       # Código fonte
+│   ├── components/            # Componentes reutilizáveis
+│   │   ├── ui/               # Componentes base (shadcn/ui)
+│   │   ├── admin/            # Componentes administrativos
+│   │   ├── captation/        # Componentes de captação
+│   │   ├── HeroSection.tsx   # Seção principal
+│   │   ├── SuccessDashboard.tsx
+│   │   ├── PortfolioGallery.tsx
+│   │   └── ...
+│   ├── pages/                # Páginas da aplicação
+│   │   ├── Index.tsx         # Página principal
+│   │   ├── Portfolio.tsx     # Portfólio de projetos
+│   │   ├── ClientBrief.tsx   # Briefing de cliente
+│   │   ├── admin/            # Páginas administrativas
+│   │   └── ...
+│   ├── hooks/                # Custom hooks
+│   ├── lib/                  # Utilitários e configurações
+│   ├── services/             # Serviços e APIs
+│   ├── types/                # Definições de tipos TypeScript
+│   ├── assets/               # Assets da aplicação
+│   ├── App.tsx               # Componente raiz
+│   ├── main.tsx              # Ponto de entrada
+│   └── index.css             # Estilos globais
+├── package.json              # Dependências e scripts
+├── vite.config.ts            # Configuração do Vite
+├── tailwind.config.ts        # Configuração do Tailwind
+├── tsconfig.json             # Configuração do TypeScript
+└── README.md                 # Documentação básica
+                    </pre>
+                </div>
+
+                <h3>Arquitetura de Componentes</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🏗️ Componentes Base (ui/)</h4>
+                        <p>Componentes fundamentais baseados no shadcn/ui para consistência visual.</p>
+                    </div>
+                    <div class="card">
+                        <h4>📝 Captação (captation/)</h4>
+                        <p>Componentes específicos para captação de leads e formulários.</p>
+                    </div>
+                    <div class="card">
+                        <h4>👨‍💼 Admin (admin/)</h4>
+                        <p>Painel administrativo para gerenciamento de conteúdo e leads.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Funcionalidades Implementadas
+                </h2>
+
+                <p>A landing page do Rei do Crédito possui diversas funcionalidades otimizadas para conversão:</p>
+
+                <h3>🎯 Seções Principais da Landing Page</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Hero Section</h4>
+                        <span class="badge badge-primary">Alta Conversão</span>
+                        <ul>
+                            <li>Proposta de valor clara</li>
+                            <li>CTA principal em destaque</li>
+                            <li>Indicadores de confiança</li>
+                            <li>Formulário de simulação</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Vantagens do Produto</h4>
+                        <span class="badge badge-info">Educativo</span>
+                        <ul>
+                            <li>Crédito rápido (48h)</li>
+                            <li>Desconto automático</li>
+                            <li>Parcelamento flexível</li>
+                            <li>Processo sem burocracia</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Requisitos e Documentos</h4>
+                        <span class="badge badge-warning">Qualificação</span>
+                        <ul>
+                            <li>Critérios de elegibilidade</li>
+                            <li>Documentos necessários</li>
+                            <li>Processo transparente</li>
+                            <li>FAQ detalhado</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Prova Social</h4>
+                        <span class="badge badge-success">Confiança</span>
+                        <ul>
+                            <li>Depoimentos reais</li>
+                            <li>Avaliações Google (5.0⭐)</li>
+                            <li>+15mil famílias atendidas</li>
+                            <li>6 lojas físicas em SC</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>⚙️ Funcionalidades Técnicas</h3>
+                <ul>
+                    <li><strong>Lazy Loading:</strong> Carregamento otimizado de componentes</li>
+                    <li><strong>Code Splitting:</strong> Divisão inteligente do código</li>
+                    <li><strong>SEO Otimizado:</strong> Meta tags e structured data</li>
+                    <li><strong>Analytics:</strong> Tracking de conversões</li>
+                    <li><strong>Formulários Validados:</strong> Validação client-side e server-side</li>
+                    <li><strong>Integração WhatsApp:</strong> Redirecionamento automático</li>
+                    <li><strong>Painel Admin:</strong> Gerenciamento de leads e conteúdo</li>
+                </ul>
+
+                <h3>🔐 Sistema Administrativo</h3>
+                <p>O projeto inclui um painel administrativo completo para gestão:</p>
+                <div class="code-block">
+                    <pre>
+// Rotas administrativas
+/admin                    → Login administrativo
+/admin/dashboard         → Dashboard principal
+/briefing-cliente        → Formulário de briefing
+/briefing-institucional  → Briefing institucional
+/portfolio              → Galeria de projetos
+                    </pre>
+                </div>
+            </section>
+
+            <section id="responsive">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    Considerações de Design Responsivo
+                </h2>
+
+                <p>O design da landing page foi desenvolvido com abordagem mobile-first, garantindo experiência otimizada em todos os dispositivos:</p>
+
+                <h3>📱 Breakpoints Utilizados</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dispositivo</th>
+                                <th>Breakpoint</th>
+                                <th>Container</th>
+                                <th>Características</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mobile</td>
+                                <td>&lt; 640px</td>
+                                <td>100% - 20px</td>
+                                <td>Layout vertical, CTAs em destaque</td>
+                            </tr>
+                            <tr>
+                                <td>Tablet</td>
+                                <td>640px - 1024px</td>
+                                <td>90%</td>
+                                <td>Grid 2 colunas, navegação adaptada</td>
+                            </tr>
+                            <tr>
+                                <td>Desktop</td>
+                                <td>&gt; 1024px</td>
+                                <td>1200px max</td>
+                                <td>Layout completo, hover effects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🎨 Adaptações por Dispositivo</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Mobile (< 640px)</h4>
+                        <ul>
+                            <li>Navegação hambúrguer</li>
+                            <li>CTAs em largura total</li>
+                            <li>Texto otimizado para leitura</li>
+                            <li>Formulários simplificados</li>
+                            <li>Imagens otimizadas</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Tablet (640px - 1024px)</h4>
+                        <ul>
+                            <li>Grid 2x2 para cards</li>
+                            <li>Navegação horizontal</li>
+                            <li>Imagens em tamanho médio</li>
+                            <li>Espaçamentos ajustados</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Desktop (> 1024px)</h4>
+                        <ul>
+                            <li>Layout completo com sidebar</li>
+                            <li>Hover effects e animações</li>
+                            <li>Grid 3x3 para portfolios</li>
+                            <li>Formulários em modal</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>⚡ Otimizações de Performance</h3>
+                <ul>
+                    <li><strong>Imagens Responsivas:</strong> Diferentes tamanhos por breakpoint</li>
+                    <li><strong>Lazy Loading:</strong> Carregamento sob demanda</li>
+                    <li><strong>Critical CSS:</strong> CSS crítico inline</li>
+                    <li><strong>Font Display:</strong> Otimização de carregamento de fontes</li>
+                    <li><strong>Preload:</strong> Recursos críticos pré-carregados</li>
+                </ul>
+            </section>
+
+            <section id="build">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Dependências e Instruções de Build/Deploy
+                </h2>
+
+                <h3>📋 Pré-requisitos</h3>
+                <div class="code-block">
+                    <pre>
+Node.js >= 18.0.0
+npm >= 8.0.0 ou yarn >= 1.22.0
+Git
+                    </pre>
+                </div>
+
+                <h3>🚀 Instalação e Configuração</h3>
+                <div class="code-block">
+                    <pre>
+# 1. Clone o repositório
+git clone [URL_DO_REPOSITORIO]
+cd rei-do-credito-build
+
+# 2. Instale as dependências
+npm install
+# ou
+yarn install
+
+# 3. Configure as variáveis de ambiente
+cp .env.example .env.local
+# Edite o arquivo .env.local com suas credenciais
+
+# 4. Execute em modo desenvolvimento
+npm run dev
+# ou
+yarn dev
+
+# Acesse: http://localhost:8080
+                    </pre>
+                </div>
+
+                <h3>🔧 Scripts Disponíveis</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Script</th>
+                                <th>Comando</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Desenvolvimento</td>
+                                <td><code>npm run dev</code></td>
+                                <td>Inicia servidor de desenvolvimento com HMR</td>
+                            </tr>
+                            <tr>
+                                <td>Build Produção</td>
+                                <td><code>npm run build</code></td>
+                                <td>Gera build otimizado para produção</td>
+                            </tr>
+                            <tr>
+                                <td>Build Desenvolvimento</td>
+                                <td><code>npm run build:dev</code></td>
+                                <td>Build com modo desenvolvimento</td>
+                            </tr>
+                            <tr>
+                                <td>Preview</td>
+                                <td><code>npm run preview</code></td>
+                                <td>Visualiza build de produção localmente</td>
+                            </tr>
+                            <tr>
+                                <td>Lint</td>
+                                <td><code>npm run lint</code></td>
+                                <td>Verifica qualidade do código</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🌐 Deploy em Produção</h3>
+                <p>O projeto está configurado para deploy em múltiplas plataformas:</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🔥 Hostinger (Atual)</h4>
+                        <span class="badge badge-success">Ativo</span>
+                        <div class="code-block">
+                            <pre>
+# Build para produção
+npm run build
+
+# Upload da pasta dist/ via FTP/SFTP
+# Configurar .htaccess para SPA
+                            </pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>▲ Vercel</h4>
+                        <span class="badge badge-info">Configurado</span>
+                        <div class="code-block">
+                            <pre>
+# Arquivo vercel.json já configurado
+# Deploy automático via Git
+vercel --prod
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>⚙️ Configurações de Build</h3>
+                <p>O Vite está configurado com otimizações específicas:</p>
+                <ul>
+                    <li><strong>Code Splitting:</strong> Divisão automática por vendor, router, UI, forms</li>
+                    <li><strong>Tree Shaking:</strong> Remoção de código não utilizado</li>
+                    <li><strong>Minificação:</strong> Terser com remoção de console.log</li>
+                    <li><strong>Asset Optimization:</strong> Compressão de imagens e CSS</li>
+                    <li><strong>Chunk Naming:</strong> Nomes otimizados para cache</li>
+                </ul>
+            </section>
+
+            <section id="maintenance">
+                <h2>
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Observações para Manutenção Futura
+                </h2>
+
+                <h3>🔄 Atualizações Recomendadas</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>📅 Mensais</h4>
+                        <ul>
+                            <li>Atualizar dependências de segurança</li>
+                            <li>Revisar métricas de conversão</li>
+                            <li>Backup do banco de dados</li>
+                            <li>Verificar links e formulários</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📊 Trimestrais</h4>
+                        <ul>
+                            <li>Audit de performance</li>
+                            <li>Atualização de conteúdo</li>
+                            <li>Revisão de SEO</li>
+                            <li>Teste de compatibilidade</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>🔧 Anuais</h4>
+                        <ul>
+                            <li>Major updates do framework</li>
+                            <li>Redesign de seções</li>
+                            <li>Otimização de infraestrutura</li>
+                            <li>Revisão completa de código</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>⚠️ Pontos de Atenção</h3>
+                <div class="card">
+                    <h4>🚨 Componentes Críticos</h4>
+                    <ul>
+                        <li><strong>HeroSection.tsx:</strong> Seção principal de conversão</li>
+                        <li><strong>Formulários de captação:</strong> Validação e integração</li>
+                        <li><strong>Integração Supabase:</strong> Autenticação e dados</li>
+                        <li><strong>WhatsApp links:</strong> Verificar funcionamento</li>
+                    </ul>
+                </div>
+
+                <h3>📝 Logs e Monitoramento</h3>
+                <div class="code-block">
+                    <pre>
+// Locais importantes para monitoramento:
+- Console do navegador (erros JS)
+- Network tab (requests falhando)
+- Lighthouse (performance score)
+- Google Analytics (conversões)
+- Search Console (SEO)
+                    </pre>
+                </div>
+
+                <h3>🛠️ Troubleshooting Comum</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Problema</th>
+                                <th>Possível Causa</th>
+                                <th>Solução</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Build falha</td>
+                                <td>Dependências desatualizadas</td>
+                                <td><code>npm install && npm run build</code></td>
+                            </tr>
+                            <tr>
+                                <td>Formulário não envia</td>
+                                <td>Configuração Supabase</td>
+                                <td>Verificar .env e conexão</td>
+                            </tr>
+                            <tr>
+                                <td>Imagens não carregam</td>
+                                <td>Path incorreto</td>
+                                <td>Verificar public/Images/</td>
+                            </tr>
+                            <tr>
+                                <td>WhatsApp não abre</td>
+                                <td>Link malformado</td>
+                                <td>Verificar formato wa.link</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>📚 Recursos Úteis</h3>
+                <ul>
+                    <li><strong>Documentação React:</strong> <a href="https://react.dev" target="_blank" style="color: var(--workflow-accent);">react.dev</a></li>
+                    <li><strong>Tailwind CSS:</strong> <a href="https://tailwindcss.com" target="_blank" style="color: var(--workflow-accent);">tailwindcss.com</a></li>
+                    <li><strong>Vite Guide:</strong> <a href="https://vitejs.dev" target="_blank" style="color: var(--workflow-accent);">vitejs.dev</a></li>
+                    <li><strong>Supabase Docs:</strong> <a href="https://supabase.com/docs" target="_blank" style="color: var(--workflow-accent);">supabase.com/docs</a></li>
+                </ul>
+
+                <div class="card">
+                    <h4>💡 Dicas de Manutenção</h4>
+                    <ul>
+                        <li>Sempre teste em ambiente de desenvolvimento antes de deploy</li>
+                        <li>Mantenha backup dos arquivos de configuração</li>
+                        <li>Documente mudanças significativas</li>
+                        <li>Use versionamento semântico para releases</li>
+                        <li>Monitore métricas de conversão após mudanças</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Documentação gerada pela <strong>Workflow Services</strong> • Última atualização: Janeiro 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling para links de navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight da seção ativa na navegação
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+
+        function highlightActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.background = '';
+                link.style.color = '';
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.style.background = 'var(--workflow-glass)';
+                    link.style.color = 'var(--workflow-zen)';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightActiveSection);
+        highlightActiveSection(); // Initial call
+    </script>
+</body>
+</html> 
