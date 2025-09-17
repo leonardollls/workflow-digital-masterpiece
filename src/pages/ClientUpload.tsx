@@ -324,7 +324,7 @@ const ClientUpload = () => {
             <img 
               src="/Images/logo-workflow-sem-fundo.png" 
               alt="Workflow Services Logo" 
-              className="h-20 w-auto"
+              className="h-32 w-auto"
             />
           </div>
           
