@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { downloadReconstructedFile, isMultipartFile } from '@/lib/supabase';
 import { 
   FileText, 
   Download, 
@@ -51,6 +52,7 @@ interface UploadCardProps {
 
 const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
@@ -76,8 +78,26 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
     }
   };
 
-  const handleDownload = () => {
-    window.open(upload.file_url, '_blank');
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
+      
+      // Verificar se é um arquivo dividido em partes
+      const isMultipart = await isMultipartFile(upload.file_url);
+      
+      if (isMultipart) {
+        console.log('📦 Detectado arquivo dividido, iniciando reconstrução...');
+        await downloadReconstructedFile(upload.file_url);
+      } else {
+        console.log('📄 Arquivo simples, download direto...');
+        window.open(upload.file_url, '_blank');
+      }
+    } catch (error) {
+      console.error('❌ Erro no download:', error);
+      alert('Erro ao baixar arquivo. Tente novamente.');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleDelete = () => {
@@ -172,10 +192,20 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
             variant="outline"
             size="sm"
             onClick={handleDownload}
+            disabled={isDownloading}
             className="flex-1 gap-2"
           >
-            <Download className="w-4 h-4" />
-            Download
+            {isDownloading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                Baixando...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                Download
+              </>
+            )}
           </Button>
 
           <Dialog open={showDetails} onOpenChange={setShowDetails}>
@@ -280,9 +310,22 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
 
                 {/* Ações */}
                 <div className="flex gap-3">
-                  <Button onClick={handleDownload} className="gap-2">
-                    <ExternalLink className="w-4 h-4" />
-                    Abrir Arquivo
+                  <Button 
+                    onClick={handleDownload} 
+                    disabled={isDownloading}
+                    className="gap-2"
+                  >
+                    {isDownloading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                        Baixando...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="w-4 h-4" />
+                        Baixar Arquivo
+                      </>
+                    )}
                   </Button>
                   <Button variant="destructive" onClick={handleDelete} className="gap-2">
                     <Trash2 className="w-4 h-4" />

@@ -151,6 +151,78 @@ export const uploadLargeFileInParts = async (
   }
 };
 
+// Função para baixar e reconstruir arquivos divididos em partes
+export const downloadReconstructedFile = async (metadataUrl: string): Promise<void> => {
+  try {
+    console.log('🔄 [DOWNLOAD] Iniciando download de arquivo dividido:', metadataUrl);
+    
+    // Baixar metadata
+    const metadataResponse = await fetch(metadataUrl);
+    if (!metadataResponse.ok) {
+      throw new Error('Erro ao baixar metadata do arquivo');
+    }
+    
+    const metadata = await metadataResponse.json();
+    console.log('📋 [DOWNLOAD] Metadata carregado:', metadata);
+    
+    // Verificar se é um arquivo dividido
+    if (!metadata.partUrls || !Array.isArray(metadata.partUrls)) {
+      // Se não é arquivo dividido, fazer download direto
+      window.open(metadataUrl, '_blank');
+      return;
+    }
+    
+    // Baixar todas as partes
+    console.log(`📦 [DOWNLOAD] Baixando ${metadata.totalParts} partes...`);
+    const partPromises = metadata.partUrls.map(async (partUrl: string, index: number) => {
+      console.log(`📥 [DOWNLOAD] Baixando parte ${index + 1}/${metadata.totalParts}`);
+      const response = await fetch(partUrl);
+      if (!response.ok) {
+        throw new Error(`Erro ao baixar parte ${index + 1}`);
+      }
+      return response.blob();
+    });
+    
+    const parts = await Promise.all(partPromises);
+    
+    // Reconstruir arquivo original
+    console.log('🔧 [DOWNLOAD] Reconstruindo arquivo original...');
+    const reconstructedBlob = new Blob(parts, { type: metadata.contentType });
+    
+    // Criar URL temporária e iniciar download
+    const downloadUrl = URL.createObjectURL(reconstructedBlob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = metadata.originalName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Limpar URL temporária
+    URL.revokeObjectURL(downloadUrl);
+    
+    console.log('✅ [DOWNLOAD] Download concluído:', metadata.originalName);
+    
+  } catch (error) {
+    console.error('❌ [DOWNLOAD] Erro no download:', error);
+    throw error;
+  }
+};
+
+// Função para verificar se uma URL é de arquivo dividido
+export const isMultipartFile = async (fileUrl: string): Promise<boolean> => {
+  try {
+    if (!fileUrl.includes('_metadata.json')) {
+      return false;
+    }
+    
+    const response = await fetch(fileUrl, { method: 'HEAD' });
+    return response.ok && response.headers.get('content-type')?.includes('application/json');
+  } catch {
+    return false;
+  }
+};
+
 // Função para upload resumível de arquivos grandes usando TUS
 export const uploadFileResumable = async (
   file: File, 
