@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FileUpload } from '@/components/ui/FileUpload';
-import { supabase, uploadFile } from '@/lib/supabase';
+import { supabase, uploadFile, uploadFileResumable } from '@/lib/supabase';
 import { 
   Upload, 
   CheckCircle, 
@@ -32,6 +32,7 @@ interface UploadedFile {
   url?: string;
   uploading: boolean;
   error?: string;
+  progress?: number; // Adicionar progresso para uploads resumíveis
 }
 
 const ClientUpload = () => {
@@ -79,7 +80,7 @@ const ClientUpload = () => {
     
     // Atualizar status para uploading
     setUploadedFiles(prev => prev.map((f, i) => 
-      i === index ? { ...f, uploading: true, error: undefined } : f
+      i === index ? { ...f, uploading: true, error: undefined, progress: 0 } : f
     ));
 
     try {
@@ -92,21 +93,44 @@ const ClientUpload = () => {
       const fileName = `${timestamp}_${sanitizedName}`;
       const filePath = `uploads/${fileName}`;
 
-      console.log('📁 Iniciando upload:', { fileName, size: file.size });
+      console.log('📁 Iniciando upload:', { fileName, size: `${(file.size / 1024 / 1024).toFixed(2)}MB` });
 
-      // Upload para o Supabase Storage
-      const uploadResult = await uploadFile(file, 'client-uploads', filePath);
+      // Usar upload resumível para arquivos grandes (>100MB) ou upload padrão para menores
+      const isLargeFile = file.size > 100 * 1024 * 1024; // 100MB
+      let publicUrl: string;
       
-      // Obter URL pública
-      const { data } = supabase.storage
-        .from('client-uploads')
-        .getPublicUrl(filePath);
-
-      const publicUrl = data.publicUrl;
+      if (isLargeFile) {
+        console.log(`📦 Arquivo grande detectado (${(file.size / 1024 / 1024).toFixed(2)}MB), usando upload resumível`);
+        
+        publicUrl = await uploadFileResumable(
+          file, 
+          'client-uploads', 
+          filePath,
+          (bytesUploaded, bytesTotal) => {
+            // Atualizar progresso
+            const progress = Math.round((bytesUploaded / bytesTotal) * 100);
+            setUploadedFiles(prev => prev.map((f, i) => 
+              i === index ? { ...f, progress } : f
+            ));
+          }
+        );
+      } else {
+        console.log(`📄 Arquivo pequeno (${(file.size / 1024 / 1024).toFixed(2)}MB), usando upload padrão`);
+        
+        // Upload para o Supabase Storage
+        await uploadFile(file, 'client-uploads', filePath);
+        
+        // Obter URL pública
+        const { data } = supabase.storage
+          .from('client-uploads')
+          .getPublicUrl(filePath);
+        
+        publicUrl = data.publicUrl;
+      }
 
       // Atualizar status para sucesso
       setUploadedFiles(prev => prev.map((f, i) => 
-        i === index ? { ...f, uploading: false, url: publicUrl } : f
+        i === index ? { ...f, uploading: false, url: publicUrl, progress: 100 } : f
       ));
 
       console.log('✅ Upload concluído:', publicUrl);
@@ -118,7 +142,7 @@ const ClientUpload = () => {
       
       // Atualizar status para erro
       setUploadedFiles(prev => prev.map((f, i) => 
-        i === index ? { ...f, uploading: false, error: errorMessage } : f
+        i === index ? { ...f, uploading: false, error: errorMessage, progress: 0 } : f
       ));
 
       throw error;
@@ -421,7 +445,23 @@ const ClientUpload = () => {
                         </div>
                         
                         {fileData.uploading && (
-                          <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                          <div className="flex items-center gap-2">
+                            {fileData.progress !== undefined && fileData.progress > 0 ? (
+                              <div className="flex items-center gap-2">
+                                <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full bg-blue-500 transition-all duration-300"
+                                    style={{ width: `${fileData.progress}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs text-blue-600 font-medium">
+                                  {fileData.progress}%
+                                </span>
+                              </div>
+                            ) : (
+                              <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                            )}
+                          </div>
                         )}
                         
                         {fileData.url && !fileData.uploading && (

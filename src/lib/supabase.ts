@@ -80,7 +80,86 @@ export interface ClientBriefing {
   updated_at?: string
 }
 
-// Função para upload de arquivos com error handling melhorado
+// Função para upload resumível de arquivos grandes usando TUS
+export const uploadFileResumable = async (
+  file: File, 
+  bucket: string, 
+  path: string,
+  onProgress?: (bytesUploaded: number, bytesTotal: number) => void
+): Promise<string> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log('🚀 [TUS] Iniciando upload resumível:', { 
+        file: file.name, 
+        size: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
+        type: file.type,
+        bucket, 
+        path 
+      });
+
+      // Importar TUS dinamicamente
+      const { Upload } = await import('tus-js-client');
+      
+      // Obter sessão do usuário
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Criar upload TUS
+      const upload = new Upload(file, {
+        // Endpoint TUS do Supabase (usando hostname direto para melhor performance)
+        endpoint: `${supabaseUrl.replace('.supabase.co', '.storage.supabase.co')}/storage/v1/upload/resumable`,
+        retryDelays: [0, 3000, 5000, 10000, 20000],
+        headers: {
+          authorization: `Bearer ${session?.access_token || supabaseAnonKey}`,
+          'x-upsert': 'true', // Sobrescrever se já existir
+        },
+        uploadDataDuringCreation: true,
+        removeFingerprintOnSuccess: true,
+        metadata: {
+          bucketName: bucket,
+          objectName: path,
+          contentType: file.type || 'application/octet-stream',
+          cacheControl: '3600',
+        },
+        chunkSize: 6 * 1024 * 1024, // 6MB chunks (obrigatório pelo Supabase)
+        onError: function (error) {
+          console.error('❌ [TUS] Erro no upload:', error);
+          reject(new Error(`Falha no upload: ${error.message}`));
+        },
+        onProgress: function (bytesUploaded, bytesTotal) {
+          const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+          console.log(`📊 [TUS] Progresso: ${bytesUploaded}/${bytesTotal} bytes (${percentage}%)`);
+          if (onProgress) {
+            onProgress(bytesUploaded, bytesTotal);
+          }
+        },
+        onSuccess: function () {
+          console.log('✅ [TUS] Upload concluído com sucesso:', upload.file?.name);
+          
+          // Construir URL pública do arquivo
+          const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+          resolve(data.publicUrl);
+        },
+      });
+
+      // Verificar uploads anteriores para continuar se necessário
+      upload.findPreviousUploads().then(function (previousUploads) {
+        if (previousUploads.length) {
+          console.log('🔄 [TUS] Continuando upload anterior...');
+          upload.resumeFromPreviousUpload(previousUploads[0]);
+        }
+        
+        // Iniciar upload
+        upload.start();
+      }).catch(reject);
+      
+    } catch (error) {
+      console.error('❌ [TUS] Erro na inicialização:', error);
+      reject(error);
+    }
+  });
+};
+
+// Função para upload de arquivos com error handling melhorado (mantida para compatibilidade)
 export const uploadFile = async (file: File, bucket: string, path: string) => {
   try {
     console.log('📁 [SUPABASE] Iniciando upload:', { 
@@ -96,19 +175,12 @@ export const uploadFile = async (file: File, bucket: string, path: string) => {
       throw new Error('Arquivo inválido ou vazio');
     }
     
-    // Tentar upload com configurações otimizadas para arquivos grandes
+    // Configurações simplificadas para arquivos grandes
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(path, file, {
         cacheControl: '3600',
-        upsert: true, // Sobrescrever se já existir
-        duplex: 'half', // Para arquivos grandes
-        timeout: 300000, // 5 minutos de timeout para arquivos grandes
-        // Headers adicionais para arquivos grandes
-        headers: {
-          'x-upsert': 'true',
-          'cache-control': 'max-age=3600'
-        }
+        upsert: true // Sobrescrever se já existir
       });
 
     if (error) {
