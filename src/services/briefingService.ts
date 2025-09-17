@@ -174,8 +174,8 @@ const uploadFiles = async (files: FileList | null, bucket: string, folder: strin
       console.log(`📁 [UPLOAD] Iniciando upload: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`)
       
       // Verificações de validação
-      if (file.size > 50 * 1024 * 1024) {
-        throw new Error(`Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(2)}MB). Máximo: 50MB`)
+      if (file.size > 500 * 1024 * 1024) {
+        throw new Error(`Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(2)}MB). Máximo: 500MB`)
       }
       
       if (file.size === 0) {

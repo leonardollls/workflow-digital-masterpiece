@@ -394,7 +394,7 @@ const ClientUpload = () => {
                 multiple={true}
                 onChange={handleFileSelection}
                 label="Selecione seus arquivos"
-                description="Qualquer tipo de arquivo é aceito. Tamanho máximo: 50MB por arquivo."
+                description="Qualquer tipo de arquivo é aceito. Tamanho máximo: 500MB por arquivo."
                 className="mb-6"
               />
 

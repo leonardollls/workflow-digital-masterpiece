@@ -556,7 +556,7 @@ const CustomBrief = () => {
                       multiple
                       onChange={(files) => setValue('materialFiles', files)}
                       label="Upload dos Seus Materiais"
-                      description="Imagens, Vídeos, Documentos - Máximo 50MB por arquivo"
+                      description="Imagens, Vídeos, Documentos - Máximo 500MB por arquivo"
                       className="mt-4"
                     />
                   </div>
