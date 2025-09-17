@@ -96,13 +96,19 @@ export const uploadFile = async (file: File, bucket: string, path: string) => {
       throw new Error('Arquivo inválido ou vazio');
     }
     
-    // Tentar upload com configurações otimizadas
+    // Tentar upload com configurações otimizadas para arquivos grandes
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(path, file, {
         cacheControl: '3600',
         upsert: true, // Sobrescrever se já existir
-        duplex: 'half' // Para arquivos grandes
+        duplex: 'half', // Para arquivos grandes
+        timeout: 300000, // 5 minutos de timeout para arquivos grandes
+        // Headers adicionais para arquivos grandes
+        headers: {
+          'x-upsert': 'true',
+          'cache-control': 'max-age=3600'
+        }
       });
 
     if (error) {

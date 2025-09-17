@@ -801,7 +801,7 @@ Inclua o que está incluso em cada uma."
                       multiple
                       onChange={(files) => setValue('materialFiles', files)}
                       label="Upload dos Seus Materiais"
-                      description="Imagens (PNG, JPG, WEBP), Vídeos (MP4, MOV), Documentos (PDF, DOC) - Máximo 500MB por arquivo"
+                      description="Imagens (PNG, JPG, WEBP), Vídeos (MP4, MOV), Documentos (PDF, DOC) - Máximo 1GB por arquivo"
                       className="mt-4"
                     />
                     <p className="text-sm text-workflow-deep/60 mt-2">
