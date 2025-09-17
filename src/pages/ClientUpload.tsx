@@ -319,14 +319,19 @@ const ClientUpload = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Upload className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Upload de Arquivos</h1>
-              <p className="text-lg text-gray-600">Workflow Services</p>
-            </div>
+          {/* Logo centralizada acima do título */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/Images/logo-workflow-sem-fundo.png" 
+              alt="Workflow Services Logo" 
+              className="h-20 w-auto"
+            />
+          </div>
+          
+          {/* Título e subtítulo */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Upload de Arquivos</h1>
+            <p className="text-lg text-gray-600">Workflow Services</p>
           </div>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Envie seus arquivos, materiais e documentos relacionados ao seu projeto. 
