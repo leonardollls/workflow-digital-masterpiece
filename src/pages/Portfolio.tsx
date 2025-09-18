@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
+import SmartImage from '@/components/SmartImage';
+import { usePortfolioImages } from '@/hooks/usePortfolioImages';
 
 interface Project {
   id: number;
@@ -15,6 +17,9 @@ const Portfolio = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
   const galleryRef = useRef<HTMLElement>(null);
+  
+  // Hook para buscar dados otimizados do Supabase
+  const { projects, loading, error } = usePortfolioImages();
 
   useEffect(() => {
     // Garantir que o conteúdo seja visível imediatamente para evitar problemas mobile
@@ -48,128 +53,23 @@ const Portfolio = () => {
     return () => window.removeEventListener('popstate', updateLogoSrc);
   }, []);
 
-  // Precarrega as primeiras 3 imagens críticas
+  // Precarrega as imagens críticas (prioritárias)
   useEffect(() => {
+    if (projects.length === 0) return;
+    
     const preloadCriticalImages = () => {
-      const criticalImages = projects.slice(0, 3);
+      const criticalImages = projects.filter(project => project.priority);
       criticalImages.forEach((project) => {
         const img = new Image();
-        img.src = project.image;
+        img.src = project.thumbnailImage || project.image;
       });
     };
 
     // Precarrega após um pequeno delay para não bloquear o carregamento inicial
     const timer = setTimeout(preloadCriticalImages, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [projects]);
 
-  const projects: Project[] = [
-    {
-      id: 101,
-      title: "Plataforma de IA para Vendas",
-      description: "Landing page desenvolvida para uma plataforma inovadora de inteligência artificial focada em otimizar processos de vendas e atendimento ao cliente.",
-      image: "/Images/landing-page-demonstracao-workana-1.png",
-      category: "ai"
-    },
-    {
-      id: 102,
-      title: "Quart's - Móveis Sob Medida",
-      description: "Landing page desenvolvida para uma empresa especializada em móveis sob medida e design de interiores.",
-      image: "/Images/118d31229400769.686562b112afe.jpg",
-      category: "interiores"
-    },
-    {
-      id: 1,
-      title: "Wood Home - Móveis Planejados",
-      description: "Landing page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
-      image: "/Images/landing-page-demonstracao-1.webp",
-      category: "design"
-    },
-    {
-      id: 105,
-      title: "Valor Corretora - Seguro de Renda",
-      description: "Página de captura que apresenta o Seguro DIT para proteger a renda de trabalhadores contra afastamentos por acidente ou doença.",
-      image: "/Images/FireShot Capture 003 - Segura de Renda.webp",
-      category: "finance"
-    },
-    {
-      id: 106,
-      title: "Curso Nano Lips – Domine a Técnica Mais Lucrativa do Mercado",
-      description: "Página de captura para curso especializado em Nano Lips, apresentando benefícios, público-alvo, técnicas ensinadas, resultados alcançáveis e bônus exclusivos.",
-      image: "/Images/FireShotCaptureNanoLips.jpg",
-      category: "education"
-    },
-    {
-      id: 104,
-      title: "Rei do Crédito – Crédito Rápido e Seguro",
-      description: "Página de captura que apresenta soluções de crédito rápido e transparente (Antecipação FGTS, crédito pessoal e para trabalhadores).",
-      image: "/Images/FireShot Capture 001 - Rei do Crédito.webp",
-      category: "finance"
-    },
-    {
-      id: 2,
-      title: "Teacher Mary - Curso de Inglês",
-      description: "Página de captura para professora de inglês com método exclusivo, aulas personalizadas e resultados comprovados",
-      image: "/Images/landing-page-demonstracao-2.webp",
-      category: "education"
-    },
-    {
-      id: 103,
-      title: "Evento de Imersão",
-      description: "Landing page desenvolvida para uma imersão de alto nível voltada para desenvolvimento pessoal e networking estratégico.",
-      image: "/Images/54478b229424237.68648848892d0_11zon%20(1).webp",
-      category: "evento"
-    },
-    {
-      id: 3,
-      title: "Plataforma de Design Interativo",
-      description: "Landing page para ferramenta de criação de interfaces UI com gráficos vetoriais em tempo real e multiplataforma",
-      image: "/Images/landing-page-demonstracao-3.png",
-      category: "tech"
-    },
-    {
-      id: 4,
-      title: "Desenvolvimento Pessoal & Relacionamentos",
-      description: "Página de conversão para programa de autoconhecimento e relacionamentos saudáveis voltado para mulheres",
-      image: "/Images/landing-page-demonstracao-4.webp",
-      category: "lifestyle"
-    },
-    {
-      id: 5,
-      title: "Checklist Produto Digital",
-      description: "Landing page para método de lançamento de produtos digitais em 3 dias, ideal para iniciantes sem audiência",
-      image: "/Images/landing-page-demonstracao-5.webp",
-      category: "digital"
-    },
-    {
-      id: 6,
-      title: "Grupo Dharma - Arquitetura",
-      description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais",
-      image: "/Images/landing-page-demonstracao-6.webp",
-      category: "architecture"
-    },
-    {
-      id: 7,
-      title: "Oasis Corp - Presença Digital",
-      description: "Landing page para agência especializada em criar sites profissionais para pequenas empresas e empreendedores",
-      image: "/Images/landing-page-demonstracao-7.webp",
-      category: "agency"
-    },
-    {
-      id: 8,
-      title: "Turtle Fast - Autoridade Digital",
-      description: "Página de vendas para metodologia que transforma especialistas em autoridades digitais lucrativas em 120 dias",
-      image: "/Images/landing-page-demonstracao-8.webp",
-      category: "business"
-    },
-    {
-      id: 9,
-      title: "Automação Financeira Empresarial",
-      description: "Plataforma de gestão financeira inteligente para pequenas empresas com IA, insights em tempo real e integração bancária",
-      image: "/Images/landing-page-demonstracao-9.png",
-      category: "fintech"
-    }
-  ];
 
   const openImageModal = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -237,8 +137,24 @@ const Portfolio = () => {
 
           {/* Projects Grid */}
           <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
-              {projects.map((project) => (
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
+                {Array.from({ length: 9 }).map((_, index) => (
+                  <div key={index} className="group relative overflow-hidden rounded-3xl bg-white shadow-glass">
+                    <div className="relative h-64 overflow-hidden bg-gray-100 animate-pulse">
+                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                    </div>
+                    <div className="p-6">
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-3"></div>
+                      <div className="h-4 bg-gray-100 rounded animate-pulse mb-2"></div>
+                      <div className="h-4 bg-gray-100 rounded animate-pulse w-3/4"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
+                {projects.map((project) => (
                 <div
                   key={project.id}
                   className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
@@ -246,13 +162,14 @@ const Portfolio = () => {
                   onMouseLeave={() => setHoveredProject(null)}
                 >
                   {/* Project Image */}
-                  <div className="relative h-64 overflow-hidden bg-gray-100">
-                    <img
+                  <div className="relative h-64 overflow-hidden">
+                    <SmartImage
                       src={project.image}
+                      thumbnailSrc={project.thumbnailImage}
                       alt={project.title}
+                      blurDataUrl={project.blurDataUrl}
+                      priority={project.priority}
                       className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                      decoding="async"
                     />
                     
                     {/* Gradient Overlay */}
@@ -331,8 +248,9 @@ const Portfolio = () => {
                   {/* Simple Border */}
                   <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
