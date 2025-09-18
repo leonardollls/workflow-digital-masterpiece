@@ -7,7 +7,9 @@ interface Project {
   title: string;
   description: string;
   image: string;
+  thumbnailImage?: string;
   category: string;
+  priority?: boolean;
 }
 
 const PortfolioGallery = () => {

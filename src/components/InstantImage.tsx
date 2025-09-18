@@ -27,10 +27,9 @@ const InstantImage: React.FC<InstantImageProps> = ({
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         fetchPriority={priority ? "high" : "auto"}
-        style={{
-          // Otimizações para carregamento mais rápido
-          maxWidth: '100%',
-          height: 'auto'
+        onError={(e) => {
+          console.error('Erro ao carregar imagem:', src);
+          e.currentTarget.style.backgroundColor = '#f3f4f6';
         }}
       />
     </div>
