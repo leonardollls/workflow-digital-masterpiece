@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
-import FastImage from '@/components/FastImage';
+import InstantImage from '@/components/InstantImage';
 import { usePortfolioImages } from '@/hooks/usePortfolioImages';
 
 interface Project {
@@ -53,22 +53,7 @@ const Portfolio = () => {
     return () => window.removeEventListener('popstate', updateLogoSrc);
   }, []);
 
-  // Precarregamento simplificado das primeiras 2 imagens apenas
-  useEffect(() => {
-    if (projects.length === 0) return;
-    
-    const preloadFirstImages = () => {
-      const firstTwo = projects.slice(0, 2);
-      firstTwo.forEach((project) => {
-        const img = new Image();
-        img.src = project.thumbnailImage || project.image;
-      });
-    };
-
-    // Precarrega apenas após um delay maior para não impactar o carregamento
-    const timer = setTimeout(preloadFirstImages, 1000);
-    return () => clearTimeout(timer);
-  }, [projects]);
+  // Sem precarregamento adicional - deixa o browser otimizar naturalmente
 
 
   const openImageModal = (imageSrc: string) => {
@@ -163,7 +148,7 @@ const Portfolio = () => {
                 >
                   {/* Project Image */}
                   <div className="relative h-64 overflow-hidden">
-                    <FastImage
+                    <InstantImage
                       src={project.thumbnailImage || project.image}
                       alt={project.title}
                       priority={project.priority}

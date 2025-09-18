@@ -156,8 +156,20 @@ export const usePortfolioImages = () => {
     const fetchPortfolioImages = async () => {
       try {
         // Inicia com fallback imediatamente para carregamento rápido
-        setProjects(fallbackProjects);
+        const projectsWithPriority = fallbackProjects.map((project, index) => ({
+          ...project,
+          priority: index < 6 // Primeiras 6 imagens são prioritárias
+        }));
+        
+        setProjects(projectsWithPriority);
         setLoading(false);
+        
+        // Precarrega as primeiras 6 imagens imediatamente
+        const preloadImages = projectsWithPriority.slice(0, 6);
+        preloadImages.forEach((project) => {
+          const img = new Image();
+          img.src = project.image;
+        });
         
         // Tenta buscar dados otimizados do Supabase em background
         const { data, error: supabaseError } = await supabase
@@ -171,7 +183,7 @@ export const usePortfolioImages = () => {
           setImages(data);
           
           // Converte dados do Supabase para o formato esperado
-          const convertedProjects: ProjectData[] = data.map(img => ({
+          const convertedProjects: ProjectData[] = data.map((img, index) => ({
             id: parseInt(img.project_id),
             title: img.project_title,
             description: img.project_description,
@@ -179,17 +191,21 @@ export const usePortfolioImages = () => {
             thumbnailImage: img.thumbnail_url || img.original_url,
             blurDataUrl: img.blur_data_url,
             category: img.project_category,
-            priority: img.priority
+            priority: index < 6 // Primeiras 6 são prioritárias
           }));
           
-          // Atualiza apenas se os dados são diferentes
+          // Precarrega também as imagens do Supabase
+          convertedProjects.slice(0, 6).forEach((project) => {
+            const img = new Image();
+            img.src = project.thumbnailImage || project.image;
+          });
+          
           setProjects(convertedProjects);
         }
         
         setError(null);
       } catch (err) {
         console.warn('Error fetching portfolio images, keeping fallback:', err);
-        // Mantém fallback já carregado
         setError(null);
       }
     };

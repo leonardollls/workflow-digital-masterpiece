@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import FastImage from '@/components/FastImage';
+import InstantImage from '@/components/InstantImage';
 import { usePortfolioImages } from '@/hooks/usePortfolioImages';
 
 interface Project {
@@ -38,22 +38,7 @@ const PortfolioGallery = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Precarrega as imagens críticas (prioritárias)
-  useEffect(() => {
-    if (projects.length === 0) return;
-    
-    const preloadCriticalImages = () => {
-      const criticalImages = projects.filter(project => project.priority);
-      criticalImages.forEach((project) => {
-        const img = new Image();
-        img.src = project.thumbnailImage || project.image;
-      });
-    };
-
-    // Precarrega após um pequeno delay para não bloquear o carregamento inicial
-    const timer = setTimeout(preloadCriticalImages, 100);
-    return () => clearTimeout(timer);
-  }, [projects]);
+  // Sem precarregamento adicional - deixa o browser otimizar naturalmente
 
   const openImageModal = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -116,7 +101,7 @@ const PortfolioGallery = () => {
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
-                  <FastImage
+                  <InstantImage
                     src={project.thumbnailImage || project.image}
                     alt={project.title}
                     priority={project.priority}
