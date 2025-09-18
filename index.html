@@ -82,23 +82,11 @@
     }
     </script>
 
-    <!-- Critical Resource Preloads - LCP image only -->
-    <link rel="preload" href="/Images/landing-page-demonstracao-workana-1.png" as="image" fetchpriority="high" />
-    
-    <!-- Critical CSS - Simplified -->
-    <style>
-      *{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif}.min-h-screen{min-height:100vh}.h-64{height:16rem}.w-full{width:100%}.h-full{height:100%}.grid{display:grid}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.relative{position:relative}.overflow-hidden{overflow:hidden}.object-cover{object-fit:cover}.flex{display:flex}.items-center{align-items:center}.justify-center{justify-content:center}@media (min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    </style>
-
-    <!-- Defer all fonts - load after critical render -->
-    <script>
-      setTimeout(function(){
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@400;600&display=swap';
-        document.head.appendChild(link);
-      }, 100);
-    </script>
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://workflow.lovable.app" />
