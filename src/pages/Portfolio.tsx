@@ -17,19 +17,11 @@ const Portfolio = () => {
   
   const galleryRef = useRef<HTMLElement>(null);
 
-  // Função para otimizar URLs de imagem
-  const getOptimizedImageUrl = useCallback((originalUrl: string, index: number) => {
-    // Para as primeiras 3 imagens (LCP críticas), usar versões otimizadas
-    if (index < 3) {
-      if (originalUrl.includes('landing-page-demonstracao-workana-1.png')) {
-        return '/Images/landing-page-demonstracao-workana-1.webp'; // Versão WebP otimizada
-      }
-      if (originalUrl.includes('118d31229400769.686562b112afe.jpg')) {
-        return '/Images/118d31229400769.686562b112afe.webp'; // Versão WebP otimizada
-      }
-    }
-    return originalUrl;
-  }, []);
+  // URLs de imagens otimizadas (estático para evitar problemas)
+  const optimizedImages = useMemo(() => ({
+    '/Images/landing-page-demonstracao-workana-1.png': '/Images/landing-page-demonstracao-workana-1.webp',
+    '/Images/118d31229400769.686562b112afe.jpg': '/Images/118d31229400769.686562b112afe.webp',
+  }), []);
 
   // Memoizar projetos para evitar re-renderização desnecessária
   const projects = useMemo(() => [
@@ -249,9 +241,9 @@ const Portfolio = () => {
                   {/* Project Image - Fixed height prevents layout shift */}
                   <div className="relative h-64 overflow-hidden bg-workflow-50">
                     <picture>
-                      {index < 3 && (
+                      {index < 3 && optimizedImages[project.image as keyof typeof optimizedImages] && (
                         <source 
-                          srcSet={getOptimizedImageUrl(project.image, index)} 
+                          srcSet={optimizedImages[project.image as keyof typeof optimizedImages]} 
                           type="image/webp" 
                         />
                       )}
