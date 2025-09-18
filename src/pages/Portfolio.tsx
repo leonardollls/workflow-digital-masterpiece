@@ -17,11 +17,6 @@ const Portfolio = () => {
   
   const galleryRef = useRef<HTMLElement>(null);
 
-  // URLs de imagens otimizadas (estático para evitar problemas)
-  const optimizedImages = useMemo(() => ({
-    '/Images/landing-page-demonstracao-workana-1.png': '/Images/landing-page-demonstracao-workana-1.webp',
-    '/Images/118d31229400769.686562b112afe.jpg': '/Images/118d31229400769.686562b112afe.webp',
-  }), []);
 
   // Memoizar projetos para evitar re-renderização desnecessária
   const projects = useMemo(() => [
@@ -240,23 +235,15 @@ const Portfolio = () => {
                 >
                   {/* Project Image - Fixed height prevents layout shift */}
                   <div className="relative h-64 overflow-hidden bg-workflow-50">
-                    <picture>
-                      {index < 3 && optimizedImages[project.image as keyof typeof optimizedImages] && (
-                        <source 
-                          srcSet={optimizedImages[project.image as keyof typeof optimizedImages]} 
-                          type="image/webp" 
-                        />
-                      )}
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        loading={index < 3 ? "eager" : "lazy"}
-                        decoding="async"
-                        fetchPriority={index < 3 ? "high" : "auto"}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    </picture>
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      loading={index < 3 ? "eager" : "lazy"}
+                      decoding="async"
+                      fetchPriority={index < 3 ? "high" : "auto"}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
