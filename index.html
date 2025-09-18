@@ -88,12 +88,21 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     
-    <!-- Critical Resource Preloads - Only essential -->
+    <!-- Critical Resource Preloads - LCP optimization -->
     <link rel="preload" href="/logo-workflow.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="/Images/landing-page-demonstracao-workana-1.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="/Images/118d31229400769.686562b112afe.jpg" as="image" fetchpriority="high" />
+    <link rel="preload" href="/Images/landing-page-demonstracao-1.webp" as="image" fetchpriority="high" />
     
     <!-- DNS Prefetch for external resources -->
     <link rel="dns-prefetch" href="//lovable.dev" />
     
+    <!-- Critical CSS inline -->
+    <style>
+      /* Critical above-the-fold styles */
+      .min-h-screen{min-height:100vh}.h-64{height:16rem}.w-full{width:100%}.h-full{height:100%}.flex{display:flex}.items-center{align-items:center}.justify-center{justify-content:center}.grid{display:grid}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.relative{position:relative}.absolute{position:absolute}.inset-0{top:0;right:0;bottom:0;left:0}.overflow-hidden{overflow:hidden}.bg-workflow-50{background-color:rgb(248 250 252)}.bg-white{background-color:rgb(255 255 255)}.object-cover{object-fit:cover}.object-contain{object-fit:contain}.opacity-0{opacity:0}.opacity-100{opacity:1}.transition-opacity{transition-property:opacity}.transition-transform{transition-property:transform}.duration-300{transition-duration:300ms}@media (min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    </style>
+
     <!-- Optimize font loading -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" /></noscript>

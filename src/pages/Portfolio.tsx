@@ -234,14 +234,28 @@ const Portfolio = () => {
                 >
                   {/* Project Image - Fixed height prevents layout shift */}
                   <div className="relative h-64 overflow-hidden bg-workflow-50">
-                    <LazyImage
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading={index < 3 ? 'eager' : 'lazy'}
-                      priority={index < 3}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+                    {index < 3 ? (
+                      // Primeiras 3 imagens: carregamento imediato para LCP
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    ) : (
+                      // Demais imagens: lazy loading
+                      <LazyImage
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                        priority={false}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    )}
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
