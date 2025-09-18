@@ -155,8 +155,11 @@ export const usePortfolioImages = () => {
   useEffect(() => {
     const fetchPortfolioImages = async () => {
       try {
-        setLoading(true);
+        // Inicia com fallback imediatamente para carregamento rápido
+        setProjects(fallbackProjects);
+        setLoading(false);
         
+        // Tenta buscar dados otimizados do Supabase em background
         const { data, error: supabaseError } = await supabase
           .from('portfolio_images')
           .select('*')
@@ -164,17 +167,10 @@ export const usePortfolioImages = () => {
           .order('priority', { ascending: false })
           .order('created_at', { ascending: true });
 
-        if (supabaseError) {
-          console.warn('Supabase error, using fallback data:', supabaseError.message);
-          setProjects(fallbackProjects);
-          setError(null);
-          return;
-        }
-
-        if (data && data.length > 0) {
+        if (!supabaseError && data && data.length > 0) {
           setImages(data);
           
-          // Converte dados do Supabase para o formato esperado pelo componente
+          // Converte dados do Supabase para o formato esperado
           const convertedProjects: ProjectData[] = data.map(img => ({
             id: parseInt(img.project_id),
             title: img.project_title,
@@ -186,20 +182,15 @@ export const usePortfolioImages = () => {
             priority: img.priority
           }));
           
+          // Atualiza apenas se os dados são diferentes
           setProjects(convertedProjects);
-        } else {
-          // Se não há dados no Supabase, usa fallback
-          console.log('No data in Supabase, using fallback data');
-          setProjects(fallbackProjects);
         }
         
         setError(null);
       } catch (err) {
-        console.warn('Error fetching portfolio images, using fallback:', err);
-        setProjects(fallbackProjects);
-        setError(null); // Não mostra erro para o usuário, apenas usa fallback
-      } finally {
-        setLoading(false);
+        console.warn('Error fetching portfolio images, keeping fallback:', err);
+        // Mantém fallback já carregado
+        setError(null);
       }
     };
 

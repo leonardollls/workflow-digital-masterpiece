@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import SmartImage from '@/components/SmartImage';
+import FastImage from '@/components/FastImage';
 import { usePortfolioImages } from '@/hooks/usePortfolioImages';
 
 interface Project {
@@ -116,13 +116,11 @@ const PortfolioGallery = () => {
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
-                  <SmartImage
-                    src={project.image}
-                    thumbnailSrc={project.thumbnailImage}
+                  <FastImage
+                    src={project.thumbnailImage || project.image}
                     alt={project.title}
-                    blurDataUrl={project.blurDataUrl}
                     priority={project.priority}
-                    className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full"
                   />
                   
                   {/* Gradient Overlay */}

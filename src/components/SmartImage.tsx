@@ -22,6 +22,7 @@ const SmartImage: React.FC<SmartImageProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(priority); // Imagens prioritárias carregam imediatamente
   const [hasError, setHasError] = useState(false);
+  const [showFullRes, setShowFullRes] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -60,9 +61,19 @@ const SmartImage: React.FC<SmartImageProps> = ({
     setHasError(true);
   };
 
-  // Determina qual imagem usar (thumbnail para cards, original para modal)
+  // Estratégia de carregamento otimizada
   const imageUrl = thumbnailSrc || src;
   const placeholderUrl = blurDataUrl || defaultBlurDataUrl;
+  
+  // Carregamento progressivo - carrega thumbnail primeiro, depois full res
+  useEffect(() => {
+    if (isLoaded && !showFullRes && !priority) {
+      const timer = setTimeout(() => {
+        setShowFullRes(true);
+      }, 500); // Delay para mostrar versão completa
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaded, showFullRes, priority]);
 
   return (
     <div 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
-import SmartImage from '@/components/SmartImage';
+import FastImage from '@/components/FastImage';
 import { usePortfolioImages } from '@/hooks/usePortfolioImages';
 
 interface Project {
@@ -53,20 +53,20 @@ const Portfolio = () => {
     return () => window.removeEventListener('popstate', updateLogoSrc);
   }, []);
 
-  // Precarrega as imagens críticas (prioritárias)
+  // Precarregamento simplificado das primeiras 2 imagens apenas
   useEffect(() => {
     if (projects.length === 0) return;
     
-    const preloadCriticalImages = () => {
-      const criticalImages = projects.filter(project => project.priority);
-      criticalImages.forEach((project) => {
+    const preloadFirstImages = () => {
+      const firstTwo = projects.slice(0, 2);
+      firstTwo.forEach((project) => {
         const img = new Image();
         img.src = project.thumbnailImage || project.image;
       });
     };
 
-    // Precarrega após um pequeno delay para não bloquear o carregamento inicial
-    const timer = setTimeout(preloadCriticalImages, 100);
+    // Precarrega apenas após um delay maior para não impactar o carregamento
+    const timer = setTimeout(preloadFirstImages, 1000);
     return () => clearTimeout(timer);
   }, [projects]);
 
@@ -163,13 +163,11 @@ const Portfolio = () => {
                 >
                   {/* Project Image */}
                   <div className="relative h-64 overflow-hidden">
-                    <SmartImage
-                      src={project.image}
-                      thumbnailSrc={project.thumbnailImage}
+                    <FastImage
+                      src={project.thumbnailImage || project.image}
                       alt={project.title}
-                      blurDataUrl={project.blurDataUrl}
                       priority={project.priority}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      className="w-full h-full"
                     />
                     
                     {/* Gradient Overlay */}
