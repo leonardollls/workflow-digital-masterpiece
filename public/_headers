@@ -42,12 +42,6 @@
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  X-DNS-Prefetch-Control: on
-
-# Preload critical resources for LCP optimization
-/portfolio
-  Link: </Images/landing-page-demonstracao-workana-1.webp>; rel=preload; as=image; fetchpriority=high
-  Link: </Images/118d31229400769.686562b112afe.webp>; rel=preload; as=image; fetchpriority=high
 
 # Compression
 /*

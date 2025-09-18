@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
 
 interface Project {
@@ -12,14 +12,43 @@ interface Project {
 const Portfolio = () => {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
   const [isVisible, setIsVisible] = useState(false);
-  
+  const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
   const galleryRef = useRef<HTMLElement>(null);
 
+  useEffect(() => {
+    // Garantir que o conteúdo seja visível imediatamente para evitar problemas mobile
+    setIsVisible(true);
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { 
+        threshold: 0.1,
+        rootMargin: '50px' // Adicionar margem para melhorar detecção mobile
+      }
+    );
 
-  // Memoizar projetos para evitar re-renderização desnecessária
-  const projects = useMemo(() => [
+    if (galleryRef.current) {
+      observer.observe(galleryRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const updateLogoSrc = () => {
+      const newLogoSrc = window.location.pathname === '/' 
+        ? './logo-workflow.png' 
+        : '/Images/logo-workflow-sem-fundo.png';
+      setLogoSrc(newLogoSrc);
+    };
+
+    updateLogoSrc();
+    window.addEventListener('popstate', updateLogoSrc);
+    return () => window.removeEventListener('popstate', updateLogoSrc);
+  }, []);
+
+  const projects: Project[] = [
     {
       id: 101,
       title: "Plataforma de IA para Vendas",
@@ -125,50 +154,17 @@ const Portfolio = () => {
       image: "/Images/landing-page-demonstracao-9.png",
       category: "fintech"
     }
-  ], []);
+  ];
 
-  // Intersection Observer para lazy loading
-  useEffect(() => {
-    setIsVisible(true);
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { 
-        threshold: 0.1,
-        rootMargin: '50px'
-      }
-    );
-
-    if (galleryRef.current) {
-      observer.observe(galleryRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const updateLogoSrc = () => {
-      const newLogoSrc = window.location.pathname === '/' 
-        ? './logo-workflow.png' 
-        : '/Images/logo-workflow-sem-fundo.png';
-      setLogoSrc(newLogoSrc);
-    };
-
-    updateLogoSrc();
-    window.addEventListener('popstate', updateLogoSrc);
-    return () => window.removeEventListener('popstate', updateLogoSrc);
-  }, []);
-
-  // Funções de modal otimizadas com useCallback
-  const openImageModal = useCallback((imageSrc: string) => {
+  const openImageModal = (imageSrc: string) => {
     setSelectedImage(imageSrc);
     document.body.style.overflow = 'hidden';
-  }, []);
+  };
 
-  const closeImageModal = useCallback(() => {
+  const closeImageModal = () => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  }, []);
+  };
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -197,13 +193,14 @@ const Portfolio = () => {
             
             {/* Logo da Workflow */}
             <div className="flex justify-center mb-8">
-              <img
-                src={logoSrc}
-                alt="Workflow Logo"
+              <img 
+                src={logoSrc} 
+                alt="Workflow Logo" 
                 className="h-24 sm:h-28 md:h-32 lg:h-36 object-contain"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/Images/logo-workflow-sem-fundo.png';
+                }}
               />
             </div>
 
@@ -223,59 +220,100 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Projects Grid - Simplificado */}
+          {/* Projects Grid */}
           <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 px-2 sm:px-4 md:px-0">
-              {projects.map((project, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
+              {projects.map((project) => (
                 <div
                   key={project.id}
                   className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
                 >
-                  {/* Project Image - Fixed height prevents layout shift */}
-                  <div className="relative h-64 overflow-hidden bg-workflow-50">
+                  {/* Project Image */}
+                  <div className="relative h-64 overflow-hidden">
                     <img
                       src={project.image}
                       alt={project.title}
                       className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading={index < 3 ? "eager" : "lazy"}
-                      decoding="async"
-                      fetchPriority={index < 3 ? "high" : "auto"}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading="lazy"
                     />
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </div>
                   
-                  {/* Project Content */}
-                  <div className="p-6 space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-bold text-workflow-dark group-hover:text-workflow-energy transition-colors duration-300">
-                        {project.title}
-                      </h3>
-                      <p className="text-workflow-muted text-sm leading-relaxed line-clamp-3">
-                        {project.description}
-                      </p>
-                    </div>
+                  {/* Ícone de olho SEMPRE VISÍVEL e clicável */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Eye button clicked for:', project.title);
+                      openImageModal(project.image);
+                    }}
+                    className="absolute top-4 right-4 group/btn w-14 h-14 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg hover:scale-110 z-20"
+                    type="button"
+                    style={{ zIndex: 20 }}
+                  >
+                    {/* Brilho de fundo */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/30 to-workflow-zen/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
                     
-                    {/* Action Button */}
-                    <button
-                      onClick={() => openImageModal(project.image)}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-workflow-energy to-workflow-zen text-white text-sm font-medium rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300"
+                    {/* Ícone SVG moderno */}
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="relative z-10 text-workflow-deep drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
                     >
-                      <span>Ver Projeto</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </button>
+                      <path
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                        fill="currentColor"
+                        className="group-hover/btn:fill-workflow-energy transition-colors duration-300"
+                      />
+                    </svg>
+                    
+                    {/* Efeito de ondas sutis */}
+                    <div className="absolute inset-0 rounded-full border border-white/40 scale-100 group-hover/btn:scale-110 opacity-100 group-hover/btn:opacity-0 transition-all duration-300" />
+                  </button>
+
+                  {/* Project Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-workflow-deep mb-3 group-hover:text-workflow-energy transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <p className="text-workflow-deep/70 text-sm leading-relaxed mb-4">
+                      {project.description}
+                    </p>
+                    
+                    {/* Category Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
+                      <span className="w-2 h-2 bg-workflow-energy rounded-full" />
+                      <span className="capitalize">{project.category}</span>
+                    </div>
                   </div>
-                  
-                  {/* Hover Indicator */}
-                  {hoveredProject === project.id && (
-                    <div className="absolute top-4 right-4 w-3 h-3 bg-workflow-energy rounded-full animate-pulse" />
-                  )}
+
+                  {/* Simple Border */}
+                  <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
                 </div>
               ))}
             </div>
@@ -313,13 +351,10 @@ const Portfolio = () => {
                 {/* Image Container */}
                 <div className="relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl animate-scale-in">
                   <img
-                    src={selectedImage || ''}
+                    src={selectedImage}
                     alt="Landing page preview"
                     className="w-full h-auto block"
                     style={{ minHeight: '100vh' }}
-                    loading="eager"
-                    decoding="async"
-                    fetchPriority="high"
                   />
                 </div>
               </div>
