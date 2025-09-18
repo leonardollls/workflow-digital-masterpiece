@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
+import LazyImage from '@/components/LazyImage';
 
 interface Project {
   id: number;
@@ -195,14 +196,12 @@ const Portfolio = () => {
             
             {/* Logo da Workflow */}
             <div className="flex justify-center mb-8">
-              <img 
-                src={logoSrc} 
-                alt="Workflow Logo" 
+              <LazyImage
+                src={logoSrc}
+                alt="Workflow Logo"
                 className="h-24 sm:h-28 md:h-32 lg:h-36 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/Images/logo-workflow-sem-fundo.png';
-                }}
+                priority={true}
+                loading="eager"
               />
             </div>
 
@@ -232,13 +231,15 @@ const Portfolio = () => {
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
                 >
-                  {/* Project Image */}
-                  <div className="relative h-64 overflow-hidden">
-                    <img
+                  {/* Project Image - Fixed height prevents layout shift */}
+                  <div className="relative h-64 overflow-hidden bg-workflow-50">
+                    <LazyImage
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
+                      className="w-full h-full object-cover object-top will-change-transform transition-transform duration-300 group-hover:scale-105"
+                      loading={index < 3 ? 'eager' : 'lazy'}
+                      priority={index < 3}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     
                     {/* Gradient Overlay */}
@@ -352,11 +353,13 @@ const Portfolio = () => {
               <div className="min-h-full flex items-start justify-center p-4 pt-20">
                 {/* Image Container */}
                 <div className="relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl animate-scale-in">
-                  <img
+                  <LazyImage
                     src={selectedImage || ''}
                     alt="Landing page preview"
                     className="w-full h-auto block"
                     style={{ minHeight: '100vh' }}
+                    loading="eager"
+                    priority={true}
                   />
                 </div>
               </div>

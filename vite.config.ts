@@ -22,15 +22,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    target: 'es2015',
-    minify: true,
+    target: 'es2020',
+    minify: 'terser',
     sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom']
-        }
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
       }
     }
   },
