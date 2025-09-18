@@ -26,13 +26,29 @@ export default defineConfig(({ mode }) => ({
     minify: 'terser',
     sourcemap: false,
     cssCodeSplit: true,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 1600,
     assetsInlineLimit: 4096,
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
-      }
-    }
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2,
+        unsafe: true,
+        unsafe_comps: true,
+        unsafe_math: true,
+      },
+      mangle: {
+        safari10: true,
+      },
+    },
+    rollupOptions: {
+      treeshake: {
+        preset: 'recommended',
+        moduleSideEffects: false,
+      },
+    },
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js'],

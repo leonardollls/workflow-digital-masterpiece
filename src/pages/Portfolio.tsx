@@ -17,6 +17,20 @@ const Portfolio = () => {
   
   const galleryRef = useRef<HTMLElement>(null);
 
+  // Função para otimizar URLs de imagem
+  const getOptimizedImageUrl = useCallback((originalUrl: string, index: number) => {
+    // Para as primeiras 3 imagens (LCP críticas), usar versões otimizadas
+    if (index < 3) {
+      if (originalUrl.includes('landing-page-demonstracao-workana-1.png')) {
+        return '/Images/landing-page-demonstracao-workana-1.webp'; // Versão WebP otimizada
+      }
+      if (originalUrl.includes('118d31229400769.686562b112afe.jpg')) {
+        return '/Images/118d31229400769.686562b112afe.webp'; // Versão WebP otimizada
+      }
+    }
+    return originalUrl;
+  }, []);
+
   // Memoizar projetos para evitar re-renderização desnecessária
   const projects = useMemo(() => [
     {
@@ -234,15 +248,23 @@ const Portfolio = () => {
                 >
                   {/* Project Image - Fixed height prevents layout shift */}
                   <div className="relative h-64 overflow-hidden bg-workflow-50">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading={index < 3 ? "eager" : "lazy"}
-                      decoding="async"
-                      fetchPriority={index < 3 ? "high" : "auto"}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+                    <picture>
+                      {index < 3 && (
+                        <source 
+                          srcSet={getOptimizedImageUrl(project.image, index)} 
+                          type="image/webp" 
+                        />
+                      )}
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                        loading={index < 3 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={index < 3 ? "high" : "auto"}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    </picture>
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
