@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
 import LazyImage from '@/components/LazyImage';
+import OptimizedPortfolioGrid from '@/components/OptimizedPortfolioGrid';
+import imageConfig from '@/config/images.json';
+import { useImageOptimization, useImagePreloader, useResponsiveImageSizes } from '@/hooks/useImageOptimization';
 
 interface Project {
   id: number;
@@ -15,6 +18,17 @@ const Portfolio = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
   const [isVisible, setIsVisible] = useState(false);
+  
+  // Hooks de otimização de imagem
+  const imageOptimization = useImageOptimization();
+  const responsiveSizes = useResponsiveImageSizes();
+  
+  // Preload das imagens críticas
+  const criticalImages = useMemo(() => 
+    projects.slice(0, 3).map(p => p.image), 
+    [projects]
+  );
+  const { preloadedImages } = useImagePreloader(criticalImages, true);
   const galleryRef = useRef<HTMLElement>(null);
 
   // Memoizar projetos para evitar re-renderização desnecessária
@@ -221,104 +235,16 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Projects Grid */}
+          {/* Projects Grid - Otimizado */}
           <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
-              {projects.map((project, index) => (
-                <div
-                  key={project.id}
-                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                >
-                  {/* Project Image - Fixed height prevents layout shift */}
-                  <div className="relative h-64 overflow-hidden bg-workflow-50">
-                    <LazyImage
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover object-top will-change-transform transition-transform duration-300 group-hover:scale-105"
-                      loading={index < 3 ? 'eager' : 'lazy'}
-                      priority={index < 3}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  </div>
-                  
-                  {/* Ícone de olho */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      openImageModal(project.image);
-                    }}
-                    className="absolute top-4 right-4 group/btn w-14 h-14 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer shadow-lg z-20"
-                    type="button"
-                    style={{ zIndex: 20 }}
-                    aria-label={`Visualizar ${project.title}`}
-                  >
-                    {/* Brilho de fundo */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/30 to-workflow-zen/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Ícone SVG moderno */}
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="relative z-10 text-workflow-deep drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
-                    >
-                      <path
-                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="3"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="group-hover/btn:stroke-workflow-energy transition-colors duration-300"
-                      />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="1"
-                        fill="currentColor"
-                        className="group-hover/btn:fill-workflow-energy transition-colors duration-300"
-                      />
-                    </svg>
-                    
-                    {/* Efeito de ondas sutis */}
-                    <div className="absolute inset-0 rounded-full border border-white/40 scale-100 group-hover/btn:scale-110 opacity-100 group-hover/btn:opacity-0 transition-all duration-300" />
-                  </button>
-
-                  {/* Project Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-workflow-deep mb-3 group-hover:text-workflow-energy transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    <p className="text-workflow-deep/70 text-sm leading-relaxed mb-4">
-                      {project.description}
-                    </p>
-                    
-                    {/* Category Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
-                      <span className="w-2 h-2 bg-workflow-energy rounded-full" />
-                      <span className="capitalize">{project.category}</span>
-                    </div>
-                  </div>
-
-                  {/* Simple Border */}
-                  <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
-                </div>
-              ))}
+            <div className="px-2 sm:px-4 md:px-0">
+              <OptimizedPortfolioGrid
+                projects={projects}
+                onImageClick={openImageModal}
+                hoveredProject={hoveredProject}
+                onProjectHover={setHoveredProject}
+                responsiveSizes={responsiveSizes}
+              />
             </div>
           </div>
         </div>
