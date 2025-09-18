@@ -188,7 +188,8 @@ export const usePortfolioImages = () => {
             title: img.project_title,
             description: img.project_description,
             image: img.original_url,
-            thumbnailImage: img.thumbnail_url || img.original_url,
+            // Usa imagem original porque as thumbnails não existem no servidor
+            thumbnailImage: img.original_url, 
             blurDataUrl: img.blur_data_url,
             category: img.project_category,
             priority: index < 6 // Primeiras 6 são prioritárias
@@ -197,7 +198,7 @@ export const usePortfolioImages = () => {
           // Precarrega também as imagens do Supabase
           convertedProjects.slice(0, 6).forEach((project) => {
             const img = new Image();
-            img.src = project.thumbnailImage || project.image;
+            img.src = project.image; // Usa imagem original
           });
           
           setProjects(convertedProjects);
