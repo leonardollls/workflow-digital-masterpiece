@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import OptimizedImage from '@/components/OptimizedImage';
+import { useImagePreloader } from '@/utils/imageCache';
 
 interface Project {
   id: number;
@@ -13,6 +15,7 @@ const PortfolioGallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const galleryRef = useRef<HTMLElement>(null);
+  const { preloadImages } = useImagePreloader();
 
   useEffect(() => {
     // Garantir que o conteúdo seja visível imediatamente para evitar problemas mobile
@@ -141,6 +144,12 @@ const PortfolioGallery = () => {
     }
   ];
 
+  // Precarrega as primeiras 3 imagens para melhor performance inicial
+  useEffect(() => {
+    const criticalImages = projects.slice(0, 3).map(project => project.image);
+    preloadImages(criticalImages);
+  }, [preloadImages]);
+
   const openImageModal = (imageSrc: string) => {
     setSelectedImage(imageSrc);
     document.body.style.overflow = 'hidden';
@@ -202,11 +211,10 @@ const PortfolioGallery = () => {
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
-                  <img
+                  <OptimizedImage
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
                   />
                   
                   {/* Gradient Overlay */}
