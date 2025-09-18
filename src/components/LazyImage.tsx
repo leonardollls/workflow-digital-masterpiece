@@ -72,18 +72,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
 
   return (
     <div className={`relative overflow-hidden ${className}`} style={style}>
-      {/* Placeholder SVG otimizado */}
-      {!isLoaded && placeholder && (
-        <img
-          src={placeholder}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm"
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Loading spinner apenas se não houver placeholder */}
-      {!isLoaded && currentSrc && !placeholder && (
+      {/* Loading spinner simples */}
+      {!isLoaded && currentSrc && (
         <div className="absolute inset-0 bg-workflow-50 flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-workflow-energy border-t-transparent rounded-full animate-spin opacity-50"></div>
         </div>
@@ -92,10 +82,10 @@ const LazyImage: React.FC<LazyImageProps> = ({
       {/* Imagem principal */}
       <img
         ref={imgRef}
-        src={currentSrc || placeholder || ''}
+        src={currentSrc}
         alt={alt}
-        className={`w-full h-full object-cover transition-all duration-500 ${
-          isLoaded ? 'opacity-100 blur-0' : currentSrc ? 'opacity-0' : 'opacity-30 blur-sm'
+        className={`w-full h-full object-cover transition-opacity duration-300 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         loading={loading}
         onLoad={handleLoad}

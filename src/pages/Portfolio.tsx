@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
 import LazyImage from '@/components/LazyImage';
-import OptimizedPortfolioGrid from '@/components/OptimizedPortfolioGrid';
-import imageConfig from '@/config/images.json';
-import { useImageOptimization, useImagePreloader, useResponsiveImageSizes } from '@/hooks/useImageOptimization';
 
 interface Project {
   id: number;
@@ -19,16 +16,6 @@ const Portfolio = () => {
   const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
   const [isVisible, setIsVisible] = useState(false);
   
-  // Hooks de otimização de imagem
-  const imageOptimization = useImageOptimization();
-  const responsiveSizes = useResponsiveImageSizes();
-  
-  // Preload das imagens críticas
-  const criticalImages = useMemo(() => 
-    projects.slice(0, 3).map(p => p.image), 
-    [projects]
-  );
-  const { preloadedImages } = useImagePreloader(criticalImages, true);
   const galleryRef = useRef<HTMLElement>(null);
 
   // Memoizar projetos para evitar re-renderização desnecessária
@@ -235,16 +222,60 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Projects Grid - Otimizado */}
+          {/* Projects Grid - Simplificado */}
           <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="px-2 sm:px-4 md:px-0">
-              <OptimizedPortfolioGrid
-                projects={projects}
-                onImageClick={openImageModal}
-                hoveredProject={hoveredProject}
-                onProjectHover={setHoveredProject}
-                responsiveSizes={responsiveSizes}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 px-2 sm:px-4 md:px-0">
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
+                  onMouseEnter={() => setHoveredProject(project.id)}
+                  onMouseLeave={() => setHoveredProject(null)}
+                >
+                  {/* Project Image - Fixed height prevents layout shift */}
+                  <div className="relative h-64 overflow-hidden bg-workflow-50">
+                    <LazyImage
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      loading={index < 3 ? 'eager' : 'lazy'}
+                      priority={index < 3}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  </div>
+                  
+                  {/* Project Content */}
+                  <div className="p-6 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold text-workflow-dark group-hover:text-workflow-energy transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <p className="text-workflow-muted text-sm leading-relaxed line-clamp-3">
+                        {project.description}
+                      </p>
+                    </div>
+                    
+                    {/* Action Button */}
+                    <button
+                      onClick={() => openImageModal(project.image)}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-workflow-energy to-workflow-zen text-white text-sm font-medium rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300"
+                    >
+                      <span>Ver Projeto</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  {/* Hover Indicator */}
+                  {hoveredProject === project.id && (
+                    <div className="absolute top-4 right-4 w-3 h-3 bg-workflow-energy rounded-full animate-pulse" />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
