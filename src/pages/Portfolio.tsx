@@ -1,5 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
+import OptimizedImage from '@/components/OptimizedImage';
+import { 
+  useIntersectionObserver, 
+  useAnimationOptimization, 
+  useResourcePreloader,
+  useDeviceOptimization 
+} from '@/hooks/usePerformance';
 
 interface Project {
   id: number;
@@ -12,43 +19,19 @@ interface Project {
 const Portfolio = () => {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [logoSrc, setLogoSrc] = useState('/logo-workflow.png');
-  const galleryRef = useRef<HTMLElement>(null);
+  
+  // Hooks de performance
+  const { targetRef: galleryRef, isIntersecting, hasIntersected } = useIntersectionObserver({
+    rootMargin: '50px',
+    threshold: 0.1
+  });
+  const { getAnimationClass, shouldReduceAnimations } = useAnimationOptimization();
+  const { preloadImage } = useResourcePreloader();
+  const { isMobile, isLowEndDevice } = useDeviceOptimization();
 
-  useEffect(() => {
-    // Garantir que o conteúdo seja visível imediatamente para evitar problemas mobile
-    setIsVisible(true);
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { 
-        threshold: 0.1,
-        rootMargin: '50px' // Adicionar margem para melhorar detecção mobile
-      }
-    );
-
-    if (galleryRef.current) {
-      observer.observe(galleryRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const updateLogoSrc = () => {
-      const newLogoSrc = window.location.pathname === '/' 
-        ? './logo-workflow.png' 
-        : '/Images/logo-workflow-sem-fundo.png';
-      setLogoSrc(newLogoSrc);
-    };
-
-    updateLogoSrc();
-    window.addEventListener('popstate', updateLogoSrc);
-    return () => window.removeEventListener('popstate', updateLogoSrc);
-  }, []);
-
-  const projects: Project[] = [
+  // Memoizar projetos para evitar re-renderização desnecessária
+  const projects = useMemo(() => [
     {
       id: 101,
       title: "Plataforma de IA para Vendas",
@@ -154,17 +137,42 @@ const Portfolio = () => {
       image: "/Images/landing-page-demonstracao-9.png",
       category: "fintech"
     }
-  ];
+  ], []);
 
-  const openImageModal = (imageSrc: string) => {
+  // Preload das primeiras imagens críticas
+  useEffect(() => {
+    // Preload do logo
+    preloadImage(logoSrc, 'high');
+    
+    // Preload das primeiras 3 imagens do portfolio
+    projects.slice(0, 3).forEach(project => {
+      preloadImage(project.image, 'high');
+    });
+  }, [preloadImage, logoSrc, projects]);
+
+  useEffect(() => {
+    const updateLogoSrc = () => {
+      const newLogoSrc = window.location.pathname === '/' 
+        ? './logo-workflow.png' 
+        : '/Images/logo-workflow-sem-fundo.png';
+      setLogoSrc(newLogoSrc);
+    };
+
+    updateLogoSrc();
+    window.addEventListener('popstate', updateLogoSrc);
+    return () => window.removeEventListener('popstate', updateLogoSrc);
+  }, []);
+
+  // Funções de modal otimizadas com useCallback
+  const openImageModal = useCallback((imageSrc: string) => {
     setSelectedImage(imageSrc);
     document.body.style.overflow = 'hidden';
-  };
+  }, []);
 
-  const closeImageModal = () => {
+  const closeImageModal = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -189,17 +197,18 @@ const Portfolio = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           {/* Header Section */}
-          <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 ${getAnimationClass('transition-opacity duration-500', 'transition-opacity duration-200')} portfolio-content ${hasIntersected ? 'opacity-100' : 'opacity-0'}`}>
             
             {/* Logo da Workflow */}
             <div className="flex justify-center mb-8">
-              <img 
-                src={logoSrc} 
-                alt="Workflow Logo" 
+              <OptimizedImage
+                src={logoSrc}
+                alt="Workflow Logo"
                 className="h-24 sm:h-28 md:h-32 lg:h-36 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/Images/logo-workflow-sem-fundo.png';
+                priority={true}
+                loading="eager"
+                onError={() => {
+                  setLogoSrc('/Images/logo-workflow-sem-fundo.png');
                 }}
               />
             </div>
@@ -221,51 +230,55 @@ const Portfolio = () => {
           </div>
 
           {/* Projects Grid */}
-          <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
-              {projects.map((project) => (
+          <div className={`${getAnimationClass('transition-opacity duration-500', 'transition-opacity duration-200')} portfolio-content ${hasIntersected ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0 ${isLowEndDevice ? 'lg:grid-cols-2' : ''}`}>
+              {projects.map((project, index) => (
                 <div
                   key={project.id}
-                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
+                  className={`group relative overflow-hidden rounded-3xl bg-white shadow-glass ${!shouldReduceAnimations ? 'hover:shadow-workflow-lg transition-shadow duration-300' : ''}`}
+                  onMouseEnter={() => !isMobile && setHoveredProject(project.id)}
+                  onMouseLeave={() => !isMobile && setHoveredProject(null)}
                 >
                   {/* Project Image */}
                   <div className="relative h-64 overflow-hidden">
-                    <img
+                    <OptimizedImage
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
+                      className={`w-full h-full object-cover object-top ${!shouldReduceAnimations ? 'transition-transform duration-300 group-hover:scale-105' : ''}`}
+                      loading={index < 3 ? 'eager' : 'lazy'}
+                      priority={index < 3}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    {/* Gradient Overlay - otimizado para mobile */}
+                    <div className={`absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent ${isMobile ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'} ${!shouldReduceAnimations ? 'transition-opacity duration-300' : ''} pointer-events-none`} />
                   </div>
                   
-                  {/* Ícone de olho SEMPRE VISÍVEL e clicável */}
+                  {/* Ícone de olho otimizado para mobile/desktop */}
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log('Eye button clicked for:', project.title);
                       openImageModal(project.image);
                     }}
-                    className="absolute top-4 right-4 group/btn w-14 h-14 bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg hover:scale-110 z-20"
+                    className={`absolute top-4 right-4 group/btn ${isMobile ? 'w-12 h-12' : 'w-14 h-14'} bg-white/80 hover:bg-white/90 rounded-full flex items-center justify-center ${!shouldReduceAnimations ? 'transition-all duration-300 hover:scale-110' : ''} cursor-pointer shadow-lg z-20`}
                     type="button"
                     style={{ zIndex: 20 }}
+                    aria-label={`Visualizar ${project.title}`}
                   >
-                    {/* Brilho de fundo */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/30 to-workflow-zen/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                    {/* Brilho de fundo - otimizado */}
+                    {!shouldReduceAnimations && (
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-workflow-energy/30 to-workflow-zen/30 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                    )}
                     
                     {/* Ícone SVG moderno */}
                     <svg
-                      width="24"
-                      height="24"
+                      width={isMobile ? "20" : "24"}
+                      height={isMobile ? "20" : "24"}
                       viewBox="0 0 24 24"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className="relative z-10 text-workflow-deep drop-shadow-lg group-hover/btn:scale-110 transition-transform duration-300"
+                      className={`relative z-10 text-workflow-deep drop-shadow-lg ${!shouldReduceAnimations ? 'group-hover/btn:scale-110 transition-transform duration-300' : ''}`}
                     >
                       <path
                         d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
@@ -292,16 +305,18 @@ const Portfolio = () => {
                       />
                     </svg>
                     
-                    {/* Efeito de ondas sutis */}
-                    <div className="absolute inset-0 rounded-full border border-white/40 scale-100 group-hover/btn:scale-110 opacity-100 group-hover/btn:opacity-0 transition-all duration-300" />
+                    {/* Efeito de ondas sutis - otimizado */}
+                    {!shouldReduceAnimations && (
+                      <div className="absolute inset-0 rounded-full border border-white/40 scale-100 group-hover/btn:scale-110 opacity-100 group-hover/btn:opacity-0 transition-all duration-300" />
+                    )}
                   </button>
 
-                  {/* Project Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-workflow-deep mb-3 group-hover:text-workflow-energy transition-colors duration-300">
+                  {/* Project Info - otimizado para mobile */}
+                  <div className={`${isMobile ? 'p-4' : 'p-6'}`}>
+                    <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-workflow-deep mb-3 ${!shouldReduceAnimations ? 'group-hover:text-workflow-energy transition-colors duration-300' : ''}`}>
                       {project.title}
                     </h3>
-                    <p className="text-workflow-deep/70 text-sm leading-relaxed mb-4">
+                    <p className={`text-workflow-deep/70 ${isMobile ? 'text-xs' : 'text-sm'} leading-relaxed mb-4`}>
                       {project.description}
                     </p>
                     
@@ -312,8 +327,10 @@ const Portfolio = () => {
                     </div>
                   </div>
 
-                  {/* Simple Border */}
-                  <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
+                  {/* Simple Border - otimizado */}
+                  {!shouldReduceAnimations && (
+                    <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
+                  )}
                 </div>
               ))}
             </div>
@@ -349,12 +366,14 @@ const Portfolio = () => {
             <div className="h-full overflow-y-auto overflow-x-hidden">
               <div className="min-h-full flex items-start justify-center p-4 pt-20">
                 {/* Image Container */}
-                <div className="relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl animate-scale-in">
-                  <img
-                    src={selectedImage}
+                <div className={`relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl ${getAnimationClass('animate-scale-in', '')}`}>
+                  <OptimizedImage
+                    src={selectedImage || ''}
                     alt="Landing page preview"
                     className="w-full h-auto block"
                     style={{ minHeight: '100vh' }}
+                    loading="eager"
+                    priority={true}
                   />
                 </div>
               </div>
