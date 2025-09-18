@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import WorkflowFooter from '@/components/WorkflowFooter';
-import LazyImage from '@/components/LazyImage';
 
 interface Project {
   id: number;
@@ -197,12 +196,13 @@ const Portfolio = () => {
             
             {/* Logo da Workflow */}
             <div className="flex justify-center mb-8">
-              <LazyImage
+              <img
                 src={logoSrc}
                 alt="Workflow Logo"
                 className="h-24 sm:h-28 md:h-32 lg:h-36 object-contain"
-                priority={true}
                 loading="eager"
+                decoding="async"
+                fetchPriority="high"
               />
             </div>
 
@@ -234,28 +234,15 @@ const Portfolio = () => {
                 >
                   {/* Project Image - Fixed height prevents layout shift */}
                   <div className="relative h-64 overflow-hidden bg-workflow-50">
-                    {index < 3 ? (
-                      // Primeiras 3 imagens: carregamento imediato para LCP
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        loading="eager"
-                        decoding="async"
-                        fetchPriority="high"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    ) : (
-                      // Demais imagens: lazy loading
-                      <LazyImage
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                        priority={false}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    )}
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      loading={index < 3 ? "eager" : "lazy"}
+                      decoding="async"
+                      fetchPriority={index < 3 ? "high" : "auto"}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -324,13 +311,14 @@ const Portfolio = () => {
               <div className="min-h-full flex items-start justify-center p-4 pt-20">
                 {/* Image Container */}
                 <div className="relative w-full max-w-4xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl animate-scale-in">
-                  <LazyImage
+                  <img
                     src={selectedImage || ''}
                     alt="Landing page preview"
                     className="w-full h-auto block"
                     style={{ minHeight: '100vh' }}
                     loading="eager"
-                    priority={true}
+                    decoding="async"
+                    fetchPriority="high"
                   />
                 </div>
               </div>
