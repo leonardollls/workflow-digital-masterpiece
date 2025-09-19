@@ -187,10 +187,13 @@ const PortfolioGallery = () => {
                     {/* Visualizar Projeto Button */}
                     <button
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
+                        console.log('Visualizar projeto clicked for:', project.title);
                         openImageModal(project.image);
                       }}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-workflow-energy hover:bg-workflow-energy/90 text-white rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-workflow-energy/25"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-workflow-energy hover:bg-workflow-energy/90 text-white rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-workflow-energy/25 relative z-10 cursor-pointer"
+                      type="button"
                     >
                       <svg
                         width="14"
