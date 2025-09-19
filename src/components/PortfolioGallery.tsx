@@ -176,10 +176,47 @@ const PortfolioGallery = () => {
                     {project.description}
                   </p>
                   
-                  {/* Category Badge */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
-                    <span className="w-2 h-2 bg-workflow-energy rounded-full" />
-                    <span className="capitalize">{project.category}</span>
+                  {/* Bottom Section with Category and Button */}
+                  <div className="flex items-center justify-between">
+                    {/* Category Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-workflow-energy/10 text-workflow-energy rounded-full text-xs font-semibold">
+                      <span className="w-2 h-2 bg-workflow-energy rounded-full" />
+                      <span className="capitalize">{project.category}</span>
+                    </div>
+                    
+                    {/* Visualizar Projeto Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openImageModal(project.image);
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-workflow-energy hover:bg-workflow-energy/90 text-white rounded-full text-xs font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-workflow-energy/25"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="text-white"
+                      >
+                        <path
+                          d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="3"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                      Visualizar projeto
+                    </button>
                   </div>
                 </div>
 
