@@ -61,9 +61,9 @@ export const usePortfolioImages = () => {
     {
       id: 1,
       title: "Wood Home - Móveis Planejados",
-      description: "Landing page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
+      description: "Site page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
       image: "/Images/landing-page-demonstracao-1.webp",
-      category: "design",
+      category: "site",
       priority: true
     },
     {
@@ -71,7 +71,7 @@ export const usePortfolioImages = () => {
       title: "Valor Corretora - Seguro de Renda",
       description: "Página de captura que apresenta o Seguro DIT para proteger a renda de trabalhadores contra afastamentos por acidente ou doença.",
       image: "/Images/FireShot Capture 003 - Segura de Renda.webp",
-      category: "finance"
+      category: "site"
     },
     {
       id: 106,
@@ -103,10 +103,10 @@ export const usePortfolioImages = () => {
     },
     {
       id: 4,
-      title: "Plataforma de Design Interativo",
-      description: "Landing page para ferramenta de criação de interfaces UI com gráficos vetoriais em tempo real e multiplataforma",
-      image: "/Images/landing-page-demonstracao-4.webp",
-      category: "tech"
+      title: "Engage - Agência de Marketing Digital",
+      description: "Landing Page para a Engage, uma agência especializada em estratégias digitais e gestão de tráfego pago para transformar negócios em verdadeiras máquinas de vendas.",
+      image: "/Images/0cbb7d227466547.68406a44b0343.webp",
+      category: "agency"
     },
     {
       id: 5,
@@ -126,8 +126,8 @@ export const usePortfolioImages = () => {
       id: 7,
       title: "Grupo Dharma - Arquitetura",
       description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais",
-      image: "/Images/landing-page-demonstracao-7.webp",
-      category: "architecture"
+      image: "/Images/landing-page-demonstracao-6.webp",
+      category: "site"
     },
     {
       id: 8,
