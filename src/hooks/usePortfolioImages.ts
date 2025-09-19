@@ -61,9 +61,9 @@ export const usePortfolioImages = () => {
     {
       id: 1,
       title: "Wood Home - Móveis Planejados",
-      description: "Site page para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
+      description: "Site para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
       image: "/Images/landing-page-demonstracao-1.webp",
-      category: "site",
+      category: "design",
       priority: true
     },
     {
@@ -71,7 +71,7 @@ export const usePortfolioImages = () => {
       title: "Valor Corretora - Seguro de Renda",
       description: "Página de captura que apresenta o Seguro DIT para proteger a renda de trabalhadores contra afastamentos por acidente ou doença.",
       image: "/Images/FireShot Capture 003 - Segura de Renda.webp",
-      category: "site"
+      category: "finance"
     },
     {
       id: 106,
@@ -127,7 +127,7 @@ export const usePortfolioImages = () => {
       title: "Grupo Dharma - Arquitetura",
       description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais",
       image: "/Images/landing-page-demonstracao-6.webp",
-      category: "site"
+      category: "architecture"
     },
     {
       id: 8,
