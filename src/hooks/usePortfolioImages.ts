@@ -43,11 +43,11 @@ export const usePortfolioImages = () => {
   // Fallback data - dados originais caso o Supabase não esteja disponível
   const fallbackProjects: ProjectData[] = [
     {
-      id: 101,
-      title: "Plataforma de IA para Vendas",
-      description: "Landing page desenvolvida para uma plataforma inovadora de inteligência artificial focada em otimizar processos de vendas e atendimento ao cliente.",
-      image: "/Images/landing-page-demonstracao-workana-1.png",
-      category: "ai",
+      id: 1,
+      title: "Wood Home - Móveis Planejados",
+      description: "Site para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado.",
+      image: "/Images/landing-page-demonstracao-1.webp",
+      category: "design",
       priority: true
     },
     {
@@ -59,11 +59,11 @@ export const usePortfolioImages = () => {
       priority: true
     },
     {
-      id: 1,
-      title: "Wood Home - Móveis Planejados",
-      description: "Site para empresa de móveis planejados sob medida, destacando design sofisticado, qualidade e atendimento personalizado",
-      image: "/Images/landing-page-demonstracao-1.webp",
-      category: "design",
+      id: 101,
+      title: "Plataforma de IA para Vendas",
+      description: "Landing page desenvolvida para uma plataforma inovadora de inteligência artificial focada em otimizar processos de vendas e atendimento ao cliente.",
+      image: "/Images/landing-page-demonstracao-workana-1.png",
+      category: "ai",
       priority: true
     },
     {
@@ -90,7 +90,7 @@ export const usePortfolioImages = () => {
     {
       id: 2,
       title: "Teacher Mary - Curso de Inglês",
-      description: "Página de captura para professora de inglês com método exclusivo, aulas personalizadas e resultados comprovados",
+      description: "Página de captura para professora de inglês com método exclusivo, aulas personalizadas e resultados comprovados.",
       image: "/Images/landing-page-demonstracao-2.webp",
       category: "education"
     },
@@ -111,42 +111,42 @@ export const usePortfolioImages = () => {
     {
       id: 5,
       title: "Desenvolvimento Pessoal & Relacionamentos",
-      description: "Página de conversão para programa de autoconhecimento e relacionamentos saudáveis voltado para mulheres",
+      description: "Página de conversão para programa de autoconhecimento e relacionamentos saudáveis voltado para mulheres.",
       image: "/Images/landing-page-demonstracao-5.webp",
       category: "lifestyle"
     },
     {
       id: 6,
       title: "Checklist Produto Digital",
-      description: "Landing page para método de lançamento de produtos digitais em 3 dias, ideal para iniciantes sem audiência",
+      description: "Landing page para método de lançamento de produtos digitais em apenas 3 dias, desenvolvida especialmente para iniciantes sem audiência prévia que desejam começar no mercado digital.",
       image: "/Images/landing-page-demonstracao-6.webp",
       category: "digital"
     },
     {
       id: 7,
       title: "Grupo Dharma - Arquitetura",
-      description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais",
+      description: "Site institucional para empresa de arquitetura e design de interiores com portfólio de projetos residenciais e comerciais.",
       image: "/Images/landing-page-demonstracao-6.webp",
       category: "architecture"
     },
     {
       id: 8,
       title: "Oasis Corp - Presença Digital",
-      description: "Landing page para agência especializada em criar sites profissionais para pequenas empresas e empreendedores",
+      description: "Landing page para agência especializada em criar sites profissionais para pequenas empresas e empreendedores.",
       image: "/Images/landing-page-demonstracao-8.webp",
       category: "agency"
     },
     {
       id: 103,
       title: "Turtle Fast - Autoridade Digital",
-      description: "Página de vendas para metodologia que transforma especialistas em autoridades digitais lucrativas em 120 dias",
+      description: "Página de vendas para metodologia que transforma especialistas em autoridades digitais lucrativas em 120 dias.",
       image: "/Images/0cbb7d227466547.68406a44b0343.webp",
       category: "business"
     },
     {
       id: 9,
       title: "Automação Financeira Empresarial",
-      description: "Plataforma de gestão financeira inteligente para pequenas empresas com IA, insights em tempo real e integração bancária",
+      description: "Plataforma de gestão financeira inteligente para pequenas empresas com IA, insights em tempo real e integração bancária.",
       image: "/Images/landing-page-demonstracao-9.png",
       category: "fintech"
     }
