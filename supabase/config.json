@@ -1,0 +1,29 @@
+{
+  "project": {
+    "name": "Workflow Services 2",
+    "id": "wbtyimthsgdsftgwezop",
+    "region": "us-east-2",
+    "organization_id": "rvngwqbugsddxpumrugz",
+    "status": "ACTIVE_HEALTHY",
+    "database": {
+      "host": "db.wbtyimthsgdsftgwezop.supabase.co",
+      "version": "17.6.1.032",
+      "engine": "17"
+    },
+    "api_url": "https://wbtyimthsgdsftgwezop.supabase.co",
+    "created_at": "2025-11-01T03:23:19.641221Z"
+  },
+  "migration": {
+    "from_project": "sphiqzwnkuzfiwejjlav",
+    "migrated_at": "2025-11-01",
+    "reason": "Storage quota exceeded (2.7GB/1GB)",
+    "status": "Structure Complete - Data Pending"
+  },
+  "structure": {
+    "tables": 12,
+    "migrations": 4,
+    "buckets": 2,
+    "policies": 19
+  }
+}
+
