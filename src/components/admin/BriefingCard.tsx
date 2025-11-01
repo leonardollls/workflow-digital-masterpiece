@@ -43,7 +43,7 @@ import {
   Users
 } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
-import type { InstitutionalBriefing } from '@/services/briefingService'
+import type { InstitutionalBriefing, LogoBriefing } from '@/services/briefingService'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { EditBriefingDialog } from './EditBriefingDialog'
@@ -51,14 +51,19 @@ import { ProposalValueDialog } from './ProposalValueDialog'
 import { deleteBriefing, deleteInstitutionalBriefing } from '@/services/briefingService'
 
 interface BriefingCardProps {
-  briefing: ClientBriefing | InstitutionalBriefing
-  onUpdate?: (updatedBriefing: ClientBriefing | InstitutionalBriefing) => void
+  briefing: ClientBriefing | InstitutionalBriefing | LogoBriefing
+  onUpdate?: (updatedBriefing: ClientBriefing | InstitutionalBriefing | LogoBriefing) => void
   onDelete?: (briefingId: string) => void
 }
 
 // Type guard para verificar se é um briefing institucional
-const isInstitutionalBriefing = (briefing: ClientBriefing | InstitutionalBriefing): briefing is InstitutionalBriefing => {
+const isInstitutionalBriefing = (briefing: ClientBriefing | InstitutionalBriefing | LogoBriefing): briefing is InstitutionalBriefing => {
   return 'website_goal' in briefing && 'website_type' in briefing
+}
+
+// Type guard para verificar se é um briefing de logo
+const isLogoBriefing = (briefing: ClientBriefing | InstitutionalBriefing | LogoBriefing): briefing is LogoBriefing => {
+  return 'logo_style' in briefing && 'logo_type' in briefing && 'logo_mood' in briefing
 }
 
 export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps) => {
@@ -149,7 +154,12 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
               </div>
               {/* Mostrar tipo de projeto */}
               <div className="flex items-center gap-2 mt-1">
-                {isInstitutionalBriefing(briefing) ? (
+                {isLogoBriefing(briefing) ? (
+                  <>
+                    <Palette className="w-4 h-4 text-pink-600" />
+                    <span className="text-xs text-pink-600 font-medium">Criação de Logo</span>
+                  </>
+                ) : isInstitutionalBriefing(briefing) ? (
                   <>
                     <Globe className="w-4 h-4 text-blue-600" />
                     <span className="text-xs text-blue-600 font-medium">Site Institucional</span>
@@ -186,7 +196,14 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
               <span className="font-medium">{briefing.responsible_name || 'Responsável não informado'}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              {isInstitutionalBriefing(briefing) ? (
+              {isLogoBriefing(briefing) ? (
+                <>
+                  <Palette className="w-4 h-4 text-pink-600" />
+                  <span className="text-gray-600 truncate">
+                    {briefing.logo_style || 'Estilo não informado'} • {briefing.logo_type || 'Tipo não informado'}
+                  </span>
+                </>
+              ) : isInstitutionalBriefing(briefing) ? (
                 <>
                   <Globe className="w-4 h-4 text-blue-600" />
                   <span className="text-gray-600 truncate">{briefing.website_goal || 'Objetivo não informado'}</span>
@@ -239,7 +256,212 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
 
                 <ScrollArea className="max-h-[70vh]">
                   <div className="space-y-6 pr-4">
-                    {isInstitutionalBriefing(briefing) ? (
+                    {isLogoBriefing(briefing) ? (
+                      // Detalhes para briefing de logo
+                      <>
+                        {/* ETAPA 1: INFORMAÇÕES DA EMPRESA */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Building2 className="w-5 h-5 text-blue-600" />
+                            Etapa 1: Informações da Empresa
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Nome da Empresa/Marca</label>
+                              <p className="text-gray-900">{briefing.company_name || 'Não informado'}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Segmento de Atuação</label>
+                              <p className="text-gray-900">{briefing.business_segment || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Descrição da Empresa</label>
+                              <p className="text-gray-900 mt-1">{briefing.company_description || 'Não informado'}</p>
+                            </div>
+                            {briefing.company_values && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Valores da Marca</label>
+                                <p className="text-gray-900 mt-1">{briefing.company_values}</p>
+                              </div>
+                            )}
+                            {briefing.target_audience && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Público-Alvo</label>
+                                <p className="text-gray-900 mt-1">{briefing.target_audience}</p>
+                              </div>
+                            )}
+                            {briefing.brand_personality && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Personalidade da Marca</label>
+                                <p className="text-gray-900 mt-1">{briefing.brand_personality}</p>
+                              </div>
+                            )}
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Nome do Responsável</label>
+                              <p className="text-gray-900">{briefing.responsible_name || 'Não informado'}</p>
+                            </div>
+                            {briefing.current_logo && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Situação Atual da Logo</label>
+                                <p className="text-gray-900">{briefing.current_logo}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* ETAPA 2: CONCEITO E ESTILO */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Palette className="w-5 h-5 text-purple-600" />
+                            Etapa 2: Conceito e Estilo
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Estilo de Logo</label>
+                              <p className="text-gray-900">{briefing.logo_style || 'Não informado'}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Tipo de Logo</label>
+                              <p className="text-gray-900">{briefing.logo_type || 'Não informado'}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Mood/Sensação</label>
+                              <p className="text-gray-900">{briefing.logo_mood || 'Não informado'}</p>
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Mensagens-Chave</label>
+                              <p className="text-gray-900 mt-1">{briefing.messages_to_convey || 'Não informado'}</p>
+                            </div>
+                            {briefing.competitor_logos && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Logos de Concorrentes (Referência)</label>
+                                <p className="text-gray-900 mt-1">{briefing.competitor_logos}</p>
+                              </div>
+                            )}
+                            {briefing.what_to_avoid && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">O Que Evitar</label>
+                                <p className="text-gray-900 mt-1">{briefing.what_to_avoid}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* ETAPA 3: ELEMENTOS VISUAIS */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Palette className="w-5 h-5 text-pink-600" />
+                            Etapa 3: Elementos Visuais
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Cores Preferidas</label>
+                              <p className="text-gray-900">{briefing.preferred_colors || 'Não informado'}</p>
+                            </div>
+                            {briefing.colors_to_avoid && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Cores a Evitar</label>
+                                <p className="text-gray-900">{briefing.colors_to_avoid}</p>
+                              </div>
+                            )}
+                            {briefing.symbols_elements && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Símbolos e Elementos</label>
+                                <p className="text-gray-900 mt-1">{briefing.symbols_elements}</p>
+                              </div>
+                            )}
+                            {briefing.typography_preference && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Preferência Tipográfica</label>
+                                <p className="text-gray-900 mt-1">{briefing.typography_preference}</p>
+                              </div>
+                            )}
+                            {briefing.visual_references && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Referências Visuais (Links)</label>
+                                <p className="text-gray-900 mt-1">{briefing.visual_references}</p>
+                              </div>
+                            )}
+                            {briefing.visual_files && briefing.visual_files.length > 0 && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Arquivos de Referência</label>
+                                <div className="mt-2 space-y-2">
+                                  {briefing.visual_files.map((url, index) => (
+                                    <a
+                                      key={index}
+                                      href={url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline block"
+                                    >
+                                      Referência {index + 1}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* ETAPA 4: APLICAÇÕES E FORMATOS */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Monitor className="w-5 h-5 text-green-600" />
+                            Etapa 4: Aplicações e Formatos
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-gray-700">Onde a Logo Será Utilizada</label>
+                              <p className="text-gray-900 mt-1">{briefing.logo_applications || 'Não informado'}</p>
+                            </div>
+                            {briefing.required_formats && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Formatos Necessários</label>
+                                <p className="text-gray-900 mt-1">{briefing.required_formats}</p>
+                              </div>
+                            )}
+                            {briefing.logo_versions && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Versões da Logo</label>
+                                <p className="text-gray-900 mt-1">{briefing.logo_versions}</p>
+                              </div>
+                            )}
+                            {briefing.specific_requirements && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Requisitos Específicos</label>
+                                <p className="text-gray-900 mt-1">{briefing.specific_requirements}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* ETAPA 5: TIMELINE E ORÇAMENTO */}
+                        <section>
+                          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Calendar className="w-5 h-5 text-orange-600" />
+                            Etapa 5: Timeline e Orçamento
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                            <div>
+                              <label className="text-sm font-medium text-gray-700">Prazo de Entrega</label>
+                              <p className="text-gray-900">{briefing.deadline || 'Não informado'}</p>
+                            </div>
+                            {briefing.budget && (
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Orçamento</label>
+                                <p className="text-gray-900">{briefing.budget}</p>
+                              </div>
+                            )}
+                            {briefing.additional_notes && (
+                              <div className="md:col-span-2">
+                                <label className="text-sm font-medium text-gray-700">Observações Adicionais</label>
+                                <p className="text-gray-900 mt-1">{briefing.additional_notes}</p>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+                      </>
+                    ) : isInstitutionalBriefing(briefing) ? (
                       // Detalhes para briefing institucional
                       <>
                         {/* Informações da Empresa */}

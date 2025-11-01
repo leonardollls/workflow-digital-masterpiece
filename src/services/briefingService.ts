@@ -99,6 +99,37 @@ export interface InstitutionalBriefForm {
   additionalNotes?: string
 }
 
+// Tipo para briefing de logo - TODOS OS CAMPOS OPCIONAIS
+export interface LogoBriefForm {
+  companyName?: string
+  businessSegment?: string
+  companyDescription?: string
+  companyValues?: string
+  targetAudience?: string
+  brandPersonality?: string
+  responsibleName?: string
+  currentLogo?: string
+  logoStyle?: string
+  logoType?: string
+  logoMood?: string
+  messagesToConvey?: string
+  competitorLogos?: string
+  whatToAvoid?: string
+  preferredColors?: string
+  colorsToAvoid?: string
+  symbolsElements?: string
+  typographyPreference?: string
+  visualReferences?: string
+  visualFiles?: FileList | null
+  logoApplications?: string
+  requiredFormats?: string
+  logoVersions?: string
+  specificRequirements?: string
+  deliveryDeadline?: string
+  budget?: string
+  additionalNotes?: string
+}
+
 // Tipo para briefing institucional salvo
 export interface InstitutionalBriefing {
   id: string
@@ -1020,6 +1051,224 @@ export const addInstitutionalProposalValue = async (id: string, proposalValue: n
     return data;
   } catch (error) {
     console.error('❌ [INSTITUTIONAL-DEBUG] Erro geral ao adicionar valor da proposta:', error);
+    throw error;
+  }
+};
+
+// ============================================================================
+// BRIEFING DE LOGO
+// ============================================================================
+
+// Tipo para briefing de logo salvo
+export interface LogoBriefing {
+  id: string
+  company_name: string
+  business_segment: string
+  company_description: string
+  company_values?: string
+  target_audience?: string
+  brand_personality?: string
+  responsible_name: string
+  current_logo?: string
+  logo_style: string
+  logo_type: string
+  logo_mood: string
+  messages_to_convey: string
+  competitor_logos?: string
+  what_to_avoid?: string
+  preferred_colors: string
+  colors_to_avoid?: string
+  symbols_elements?: string
+  typography_preference?: string
+  visual_references?: string
+  visual_files?: string[]
+  logo_applications: string
+  required_formats?: string
+  logo_versions?: string
+  specific_requirements?: string
+  deadline: string
+  budget?: string
+  additional_notes?: string
+  created_at: string
+  updated_at: string
+  proposal_value?: number
+  proposal_date?: string
+}
+
+// Função para salvar briefing de logo
+export const submitLogoBriefing = async (formData: LogoBriefForm): Promise<LogoBriefing> => {
+  console.log('🔄 Iniciando submitLogoBriefing...', { 
+    device: navigator.userAgent,
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  });
+  
+  try {
+    // 1. Upload de arquivos de referência visual
+    console.log('📁 [LOGO-DEBUG] Fazendo upload de arquivos...');
+    let visualUrls: string[] = [];
+    
+    try {
+      visualUrls = await uploadFiles(formData.visualFiles, 'briefing-files', 'logo-visual-references');
+      console.log('✅ [LOGO-DEBUG] Upload de arquivos concluído:', { 
+        visualUrls: visualUrls.length
+      });
+    } catch (uploadError) {
+      console.error('❌ [LOGO-DEBUG] Erro no upload de arquivos:', uploadError);
+      // Continuar mesmo com erro no upload
+      visualUrls = [];
+    }
+
+    // 2. Preparar dados para o banco
+    console.log('📝 [LOGO-DEBUG] Preparando dados para o banco...');
+    const briefingData = {
+      // Informações da Empresa
+      company_name: formData.companyName || 'Nome não informado',
+      business_segment: formData.businessSegment || 'Segmento não informado',
+      company_description: formData.companyDescription || 'Descrição não informada',
+      company_values: formData.companyValues || null,
+      target_audience: formData.targetAudience || null,
+      brand_personality: formData.brandPersonality || null,
+      
+      // Informações de Contato
+      responsible_name: formData.responsibleName || 'Responsável não informado',
+      current_logo: formData.currentLogo || null,
+      
+      // Conceito e Estilo
+      logo_style: formData.logoStyle || 'Estilo não informado',
+      logo_type: formData.logoType || 'Tipo não informado',
+      logo_mood: formData.logoMood || 'Mood não informado',
+      messages_to_convey: formData.messagesToConvey || 'Mensagens não informadas',
+      competitor_logos: formData.competitorLogos || null,
+      what_to_avoid: formData.whatToAvoid || null,
+      
+      // Elementos Visuais
+      preferred_colors: formData.preferredColors || 'Cores não especificadas',
+      colors_to_avoid: formData.colorsToAvoid || null,
+      symbols_elements: formData.symbolsElements || null,
+      typography_preference: formData.typographyPreference || null,
+      visual_references: formData.visualReferences || null,
+      visual_files: visualUrls || [],
+      
+      // Aplicações e Formatos
+      logo_applications: formData.logoApplications || 'Aplicações não especificadas',
+      required_formats: formData.requiredFormats || null,
+      logo_versions: formData.logoVersions || null,
+      specific_requirements: formData.specificRequirements || null,
+      
+      // Timeline e Orçamento
+      deadline: formData.deliveryDeadline || 'Valor Acordado na Workana',
+      budget: formData.budget || 'Valor Acordado na Workana',
+      additional_notes: formData.additionalNotes || null,
+      
+      // Metadados
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('📋 [LOGO-DEBUG] Dados preparados para o banco:', {
+      totalFields: Object.keys(briefingData).length,
+      companyName: briefingData.company_name,
+      responsibleName: briefingData.responsible_name,
+      logoStyle: briefingData.logo_style,
+      logoType: briefingData.logo_type,
+      visualFilesCount: briefingData.visual_files?.length || 0
+    });
+
+    // 3. Salvar no Supabase com retry
+    console.log('💾 [LOGO-DEBUG] Salvando no Supabase...');
+    
+    const savedBriefing = await retryOperation(async () => {
+      const { data, error } = await supabase
+        .from('logo_briefings')
+        .insert([briefingData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [LOGO-DEBUG] Erro do Supabase:', error);
+        throw new Error(`Erro do banco: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error('Nenhum dado retornado do banco');
+      }
+
+      return data;
+    }, 3, 1000);
+
+    console.log('✅ [LOGO-DEBUG] Briefing de logo salvo com sucesso:', savedBriefing.id);
+
+    return savedBriefing;
+
+  } catch (error) {
+    console.error('❌ [LOGO-DEBUG] Erro geral no submitLogoBriefing:', error);
+    
+    // Melhorar mensagem de erro
+    let errorMessage = 'Erro desconhecido';
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        errorMessage = 'Briefing duplicado detectado';
+      } else if (error.message.includes('connection')) {
+        errorMessage = 'Erro de conexão com o banco de dados';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Tempo limite excedido';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
+    throw new Error(`Erro ao salvar briefing de logo: ${errorMessage}`);
+  }
+};
+
+// Função para buscar briefings de logo
+export const getLogoBriefings = async (): Promise<LogoBriefing[]> => {
+  console.log('📋 [LOGO-DEBUG] Buscando briefings de logo...');
+  
+  try {
+    const { data, error } = await supabase
+      .from('logo_briefings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ [LOGO-DEBUG] Erro ao buscar briefings:', error);
+      throw new Error(`Erro ao buscar briefings: ${error.message}`);
+    }
+
+    console.log('✅ [LOGO-DEBUG] Briefings encontrados:', data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error('❌ [LOGO-DEBUG] Erro geral ao buscar briefings:', error);
+    throw error;
+  }
+};
+
+// Função para buscar um briefing de logo específico
+export const getLogoBriefing = async (id: string): Promise<LogoBriefing | null> => {
+  console.log('📋 [LOGO-DEBUG] Buscando briefing de logo:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('logo_briefings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        console.log('ℹ️ [LOGO-DEBUG] Briefing não encontrado:', id);
+        return null;
+      }
+      console.error('❌ [LOGO-DEBUG] Erro ao buscar briefing:', error);
+      throw new Error(`Erro ao buscar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [LOGO-DEBUG] Briefing encontrado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [LOGO-DEBUG] Erro geral ao buscar briefing:', error);
     throw error;
   }
 }; 

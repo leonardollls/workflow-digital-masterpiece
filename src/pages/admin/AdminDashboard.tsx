@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { getBriefings, getInstitutionalBriefings } from '@/services/briefingService'
+import { getBriefings, getInstitutionalBriefings, getLogoBriefings } from '@/services/briefingService'
 import { BriefingCard } from '@/components/admin/BriefingCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,10 +23,11 @@ import {
   Calendar,
   Globe,
   MapPin,
-  Upload
+  Upload,
+  Palette
 } from 'lucide-react'
 import type { ClientBriefing } from '@/lib/supabase'
-import type { InstitutionalBriefing } from '@/services/briefingService'
+import type { InstitutionalBriefing, LogoBriefing } from '@/services/briefingService'
 import { supabase } from '@/lib/supabase'
 import { CaptationDashboard } from '@/components/captation/CaptationDashboard'
 import UploadsManagement from '@/components/admin/UploadsManagement'
@@ -36,8 +37,10 @@ const AdminDashboard = () => {
   
   const [briefings, setBriefings] = useState<ClientBriefing[]>([])
   const [institutionalBriefings, setInstitutionalBriefings] = useState<InstitutionalBriefing[]>([])
+  const [logoBriefings, setLogoBriefings] = useState<LogoBriefing[]>([])
   const [filteredBriefings, setFilteredBriefings] = useState<ClientBriefing[]>([])
   const [filteredInstitutionalBriefings, setFilteredInstitutionalBriefings] = useState<InstitutionalBriefing[]>([])
+  const [filteredLogoBriefings, setFilteredLogoBriefings] = useState<LogoBriefing[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -52,7 +55,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     filterBriefings()
-  }, [briefings, institutionalBriefings, searchTerm, budgetFilter, urgencyFilter, segmentFilter, activeTab])
+  }, [briefings, institutionalBriefings, logoBriefings, searchTerm, budgetFilter, urgencyFilter, segmentFilter, activeTab])
 
   const loadAllBriefings = async () => {
     try {
@@ -78,16 +81,19 @@ const AdminDashboard = () => {
       console.log('🔄 [DEBUG] Resultado do teste direto institucionais:', { institutionalTestData, institutionalTestError })
       
       // Carregar dados via services
-      const [landingPagesData, institutionalData] = await Promise.all([
+      const [landingPagesData, institutionalData, logoData] = await Promise.all([
         getBriefings(),
-        getInstitutionalBriefings()
+        getInstitutionalBriefings(),
+        getLogoBriefings()
       ])
       
       console.log('✅ [DEBUG] Landing pages carregados:', landingPagesData?.length || 0)
       console.log('✅ [DEBUG] Briefings institucionais carregados:', institutionalData?.length || 0)
+      console.log('✅ [DEBUG] Briefings de logo carregados:', logoData?.length || 0)
       
       setBriefings(landingPagesData || [])
       setInstitutionalBriefings(institutionalData || [])
+      setLogoBriefings(logoData || [])
       setError('')
     } catch (err: any) {
       console.error('❌ [DEBUG] Erro ao carregar briefings:', err)
@@ -115,6 +121,14 @@ const AdminDashboard = () => {
 
   const handleInstitutionalBriefingUpdate = (updatedBriefing: InstitutionalBriefing) => {
     setInstitutionalBriefings(prev => 
+      prev.map(briefing => 
+        briefing.id === updatedBriefing.id ? updatedBriefing : briefing
+      )
+    )
+  }
+
+  const handleLogoBriefingUpdate = (updatedBriefing: LogoBriefing) => {
+    setLogoBriefings(prev => 
       prev.map(briefing => 
         briefing.id === updatedBriefing.id ? updatedBriefing : briefing
       )
@@ -164,6 +178,33 @@ const AdminDashboard = () => {
       const filteredLocal = localBriefings.filter((b: any) => b.id !== briefingId)
       localStorage.setItem('institutional_briefings', JSON.stringify(filteredLocal))
       console.log('✅ Briefing institucional também removido do localStorage')
+    } catch (error) {
+      console.warn('⚠️ Erro ao limpar localStorage:', error)
+    }
+    
+    // Aguardar um pouco antes de recarregar para evitar conflitos
+    setTimeout(async () => {
+      console.log('🔄 Recarregando dados após exclusão...')
+      await loadAllBriefings()
+    }, 1000)
+  }
+
+  const handleLogoBriefingDelete = async (briefingId: string) => {
+    console.log('🗑️ AdminDashboard: Processando exclusão do briefing de logo:', briefingId)
+    
+    // Remover do estado local imediatamente
+    setLogoBriefings(prev => {
+      const filtered = prev.filter(briefing => briefing.id !== briefingId)
+      console.log('📊 Briefings de logo restantes após exclusão:', filtered.length)
+      return filtered
+    })
+    
+    // Também limpar do localStorage para garantir consistência
+    try {
+      const localBriefings = JSON.parse(localStorage.getItem('logo_briefings') || '[]')
+      const filteredLocal = localBriefings.filter((b: any) => b.id !== briefingId)
+      localStorage.setItem('logo_briefings', JSON.stringify(filteredLocal))
+      console.log('✅ Briefing de logo também removido do localStorage')
     } catch (error) {
       console.warn('⚠️ Erro ao limpar localStorage:', error)
     }
@@ -229,6 +270,25 @@ const AdminDashboard = () => {
     }
 
     setFilteredInstitutionalBriefings(filteredInstitutional)
+
+    // Filtrar briefings de logo
+    let filteredLogo = logoBriefings
+
+    if (searchTerm) {
+      filteredLogo = filteredLogo.filter(briefing =>
+        briefing.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        briefing.business_segment.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        briefing.responsible_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (segmentFilter !== 'all') {
+      filteredLogo = filteredLogo.filter(briefing => 
+        briefing.business_segment.toLowerCase().includes(segmentFilter.toLowerCase())
+      )
+    }
+
+    setFilteredLogoBriefings(filteredLogo)
   }
 
   const handleLogout = async () => {
@@ -241,9 +301,10 @@ const AdminDashboard = () => {
   }
 
   const getStats = () => {
-    const totalBriefings = briefings.length + institutionalBriefings.length
+    const totalBriefings = briefings.length + institutionalBriefings.length + logoBriefings.length
     const totalLandingPages = briefings.length
     const totalInstitutional = institutionalBriefings.length
+    const totalLogos = logoBriefings.length
     
     const urgentCount = briefings.filter(b => {
       const days = parseInt(b.deadline.match(/\d+/)?.[0] || '0')
@@ -260,12 +321,18 @@ const AdminDashboard = () => {
       return sum + (b.proposal_value || 0)
     }, 0)
 
+    // Calcular valor total das propostas de logo
+    const totalLogoProposalValue = logoBriefings.reduce((sum, b) => {
+      return sum + (b.proposal_value || 0)
+    }, 0)
+
     // Contar briefings com propostas
     const briefingsWithProposals = briefings.filter(b => b.proposal_value).length
     const institutionalBriefingsWithProposals = institutionalBriefings.filter(b => b.proposal_value).length
+    const logoBriefingsWithProposals = logoBriefings.filter(b => b.proposal_value).length
 
-    // Combinar segmentos de ambos os tipos
-    const allBriefings = [...briefings, ...institutionalBriefings]
+    // Combinar segmentos de todos os tipos
+    const allBriefings = [...briefings, ...institutionalBriefings, ...logoBriefings]
     const segmentCounts = allBriefings.reduce((acc, b) => {
       acc[b.business_segment] = (acc[b.business_segment] || 0) + 1
       return acc
@@ -279,9 +346,10 @@ const AdminDashboard = () => {
       totalBriefings,
       totalLandingPages,
       totalInstitutional,
+      totalLogos,
       urgentCount,
-      totalProposalValue: totalProposalValue + totalInstitutionalProposalValue,
-      briefingsWithProposals: briefingsWithProposals + institutionalBriefingsWithProposals,
+      totalProposalValue: totalProposalValue + totalInstitutionalProposalValue + totalLogoProposalValue,
+      briefingsWithProposals: briefingsWithProposals + institutionalBriefingsWithProposals + logoBriefingsWithProposals,
       topSegment: topSegment[0] || 'Nenhum'
     }
   }
@@ -478,7 +546,7 @@ const AdminDashboard = () => {
 
         {/* Abas para diferentes tipos de briefing */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="landing-pages" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
               Landing Pages ({stats.totalLandingPages})
@@ -486,6 +554,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="institutional" className="flex items-center gap-2">
               <Globe className="w-4 h-4" />
               Sites Institucionais ({stats.totalInstitutional})
+            </TabsTrigger>
+            <TabsTrigger value="logos" className="flex items-center gap-2">
+              <Palette className="w-4 h-4" />
+              Logos ({stats.totalLogos})
             </TabsTrigger>
             <TabsTrigger value="uploads" className="flex items-center gap-2">
               <Upload className="w-4 h-4" />
@@ -576,6 +648,49 @@ const AdminDashboard = () => {
                       briefing={briefing} 
                       onUpdate={handleInstitutionalBriefingUpdate}
                       onDelete={handleInstitutionalBriefingDelete}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Tab de Logos */}
+          <TabsContent value="logos">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Briefings de Logos ({filteredLogoBriefings.length})
+                </h2>
+                <Button className="gap-2">
+                  <Download className="w-4 h-4" />
+                  Exportar
+                </Button>
+              </div>
+
+              {filteredLogoBriefings.length === 0 ? (
+                <Card>
+                  <CardContent className="flex flex-col items-center justify-center py-12">
+                    <Palette className="w-12 h-12 text-gray-400 mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhum briefing de logo encontrado
+                    </h3>
+                    <p className="text-gray-500 text-center max-w-md">
+                      {logoBriefings.length === 0 
+                        ? "Ainda não há briefings de logos enviados. Quando os clientes enviarem briefings de logo, eles aparecerão aqui."
+                        : "Nenhum briefing corresponde aos filtros aplicados. Tente ajustar os critérios de busca."
+                      }
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {filteredLogoBriefings.map((briefing) => (
+                    <BriefingCard 
+                      key={briefing.id} 
+                      briefing={briefing as any} 
+                      onUpdate={handleLogoBriefingUpdate}
+                      onDelete={handleLogoBriefingDelete}
                     />
                   ))}
                 </div>

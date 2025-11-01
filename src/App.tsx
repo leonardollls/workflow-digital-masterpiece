@@ -11,6 +11,7 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const ClientBrief = lazy(() => import("./pages/ClientBrief"));
 const CustomBrief = lazy(() => import("./pages/CustomBrief"));
 const InstitutionalBrief = lazy(() => import("./pages/InstitutionalBrief"));
+const LogoBrief = lazy(() => import("./pages/LogoBrief"));
 const ClientUpload = lazy(() => import("./pages/ClientUpload"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -42,6 +43,7 @@ function App() {
               <Route path="/briefing-cliente" element={<ClientBrief />} />
               <Route path="/briefing-personalizado" element={<CustomBrief />} />
               <Route path="/briefing-institucional" element={<InstitutionalBrief />} />
+              <Route path="/briefing-logo" element={<LogoBrief />} />
               <Route path="/upload-cliente" element={<ClientUpload />} />
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={
