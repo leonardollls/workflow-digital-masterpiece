@@ -77,14 +77,23 @@ Após a extração, você deve ter:
 
 **Antes de testar**, você DEVE criar um usuário administrador:
 
-1. **Acesse**: https://supabase.com/dashboard/project/sphiqzwnkuzfiwejjlav
+✅ **USUÁRIO JÁ CRIADO NO NOVO PROJETO!**
+
+**Credenciais de Acesso:**
+- **Email**: `admin@workflowdigital.com`
+- **Senha**: `AdminWorkflow2024!`
+- **Status**: Email confirmado automaticamente
+- **Projeto**: Workflow Services 2 (wbtyimthsgdsftgwezop)
+
+**Para criar usuários adicionais:**
+1. **Acesse**: https://supabase.com/dashboard/project/wbtyimthsgdsftgwezop
 2. **Vá em**: Authentication → Users
-3. **Clique**: Invite User
+3. **Clique**: Add User
 4. **Configure**:
-   - **Email**: `admin@workflowdigital.com`
-   - **Password**: `AdminWorkflow2024!` (ou sua escolha)
+   - **Email**: Novo email administrativo
+   - **Password**: Senha segura
    - **✅ IMPORTANTE**: Marque "Auto Confirm User"
-5. **Envie o convite**
+5. **Crie o usuário**
 
 ## 🧪 **Testar o Sistema**
 
