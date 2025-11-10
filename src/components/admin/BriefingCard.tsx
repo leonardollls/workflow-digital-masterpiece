@@ -48,7 +48,7 @@ import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { EditBriefingDialog } from './EditBriefingDialog'
 import { ProposalValueDialog } from './ProposalValueDialog'
-import { deleteBriefing, deleteInstitutionalBriefing } from '@/services/briefingService'
+import { deleteBriefing, deleteInstitutionalBriefing, deleteLogoBriefing } from '@/services/briefingService'
 
 interface BriefingCardProps {
   briefing: ClientBriefing | InstitutionalBriefing | LogoBriefing
@@ -108,13 +108,16 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
     try {
       console.log('🗑️ Iniciando exclusão do briefing:', {
         id: briefing.id,
-        company: briefing.company_name
+        company: briefing.company_name,
+        type: isLogoBriefing(briefing) ? 'logo' : isInstitutionalBriefing(briefing) ? 'institutional' : 'client'
       })
       
-      if (isInstitutionalBriefing(briefing)) {
+      if (isLogoBriefing(briefing)) {
+        await deleteLogoBriefing(briefing.id)
+      } else if (isInstitutionalBriefing(briefing)) {
         await deleteInstitutionalBriefing(briefing.id)
       } else {
-      await deleteBriefing(briefing.id)
+        await deleteBriefing(briefing.id)
       }
       
       console.log('✅ Briefing excluído com sucesso, notificando componente pai')

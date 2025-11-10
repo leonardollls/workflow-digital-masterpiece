@@ -1026,6 +1026,28 @@ export const deleteInstitutionalBriefing = async (id: string): Promise<void> => 
   }
 };
 
+// Função para deletar briefing de logo
+export const deleteLogoBriefing = async (id: string): Promise<void> => {
+  console.log('🗑️ [LOGO-DEBUG] Deletando briefing de logo:', id);
+  
+  try {
+    const { error } = await supabase
+      .from('logo_briefings')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ [LOGO-DEBUG] Erro ao deletar briefing:', error);
+      throw new Error(`Erro ao deletar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [LOGO-DEBUG] Briefing de logo deletado:', id);
+  } catch (error) {
+    console.error('❌ [LOGO-DEBUG] Erro geral ao deletar briefing:', error);
+    throw error;
+  }
+};
+
 // Função para adicionar valor da proposta ao briefing institucional
 export const addInstitutionalProposalValue = async (id: string, proposalValue: number): Promise<InstitutionalBriefing> => {
   console.log('💰 [INSTITUTIONAL-DEBUG] Adicionando valor da proposta:', { id, proposalValue });

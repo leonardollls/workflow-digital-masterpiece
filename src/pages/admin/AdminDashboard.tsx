@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { getBriefings, getInstitutionalBriefings, getLogoBriefings } from '@/services/briefingService'
+import { getBriefings, getInstitutionalBriefings, getLogoBriefings, deleteLogoBriefing } from '@/services/briefingService'
 import { BriefingCard } from '@/components/admin/BriefingCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -192,21 +192,30 @@ const AdminDashboard = () => {
   const handleLogoBriefingDelete = async (briefingId: string) => {
     console.log('🗑️ AdminDashboard: Processando exclusão do briefing de logo:', briefingId)
     
-    // Remover do estado local imediatamente
-    setLogoBriefings(prev => {
-      const filtered = prev.filter(briefing => briefing.id !== briefingId)
-      console.log('📊 Briefings de logo restantes após exclusão:', filtered.length)
-      return filtered
-    })
-    
-    // Também limpar do localStorage para garantir consistência
     try {
-      const localBriefings = JSON.parse(localStorage.getItem('logo_briefings') || '[]')
-      const filteredLocal = localBriefings.filter((b: any) => b.id !== briefingId)
-      localStorage.setItem('logo_briefings', JSON.stringify(filteredLocal))
-      console.log('✅ Briefing de logo também removido do localStorage')
+      // Excluir do banco de dados primeiro
+      await deleteLogoBriefing(briefingId)
+      console.log('✅ Briefing de logo excluído do banco de dados')
+      
+      // Remover do estado local
+      setLogoBriefings(prev => {
+        const filtered = prev.filter(briefing => briefing.id !== briefingId)
+        console.log('📊 Briefings de logo restantes após exclusão:', filtered.length)
+        return filtered
+      })
+      
+      // Também limpar do localStorage para garantir consistência
+      try {
+        const localBriefings = JSON.parse(localStorage.getItem('logo_briefings') || '[]')
+        const filteredLocal = localBriefings.filter((b: any) => b.id !== briefingId)
+        localStorage.setItem('logo_briefings', JSON.stringify(filteredLocal))
+        console.log('✅ Briefing de logo também removido do localStorage')
+      } catch (error) {
+        console.warn('⚠️ Erro ao limpar localStorage:', error)
+      }
     } catch (error) {
-      console.warn('⚠️ Erro ao limpar localStorage:', error)
+      console.error('❌ Erro ao excluir briefing de logo:', error)
+      alert('Erro ao excluir briefing. Tente novamente.')
     }
     
     // Aguardar um pouco antes de recarregar para evitar conflitos
