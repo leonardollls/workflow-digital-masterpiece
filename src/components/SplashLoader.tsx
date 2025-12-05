@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface SplashLoaderProps {
   onComplete: () => void;
@@ -8,7 +8,7 @@ interface SplashLoaderProps {
 /**
  * Splash Loader with full visual effects but optimized for performance
  * - Shorter duration (1200ms default)
- * - No audio effects
+ * - Audio effects (lazy initialized on user interaction)
  * - Uses composited animations only (transform/opacity)
  */
 const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
@@ -16,17 +16,127 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
   const [phase, setPhase] = useState<'loading' | 'revealing' | 'complete'>('loading');
   const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const hasPlayedWhooshRef = useRef(false);
+  const hasPlayedCompletionRef = useRef(false);
 
   const words = ['Inovação', 'Design', 'Performance', 'Resultados'];
+
+  // Initialize Web Audio API lazily (only after user interaction)
+  const initAudio = useCallback((): AudioContext | null => {
+    try {
+      if (!audioContextRef.current) {
+        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioContextClass) {
+          audioContextRef.current = new AudioContextClass();
+        }
+      }
+      if (audioContextRef.current?.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+      return audioContextRef.current;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  // Whoosh sound effect
+  const playWhooshSound = useCallback(() => {
+    if (!audioEnabled || hasPlayedWhooshRef.current) return;
+    try {
+      const ctx = audioContextRef.current;
+      if (!ctx || ctx.state !== 'running') return;
+      hasPlayedWhooshRef.current = true;
+
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.4);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2000, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.4);
+
+      gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+
+      oscillator.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.4);
+    } catch {
+      // Silent fail
+    }
+  }, [audioEnabled]);
+
+  // Completion chime sound
+  const playCompletionSound = useCallback(() => {
+    if (!audioEnabled || hasPlayedCompletionRef.current) return;
+    try {
+      const ctx = audioContextRef.current;
+      if (!ctx || ctx.state !== 'running') return;
+      hasPlayedCompletionRef.current = true;
+
+      const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5 chord
+      frequencies.forEach((freq, index) => {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq, ctx.currentTime);
+
+        const startTime = ctx.currentTime + index * 0.06;
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, startTime + 0.04);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.6);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.6);
+      });
+    } catch {
+      // Silent fail
+    }
+  }, [audioEnabled]);
+
+  // Enable audio on user interaction
+  const handleEnableAudio = useCallback(() => {
+    if (audioEnabled) return;
+    const ctx = initAudio();
+    if (ctx?.state === 'running') {
+      setAudioEnabled(true);
+      if (!hasPlayedWhooshRef.current && progress > 10) {
+        setTimeout(playWhooshSound, 50);
+      }
+    }
+  }, [audioEnabled, initAudio, progress, playWhooshSound]);
+
+  // Listen for user interactions to enable audio
+  useEffect(() => {
+    const handleInteraction = () => handleEnableAudio();
+    document.addEventListener('click', handleInteraction, { passive: true });
+    document.addEventListener('touchstart', handleInteraction, { passive: true });
+    return () => {
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+  }, [handleEnableAudio]);
 
   // Word cycling animation
   useEffect(() => {
     if (phase !== 'loading') return;
-
     const wordInterval = setInterval(() => {
       setCurrentWordIndex((prev) => (prev + 1) % words.length);
     }, 400);
-
     return () => clearInterval(wordInterval);
   }, [phase, words.length]);
 
@@ -57,12 +167,17 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       const elapsed = Date.now() - startTime;
       const newProgress = Math.min((elapsed / duration) * 100, 100);
 
+      // Play whoosh at 15% progress
+      if (newProgress >= 15 && !hasPlayedWhooshRef.current && audioEnabled) {
+        playWhooshSound();
+      }
+
       setProgress(newProgress);
 
       if (newProgress >= 100) {
         setPhase('revealing');
+        playCompletionSound();
         
-        // Trigger reveal animation
         setTimeout(() => {
           setPhase('complete');
           setTimeout(onComplete, 400);
@@ -79,10 +194,11 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [duration, onComplete]);
+  }, [duration, onComplete, audioEnabled, playWhooshSound, playCompletionSound]);
 
   return (
     <div
+      onClick={handleEnableAudio}
       className={`splash-loader fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden transition-opacity duration-500 ease-out ${
         phase === 'complete' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
@@ -203,11 +319,10 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
           </span>
         </h1>
 
-        {/* Animated Text */}
+        {/* Animated Text - sem cursor */}
         <div className="h-7 mb-6">
           <p className="text-base sm:text-lg text-purple-300/80 font-light tracking-wide">
             <span className="inline-block min-w-[120px]">{displayText}</span>
-            <span className="animate-blink text-purple-400">|</span>
           </p>
         </div>
 
