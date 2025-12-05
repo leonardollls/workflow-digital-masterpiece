@@ -14,14 +14,11 @@ const WorkflowFooter = () => {
       <div className="container mx-auto px-6">
         {/* Simple Footer Content */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Brand */}
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl font-display font-bold">
-              Work<span className="text-workflow-zen">flow</span>
-            </h3>
-            <div className="text-white/60 text-sm">
-              © {currentYear} Todos os direitos reservados.
-            </div>
+          {/* Copyright */}
+          <div className="text-white/60 text-sm text-center md:text-left">
+            <span className="block md:inline">Workflow Services © {currentYear}</span>
+            <span className="hidden md:inline"> </span>
+            <span className="block md:inline">Todos os direitos reservados.</span>
           </div>
           
           {/* Simple Links */}

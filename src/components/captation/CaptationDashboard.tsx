@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { 
   MapPin, 
@@ -21,14 +22,34 @@ import {
   Clock,
   PlayCircle,
   DollarSign,
-  Send
+  Send,
+  FileJson,
+  Upload,
+  Star,
+  Map,
+  CheckSquare,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Phone,
+  Download,
+  Calendar,
+  AlertCircle,
+  LayoutGrid,
+  LayoutList,
+  Tags,
+  BarChart3,
+  Edit2
 } from 'lucide-react'
 import type { 
   State, 
   City, 
   Category, 
   CaptationSite, 
-  CaptationStats 
+  CaptationStats,
+  ProposalStatus,
+  SortField,
+  SortOrder
 } from '@/types/captation'
 import {
   getCaptationSites,
@@ -37,11 +58,18 @@ import {
   getCities,
   getCitiesByState,
   getCategories,
-  updateCaptationSite
+  updateCaptationSite,
+  bulkUpdateStatus
 } from '@/services/captationService'
 import { AddSiteDialog } from './AddSiteDialog'
 import { EditSiteDialog } from './EditSiteDialog'
 import { StatusChangeDialog } from './StatusChangeDialog'
+import { JsonImportDialog } from './JsonImportDialog'
+import { BulkStatusDialog } from './BulkStatusDialog'
+import { ExportDialog } from './ExportDialog'
+import { TagsManager } from './TagsManager'
+import { CaptationAnalytics } from './CaptationAnalytics'
+import { ProposalTemplates } from './ProposalTemplates'
 
 export const CaptationDashboard = () => {
   const [states, setStates] = useState<State[]>([])
@@ -54,13 +82,28 @@ export const CaptationDashboard = () => {
   const [selectedState, setSelectedState] = useState<string>('all')
   const [selectedCity, setSelectedCity] = useState<string>('all')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [selectedStatus, setSelectedStatus] = useState<ProposalStatus | 'all'>('all')
+  const [sortField, setSortField] = useState<SortField>('created_at')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards')
+  const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
+  const ITEMS_PER_PAGE = 25
+  
   const [showAddDialog, setShowAddDialog] = useState(false)
+  const [showImportDialog, setShowImportDialog] = useState(false)
+  const [showBulkStatusDialog, setShowBulkStatusDialog] = useState(false)
+  const [showExportDialog, setShowExportDialog] = useState(false)
+  const [showTagsManager, setShowTagsManager] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
+  const [showProposalTemplates, setShowProposalTemplates] = useState(false)
   const [editingSite, setEditingSite] = useState<CaptationSite | null>(null)
   const [statusChangeSite, setStatusChangeSite] = useState<CaptationSite | null>(null)
+  const [selectedSites, setSelectedSites] = useState<string[]>([])
+  const [bulkUpdating, setBulkUpdating] = useState(false)
 
   // Carregar dados iniciais
   useEffect(() => {
@@ -71,8 +114,9 @@ export const CaptationDashboard = () => {
   useEffect(() => {
     if (!loading) {
       loadSitesAndStats()
+      setCurrentPage(1) // Reset para primeira página quando filtros mudam
     }
-  }, [selectedState, selectedCity, selectedCategory])
+  }, [selectedState, selectedCity, selectedCategory, selectedStatus])
 
   // Filtrar cidades quando estado mudar
   useEffect(() => {
@@ -163,6 +207,39 @@ export const CaptationDashboard = () => {
     }
   }
 
+  // Funções de seleção em massa
+  const toggleSiteSelection = (siteId: string) => {
+    setSelectedSites(prev => 
+      prev.includes(siteId) 
+        ? prev.filter(id => id !== siteId)
+        : [...prev, siteId]
+    )
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedSites.length === paginatedSites.length) {
+      setSelectedSites([])
+    } else {
+      setSelectedSites(paginatedSites.map(site => site.id))
+    }
+  }
+
+  const handleBulkStatusChange = async (newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid', serviceValue?: number) => {
+    if (selectedSites.length === 0) return
+    
+    try {
+      setBulkUpdating(true)
+      await bulkUpdateStatus(selectedSites, newStatus, serviceValue)
+      setSelectedSites([])
+      await loadSitesAndStats()
+    } catch (err: any) {
+      console.error('Erro ao atualizar status em massa:', err)
+    } finally {
+      setBulkUpdating(false)
+      setShowBulkStatusDialog(false)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'to_send':
@@ -180,17 +257,85 @@ export const CaptationDashboard = () => {
     }
   }
 
-  const filteredSites = sites.filter(site => {
-    if (!searchTerm) return true
-    return (
-      site.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      site.city?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      site.category?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      site.contact_person?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  })
+  // Filtrar sites
+  const filteredSites = sites
+    .filter(site => {
+      // Filtro por status
+      if (selectedStatus !== 'all' && site.proposal_status !== selectedStatus) {
+        return false
+      }
+      // Filtro por busca
+      if (searchTerm) {
+        const search = searchTerm.toLowerCase()
+        return (
+          site.company_name.toLowerCase().includes(search) ||
+          site.city?.name.toLowerCase().includes(search) ||
+          site.category?.name.toLowerCase().includes(search) ||
+          site.contact_person?.toLowerCase().includes(search) ||
+          site.phone?.includes(search)
+        )
+      }
+      return true
+    })
+    // Ordenar
+    .sort((a, b) => {
+      let comparison = 0
+      switch (sortField) {
+        case 'company_name':
+          comparison = a.company_name.localeCompare(b.company_name)
+          break
+        case 'google_rating':
+          comparison = (a.google_rating || 0) - (b.google_rating || 0)
+          break
+        case 'proposal_status':
+          const statusOrder = ['pending', 'to_send', 'accepted', 'in_progress', 'paid', 'rejected']
+          comparison = statusOrder.indexOf(a.proposal_status) - statusOrder.indexOf(b.proposal_status)
+          break
+        case 'next_contact_date':
+          const dateA = a.next_contact_date ? new Date(a.next_contact_date).getTime() : Infinity
+          const dateB = b.next_contact_date ? new Date(b.next_contact_date).getTime() : Infinity
+          comparison = dateA - dateB
+          break
+        case 'created_at':
+        default:
+          comparison = new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
+          break
+      }
+      return sortOrder === 'asc' ? comparison : -comparison
+    })
+
+  // Paginação
+  const totalPages = Math.ceil(filteredSites.length / ITEMS_PER_PAGE)
+  const paginatedSites = filteredSites.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
 
   const availableCities = selectedState !== 'all' ? stateCities : []
+
+  // Função auxiliar para verificar se contato está atrasado
+  const isContactOverdue = (site: CaptationSite) => {
+    if (!site.next_contact_date) return false
+    return new Date(site.next_contact_date) < new Date()
+  }
+
+  // Função para verificar se site é novo (< 7 dias)
+  const isNewSite = (site: CaptationSite) => {
+    if (!site.created_at) return false
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    return new Date(site.created_at) > sevenDaysAgo
+  }
+
+  // Função para abrir WhatsApp
+  const openWhatsApp = (site: CaptationSite) => {
+    if (!site.phone) return
+    const phone = site.phone.replace(/\D/g, '')
+    const template = site.category?.whatsapp_template || 
+      `Olá! Vi seu estabelecimento ${site.company_name} e gostaria de apresentar uma proposta de otimização para seu site.`
+    const message = encodeURIComponent(template)
+    window.open(`https://wa.me/55${phone}?text=${message}`, '_blank')
+  }
 
   if (loading) {
     return (
@@ -202,9 +347,9 @@ export const CaptationDashboard = () => {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-        <p className="text-red-800">Erro: {error}</p>
-        <Button onClick={loadInitialData} variant="outline" size="sm" className="mt-2">
+      <div className="p-4 bg-red-900/30 border border-red-800 rounded-lg">
+        <p className="text-red-300">Erro: {error}</p>
+        <Button onClick={loadInitialData} variant="outline" size="sm" className="mt-2 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700">
           Tentar Novamente
         </Button>
       </div>
@@ -216,85 +361,131 @@ export const CaptationDashboard = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Checklists de Captação</h2>
-          <p className="text-gray-600">Gerencie sites captados por estado, cidade e categoria</p>
+          <h2 className="text-2xl font-bold text-white">Checklists de Captação</h2>
+          <p className="text-slate-400">Gerencie sites captados por estado, cidade e categoria</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Adicionar Site
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setShowAnalytics(true)} 
+            variant="outline"
+            className="gap-2 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+            disabled={!stats}
+          >
+            <BarChart3 className="w-4 h-4" />
+            Analytics
+          </Button>
+          <Button 
+            onClick={() => setShowProposalTemplates(true)} 
+            variant="outline"
+            size="icon"
+            title="Templates de Proposta"
+            className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+          >
+            <FileText className="w-4 h-4" />
+          </Button>
+          <Button 
+            onClick={() => setShowTagsManager(true)} 
+            variant="outline"
+            size="icon"
+            title="Gerenciar Tags"
+            className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+          >
+            <Tags className="w-4 h-4" />
+          </Button>
+          <Button 
+            onClick={() => setShowExportDialog(true)} 
+            variant="outline"
+            className="gap-2 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+            disabled={filteredSites.length === 0}
+          >
+            <Download className="w-4 h-4" />
+            Exportar
+          </Button>
+          <Button 
+            onClick={() => setShowImportDialog(true)} 
+            variant="outline"
+            className="gap-2 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+          >
+            <FileJson className="w-4 h-4" />
+            Importar JSON
+          </Button>
+          <Button onClick={() => setShowAddDialog(true)} className="gap-2 bg-purple-600 hover:bg-purple-700">
+            <Plus className="w-4 h-4" />
+            Adicionar Site
+          </Button>
+        </div>
       </div>
 
       {/* Estatísticas */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Sites</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Total de Sites</CardTitle>
+              <Building2 className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.total_sites}</div>
+              <div className="text-2xl font-bold text-white">{stats.total_sites}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pendentes</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Pendentes</CardTitle>
+              <Clock className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">{stats.pending_proposals}</div>
+              <div className="text-2xl font-bold text-yellow-400">{stats.pending_proposals}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">A Enviar</CardTitle>
-              <Send className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">A Enviar</CardTitle>
+              <Send className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{stats.to_send_proposals}</div>
+              <div className="text-2xl font-bold text-orange-400">{stats.to_send_proposals}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Aceitas</CardTitle>
-              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Aceitas</CardTitle>
+              <CheckCircle className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.accepted_proposals}</div>
+              <div className="text-2xl font-bold text-emerald-400">{stats.accepted_proposals}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Em Execução</CardTitle>
-              <PlayCircle className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Em Execução</CardTitle>
+              <PlayCircle className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{stats.in_progress_proposals}</div>
+              <div className="text-2xl font-bold text-blue-400">{stats.in_progress_proposals}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Projetos Pagos</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Projetos Pagos</CardTitle>
+              <DollarSign className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{stats.paid_proposals}</div>
+              <div className="text-2xl font-bold text-purple-400">{stats.paid_proposals}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Valor Total Pago</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Valor Total Pago</CardTitle>
+              <TrendingUp className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-green-600">
+              <div className="text-xl font-bold text-emerald-400">
                 R$ {stats.total_paid_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </div>
             </CardContent>
@@ -303,35 +494,36 @@ export const CaptationDashboard = () => {
       )}
 
       {/* Filtros */}
-      <Card>
+      <Card className="bg-slate-900 border-slate-800">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-slate-200">
             <Filter className="w-5 h-5" />
             Filtros
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <CardContent className="space-y-4">
+          {/* Linha 1: Busca e Localização */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="relative lg:col-span-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-4 h-4" />
               <Input
-                placeholder="Buscar sites..."
+                placeholder="Buscar por nome, cidade, telefone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
 
             <Select value={selectedState} onValueChange={setSelectedState}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecionar Estado" />
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue placeholder="Estado" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Estados</SelectItem>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todos os Estados</SelectItem>
                 {states
                   .filter(state => state.name !== 'Não identificada')
                   .map(state => (
-                    <SelectItem key={state.id} value={state.id}>
+                    <SelectItem key={state.id} value={state.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
                       {state.name}
                     </SelectItem>
                   ))}
@@ -339,11 +531,11 @@ export const CaptationDashboard = () => {
             </Select>
 
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecionar Cidade" />
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue placeholder="Cidade" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as Cidades</SelectItem>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todas as Cidades</SelectItem>
                 {availableCities
                   .sort((a, b) => {
                     if (a.name === 'Não identificada') return -1
@@ -351,21 +543,21 @@ export const CaptationDashboard = () => {
                     return a.name.localeCompare(b.name)
                   })
                   .map(city => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name} {city.population ? `(${city.population.toLocaleString()} hab.)` : ''}
+                    <SelectItem key={city.id} value={city.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                      {city.name}
                     </SelectItem>
                   ))}
               </SelectContent>
             </Select>
 
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecionar Categoria" />
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue placeholder="Categoria" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as Categorias</SelectItem>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todas as Categorias</SelectItem>
                 {categories.map(category => (
-                  <SelectItem key={category.id} value={category.id}>
+                  <SelectItem key={category.id} value={category.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
                     <div className="flex items-center gap-2">
                       <div 
                         className="w-3 h-3 rounded-full" 
@@ -377,6 +569,100 @@ export const CaptationDashboard = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Linha 2: Status, Ordenação e Ações */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <Select value={selectedStatus} onValueChange={(v) => setSelectedStatus(v as ProposalStatus | 'all')}>
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todos os Status</SelectItem>
+                <SelectItem value="pending" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3 h-3 text-gray-400" /> Pendente
+                  </div>
+                </SelectItem>
+                <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <Send className="w-3 h-3 text-orange-400" /> A Enviar
+                  </div>
+                </SelectItem>
+                <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-3 h-3 text-emerald-400" /> Aceita
+                  </div>
+                </SelectItem>
+                <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="w-3 h-3 text-red-400" /> Negada
+                  </div>
+                </SelectItem>
+                <SelectItem value="in_progress" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <PlayCircle className="w-3 h-3 text-blue-400" /> Em Execução
+                  </div>
+                </SelectItem>
+                <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="w-3 h-3 text-purple-400" /> Pago
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortField} onValueChange={(v) => setSortField(v as SortField)}>
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue placeholder="Ordenar por" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="created_at" className="text-slate-200 focus:bg-slate-700 focus:text-white">Data de Criação</SelectItem>
+                <SelectItem value="company_name" className="text-slate-200 focus:bg-slate-700 focus:text-white">Nome da Empresa</SelectItem>
+                <SelectItem value="google_rating" className="text-slate-200 focus:bg-slate-700 focus:text-white">Avaliação Google</SelectItem>
+                <SelectItem value="proposal_status" className="text-slate-200 focus:bg-slate-700 focus:text-white">Status</SelectItem>
+                <SelectItem value="next_contact_date" className="text-slate-200 focus:bg-slate-700 focus:text-white">Próximo Contato</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as SortOrder)}>
+              <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="desc" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <ArrowDown className="w-3 h-3" /> Decrescente
+                  </div>
+                </SelectItem>
+                <SelectItem value="asc" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <ArrowUp className="w-3 h-3" /> Crescente
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === 'cards' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('cards')}
+                title="Visualização em cards"
+                className={viewMode === 'cards' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('table')}
+                title="Visualização em tabela"
+                className={viewMode === 'table' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}
+              >
+                <LayoutList className="w-4 h-4" />
+              </Button>
+            </div>
 
             <Button 
               variant="outline" 
@@ -384,8 +670,13 @@ export const CaptationDashboard = () => {
                 setSelectedState('all')
                 setSelectedCity('all')
                 setSelectedCategory('all')
+                setSelectedStatus('all')
                 setSearchTerm('')
+                setSortField('created_at')
+                setSortOrder('desc')
+                setCurrentPage(1)
               }}
+              className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
             >
               Limpar Filtros
             </Button>
@@ -395,42 +686,234 @@ export const CaptationDashboard = () => {
 
       {/* Lista de Sites */}
       <div className="grid gap-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold">
-            Sites Captados ({filteredSites.length})
-          </h3>
+        <div className="flex justify-between items-center flex-wrap gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
+            <h3 className="text-lg font-semibold text-white">
+              Sites Captados ({filteredSites.length})
+            </h3>
+            {totalPages > 1 && (
+              <span className="text-sm text-slate-400">
+                Página {currentPage} de {totalPages}
+              </span>
+            )}
+            {paginatedSites.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  checked={selectedSites.length === paginatedSites.length && paginatedSites.length > 0}
+                  onCheckedChange={toggleSelectAll}
+                  id="select-all"
+                />
+                <label htmlFor="select-all" className="text-sm text-slate-400 cursor-pointer">
+                  Selecionar página
+                </label>
+              </div>
+            )}
+          </div>
+          {selectedSites.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-slate-700 text-slate-200">
+                {selectedSites.length} selecionado{selectedSites.length > 1 ? 's' : ''}
+              </Badge>
+              <Button 
+                size="sm" 
+                onClick={() => setShowBulkStatusDialog(true)}
+                disabled={bulkUpdating}
+                className="gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                <CheckSquare className="w-4 h-4" />
+                Alterar Status em Massa
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setSelectedSites([])}
+                className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+              >
+                Limpar Seleção
+              </Button>
+            </div>
+          )}
         </div>
 
         {filteredSites.length === 0 ? (
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardContent className="text-center py-8">
-              <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">Nenhum site encontrado com os filtros aplicados</p>
+              <Building2 className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+              <p className="text-slate-400">Nenhum site encontrado com os filtros aplicados</p>
+            </CardContent>
+          </Card>
+        ) : viewMode === 'table' ? (
+          /* Visualização em Tabela */
+          <Card className="bg-slate-900 border-slate-800">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-800 border-b border-slate-700">
+                    <tr>
+                      <th className="p-3 text-left">
+                        <Checkbox
+                          checked={selectedSites.length === paginatedSites.length && paginatedSites.length > 0}
+                          onCheckedChange={toggleSelectAll}
+                        />
+                      </th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Empresa</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Localização</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Categoria</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Telefone</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Avaliação</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Status</th>
+                      <th className="p-3 text-left text-sm font-medium text-slate-300">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    {paginatedSites.map(site => (
+                      <tr 
+                        key={site.id} 
+                        className={`hover:bg-slate-800 ${selectedSites.includes(site.id) ? 'bg-purple-900/30' : ''} ${isContactOverdue(site) ? 'border-l-4 border-l-red-500' : ''}`}
+                      >
+                        <td className="p-3">
+                          <Checkbox
+                            checked={selectedSites.includes(site.id)}
+                            onCheckedChange={() => toggleSiteSelection(site.id)}
+                          />
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-sm text-slate-200">{site.company_name}</span>
+                            {isNewSite(site) && (
+                              <Badge variant="secondary" className="bg-emerald-900/50 text-emerald-400 text-xs">
+                                Novo
+                              </Badge>
+                            )}
+                          </div>
+                          {site.website_url && (
+                            <a 
+                              href={site.website_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-400 hover:underline"
+                            >
+                              {site.website_url.replace(/^https?:\/\//, '').slice(0, 30)}...
+                            </a>
+                          )}
+                        </td>
+                        <td className="p-3 text-sm text-slate-400">
+                          {site.city?.name}, {site.city?.state?.abbreviation}
+                        </td>
+                        <td className="p-3">
+                          {site.category && (
+                            <Badge 
+                              variant="outline"
+                              style={{ borderColor: site.category.color, color: site.category.color }}
+                              className="text-xs"
+                            >
+                              {site.category.name}
+                            </Badge>
+                          )}
+                        </td>
+                        <td className="p-3 text-sm text-slate-400">
+                          {site.phone || '-'}
+                        </td>
+                        <td className="p-3">
+                          {site.google_rating ? (
+                            <span className="flex items-center gap-1 text-sm text-amber-400">
+                              <Star className="w-3 h-3 fill-amber-400" />
+                              {site.google_rating}
+                            </span>
+                          ) : <span className="text-slate-500">-</span>}
+                        </td>
+                        <td className="p-3">
+                          {getStatusBadge(site.proposal_status)}
+                        </td>
+                        <td className="p-3">
+                          <div className="flex gap-1">
+                            {site.phone && (
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                className="h-8 w-8 p-0 text-emerald-400 hover:text-emerald-300 hover:bg-slate-800"
+                                onClick={() => openWhatsApp(site)}
+                                title="WhatsApp"
+                              >
+                                <Phone className="w-4 h-4" />
+                              </Button>
+                            )}
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                              onClick={() => setEditingSite(site)}
+                              title="Editar"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </CardContent>
           </Card>
         ) : (
+          /* Visualização em Cards */
           <div className="grid gap-4">
-            {filteredSites.map(site => (
-              <Card key={site.id} className="hover:shadow-md transition-shadow">
+            {paginatedSites.map(site => (
+              <Card 
+                key={site.id} 
+                className={`bg-slate-900 border-slate-800 hover:shadow-lg transition-shadow ${selectedSites.includes(site.id) ? 'ring-2 ring-purple-500 bg-purple-900/20' : ''} ${isContactOverdue(site) ? 'border-l-4 border-l-red-500' : ''}`}
+              >
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h4 className="text-lg font-semibold">{site.company_name}</h4>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          {site.city?.name}, {site.city?.state?.abbreviation}
-                        </span>
-                        <span 
-                          className="flex items-center gap-1"
-                          style={{ color: site.category?.color }}
-                        >
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: site.category?.color }}
-                          />
-                          {site.category?.name}
-                        </span>
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        checked={selectedSites.includes(site.id)}
+                        onCheckedChange={() => toggleSiteSelection(site.id)}
+                        className="mt-1"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-lg font-semibold text-white">{site.company_name}</h4>
+                          {isNewSite(site) && (
+                            <Badge variant="secondary" className="bg-emerald-900/50 text-emerald-400 text-xs">
+                              Novo
+                            </Badge>
+                          )}
+                          {isContactOverdue(site) && (
+                            <Badge variant="destructive" className="text-xs bg-red-900/50 text-red-400">
+                              <AlertCircle className="w-3 h-3 mr-1" />
+                              Contato atrasado
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-slate-400 mt-1 flex-wrap">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {site.city?.name}, {site.city?.state?.abbreviation}
+                          </span>
+                          <span 
+                            className="flex items-center gap-1"
+                            style={{ color: site.category?.color }}
+                          >
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: site.category?.color }}
+                            />
+                            {site.category?.name}
+                          </span>
+                          {site.google_rating && (
+                            <span className="flex items-center gap-1 text-amber-400">
+                              <Star className="w-4 h-4 fill-amber-400" />
+                              {site.google_rating}/5
+                              {site.google_reviews_count && (
+                                <span className="text-slate-500">
+                                  ({site.google_reviews_count} avaliações)
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -439,46 +922,61 @@ export const CaptationDashboard = () => {
                         size="sm" 
                         variant="outline"
                         onClick={() => setStatusChangeSite(site)}
+                        className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                       >
                         Alterar Status
                       </Button>
                       {site.service_value && site.proposal_status === 'paid' && (
-                        <div className="text-sm font-medium text-green-600">
+                        <div className="text-sm font-medium text-emerald-400">
                           R$ {site.service_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                     {site.contact_person && (
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Contato</label>
-                        <p className="text-sm text-gray-600">{site.contact_person}</p>
+                        <label className="text-sm font-medium text-slate-400">Contato</label>
+                        <p className="text-sm text-slate-300">{site.contact_person}</p>
                       </div>
                     )}
                     {site.phone && (
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Telefone</label>
-                        <p className="text-sm text-gray-600">{site.phone}</p>
+                        <label className="text-sm font-medium text-slate-400">Telefone</label>
+                        <p className="text-sm text-slate-300">{site.phone}</p>
                       </div>
                     )}
                     {site.email && (
                       <div>
-                        <label className="text-sm font-medium text-gray-700">E-mail</label>
-                        <p className="text-sm text-gray-600">{site.email}</p>
+                        <label className="text-sm font-medium text-slate-400">E-mail</label>
+                        <p className="text-sm text-slate-300">{site.email}</p>
                       </div>
                     )}
                     {site.website_url && (
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Website</label>
+                        <label className="text-sm font-medium text-slate-400">Website</label>
                         <a 
                           href={site.website_url} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                          className="text-sm text-blue-400 hover:underline flex items-center gap-1"
                         >
                           Ver site <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                    )}
+                    {site.google_maps_url && (
+                      <div>
+                        <label className="text-sm font-medium text-slate-400">Google Maps</label>
+                        <a 
+                          href={site.google_maps_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-400 hover:underline flex items-center gap-1"
+                        >
+                          <Map className="w-3 h-3" />
+                          Ver no Maps
                         </a>
                       </div>
                     )}
@@ -486,8 +984,19 @@ export const CaptationDashboard = () => {
 
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2">
+                      {site.phone && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="bg-emerald-900/50 text-emerald-400 border-emerald-600 hover:bg-emerald-800/50"
+                          onClick={() => openWhatsApp(site)}
+                        >
+                          <Phone className="w-4 h-4 mr-1" />
+                          WhatsApp
+                        </Button>
+                      )}
                       {site.contact_link && (
-                        <Button size="sm" variant="outline" asChild>
+                        <Button size="sm" variant="outline" className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700" asChild>
                           <a href={site.contact_link} target="_blank" rel="noopener noreferrer">
                             <MessageSquare className="w-4 h-4 mr-1" />
                             Contato
@@ -495,7 +1004,7 @@ export const CaptationDashboard = () => {
                         </Button>
                       )}
                       {site.proposal_link && (
-                        <Button size="sm" variant="outline" asChild>
+                        <Button size="sm" variant="outline" className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700" asChild>
                           <a href={site.proposal_link} target="_blank" rel="noopener noreferrer">
                             <FileText className="w-4 h-4 mr-1" />
                             Proposta
@@ -507,20 +1016,89 @@ export const CaptationDashboard = () => {
                       size="sm" 
                       variant="ghost"
                       onClick={() => setEditingSite(site)}
+                      className="text-slate-400 hover:text-white hover:bg-slate-800"
                     >
                       Editar
                     </Button>
                   </div>
 
                   {site.notes && (
-                    <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                      <label className="text-sm font-medium text-gray-700">Observações</label>
-                      <p className="text-sm text-gray-600 mt-1">{site.notes}</p>
+                    <div className="mt-4 p-3 bg-slate-800 rounded-md">
+                      <label className="text-sm font-medium text-slate-400">Observações</label>
+                      <p className="text-sm text-slate-300 mt-1">{site.notes}</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
             ))}
+          </div>
+        )}
+
+        {/* Paginação */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:bg-slate-800/50"
+            >
+              Primeira
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:bg-slate-800/50"
+            >
+              Anterior
+            </Button>
+            
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  // Mostrar primeira, última, atual e 2 páginas ao redor
+                  return page === 1 || 
+                         page === totalPages || 
+                         Math.abs(page - currentPage) <= 2
+                })
+                .map((page, idx, arr) => (
+                  <span key={page} className="flex items-center">
+                    {idx > 0 && arr[idx - 1] !== page - 1 && (
+                      <span className="px-2 text-slate-500">...</span>
+                    )}
+                    <Button
+                      variant={currentPage === page ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className={`min-w-[40px] ${currentPage === page ? 'bg-purple-600 hover:bg-purple-700' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`}
+                    >
+                      {page}
+                    </Button>
+                  </span>
+                ))}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:bg-slate-800/50"
+            >
+              Próxima
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages}
+              className="bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:bg-slate-800/50"
+            >
+              Última
+            </Button>
           </div>
         )}
       </div>
@@ -556,6 +1134,50 @@ export const CaptationDashboard = () => {
           companyName={statusChangeSite.company_name}
         />
       )}
+
+      <JsonImportDialog
+        open={showImportDialog}
+        onOpenChange={setShowImportDialog}
+        states={states}
+        categories={categories}
+        onImportComplete={() => {
+          loadSitesAndStats()
+          loadInitialData()
+        }}
+      />
+
+      <BulkStatusDialog
+        open={showBulkStatusDialog}
+        onOpenChange={setShowBulkStatusDialog}
+        selectedCount={selectedSites.length}
+        onStatusChange={handleBulkStatusChange}
+        loading={bulkUpdating}
+      />
+
+      <ExportDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        sites={filteredSites}
+      />
+
+      <TagsManager
+        open={showTagsManager}
+        onOpenChange={setShowTagsManager}
+        onTagsUpdated={loadSitesAndStats}
+      />
+
+      <CaptationAnalytics
+        open={showAnalytics}
+        onOpenChange={setShowAnalytics}
+        stats={stats}
+        sites={sites}
+      />
+
+      <ProposalTemplates
+        open={showProposalTemplates}
+        onOpenChange={setShowProposalTemplates}
+        categories={categories}
+      />
     </div>
   )
 } 

@@ -21,11 +21,16 @@ export interface Category {
   name: string
   description?: string
   color: string
+  whatsapp_template?: string
   created_at?: string
   updated_at?: string
 }
 
 export type ProposalStatus = 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid'
+
+export type Priority = 'low' | 'normal' | 'high' | 'urgent'
+export type SortField = 'created_at' | 'company_name' | 'google_rating' | 'proposal_status' | 'next_contact_date'
+export type SortOrder = 'asc' | 'desc'
 
 export interface CaptationSite {
   id: string
@@ -43,8 +48,35 @@ export interface CaptationSite {
   contact_person?: string
   phone?: string
   email?: string
+  google_rating?: number
+  google_reviews_count?: number
+  google_maps_url?: string
+  // Novos campos Fase 2/3/5
+  next_contact_date?: string
+  last_contact_date?: string
+  status_changed_at?: string
+  source?: 'manual' | 'import'
+  priority?: Priority
+  is_archived?: boolean
+  tags?: Tag[]
   created_at?: string
   updated_at?: string
+}
+
+export interface Tag {
+  id: string
+  name: string
+  color: string
+  created_at?: string
+}
+
+export interface StatusHistoryEntry {
+  id: string
+  site_id: string
+  old_status?: ProposalStatus
+  new_status: ProposalStatus
+  changed_at: string
+  notes?: string
 }
 
 export interface CaptationStats {
@@ -81,8 +113,31 @@ export interface CreateCaptationSiteData {
   contact_person?: string
   phone?: string
   email?: string
+  google_rating?: number
+  google_reviews_count?: number
+  google_maps_url?: string
+  next_contact_date?: string
+  last_contact_date?: string
+  source?: 'manual' | 'import'
+  priority?: Priority
+  is_archived?: boolean
 }
 
 export interface UpdateCaptationSiteData extends Partial<CreateCaptationSiteData> {
   id: string
+}
+
+export interface CaptationFilters {
+  stateId?: string
+  cityId?: string
+  categoryId?: string
+  status?: ProposalStatus | 'all'
+  priority?: Priority | 'all'
+  isArchived?: boolean
+  tagIds?: string[]
+  search?: string
+  sortField?: SortField
+  sortOrder?: SortOrder
+  page?: number
+  limit?: number
 } 

@@ -112,22 +112,22 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
   });
 
   return (
-    <Card className="h-full hover:shadow-lg transition-shadow duration-200">
+    <Card className="h-full hover:shadow-lg transition-shadow duration-200 bg-slate-900 border-slate-800">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="text-2xl">{getFileTypeIcon(upload.file_type)}</div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 truncate" title={upload.file_original_name}>
+              <h3 className="font-semibold text-white truncate" title={upload.file_original_name}>
                 {upload.file_original_name}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-slate-700 text-slate-300">
                   {formatFileSize(upload.file_size)}
                 </Badge>
                 <Badge 
                   variant={upload.upload_status === 'completed' ? 'default' : 'destructive'} 
-                  className="text-xs"
+                  className={`text-xs ${upload.upload_status === 'completed' ? 'bg-emerald-900/50 text-emerald-400' : ''}`}
                 >
                   {upload.upload_status === 'completed' ? 'Concluído' : upload.upload_status}
                 </Badge>
@@ -141,15 +141,15 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
         {/* Informações do Cliente */}
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <User className="w-4 h-4 text-gray-500" />
-            <span className="font-medium text-gray-900">{upload.client_name}</span>
+            <User className="w-4 h-4 text-slate-500" />
+            <span className="font-medium text-slate-200">{upload.client_name}</span>
           </div>
           
           <div className="flex items-center gap-2 text-sm">
-            <Mail className="w-4 h-4 text-gray-500" />
+            <Mail className="w-4 h-4 text-slate-500" />
             <a 
               href={`mailto:${upload.client_email}`}
-              className="text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
             >
               {upload.client_email}
             </a>
@@ -157,31 +157,31 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
 
           {upload.client_company && (
             <div className="flex items-center gap-2 text-sm">
-              <Building className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">{upload.client_company}</span>
+              <Building className="w-4 h-4 text-slate-500" />
+              <span className="text-slate-400">{upload.client_company}</span>
             </div>
           )}
 
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="w-4 h-4 text-gray-500" />
-            <span className="text-gray-600">{timeAgo}</span>
+            <Calendar className="w-4 h-4 text-slate-500" />
+            <span className="text-slate-400">{timeAgo}</span>
           </div>
         </div>
 
         {/* Descrição do Projeto (se houver) */}
         {upload.project_description && (
-          <div className="bg-gray-50 p-3 rounded-md">
-            <p className="text-sm text-gray-700 line-clamp-3">
-              <strong>Projeto:</strong> {upload.project_description}
+          <div className="bg-slate-800 p-3 rounded-md">
+            <p className="text-sm text-slate-300 line-clamp-3">
+              <strong className="text-slate-200">Projeto:</strong> {upload.project_description}
             </p>
           </div>
         )}
 
         {/* Observações (se houver) */}
         {upload.notes && (
-          <div className="bg-blue-50 p-3 rounded-md">
-            <p className="text-sm text-blue-700 line-clamp-2">
-              <strong>Observações:</strong> {upload.notes}
+          <div className="bg-blue-900/30 p-3 rounded-md border border-blue-800">
+            <p className="text-sm text-blue-300 line-clamp-2">
+              <strong className="text-blue-200">Observações:</strong> {upload.notes}
             </p>
           </div>
         )}
@@ -193,11 +193,11 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
             size="sm"
             onClick={handleDownload}
             disabled={isDownloading}
-            className="flex-1 gap-2"
+            className="flex-1 gap-2 border-slate-700 text-slate-300 hover:bg-slate-800"
           >
             {isDownloading ? (
               <>
-                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-slate-500 border-t-blue-400 rounded-full animate-spin" />
                 Baixando...
               </>
             ) : (
@@ -210,18 +210,18 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
 
           <Dialog open={showDetails} onOpenChange={setShowDetails}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2 border-slate-700 text-slate-300 hover:bg-slate-800">
                 <Eye className="w-4 h-4" />
                 Detalhes
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl bg-slate-900 border-slate-800">
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2">
+                <DialogTitle className="flex items-center gap-2 text-white">
                   <div className="text-2xl">{getFileTypeIcon(upload.file_type)}</div>
                   Detalhes do Upload
                 </DialogTitle>
-                <DialogDescription>
+                <DialogDescription className="text-slate-400">
                   Informações completas sobre o arquivo enviado
                 </DialogDescription>
               </DialogHeader>
@@ -229,27 +229,27 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
               <div className="space-y-6">
                 {/* Informações do Arquivo */}
                 <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-slate-200">
                     <FileText className="w-4 h-4" />
                     Arquivo
                   </h4>
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                  <div className="bg-slate-800 p-4 rounded-lg space-y-2">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <span className="font-medium">Nome Original:</span>
-                        <p className="text-gray-600 break-all">{upload.file_original_name}</p>
+                        <span className="font-medium text-slate-300">Nome Original:</span>
+                        <p className="text-slate-400 break-all">{upload.file_original_name}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Tamanho:</span>
-                        <p className="text-gray-600">{formatFileSize(upload.file_size)}</p>
+                        <span className="font-medium text-slate-300">Tamanho:</span>
+                        <p className="text-slate-400">{formatFileSize(upload.file_size)}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Tipo:</span>
-                        <p className="text-gray-600">{upload.file_type}</p>
+                        <span className="font-medium text-slate-300">Tipo:</span>
+                        <p className="text-slate-400">{upload.file_type}</p>
                       </div>
                       <div>
-                        <span className="font-medium">Status:</span>
-                        <Badge variant={upload.upload_status === 'completed' ? 'default' : 'destructive'}>
+                        <span className="font-medium text-slate-300">Status:</span>
+                        <Badge variant={upload.upload_status === 'completed' ? 'default' : 'destructive'} className={upload.upload_status === 'completed' ? 'bg-emerald-900/50 text-emerald-400' : ''}>
                           {upload.upload_status === 'completed' ? 'Concluído' : upload.upload_status}
                         </Badge>
                       </div>
@@ -259,15 +259,15 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
 
                 {/* Informações do Cliente */}
                 <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-slate-200">
                     <User className="w-4 h-4" />
                     Cliente
                   </h4>
-                  <div className="bg-blue-50 p-4 rounded-lg space-y-2">
-                    <div><strong>Nome:</strong> {upload.client_name}</div>
-                    <div><strong>Email:</strong> {upload.client_email}</div>
+                  <div className="bg-blue-900/30 p-4 rounded-lg space-y-2 border border-blue-800">
+                    <div className="text-slate-300"><strong className="text-slate-200">Nome:</strong> {upload.client_name}</div>
+                    <div className="text-slate-300"><strong className="text-slate-200">Email:</strong> {upload.client_email}</div>
                     {upload.client_company && (
-                      <div><strong>Empresa:</strong> {upload.client_company}</div>
+                      <div className="text-slate-300"><strong className="text-slate-200">Empresa:</strong> {upload.client_company}</div>
                     )}
                   </div>
                 </div>
@@ -275,18 +275,18 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
                 {/* Projeto e Observações */}
                 {(upload.project_description || upload.notes) && (
                   <div>
-                    <h4 className="font-semibold mb-3">Informações do Projeto</h4>
+                    <h4 className="font-semibold mb-3 text-slate-200">Informações do Projeto</h4>
                     <div className="space-y-3">
                       {upload.project_description && (
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                          <strong>Descrição do Projeto:</strong>
-                          <p className="text-gray-700 mt-1">{upload.project_description}</p>
+                        <div className="bg-slate-800 p-4 rounded-lg">
+                          <strong className="text-slate-200">Descrição do Projeto:</strong>
+                          <p className="text-slate-400 mt-1">{upload.project_description}</p>
                         </div>
                       )}
                       {upload.notes && (
-                        <div className="bg-yellow-50 p-4 rounded-lg">
-                          <strong>Observações:</strong>
-                          <p className="text-gray-700 mt-1">{upload.notes}</p>
+                        <div className="bg-amber-900/30 p-4 rounded-lg border border-amber-800">
+                          <strong className="text-amber-200">Observações:</strong>
+                          <p className="text-amber-300/80 mt-1">{upload.notes}</p>
                         </div>
                       )}
                     </div>
@@ -295,16 +295,16 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
 
                 {/* Informações Técnicas */}
                 <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-slate-200">
                     <HardDrive className="w-4 h-4" />
                     Informações Técnicas
                   </h4>
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
-                    <div><strong>ID do Upload:</strong> {upload.id}</div>
-                    <div><strong>Bucket:</strong> {upload.storage_bucket}</div>
-                    <div><strong>Caminho:</strong> {upload.storage_path}</div>
-                    <div><strong>Upload:</strong> {new Date(upload.created_at).toLocaleString('pt-BR')}</div>
-                    <div><strong>Atualização:</strong> {new Date(upload.updated_at).toLocaleString('pt-BR')}</div>
+                  <div className="bg-slate-800 p-4 rounded-lg space-y-2 text-sm">
+                    <div className="text-slate-400"><strong className="text-slate-300">ID do Upload:</strong> {upload.id}</div>
+                    <div className="text-slate-400"><strong className="text-slate-300">Bucket:</strong> {upload.storage_bucket}</div>
+                    <div className="text-slate-400"><strong className="text-slate-300">Caminho:</strong> {upload.storage_path}</div>
+                    <div className="text-slate-400"><strong className="text-slate-300">Upload:</strong> {new Date(upload.created_at).toLocaleString('pt-BR')}</div>
+                    <div className="text-slate-400"><strong className="text-slate-300">Atualização:</strong> {new Date(upload.updated_at).toLocaleString('pt-BR')}</div>
                   </div>
                 </div>
 
@@ -313,11 +313,11 @@ const UploadCard: React.FC<UploadCardProps> = ({ upload, onDelete }) => {
                   <Button 
                     onClick={handleDownload} 
                     disabled={isDownloading}
-                    className="gap-2"
+                    className="gap-2 bg-purple-600 hover:bg-purple-700"
                   >
                     {isDownloading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-slate-500 border-t-purple-400 rounded-full animate-spin" />
                         Baixando...
                       </>
                     ) : (

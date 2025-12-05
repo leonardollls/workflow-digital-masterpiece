@@ -140,9 +140,9 @@ export const AddSiteDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-800">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-white">
             <Plus className="w-5 h-5" />
             Adicionar Novo Site
           </DialogTitle>
@@ -150,47 +150,49 @@ export const AddSiteDialog = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-800 text-sm">{error}</p>
+            <div className="p-3 bg-red-900/30 border border-red-800 rounded-md">
+              <p className="text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="company_name">Nome da Empresa *</Label>
+              <Label htmlFor="company_name" className="text-slate-200">Nome da Empresa *</Label>
               <Input
                 id="company_name"
                 value={formData.company_name}
                 onChange={(e) => setFormData(prev => ({ ...prev, company_name: e.target.value }))}
                 placeholder="Ex: Advocacia Silva & Associados"
                 required
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="website_url">Website</Label>
+              <Label htmlFor="website_url" className="text-slate-200">Website</Label>
               <Input
                 id="website_url"
                 type="url"
                 value={formData.website_url}
                 onChange={(e) => setFormData(prev => ({ ...prev, website_url: e.target.value }))}
                 placeholder="https://exemplo.com.br"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="state">Estado *</Label>
+              <Label htmlFor="state" className="text-slate-200">Estado *</Label>
               <Select value={formData.state_id} onValueChange={handleStateChange} required>
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Selecionar Estado" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-slate-700">
                   {states
                     .filter(state => state.name !== 'Não identificada')
                     .map(state => (
-                      <SelectItem key={state.id} value={state.id}>
+                      <SelectItem key={state.id} value={state.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
                         {state.name}
                       </SelectItem>
                     ))}
@@ -199,16 +201,16 @@ export const AddSiteDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">Cidade *</Label>
+              <Label htmlFor="city" className="text-slate-200">Cidade *</Label>
               <Select 
                 value={formData.city_id} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, city_id: value }))}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Selecionar Cidade" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-slate-700">
                   {/* "Não identificada" sempre primeiro */}
                   {availableCities
                     .sort((a, b) => {
@@ -217,7 +219,7 @@ export const AddSiteDialog = ({
                       return a.name.localeCompare(b.name)
                     })
                     .map(city => (
-                      <SelectItem key={city.id} value={city.id}>
+                      <SelectItem key={city.id} value={city.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
                         {city.name} {city.population ? `(${city.population.toLocaleString()} hab.)` : ''}
                       </SelectItem>
                     ))}
@@ -228,18 +230,18 @@ export const AddSiteDialog = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="category">Categoria *</Label>
+              <Label htmlFor="category" className="text-slate-200">Categoria *</Label>
               <Select 
                 value={formData.category_id} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Selecionar Categoria" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-800 border-slate-700">
                   {categories.map(category => (
-                    <SelectItem key={category.id} value={category.id}>
+                    <SelectItem key={category.id} value={category.id} className="text-slate-200 focus:bg-slate-700 focus:text-white">
                       <div className="flex items-center gap-2">
                         <div 
                           className="w-3 h-3 rounded-full" 
@@ -254,23 +256,23 @@ export const AddSiteDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="proposal_status">Status da Proposta</Label>
+              <Label htmlFor="proposal_status" className="text-slate-200">Status da Proposta</Label>
               <Select 
                 value={formData.proposal_status} 
                 onValueChange={(value: 'pending' | 'accepted' | 'rejected') => 
                   setFormData(prev => ({ ...prev, proposal_status: value }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Pendente</SelectItem>
-                  <SelectItem value="to_send">A Enviar</SelectItem>
-                  <SelectItem value="accepted">Aceita</SelectItem>
-                  <SelectItem value="rejected">Negada</SelectItem>
-                  <SelectItem value="in_progress">Em Execução</SelectItem>
-                  <SelectItem value="paid">Projeto Pago</SelectItem>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  <SelectItem value="pending" className="text-slate-200 focus:bg-slate-700 focus:text-white">Pendente</SelectItem>
+                  <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">A Enviar</SelectItem>
+                  <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">Aceita</SelectItem>
+                  <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">Negada</SelectItem>
+                  <SelectItem value="in_progress" className="text-slate-200 focus:bg-slate-700 focus:text-white">Em Execução</SelectItem>
+                  <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">Projeto Pago</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -278,64 +280,69 @@ export const AddSiteDialog = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact_person">Pessoa de Contato</Label>
+              <Label htmlFor="contact_person" className="text-slate-200">Pessoa de Contato</Label>
               <Input
                 id="contact_person"
                 value={formData.contact_person}
                 onChange={(e) => setFormData(prev => ({ ...prev, contact_person: e.target.value }))}
                 placeholder="Nome do responsável"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone" className="text-slate-200">Telefone</Label>
               <Input
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="(11) 99999-9999"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email" className="text-slate-200">E-mail</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="contato@exemplo.com"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact_link">Link de Contato</Label>
+              <Label htmlFor="contact_link" className="text-slate-200">Link de Contato</Label>
               <Input
                 id="contact_link"
                 type="url"
                 value={formData.contact_link}
                 onChange={(e) => setFormData(prev => ({ ...prev, contact_link: e.target.value }))}
                 placeholder="Link do WhatsApp, formulário, etc."
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="proposal_link">Link da Proposta</Label>
+              <Label htmlFor="proposal_link" className="text-slate-200">Link da Proposta</Label>
               <Input
                 id="proposal_link"
                 type="url"
                 value={formData.proposal_link}
                 onChange={(e) => setFormData(prev => ({ ...prev, proposal_link: e.target.value }))}
                 placeholder="Link da proposta enviada"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
             </div>
           </div>
 
           {formData.proposal_status === 'paid' && (
             <div className="space-y-2">
-              <Label htmlFor="service_value">Valor do Serviço</Label>
+              <Label htmlFor="service_value" className="text-slate-200">Valor do Serviço</Label>
               <Input
                 id="service_value"
                 type="text"
@@ -346,29 +353,31 @@ export const AddSiteDialog = ({
                   setFormData(prev => ({ ...prev, service_value: formatted }))
                 }}
                 placeholder="R$ 0,00"
+                className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-500">
                 Valor total do projeto (obrigatório para status "Projeto Pago")
               </p>
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Observações</Label>
+            <Label htmlFor="notes" className="text-slate-200">Observações</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
               placeholder="Anotações adicionais sobre o contato, negociação, etc."
               rows={3}
+              className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
             />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={loading}>
+            <Button type="button" variant="outline" onClick={handleClose} disabled={loading} className="border-slate-700 text-slate-300 hover:bg-slate-800">
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="bg-purple-600 hover:bg-purple-700 text-white">
               {loading ? 'Salvando...' : 'Salvar Site'}
             </Button>
           </DialogFooter>

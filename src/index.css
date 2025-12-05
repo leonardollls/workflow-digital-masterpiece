@@ -831,6 +831,393 @@
   100% { background-position: 200% 0; }
 }
 
+/* Portfolio V2 - Float Slow Animation */
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-30px) translateX(10px);
+  }
+  50% {
+    transform: translateY(0px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(30px) translateX(5px);
+  }
+}
+
+/* Gradient Radial for backgrounds */
+.bg-gradient-radial {
+  background: radial-gradient(var(--tw-gradient-stops));
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Logo Glow Effect - Portfolio V2 */
+.logo-glow-container {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-glow-container::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(124, 58, 237, 0.4) 0%,
+    rgba(167, 139, 250, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(20px);
+  opacity: 0;
+  animation: logo-glow-pulse 3s ease-in-out infinite;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+.logo-glow-image {
+  position: relative;
+  z-index: 0;
+  filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5));
+  animation: logo-subtle-pulse 4s ease-in-out infinite;
+}
+
+@keyframes logo-glow-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes logo-subtle-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.4));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.6));
+    transform: scale(1.02);
+  }
+}
+
+/* Hover enhancement for logo */
+.logo-glow-container:hover .logo-glow-image {
+  filter: drop-shadow(0 0 50px rgba(124, 58, 237, 0.7));
+  transform: scale(1.05);
+  transition: all 0.3s ease-out;
+}
+
+.logo-glow-container:hover::before {
+  animation-play-state: paused;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ============================================
+   SPLASH LOADER ANIMATIONS - Portfolio V2
+   ============================================ */
+
+/* Floating Particles Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-30px) translateX(10px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(-25px) translateX(5px);
+    opacity: 0.7;
+  }
+}
+
+.splash-particle {
+  pointer-events: none;
+}
+
+/* Progress Ring Pulse Animation */
+@keyframes pulse-ring {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+}
+
+/* Logo Pulse for Splash */
+.logo-pulse {
+  animation: logo-pulse-splash 2s ease-in-out infinite;
+}
+
+@keyframes logo-pulse-splash {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 35px rgba(139, 92, 246, 0.7));
+  }
+}
+
+/* Blinking Cursor Animation */
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Shimmer Effect Animation */
+.animate-shimmer {
+  animation: shimmer-slide 2s infinite;
+}
+
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Scan Line Animation */
+.animate-scan {
+  animation: scan-line 3s ease-in-out infinite;
+}
+
+@keyframes scan-line {
+  0% {
+    top: -2px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Splash Loader Container Styles */
+.splash-loader {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: linear-gradient(135deg, #0a0a0f 0%, #0d0d1a 50%, #0a0a12 100%) !important;
+  background-color: #0a0a0f !important;
+}
+
+/* Morphing Glow Animation */
+@keyframes morphing-glow {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(0deg);
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    transform: rotate(180deg);
+  }
+  75% {
+    border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+  }
+}
+
+/* Reveal Animation */
+@keyframes reveal-expand {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(150% at 50% 50%);
+  }
+}
+
+.animate-reveal-expand {
+  animation: reveal-expand 0.8s ease-out forwards;
+}
+
+/* Number Counter Animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count-up {
+  animation: count-up 0.3s ease-out forwards;
+}
+
+/* Staggered Fade In */
+@keyframes stagger-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-stagger-fade-in {
+  animation: stagger-fade-in 0.6s ease-out forwards;
+}
+
+/* Electric Pulse Effect */
+@keyframes electric-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-electric-pulse {
+  animation: electric-pulse 1.5s ease-in-out infinite;
+}
+
+/* Typing Cursor */
+@keyframes cursor-blink {
+  0%, 45% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Wave Effect for Loading */
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-wave {
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+/* Glitch Effect for Text */
+@keyframes glitch {
+  0%, 90%, 100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+  92% {
+    transform: translate(-2px, 1px);
+    opacity: 0.8;
+  }
+  94% {
+    transform: translate(2px, -1px);
+    opacity: 0.9;
+  }
+  96% {
+    transform: translate(-1px, 2px);
+    opacity: 0.7;
+  }
+  98% {
+    transform: translate(1px, -2px);
+    opacity: 0.8;
+  }
+}
+
+.animate-glitch {
+  animation: glitch 3s ease-in-out infinite;
+}
+
+/* Orbit Animation for Decorative Elements */
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(60px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(60px) rotate(-360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit 8s linear infinite;
+}
+
+/* Pulse Scale Animation */
+@keyframes pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+/* ============================================
+   END SPLASH LOADER ANIMATIONS
+   ============================================ */
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -844,7 +1231,18 @@
   .animate-float,
   .animate-float-delayed,
   .float-gentle,
-  .float-delayed {
+  .float-delayed,
+  .logo-glow-container::before,
+  .logo-glow-image,
+  .splash-particle,
+  .logo-pulse,
+  .animate-blink,
+  .animate-shimmer,
+  .animate-scan,
+  .animate-wave,
+  .animate-glitch,
+  .animate-orbit,
+  .animate-pulse-scale {
     animation: none !important;
   }
 }

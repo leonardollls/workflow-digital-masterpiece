@@ -6,7 +6,10 @@ import type {
   CaptationSite, 
   CaptationStats, 
   CreateCaptationSiteData, 
-  UpdateCaptationSiteData 
+  UpdateCaptationSiteData,
+  Tag,
+  StatusHistoryEntry,
+  ProposalStatus
 } from '@/types/captation'
 
 // Estados
@@ -244,6 +247,34 @@ export const deleteCaptationSite = async (siteId: string): Promise<void> => {
   }
 }
 
+// Atualização em massa de status
+export const bulkUpdateStatus = async (
+  siteIds: string[], 
+  newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid',
+  serviceValue?: number
+): Promise<number> => {
+  const updateData: { proposal_status: string; service_value?: number } = {
+    proposal_status: newStatus
+  }
+  
+  if (newStatus === 'paid' && serviceValue !== undefined) {
+    updateData.service_value = serviceValue
+  }
+
+  const { data, error } = await supabase
+    .from('captation_sites')
+    .update(updateData)
+    .in('id', siteIds)
+    .select('id')
+
+  if (error) {
+    console.error('Erro ao atualizar status em massa:', error)
+    throw new Error('Erro ao atualizar status em massa')
+  }
+
+  return data?.length || 0
+}
+
 // Estatísticas
 export const getCaptationStats = async (filters?: {
   stateId?: string
@@ -332,5 +363,147 @@ export const getCaptationStats = async (filters?: {
   } catch (error) {
     console.error('Erro ao buscar estatísticas:', error)
     throw new Error('Erro ao carregar estatísticas')
+  }
+}
+
+// ============ TAGS ============
+
+export const getTags = async (): Promise<Tag[]> => {
+  const { data, error } = await supabase
+    .from('tags')
+    .select('*')
+    .order('name')
+
+  if (error) {
+    console.error('Erro ao buscar tags:', error)
+    throw new Error('Erro ao carregar tags')
+  }
+
+  return data || []
+}
+
+export const createTag = async (name: string, color: string = '#6366F1'): Promise<Tag> => {
+  const { data, error } = await supabase
+    .from('tags')
+    .insert({ name, color })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Erro ao criar tag:', error)
+    throw new Error('Erro ao criar tag')
+  }
+
+  return data
+}
+
+export const updateTag = async (id: string, name: string, color: string): Promise<Tag> => {
+  const { data, error } = await supabase
+    .from('tags')
+    .update({ name, color })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Erro ao atualizar tag:', error)
+    throw new Error('Erro ao atualizar tag')
+  }
+
+  return data
+}
+
+export const deleteTag = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('tags')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Erro ao deletar tag:', error)
+    throw new Error('Erro ao deletar tag')
+  }
+}
+
+export const getSiteTagIds = async (siteId: string): Promise<string[]> => {
+  const { data, error } = await supabase
+    .from('captation_site_tags')
+    .select('tag_id')
+    .eq('site_id', siteId)
+
+  if (error) {
+    console.error('Erro ao buscar tags do site:', error)
+    return []
+  }
+
+  return data?.map(row => row.tag_id) || []
+}
+
+export const updateSiteTags = async (siteId: string, tagIds: string[]): Promise<void> => {
+  // Remover todas as tags existentes
+  await supabase
+    .from('captation_site_tags')
+    .delete()
+    .eq('site_id', siteId)
+
+  // Adicionar novas tags
+  if (tagIds.length > 0) {
+    const { error } = await supabase
+      .from('captation_site_tags')
+      .insert(tagIds.map(tagId => ({ site_id: siteId, tag_id: tagId })))
+
+    if (error) {
+      console.error('Erro ao atualizar tags do site:', error)
+      throw new Error('Erro ao atualizar tags')
+    }
+  }
+}
+
+// ============ HISTÓRICO DE STATUS ============
+
+export const getStatusHistory = async (siteId: string): Promise<StatusHistoryEntry[]> => {
+  const { data, error } = await supabase
+    .from('captation_status_history')
+    .select('*')
+    .eq('site_id', siteId)
+    .order('changed_at', { ascending: false })
+
+  if (error) {
+    console.error('Erro ao buscar histórico:', error)
+    return []
+  }
+
+  return data || []
+}
+
+export const addStatusHistory = async (
+  siteId: string, 
+  oldStatus: ProposalStatus | null, 
+  newStatus: ProposalStatus,
+  notes?: string
+): Promise<void> => {
+  const { error } = await supabase
+    .from('captation_status_history')
+    .insert({
+      site_id: siteId,
+      old_status: oldStatus,
+      new_status: newStatus,
+      notes
+    })
+
+  if (error) {
+    console.error('Erro ao adicionar histórico:', error)
+  }
+}
+
+// Atualizar contato realizado
+export const updateLastContact = async (siteId: string): Promise<void> => {
+  const { error } = await supabase
+    .from('captation_sites')
+    .update({ last_contact_date: new Date().toISOString() })
+    .eq('id', siteId)
+
+  if (error) {
+    console.error('Erro ao atualizar último contato:', error)
   }
 } 

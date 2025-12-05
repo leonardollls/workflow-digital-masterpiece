@@ -8,6 +8,7 @@ import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
 const Index = lazy(() => import("./pages/Index"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
+const PortfolioV2 = lazy(() => import("./pages/PortfolioV2"));
 const ClientBrief = lazy(() => import("./pages/ClientBrief"));
 const CustomBrief = lazy(() => import("./pages/CustomBrief"));
 const InstitutionalBrief = lazy(() => import("./pages/InstitutionalBrief"));
@@ -38,7 +39,9 @@ function App() {
           <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/portfolio" element={<PortfolioV2 />} />
+              <Route path="/portfolio-v1" element={<Portfolio />} />
+              <Route path="/portfolio-v2" element={<Navigate to="/portfolio" replace />} />
               <Route path="/briefing" element={<Navigate to="/briefing-cliente" replace />} />
               <Route path="/briefing-cliente" element={<ClientBrief />} />
               <Route path="/briefing-personalizado" element={<CustomBrief />} />

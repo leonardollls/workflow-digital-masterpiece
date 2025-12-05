@@ -366,10 +366,10 @@ const AdminDashboard = () => {
   // Mostrar loading
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+          <p className="text-slate-400">Carregando dashboard...</p>
         </div>
       </div>
     )
@@ -378,15 +378,15 @@ const AdminDashboard = () => {
   // Mostrar erro se houver
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
         <div className="text-center max-w-md">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Erro no Dashboard</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={loadAllBriefings} className="mr-2">
+          <h2 className="text-2xl font-bold text-white mb-2">Erro no Dashboard</h2>
+          <p className="text-slate-400 mb-4">{error}</p>
+          <Button onClick={loadAllBriefings} className="mr-2 bg-purple-600 hover:bg-purple-700">
             Tentar Novamente
           </Button>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button variant="outline" onClick={handleLogout} className="border-slate-600 text-slate-300 hover:bg-slate-800">
             Fazer Logout
           </Button>
         </div>
@@ -397,9 +397,9 @@ const AdminDashboard = () => {
   const stats = getStats()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-950">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-slate-900 shadow-lg border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
@@ -407,21 +407,21 @@ const AdminDashboard = () => {
                 <Workflow className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Workflow Digital</h1>
-                <p className="text-sm text-gray-500">Painel Administrativo</p>
+                <h1 className="text-xl font-bold text-white">Workflow Digital</h1>
+                <p className="text-sm text-slate-400">Painel Administrativo</p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.email}</p>
-                <p className="text-xs text-gray-500">Administrador</p>
+                <p className="text-sm font-medium text-slate-200">{user?.email}</p>
+                <p className="text-xs text-slate-400">Administrador</p>
               </div>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={handleLogout}
-                className="gap-2"
+                className="gap-2 bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
               >
                 <LogOut className="w-4 h-4" />
                 Sair
@@ -434,58 +434,58 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Briefings</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Total de Briefings</CardTitle>
+              <FileText className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalBriefings}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold text-white">{stats.totalBriefings}</div>
+              <p className="text-xs text-slate-400">
                 Briefings recebidos
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Urgentes</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Urgentes</CardTitle>
+              <Clock className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{stats.urgentCount}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold text-red-400">{stats.urgentCount}</div>
+              <p className="text-xs text-slate-400">
                 Prazo ≤ 10 dias
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Valor das Propostas</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Valor das Propostas</CardTitle>
+              <DollarSign className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-emerald-400">
                 {new Intl.NumberFormat('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
                 }).format(stats.totalProposalValue)}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-400">
                 {stats.briefingsWithProposals} de {stats.totalBriefings} briefings
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Segmento Principal</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-slate-200">Segmento Principal</CardTitle>
+              <Building2 className="h-4 w-4 text-slate-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold capitalize">{stats.topSegment}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold capitalize text-white">{stats.topSegment}</div>
+              <p className="text-xs text-slate-400">
                 Mais comum
               </p>
             </CardContent>
@@ -493,9 +493,9 @@ const AdminDashboard = () => {
         </div>
 
         {/* Filtros */}
-        <Card className="mb-6">
+        <Card className="mb-6 bg-slate-900 border-slate-800">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-slate-200">
               <Filter className="w-5 h-5" />
               Filtros
             </CardTitle>
@@ -503,50 +503,50 @@ const AdminDashboard = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
                   placeholder="Buscar por empresa, segmento..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500 focus:border-purple-500"
                 />
               </div>
 
               <Select value={budgetFilter} onValueChange={setBudgetFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Filtrar por orçamento" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os orçamentos</SelectItem>
-                  <SelectItem value="1000">R$ 1.000 - R$ 5.000</SelectItem>
-                  <SelectItem value="5000">R$ 5.000 - R$ 10.000</SelectItem>
-                  <SelectItem value="10000">R$ 10.000+</SelectItem>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todos os orçamentos</SelectItem>
+                  <SelectItem value="1000" className="text-slate-200 focus:bg-slate-700 focus:text-white">R$ 1.000 - R$ 5.000</SelectItem>
+                  <SelectItem value="5000" className="text-slate-200 focus:bg-slate-700 focus:text-white">R$ 5.000 - R$ 10.000</SelectItem>
+                  <SelectItem value="10000" className="text-slate-200 focus:bg-slate-700 focus:text-white">R$ 10.000+</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Filtrar por urgência" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as urgências</SelectItem>
-                  <SelectItem value="urgent">Urgente (≤ 10 dias)</SelectItem>
-                  <SelectItem value="moderate">Moderado (11-20 dias)</SelectItem>
-                  <SelectItem value="flexible">Flexível (&gt; 20 dias)</SelectItem>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todas as urgências</SelectItem>
+                  <SelectItem value="urgent" className="text-slate-200 focus:bg-slate-700 focus:text-white">Urgente (≤ 10 dias)</SelectItem>
+                  <SelectItem value="moderate" className="text-slate-200 focus:bg-slate-700 focus:text-white">Moderado (11-20 dias)</SelectItem>
+                  <SelectItem value="flexible" className="text-slate-200 focus:bg-slate-700 focus:text-white">Flexível (&gt; 20 dias)</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={segmentFilter} onValueChange={setSegmentFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-slate-800 border-slate-700 text-slate-200">
                   <SelectValue placeholder="Filtrar por segmento" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os segmentos</SelectItem>
-                  <SelectItem value="tecnologia">Tecnologia</SelectItem>
-                  <SelectItem value="saude">Saúde</SelectItem>
-                  <SelectItem value="educacao">Educação</SelectItem>
-                  <SelectItem value="comercio">Comércio</SelectItem>
-                  <SelectItem value="servicos">Serviços</SelectItem>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  <SelectItem value="all" className="text-slate-200 focus:bg-slate-700 focus:text-white">Todos os segmentos</SelectItem>
+                  <SelectItem value="tecnologia" className="text-slate-200 focus:bg-slate-700 focus:text-white">Tecnologia</SelectItem>
+                  <SelectItem value="saude" className="text-slate-200 focus:bg-slate-700 focus:text-white">Saúde</SelectItem>
+                  <SelectItem value="educacao" className="text-slate-200 focus:bg-slate-700 focus:text-white">Educação</SelectItem>
+                  <SelectItem value="comercio" className="text-slate-200 focus:bg-slate-700 focus:text-white">Comércio</SelectItem>
+                  <SelectItem value="servicos" className="text-slate-200 focus:bg-slate-700 focus:text-white">Serviços</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -555,24 +555,24 @@ const AdminDashboard = () => {
 
         {/* Abas para diferentes tipos de briefing */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="landing-pages" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-5 bg-slate-900 border border-slate-800">
+            <TabsTrigger value="landing-pages" className="flex items-center gap-2 text-slate-400 data-[state=active]:bg-slate-800 data-[state=active]:text-white">
               <FileText className="w-4 h-4" />
               Landing Pages ({stats.totalLandingPages})
             </TabsTrigger>
-            <TabsTrigger value="institutional" className="flex items-center gap-2">
+            <TabsTrigger value="institutional" className="flex items-center gap-2 text-slate-400 data-[state=active]:bg-slate-800 data-[state=active]:text-white">
               <Globe className="w-4 h-4" />
               Sites Institucionais ({stats.totalInstitutional})
             </TabsTrigger>
-            <TabsTrigger value="logos" className="flex items-center gap-2">
+            <TabsTrigger value="logos" className="flex items-center gap-2 text-slate-400 data-[state=active]:bg-slate-800 data-[state=active]:text-white">
               <Palette className="w-4 h-4" />
               Logos ({stats.totalLogos})
             </TabsTrigger>
-            <TabsTrigger value="uploads" className="flex items-center gap-2">
+            <TabsTrigger value="uploads" className="flex items-center gap-2 text-slate-400 data-[state=active]:bg-slate-800 data-[state=active]:text-white">
               <Upload className="w-4 h-4" />
               Uploads de Clientes
             </TabsTrigger>
-            <TabsTrigger value="captation" className="flex items-center gap-2">
+            <TabsTrigger value="captation" className="flex items-center gap-2 text-slate-400 data-[state=active]:bg-slate-800 data-[state=active]:text-white">
               <MapPin className="w-4 h-4" />
               Checklists de Captação
             </TabsTrigger>
@@ -582,23 +582,23 @@ const AdminDashboard = () => {
           <TabsContent value="landing-pages">
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-white">
                   Briefings de Landing Pages ({filteredBriefings.length})
             </h2>
-            <Button className="gap-2">
+            <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
               <Download className="w-4 h-4" />
               Exportar
             </Button>
           </div>
 
           {filteredBriefings.length === 0 ? (
-            <Card>
+            <Card className="bg-slate-900 border-slate-800">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <FileText className="w-12 h-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <FileText className="w-12 h-12 text-slate-500 mb-4" />
+                <h3 className="text-lg font-semibold text-white mb-2">
                       Nenhum briefing de landing page encontrado
                 </h3>
-                <p className="text-gray-500 text-center max-w-md">
+                <p className="text-slate-400 text-center max-w-md">
                   {briefings.length === 0 
                         ? "Ainda não há briefings de landing pages enviados. Quando os clientes enviarem briefings, eles aparecerão aqui."
                     : "Nenhum briefing corresponde aos filtros aplicados. Tente ajustar os critérios de busca."
@@ -625,23 +625,23 @@ const AdminDashboard = () => {
           <TabsContent value="institutional">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-white">
                   Briefings de Sites Institucionais ({filteredInstitutionalBriefings.length})
                 </h2>
-                <Button className="gap-2">
+                <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
                   <Download className="w-4 h-4" />
                   Exportar
                 </Button>
               </div>
 
               {filteredInstitutionalBriefings.length === 0 ? (
-                <Card>
+                <Card className="bg-slate-900 border-slate-800">
                   <CardContent className="flex flex-col items-center justify-center py-12">
-                    <Globe className="w-12 h-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <Globe className="w-12 h-12 text-slate-500 mb-4" />
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Nenhum briefing institucional encontrado
                     </h3>
-                    <p className="text-gray-500 text-center max-w-md">
+                    <p className="text-slate-400 text-center max-w-md">
                       {institutionalBriefings.length === 0 
                         ? "Ainda não há briefings de sites institucionais enviados. Quando os clientes enviarem briefings, eles aparecerão aqui."
                         : "Nenhum briefing corresponde aos filtros aplicados. Tente ajustar os critérios de busca."
@@ -668,23 +668,23 @@ const AdminDashboard = () => {
           <TabsContent value="logos">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-white">
                   Briefings de Logos ({filteredLogoBriefings.length})
                 </h2>
-                <Button className="gap-2">
+                <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
                   <Download className="w-4 h-4" />
                   Exportar
                 </Button>
               </div>
 
               {filteredLogoBriefings.length === 0 ? (
-                <Card>
+                <Card className="bg-slate-900 border-slate-800">
                   <CardContent className="flex flex-col items-center justify-center py-12">
-                    <Palette className="w-12 h-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <Palette className="w-12 h-12 text-slate-500 mb-4" />
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Nenhum briefing de logo encontrado
                     </h3>
-                    <p className="text-gray-500 text-center max-w-md">
+                    <p className="text-slate-400 text-center max-w-md">
                       {logoBriefings.length === 0 
                         ? "Ainda não há briefings de logos enviados. Quando os clientes enviarem briefings de logo, eles aparecerão aqui."
                         : "Nenhum briefing corresponde aos filtros aplicados. Tente ajustar os critérios de busca."

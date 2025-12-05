@@ -144,14 +144,14 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-all duration-200 bg-white border border-gray-200">
+      <Card className="hover:shadow-lg transition-all duration-200 bg-slate-900 border border-slate-800">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
+              <CardTitle className="text-lg font-semibold text-white mb-1">
                 {briefing.company_name || 'Nome não informado'}
               </CardTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
                 <Building2 className="w-4 h-4" />
                 <span>{briefing.business_segment || 'Segmento não informado'}</span>
               </div>
@@ -184,51 +184,51 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-green-600" />
-              <span className="font-medium">{briefing.budget || 'Não informado'}</span>
+              <DollarSign className="w-4 h-4 text-emerald-400" />
+              <span className="font-medium text-slate-200">{briefing.budget || 'Não informado'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-blue-600" />
-              <span>{briefing.deadline || 'Prazo não informado'}</span>
+              <Clock className="w-4 h-4 text-blue-400" />
+              <span className="text-slate-200">{briefing.deadline || 'Prazo não informado'}</span>
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
-              <User className="w-4 h-4 text-purple-600" />
-              <span className="font-medium">{briefing.responsible_name || 'Responsável não informado'}</span>
+              <User className="w-4 h-4 text-purple-400" />
+              <span className="font-medium text-slate-200">{briefing.responsible_name || 'Responsável não informado'}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               {isLogoBriefing(briefing) ? (
                 <>
-                  <Palette className="w-4 h-4 text-pink-600" />
-                  <span className="text-gray-600 truncate">
+                  <Palette className="w-4 h-4 text-pink-400" />
+                  <span className="text-slate-400 truncate">
                     {briefing.logo_style || 'Estilo não informado'} • {briefing.logo_type || 'Tipo não informado'}
                   </span>
                 </>
               ) : isInstitutionalBriefing(briefing) ? (
                 <>
-                  <Globe className="w-4 h-4 text-blue-600" />
-                  <span className="text-gray-600 truncate">{briefing.website_goal || 'Objetivo não informado'}</span>
+                  <Globe className="w-4 h-4 text-blue-400" />
+                  <span className="text-slate-400 truncate">{briefing.website_goal || 'Objetivo não informado'}</span>
                 </>
               ) : (
                 <>
-              <Target className="w-4 h-4 text-orange-600" />
-              <span className="text-gray-600 truncate">{briefing.landing_page_goal || 'Objetivo não informado'}</span>
+              <Target className="w-4 h-4 text-orange-400" />
+              <span className="text-slate-400 truncate">{briefing.landing_page_goal || 'Objetivo não informado'}</span>
                 </>
               )}
             </div>
           </div>
 
-          <Separator />
+          <Separator className="bg-slate-700" />
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-slate-500">
                 {briefing.created_at && formatDate(briefing.created_at)}
               </span>
               {briefing.proposal_value && (
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Badge variant="secondary" className="bg-emerald-900/50 text-emerald-400 border border-emerald-700">
                   {new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
@@ -240,7 +240,7 @@ export const BriefingCard = ({ briefing, onUpdate, onDelete }: BriefingCardProps
             <div className="flex flex-wrap gap-2">
               <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2 flex-1">
+                  <Button variant="outline" size="sm" className="gap-2 flex-1 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
                     <Eye className="w-4 h-4" />
                     Ver Detalhes
                   </Button>
