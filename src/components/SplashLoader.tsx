@@ -10,113 +10,169 @@ const SplashLoader = ({ onComplete, duration = 3500 }: SplashLoaderProps) => {
   const [phase, setPhase] = useState<'loading' | 'revealing' | 'complete'>('loading');
   const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  
   const audioContextRef = useRef<AudioContext | null>(null);
-  const hasPlayedSoundRef = useRef(false);
+  const hasPlayedWhooshRef = useRef(false);
+  const hasPlayedCompletionRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const words = ['Inovação', 'Design', 'Performance', 'Resultados'];
 
-  // Initialize Web Audio API
-  const initAudio = useCallback(() => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+  // Initialize Web Audio API only after user interaction
+  const initAudio = useCallback((): AudioContext | null => {
+    try {
+      if (!audioContextRef.current) {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioContextClass) {
+          audioContextRef.current = new AudioContextClass();
+        }
+      }
+      
+      if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+      
+      return audioContextRef.current;
+    } catch (e) {
+      // Silent fail - audio not supported
+      return null;
     }
-    return audioContextRef.current;
   }, []);
 
-  // Generate synthetic sounds using Web Audio API
+  // Generate whoosh/sweep sound
   const playWhooshSound = useCallback(() => {
+    if (!audioEnabled || hasPlayedWhooshRef.current) return;
+    
     try {
-      const audioContext = initAudio();
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
+      const ctx = audioContextRef.current;
+      if (!ctx || ctx.state !== 'running') return;
+      
+      hasPlayedWhooshRef.current = true;
 
-      // Create whoosh/sweep sound
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      const filter = audioContext.createBiquadFilter();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
 
       oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.5);
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.5);
 
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(2000, audioContext.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.5);
+      filter.frequency.setValueAtTime(2000, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.5);
 
-      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      gainNode.gain.setValueAtTime(0.15, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
 
       oscillator.connect(filter);
       filter.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(ctx.destination);
 
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.5);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.5);
     } catch (e) {
-      console.log('Audio not available');
+      // Silent fail
     }
-  }, [initAudio]);
+  }, [audioEnabled]);
 
+  // Completion chime sound
   const playCompletionSound = useCallback(() => {
+    if (!audioEnabled || hasPlayedCompletionRef.current) return;
+    
     try {
-      const audioContext = initAudio();
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
+      const ctx = audioContextRef.current;
+      if (!ctx || ctx.state !== 'running') return;
+      
+      hasPlayedCompletionRef.current = true;
 
-      // Create a pleasant completion chime
       const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5 chord
 
       frequencies.forEach((freq, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
 
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(freq, ctx.currentTime);
 
-        const startTime = audioContext.currentTime + index * 0.08;
+        const startTime = ctx.currentTime + index * 0.08;
         gainNode.gain.setValueAtTime(0, startTime);
         gainNode.gain.linearRampToValueAtTime(0.12, startTime + 0.05);
         gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.8);
 
         oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        gainNode.connect(ctx.destination);
 
         oscillator.start(startTime);
         oscillator.stop(startTime + 0.8);
       });
     } catch (e) {
-      console.log('Audio not available');
+      // Silent fail
     }
-  }, [initAudio]);
+  }, [audioEnabled]);
 
+  // Tick sound for word changes
   const playTickSound = useCallback(() => {
+    if (!audioEnabled) return;
+    
     try {
-      const audioContext = initAudio();
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
+      const ctx = audioContextRef.current;
+      if (!ctx || ctx.state !== 'running') return;
 
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
 
       oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(1200, ctx.currentTime);
 
-      gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+      gainNode.gain.setValueAtTime(0.05, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
 
       oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(ctx.destination);
 
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.05);
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.05);
     } catch (e) {
       // Silent fail
     }
-  }, [initAudio]);
+  }, [audioEnabled]);
+
+  // Handle user interaction to enable audio
+  const handleEnableAudio = useCallback(() => {
+    if (audioEnabled) return;
+    
+    const ctx = initAudio();
+    if (ctx && ctx.state === 'running') {
+      setAudioEnabled(true);
+      
+      // Play whoosh if not played yet
+      if (!hasPlayedWhooshRef.current && progress > 10) {
+        setTimeout(() => {
+          hasPlayedWhooshRef.current = false; // Reset to allow playing
+          playWhooshSound();
+        }, 100);
+      }
+    }
+  }, [audioEnabled, initAudio, progress, playWhooshSound]);
+
+  // Listen for user interactions to enable audio
+  useEffect(() => {
+    const handleInteraction = () => {
+      handleEnableAudio();
+    };
+
+    // Add listeners for various interaction types
+    document.addEventListener('click', handleInteraction, { passive: true });
+    document.addEventListener('touchstart', handleInteraction, { passive: true });
+    document.addEventListener('keydown', handleInteraction, { passive: true });
+
+    return () => {
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
+    };
+  }, [handleEnableAudio]);
 
   // Word cycling animation
   useEffect(() => {
@@ -151,14 +207,14 @@ const SplashLoader = ({ onComplete, duration = 3500 }: SplashLoaderProps) => {
   // Progress animation
   useEffect(() => {
     const startTime = Date.now();
+    
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const newProgress = Math.min((elapsed / duration) * 100, 100);
 
-      // Play whoosh at certain milestones
-      if (!hasPlayedSoundRef.current && newProgress > 10) {
+      // Try to play whoosh at 15% progress
+      if (newProgress >= 15 && !hasPlayedWhooshRef.current && audioEnabled) {
         playWhooshSound();
-        hasPlayedSoundRef.current = true;
       }
 
       setProgress(newProgress);
@@ -178,28 +234,12 @@ const SplashLoader = ({ onComplete, duration = 3500 }: SplashLoaderProps) => {
     };
 
     requestAnimationFrame(animate);
-  }, [duration, onComplete, playWhooshSound, playCompletionSound]);
-
-  // User interaction to enable audio
-  useEffect(() => {
-    const enableAudio = () => {
-      initAudio();
-      document.removeEventListener('click', enableAudio);
-      document.removeEventListener('touchstart', enableAudio);
-    };
-
-    document.addEventListener('click', enableAudio);
-    document.addEventListener('touchstart', enableAudio);
-
-    return () => {
-      document.removeEventListener('click', enableAudio);
-      document.removeEventListener('touchstart', enableAudio);
-    };
-  }, [initAudio]);
+  }, [duration, onComplete, playWhooshSound, playCompletionSound, audioEnabled]);
 
   return (
     <div
       ref={containerRef}
+      onClick={handleEnableAudio}
       className={`splash-loader fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden transition-all duration-700 ease-out ${
         phase === 'complete' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
@@ -394,4 +434,3 @@ const SplashLoader = ({ onComplete, duration = 3500 }: SplashLoaderProps) => {
 };
 
 export default SplashLoader;
-
