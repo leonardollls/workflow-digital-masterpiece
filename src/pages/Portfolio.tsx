@@ -93,17 +93,23 @@ const Portfolio = () => {
           {/* Header Section */}
           <div className={`text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-0 transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             
-            {/* Logo da Workflow */}
+            {/* Logo da Workflow - with explicit dimensions to prevent CLS */}
             <div className="flex justify-center mb-8">
-              <img 
-                src={logoSrc} 
-                alt="Workflow Logo" 
-                className="h-24 sm:h-28 md:h-32 lg:h-36 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/Images/logo-workflow-sem-fundo.png';
-                }}
-              />
+              <div className="logo-glow-container" style={{ width: '140px', height: '140px' }}>
+                <img 
+                  src={logoSrc} 
+                  alt="Workflow Logo" 
+                  width={140}
+                  height={140}
+                  className="logo-glow-image h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain"
+                  fetchPriority="high"
+                  decoding="async"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/Images/logo-workflow-sem-fundo.png';
+                  }}
+                />
+              </div>
             </div>
 
             <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
@@ -127,14 +133,15 @@ const Portfolio = () => {
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
                 {Array.from({ length: 9 }).map((_, index) => (
-                  <div key={index} className="group relative overflow-hidden rounded-3xl bg-white shadow-glass">
-                    <div className="relative h-64 overflow-hidden bg-gray-100 animate-pulse">
+                  <div key={index} className="group relative overflow-hidden rounded-3xl bg-white shadow-glass card-portfolio" style={{ minHeight: '420px' }}>
+                    {/* Fixed aspect ratio skeleton to prevent CLS */}
+                    <div className="relative overflow-hidden skeleton" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
                       <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200"></div>
                     </div>
                     <div className="p-6">
-                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-3"></div>
-                      <div className="h-4 bg-gray-100 rounded animate-pulse mb-2"></div>
-                      <div className="h-4 bg-gray-100 rounded animate-pulse w-3/4"></div>
+                      <div className="h-6 bg-gray-200 rounded skeleton mb-3"></div>
+                      <div className="h-4 bg-gray-100 rounded skeleton mb-2"></div>
+                      <div className="h-4 bg-gray-100 rounded skeleton w-3/4"></div>
                     </div>
                   </div>
                 ))}
@@ -144,17 +151,19 @@ const Portfolio = () => {
                 {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300"
+                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300 card-portfolio"
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
                 >
-                  {/* Project Image */}
-                  <div className="relative h-64 overflow-hidden">
+                  {/* Project Image - with fixed aspect ratio to prevent CLS */}
+                  <div className="relative overflow-hidden" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
                     <InstantImage
                       src={project.thumbnailImage || project.image}
-                      alt={project.title}
+                      alt={`Capa do projeto ${project.title}`}
                       priority={project.priority}
                       className="w-full h-full"
+                      width={800}
+                      height={406}
                     />
                     
                     {/* Gradient Overlay */}
@@ -312,8 +321,12 @@ const Portfolio = () => {
                   <img
                     src={selectedImage}
                     alt="Landing page preview"
+                    width={1200}
+                    height={2400}
                     className="w-full h-auto block"
-                    style={{ minHeight: '100vh' }}
+                    loading="eager"
+                    decoding="async"
+                    style={{ minHeight: '50vh' }}
                   />
                 </div>
               </div>

@@ -192,12 +192,14 @@ const HeroSection = () => {
         animate={isVisible ? "visible" : "hidden"}
       >
         {/* Logo with enhanced animation */}
+        {/* Logo with explicit dimensions to prevent CLS */}
         <motion.div 
           className="flex justify-center mb-2 sm:mb-3 md:mb-4 relative z-30"
           variants={itemVariants}
         >
           <motion.div
             className="relative group"
+            style={{ width: '192px', height: '192px' }}
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", bounce: 0.4 }}
           >
@@ -205,6 +207,8 @@ const HeroSection = () => {
             <motion.img
               src={logoSrc}
               alt="Workflow Logo"
+              width={192}
+              height={192}
               className="h-32 sm:h-36 md:h-40 lg:h-44 xl:h-48 w-auto relative z-10 drop-shadow-2xl"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}

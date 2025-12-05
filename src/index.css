@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Google Fonts loaded asynchronously via index.html for better performance */
+/* Removed: @import url('https://fonts.googleapis.com/css2?family=...') - causes render blocking */
+
+/* Performance optimization: content-visibility for off-screen elements */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -133,6 +136,17 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Performance: Use content-visibility for off-screen sections */
+  section:not(:first-of-type) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+
+  /* Ensure images don't cause reflows */
+  img {
+    content-visibility: auto;
   }
 
   /* Enhanced Custom Scrollbar */
@@ -316,14 +330,31 @@
     animation: word-reveal 0.6s var(--smooth-easing) forwards;
   }
 
-  /* Floating Animations */
+  /* Floating Animations - GPU accelerated */
   .float-gentle {
     animation: float-gentle 6s ease-in-out infinite;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .float-delayed {
     animation: float-gentle 6s ease-in-out infinite;
     animation-delay: 3s;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Skeleton Loading Animation - Performance optimized */
+  .skeleton {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    will-change: background-position;
+  }
+
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   /* Gradient Text Effects */
@@ -351,32 +382,38 @@
     animation: shimmer 2s linear infinite;
   }
 
-  /* Micro Interaction Classes */
+  /* Micro Interaction Classes - GPU accelerated */
   .hover-lift {
     transition: transform var(--motion-duration-normal) var(--spring-easing);
     pointer-events: auto !important;
+    will-change: transform;
+    transform: translateZ(0); /* Force GPU layer */
   }
 
   .hover-lift:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) translateZ(0);
   }
 
   .hover-scale {
     transition: transform var(--motion-duration-normal) var(--spring-easing);
     pointer-events: auto !important;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .hover-scale:hover {
-    transform: scale(1.05);
+    transform: scale(1.05) translateZ(0);
   }
 
   .hover-rotate {
     transition: transform var(--motion-duration-normal) var(--spring-easing);
     pointer-events: auto !important;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .hover-rotate:hover {
-    transform: rotate(5deg);
+    transform: rotate(5deg) translateZ(0);
   }
 
   /* Advanced Background Patterns */
@@ -407,6 +444,19 @@
   .card-floating {
     @apply card-workflow hover:transform hover:-translate-y-2;
     pointer-events: auto !important;
+  }
+
+  /* Portfolio Card - Fixed height to prevent CLS */
+  .card-portfolio {
+    min-height: 420px;
+    contain: layout style;
+  }
+
+  /* Project card image placeholder */
+  .project-card-image {
+    aspect-ratio: 800/406;
+    background-color: #f3f4f6;
+    contain: layout;
   }
 
   /* Text Effects */

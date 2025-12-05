@@ -343,13 +343,16 @@ const SplashLoader = ({ onComplete, duration = 3500 }: SplashLoaderProps) => {
             </defs>
           </svg>
 
-          {/* Logo in Center */}
+          {/* Logo in Center - with explicit dimensions */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative">
+            <div className="relative" style={{ width: '80px', height: '80px' }}>
               <img
                 src="/Images/logo-workflow-sem-fundo2.png"
                 alt="Workflow"
+                width={80}
+                height={80}
                 className="w-16 h-16 sm:w-20 sm:h-20 object-contain logo-pulse"
+                fetchPriority="high"
               />
               {/* Logo Glow */}
               <div 

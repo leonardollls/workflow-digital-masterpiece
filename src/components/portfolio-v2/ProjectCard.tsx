@@ -65,15 +65,18 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
       }}
     >
       <GlassCard className="h-full flex flex-col" hover>
-        {/* Thumbnail Section with image or gradient placeholder */}
-        <div className="relative h-48 sm:h-52 overflow-hidden rounded-t-2xl">
+        {/* Thumbnail Section with image or gradient placeholder - fixed aspect ratio */}
+        <div className="relative overflow-hidden rounded-t-2xl" style={{ aspectRatio: '800/406', minHeight: '180px' }}>
           {/* Show thumbnail image if available, otherwise show gradient placeholder */}
           {project.thumbnail_url ? (
             <img
               src={project.thumbnail_url}
               alt={`Capa do projeto ${project.title}`}
+              width={800}
+              height={406}
               className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div 
