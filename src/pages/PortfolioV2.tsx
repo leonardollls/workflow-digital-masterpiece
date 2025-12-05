@@ -48,9 +48,9 @@ const PortfolioV2 = () => {
 
   return (
     <>
-      {/* Splash Loading Screen - minimal duration for better LCP/CLS */}
+      {/* Splash Loading Screen - optimized duration */}
       {showSplash && (
-        <SplashLoader onComplete={handleSplashComplete} duration={600} />
+        <SplashLoader onComplete={handleSplashComplete} duration={1200} />
       )}
 
       {/* Iframe Modal - rendered at root level for z-index */}
