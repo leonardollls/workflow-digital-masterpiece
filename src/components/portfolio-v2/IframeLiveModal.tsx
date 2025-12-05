@@ -43,6 +43,7 @@ const SITES_REQUIRING_PROXY = [
   'semiglobe.com.br', // Fontes em dominio diferente (agenciareally.com.br) causam CORS + Lenis scroll lib
   'promptizi.com.br', // Site Framer com erros de hidratacao React + n8n webhook CORS
   'hazaempreendimentos.com.br', // WordPress/Elementor com UE Slider e erros cross-origin
+  'gynfood.vercel.app', // Vercel default X-Frame-Options DENY bloqueia iframe embedding
 ];
 
 // Sites que nao podem ser exibidos de forma alguma
