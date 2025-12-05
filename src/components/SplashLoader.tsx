@@ -24,6 +24,27 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
 
   const words = ['Inovação', 'Design', 'Performance', 'Resultados'];
 
+  // Reset audio state on each mount to ensure sounds play every time
+  useEffect(() => {
+    // Reset refs on mount
+    hasPlayedWhooshRef.current = false;
+    hasPlayedCompletionRef.current = false;
+    
+    // Close any existing audio context and create fresh one
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close().catch(() => {});
+        audioContextRef.current = null;
+      }
+    };
+  }, []);
+
   // Initialize Web Audio API lazily (only after user interaction)
   const initAudio = useCallback((): AudioContext | null => {
     try {
