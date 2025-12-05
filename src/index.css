@@ -946,46 +946,63 @@
 }
 
 
+/* Optimized logo class - uses only composited properties (transform, opacity) */
+.logo-optimized {
+  position: relative;
+  z-index: 0;
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force GPU layer */
+}
+
+/* Legacy glow image - now uses composited animations only */
 .logo-glow-image {
   position: relative;
   z-index: 0;
-  filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.5));
-  animation: logo-subtle-pulse 4s ease-in-out infinite;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  animation: logo-composited-pulse 4s ease-in-out infinite;
 }
 
 @keyframes logo-glow-pulse {
   0%, 100% {
     opacity: 0.6;
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.05) translateZ(0);
   }
 }
 
-@keyframes logo-subtle-pulse {
+/* Optimized animation using only transform and opacity - GPU accelerated */
+@keyframes logo-composited-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.4));
-    transform: scale(1);
+    opacity: 0.9;
+    transform: scale(1) translateZ(0);
   }
   50% {
-    filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.6));
-    transform: scale(1.02);
+    opacity: 1;
+    transform: scale(1.03) translateZ(0);
   }
 }
 
-/* Hover enhancement for logo */
+/* Hover enhancement for logo - uses only composited properties */
 .logo-glow-container:hover .logo-glow-image {
-  filter: drop-shadow(0 0 50px rgba(124, 58, 237, 0.7));
-  transform: scale(1.05);
-  transition: all 0.3s ease-out;
+  transform: scale(1.05) translateZ(0);
+  opacity: 1;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.logo-glow-container:hover .logo-optimized {
+  transform: scale(1.05) translateZ(0);
+  opacity: 1;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .logo-glow-container:hover::before {
   animation-play-state: paused;
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.1) translateZ(0);
 }
 
 /* ============================================

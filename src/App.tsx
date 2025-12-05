@@ -37,10 +37,19 @@ function App() {
         <Sonner />
         <BrowserRouter>
           <Suspense fallback={
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-workflow-50 via-white to-workflow-100">
+            <div 
+              className="flex items-center justify-center min-h-screen"
+              style={{ 
+                background: 'linear-gradient(135deg, #0a0a0f 0%, #0d0d1a 50%, #0a0a12 100%)',
+                contain: 'layout style paint'
+              }}
+            >
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-workflow-energy/10 skeleton"></div>
-                <div className="h-4 w-32 mx-auto bg-gray-200 rounded skeleton"></div>
+                <div 
+                  className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/20" 
+                  style={{ contain: 'layout' }}
+                />
+                <div className="h-4 w-32 mx-auto bg-white/10 rounded" />
               </div>
             </div>
           }>

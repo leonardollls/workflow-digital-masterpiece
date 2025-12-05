@@ -48,9 +48,9 @@ const PortfolioV2 = () => {
 
   return (
     <>
-      {/* Splash Loading Screen - reduced duration for better LCP */}
+      {/* Splash Loading Screen - minimal duration for better LCP/CLS */}
       {showSplash && (
-        <SplashLoader onComplete={handleSplashComplete} duration={1800} />
+        <SplashLoader onComplete={handleSplashComplete} duration={600} />
       )}
 
       {/* Iframe Modal - rendered at root level for z-index */}
@@ -78,15 +78,16 @@ const PortfolioV2 = () => {
             >
               {/* Logo with Glow Effect - explicit dimensions to prevent CLS */}
               <div className="flex justify-center mb-6 sm:mb-8">
-                <div className="logo-glow-container" style={{ width: '140px', height: '140px' }}>
+                <div className="logo-glow-container" style={{ width: '128px', height: '128px', contain: 'layout' }}>
                   <img
                     src="/Images/logo-workflow-sem-fundo2.png"
                     alt="Workflow Logo"
-                    width={140}
-                    height={140}
-                    className="logo-glow-image h-20 sm:h-24 md:h-28 lg:h-32 object-contain"
+                    width={128}
+                    height={128}
+                    className="logo-optimized w-full h-full object-contain"
                     fetchPriority="high"
                     decoding="async"
+                    loading="eager"
                   />
                 </div>
               </div>
@@ -156,23 +157,26 @@ const PortfolioV2 = () => {
         <section className="px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20 md:pb-24">
           <div className="max-w-7xl mx-auto">
             {loading ? (
-              // Loading skeleton with fixed dimensions to prevent CLS
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              // Loading skeleton with exact fixed dimensions to prevent CLS
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" style={{ contain: 'layout' }}>
                 {Array.from({ length: 6 }).map((_, index) => (
                   <div
                     key={index}
-                    className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden card-portfolio"
-                    style={{ minHeight: '420px' }}
+                    className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden"
+                    style={{ minHeight: '420px', height: '420px', contain: 'layout style' }}
                   >
-                    {/* Fixed aspect ratio for image placeholder */}
-                    <div className="bg-white/5 skeleton" style={{ aspectRatio: '800/406', minHeight: '180px' }} />
+                    {/* Fixed height for image placeholder - matches ProjectCard */}
+                    <div 
+                      className="bg-white/5" 
+                      style={{ height: '208px', contain: 'layout' }} 
+                    />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 bg-white/10 rounded-lg w-3/4 skeleton" />
-                      <div className="h-4 bg-white/5 rounded-lg skeleton" />
-                      <div className="h-4 bg-white/5 rounded-lg w-2/3 skeleton" />
+                      <div className="h-5 bg-white/10 rounded-lg w-3/4" />
+                      <div className="h-4 bg-white/5 rounded-lg" />
+                      <div className="h-4 bg-white/5 rounded-lg w-2/3" />
                       <div className="flex gap-3 pt-2">
-                        <div className="h-10 bg-white/10 rounded-xl flex-1 skeleton" />
-                        <div className="h-10 w-10 bg-white/10 rounded-xl skeleton" />
+                        <div className="h-10 bg-white/10 rounded-xl flex-1" />
+                        <div className="h-10 w-10 bg-white/10 rounded-xl" />
                       </div>
                     </div>
                   </div>
