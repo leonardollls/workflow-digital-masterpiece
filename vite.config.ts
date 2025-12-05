@@ -40,59 +40,31 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Core React - load first
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-            return 'vendor-react';
-          }
-          // Router - needed for navigation
-          if (id.includes('node_modules/react-router')) {
-            return 'vendor-router';
-          }
-          // Framer Motion - heavy, defer if possible
-          if (id.includes('node_modules/framer-motion')) {
-            return 'vendor-motion';
-          }
-          // UI Components - load on demand
-          if (id.includes('node_modules/@radix-ui')) {
-            return 'vendor-ui';
-          }
-          // Supabase - load on demand
-          if (id.includes('node_modules/@supabase')) {
-            return 'vendor-supabase';
-          }
-          // Forms - load on demand
-          if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/@hookform') || id.includes('node_modules/zod')) {
-            return 'vendor-forms';
-          }
-          // Query - load on demand
-          if (id.includes('node_modules/@tanstack')) {
-            return 'vendor-query';
-          }
-          // Three.js - very heavy, separate chunk
-          if (id.includes('node_modules/three')) {
-            return 'vendor-three';
-          }
-          // Charts/Analytics - heavy
-          if (id.includes('node_modules/recharts') || id.includes('node_modules/@tremor')) {
-            return 'vendor-charts';
-          }
-          // Animation libraries - heavy
-          if (id.includes('node_modules/gsap') || id.includes('node_modules/lottie')) {
-            return 'vendor-animations';
-          }
-          // Lucide icons - commonly used
-          if (id.includes('node_modules/lucide-react')) {
-            return 'vendor-icons';
-          }
-          // Date utilities
-          if (id.includes('node_modules/date-fns')) {
-            return 'vendor-date';
-          }
-          // Other node_modules
-          if (id.includes('node_modules/')) {
-            return 'vendor-misc';
-          }
+        manualChunks: {
+          // Core vendor - React ecosystem must stay together
+          'vendor-react': ['react', 'react-dom', 'react-router-dom', 'scheduler'],
+          // Framer Motion
+          'vendor-motion': ['framer-motion'],
+          // UI Components
+          'vendor-ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-label',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-separator',
+          ],
+          // Forms
+          'vendor-forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          // Supabase
+          'vendor-supabase': ['@supabase/supabase-js'],
+          // Query
+          'vendor-query': ['@tanstack/react-query'],
         },
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
