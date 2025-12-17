@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta de Redesign - Workflow Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Workflow Brand Colors */
+            --workflow-deep: #1a0d2e;
+            --workflow-energy: #7c3aed;
+            --workflow-zen: #a78bfa;
+            --workflow-shadow: #0f0517;
+            --workflow-glow: #f3f0ff;
+            --workflow-neon: rgba(124, 58, 237, 0.8);
+            --workflow-glass: rgba(167, 139, 250, 0.1);
+            --workflow-accent: #06b6d4;
+            
+            /* Semantic Colors */
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.2);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.2);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Poppins', sans-serif;
+            
+            /* Shadows */
+            --shadow-workflow: 0 4px 32px rgba(124, 58, 237, 0.15);
+            --shadow-workflow-lg: 0 8px 64px rgba(124, 58, 237, 0.2);
+            --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.4);
+            --shadow-glow-lg: 0 0 40px rgba(124, 58, 237, 0.3);
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--workflow-shadow);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(124, 58, 237, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            padding: 60px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 32px;
+        }
+
+        /* TAMANHO DA LOGO: Altere os valores abaixo para ajustar o tamanho
+           Exemplo: 150px para médio, 200px para grande, 250px para muito grande */
+        .logo-icon {
+            width: 180px;  /* Largura da logo - EDITE AQUI */
+            height: 180px; /* Altura da logo - EDITE AQUI */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.5));
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--workflow-glass);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: var(--workflow-zen);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--workflow-energy);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 6vw, 52px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .header h1 .highlight {
+            background: linear-gradient(135deg, var(--workflow-energy) 0%, var(--workflow-zen) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Icon styles */
+        .icon-img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .icon-img.colored {
+            filter: none;
+        }
+
+        .icon-img.purple {
+            filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(1234%) hue-rotate(243deg) brightness(87%) contrast(101%);
+        }
+
+        .icon-img.green {
+            filter: brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(456%) hue-rotate(109deg) brightness(92%) contrast(94%);
+        }
+
+        .icon-img.red {
+            filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1352%) hue-rotate(338deg) brightness(99%) contrast(92%);
+        }
+
+        .icon-img.yellow {
+            filter: brightness(0) saturate(100%) invert(63%) sepia(98%) saturate(456%) hue-rotate(2deg) brightness(103%) contrast(97%);
+        }
+
+        /* Sections */
+        .section {
+            background: rgba(26, 13, 46, 0.6);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 24px auto;
+            max-width: 800px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-workflow-lg);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-title .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title .icon img {
+            width: 26px;
+            height: 26px;
+        }
+
+        .section-title .icon.danger {
+            background: var(--danger-glow);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .section-title .icon.danger img {
+            filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1352%) hue-rotate(338deg) brightness(99%) contrast(92%);
+        }
+
+        .section-title .icon.success {
+            background: var(--success-glow);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .section-title .icon.success img {
+            filter: brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(456%) hue-rotate(109deg) brightness(92%) contrast(94%);
+        }
+
+        .section-title .icon.primary {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .section-title .icon.primary img {
+            filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(1234%) hue-rotate(243deg) brightness(87%) contrast(101%);
+        }
+
+        .section-title .icon.warning {
+            background: var(--warning-glow);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .section-title .icon.warning img {
+            filter: brightness(0) saturate(100%) invert(63%) sepia(98%) saturate(456%) hue-rotate(2deg) brightness(103%) contrast(97%);
+        }
+
+        /* Problems Section */
+        .problems-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .problem-item:hover {
+            transform: translateX(8px);
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .problem-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .problem-icon img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+        }
+
+        .problem-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .problem-content p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Screenshot Section */
+        .screenshot-section {
+            background: rgba(245, 158, 11, 0.08);
+            border: 2px dashed rgba(245, 158, 11, 0.4);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 24px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .screenshot-placeholder {
+            background: rgba(26, 13, 46, 0.8);
+            border-radius: 16px;
+            padding: 60px 40px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+        }
+
+        .screenshot-placeholder.has-image {
+            padding: 20px;
+            border: none;
+        }
+
+        .screenshot-placeholder .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            opacity: 0.6;
+        }
+
+        .screenshot-placeholder .placeholder-icon img {
+            width: 100%;
+            height: 100%;
+            filter: brightness(0) invert(1) opacity(0.6);
+        }
+
+        .screenshot-placeholder h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .screenshot-placeholder p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .screenshot-placeholder img.screenshot-image {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--warning);
+        }
+
+        .screenshot-section-title img {
+            width: 28px;
+            height: 28px;
+            filter: brightness(0) saturate(100%) invert(63%) sepia(98%) saturate(456%) hue-rotate(2deg) brightness(103%) contrast(97%);
+        }
+
+        /* Benefits List */
+        .benefits-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 20px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateX(8px);
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .benefit-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .benefit-icon img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) invert(1);
+        }
+
+        .benefit-text {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .result-card {
+            padding: 24px;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            background: rgba(124, 58, 237, 0.12);
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: var(--shadow-workflow);
+        }
+
+        .result-card .card-icon {
+            width: 36px;
+            height: 36px;
+            margin: 0 auto 14px;
+        }
+
+        .result-card .card-icon img {
+            width: 100%;
+            height: 100%;
+            filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(1234%) hue-rotate(243deg) brightness(87%) contrast(101%);
+        }
+
+        .result-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .result-card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: linear-gradient(135deg, var(--workflow-energy) 0%, #9333ea 50%, var(--workflow-zen) 100%);
+            border-radius: 28px;
+            padding: 56px 40px;
+            margin: 24px auto;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .pricing-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pricing-badge img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        .price {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 10vw, 72px);
+            font-weight: 800;
+            margin: 16px 0;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .price-note {
+            font-size: 18px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+
+        .price-highlight {
+            background: white;
+            color: var(--workflow-energy);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-options {
+            margin-top: 24px;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .payment-options p {
+            font-size: 14px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .payment-method {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .payment-method img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+        }
+
+        .price-highlight img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(1234%) hue-rotate(243deg) brightness(87%) contrast(101%);
+        }
+
+        /* Process Section */
+        .process-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .process-item {
+            display: flex;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .process-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        .process-number {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--workflow-energy) 0%, var(--workflow-zen) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .process-content h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .process-content p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Delivery Section - New Grid Layout */
+        .delivery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .delivery-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .delivery-card:hover {
+            background: rgba(16, 185, 129, 0.12);
+            transform: translateY(-2px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .delivery-card .card-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .delivery-card .card-icon img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .delivery-card-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .delivery-card-content p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+            border-radius: 28px;
+            padding: 56px 40px;
+            margin: 24px auto;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-section h2 img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            opacity: 0.95;
+            margin-bottom: 28px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: #059669;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-button img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) saturate(100%) invert(45%) sepia(74%) saturate(1002%) hue-rotate(118deg) brightness(95%) contrast(95%);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 48px 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .footer-brand .logo-mini {
+            width: 32px;
+            height: 32px;
+        }
+
+        .footer-brand .logo-mini img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 18px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .highlight-box .title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--workflow-zen);
+            margin-bottom: 12px;
+        }
+
+        .highlight-box .title img {
+            width: 22px;
+            height: 22px;
+            filter: brightness(0) saturate(100%) invert(69%) sepia(25%) saturate(1234%) hue-rotate(212deg) brightness(102%) contrast(96%);
+        }
+
+        .highlight-box p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .highlight-box.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .highlight-box.success .title {
+            color: #34d399;
+        }
+
+        .highlight-box.success .title img {
+            filter: brightness(0) saturate(100%) invert(72%) sepia(38%) saturate(528%) hue-rotate(103deg) brightness(92%) contrast(92%);
+        }
+
+        /* Stat Highlight */
+        .stat-highlight {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(124, 58, 237, 0.2);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--workflow-zen);
+            font-size: 13px;
+            margin: 2px 4px;
+        }
+
+        .stat-highlight img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) saturate(100%) invert(69%) sepia(25%) saturate(1234%) hue-rotate(212deg) brightness(102%) contrast(96%);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .section {
+                padding: 28px 20px;
+                margin: 16px;
+                border-radius: 20px;
+            }
+
+            .header {
+                padding: 40px 20px 30px;
+            }
+
+            .pricing-section,
+            .cta-section {
+                padding: 40px 24px;
+                margin: 16px;
+            }
+
+            .screenshot-section {
+                margin: 16px;
+                padding: 28px 20px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .delivery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.7s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Intro Animation */
+        .section, .pricing-section, .cta-section, .screenshot-section {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="content">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <img src="https://i.ibb.co/hRs4pZJP/logo-workflow-sem-fundo2.png" alt="Workflow Logo">
+                </div>
+            </div>
+            
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Análise Gratuita<strong class="highlight" style="margin-left: 4px;">www.spadetto.com.br</strong>
+            </div>
+            
+            <h1>Seu Site Está <span class="highlight">Afastando</span><br>Clientes Potenciais</h1>
+            
+            <p>Identificamos pontos críticos que estão impedindo seu escritório de conquistar mais clientes online</p>
+        </header>
+
+        <div class="container">
+            <!-- Problems Section -->
+            <section class="section animate">
+                <h2 class="section-title">
+                    <span class="icon danger">
+                        <img src="https://img.icons8.com/?id=7964&format=png&size=64" alt="Análise">
+                    </span>
+                    Principais Problemas Identificados
+                </h2>
+                <div class="problems-list">
+                    <div class="problem-item">
+                        <div class="problem-icon">
+                            <img src="https://img.icons8.com/?id=3062&format=png&size=64" alt="X">
+                        </div>
+                        <div class="problem-content">
+                            <h4>Design Ultrapassado</h4>
+                            <p>O visual atual do site está afastando clientes potenciais antes mesmo de conhecerem seus serviços</p>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">
+                            <img src="https://img.icons8.com/?id=3062&format=png&size=64" alt="X">
+                        </div>
+                        <div class="problem-content">
+                            <h4>Não Otimizado Para Celular</h4>
+                            <p><span class="stat-highlight"><img src="https://img.icons8.com/?id=11409&format=png&size=64" alt="Mobile"> 70% dos usuários</span> acessam pelo celular e estão tendo uma experiência ruim</p>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">
+                            <img src="https://img.icons8.com/?id=3062&format=png&size=64" alt="X">
+                        </div>
+                        <div class="problem-content">
+                            <h4>Carregamento Lento</h4>
+                            <p>Tempo de carregamento acima de <span class="stat-highlight"><img src="https://img.icons8.com/?id=34&format=png&size=64" alt="Relógio"> 4 segundos</span> - cada segundo a mais reduz conversões em 7%</p>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">
+                            <img src="https://img.icons8.com/?id=3062&format=png&size=64" alt="X">
+                        </div>
+                        <div class="problem-content">
+                            <h4>Diferenciais Não Destacados</h4>
+                            <p>A estrutura atual não evidencia o que torna seu escritório único no mercado</p>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">
+                            <img src="https://img.icons8.com/?id=3062&format=png&size=64" alt="X">
+                        </div>
+                        <div class="problem-content">
+                            <h4>SEO Deficiente</h4>
+                            <p>Página sem otimização para mecanismos de busca - difícil de ser encontrado no Google</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screenshot Section -->
+            <section class="screenshot-section animate delay-1">
+                <h3 class="screenshot-section-title">
+                    <img src="https://img.icons8.com/?id=3005&format=png&size=64" alt="Gráfico">
+                    Resultado da Análise de Desempenho
+                </h3>
+                
+                <div class="screenshot-placeholder has-image" id="screenshotContainer">
+                    <img src="https://i.ibb.co/KjW7D54Z/resultado-analise-site-contabilidade1.png" alt="Resultado do teste de desempenho" class="screenshot-image">
+                </div>
+            </section>
+
+            <!-- Solution Section -->
+            <section class="section animate delay-2">
+                <h2 class="section-title">
+                    <span class="icon success">
+                        <img src="https://img.icons8.com/?id=20884&format=png&size=64" alt="Alvo">
+                    </span>
+                    O Que Você Recebe
+                </h2>
+                <p style="margin-bottom: 24px; color: rgba(255,255,255,0.6); font-size: 16px;">
+                    Tenho uma proposta irrecusável para transformar completamente a presença digital do seu escritório!
+                </p>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Site 100% responsivo (mobile + tablet + desktop)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Design moderno, atraente e exclusivo para seu escritório</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Otimização científica para conversão de visitantes em clientes</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">SEO otimizado - Melhora sua posição no Google</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Certificado SSL - Segurança total para seus clientes</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Velocidade otimizada - Carregamento total em menos de 2 segundos</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Site 100% editável - Clique, edite e atualize quando quiser</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Botões de WhatsApp flutuantes e estratégicos</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Pixel do Facebook/Google configurado para anúncios</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Formulário de captura de leads profissional (se necessário)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Analytics configurado - Dados precisos de visitantes (se necessário)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <img src="https://img.icons8.com/?id=3061&format=png&size=64" alt="Check">
+                        </div>
+                        <span class="benefit-text">Suporte pós-entrega incluso</span>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="title">
+                        <img src="https://img.icons8.com/?id=20183&format=png&size=64" alt="Lâmpada">
+                        Experiência Comprovada
+                    </div>
+                    <p>Já ajudei outros escritórios contábeis a <strong style="color: var(--workflow-zen);">triplicar seus leads online</strong> com essas mesmas melhorias! O método é testado e funciona.</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="section animate delay-3">
+                <h2 class="section-title">
+                    <span class="icon primary">
+                        <img src="https://img.icons8.com/?id=24926&format=png&size=64" alt="Pensamento">
+                    </span>
+                    O Que Você Pode Esperar
+                </h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=104&format=png&size=64" alt="Estrela">
+                        </div>
+                        <h4>Primeira Impressão Impecável</h4>
+                        <p>94% dos clientes julgam pela aparência do site</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=2073&format=png&size=64" alt="Troféu">
+                        </div>
+                        <h4>Confiança Instantânea</h4>
+                        <p>Design profissional transmite competência</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=20884&format=png&size=64" alt="Alvo">
+                        </div>
+                        <h4>Destaque da Concorrência</h4>
+                        <p>Diferenciação clara no mercado local</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=34&format=png&size=64" alt="Relógio">
+                        </div>
+                        <h4>Mais Tempo no Site</h4>
+                        <p>Visitantes ficam mais tempo navegando</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=3005&format=png&size=64" alt="Gráfico">
+                        </div>
+                        <h4>Mais Contatos</h4>
+                        <p>Aumento de 70-90% nas mensagens e ligações</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=484&format=png&size=64" alt="Dinheiro">
+                        </div>
+                        <h4>Custo por Cliente Menor</h4>
+                        <p>Menos investimento em marketing por cliente</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=1136&format=png&size=64" alt="Medalha">
+                        </div>
+                        <h4>Clientes Mais Qualificados</h4>
+                        <p>Pessoas que realmente precisam dos seus serviços</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=884&format=png&size=64" alt="Escudo">
+                        </div>
+                        <h4>Menos "Pneu Furado"</h4>
+                        <p>Menos consultas que não dão em nada</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section class="pricing-section animate delay-4">
+                <div class="pricing-content">
+                    <div class="pricing-badge">
+                        <img src="https://img.icons8.com/?id=999&format=png&size=64" alt="Foguete">
+                        Investimento Especial
+                    </div>
+                    <p class="price-note">Transformação completa do seu site por apenas</p>
+                    <div class="price">R$ 500</div>
+                    <div class="price-highlight">
+                        <img src="https://img.icons8.com/?id=11341&format=png&size=64" alt="Segurança">
+                        Pagamento só após aprovação!
+                    </div>
+
+                    <div class="payment-options">
+                        <p>Pague através de link seguro via:</p>
+                        <div class="payment-methods">
+                            <span class="payment-method">
+                                <img src="https://img.icons8.com/?id=62890&format=png&size=64" alt="PIX">
+                                PIX
+                            </span>
+                            <span class="payment-method">
+                                <img src="https://img.icons8.com/?id=1395&format=png&size=64" alt="Boleto">
+                                Boleto
+                            </span>
+                            <span class="payment-method">
+                                <img src="https://img.icons8.com/?id=52&format=png&size=64" alt="Cartão">
+                                Cartão até 12x
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Section -->
+            <section class="section animate delay-5">
+                <h2 class="section-title">
+                    <span class="icon warning">
+                        <img src="https://img.icons8.com/?id=364&format=png&size=64" alt="Engrenagem">
+                    </span>
+                    Como Funciona
+                </h2>
+                <div class="process-list">
+                    <div class="process-item">
+                        <div class="process-number">1</div>
+                        <div class="process-content">
+                            <h4>Desenvolvimento do Novo Site</h4>
+                            <p>Crio o novo site completo do seu escritório com todas as otimizações incluídas</p>
+                        </div>
+                    </div>
+                    <div class="process-item">
+                        <div class="process-number">2</div>
+                        <div class="process-content">
+                            <h4>Envio Para Análise</h4>
+                            <p>Você recebe o link da primeira versão pronta para analisar com calma</p>
+                        </div>
+                    </div>
+                    <div class="process-item">
+                        <div class="process-number">3</div>
+                        <div class="process-content">
+                            <h4>Ajustes Necessários</h4>
+                            <p>Você aprova o resultado e aponta todos os ajustes que desejar</p>
+                        </div>
+                    </div>
+                    <div class="process-item">
+                        <div class="process-number">4</div>
+                        <div class="process-content">
+                            <h4>Pagamento e Transferência</h4>
+                            <p>Efetua o pagamento (R$ 500) e transfiro tudo para sua hospedagem e domínio atual, ou diferente se preferir</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Delivery Section - Updated with new items -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="icon success">
+                        <img src="https://img.icons8.com/?id=11229&format=png&size=64" alt="Pacote">
+                    </span>
+                    O Que Eu Entrego
+                </h2>
+                <div class="delivery-grid">
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=1349&format=png&size=64" alt="Website">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Site Completo</h4>
+                            <p>Site completo totalmente otimizado e funcional</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=2778&format=png&size=64" alt="Código">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Código Fonte</h4>
+                            <p>100% de propriedade, sem restrições</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=6690&format=png&size=64" alt="Dashboard">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>CMS Builder</h4>
+                            <p>Painel administrativo para gerenciamento e edição visual</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=1395&format=png&size=64" alt="Documento">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Documentação Técnica</h4>
+                            <p>Especificações completas do projeto</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=57714&format=png&size=64" alt="Relatório">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Relatório de Performance</h4>
+                            <p>Análise completa de velocidade</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=4716&format=png&size=64" alt="Backup">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Backup Inicial</h4>
+                            <p>Cópia de segurança do projeto</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=6837&format=png&size=64" alt="Suporte">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Suporte Técnico</h4>
+                            <p>Atendimento especializado</p>
+                        </div>
+                    </div>
+                    <div class="delivery-card">
+                        <div class="card-icon">
+                            <img src="https://img.icons8.com/?id=884&format=png&size=64" alt="Garantia">
+                        </div>
+                        <div class="delivery-card-content">
+                            <h4>Garantia de 30 dias</h4>
+                            <p>Ajustes gratuitos por 1 mês após a entrega</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box success">
+                    <div class="title">
+                        <img src="https://img.icons8.com/?id=94&format=png&size=64" alt="Cadeado">
+                        Risco Zero Para Você
+                    </div>
+                    <p>O pagamento só é feito <strong style="color: #34d399;">após o site estar pronto e aprovado</strong>. Você vê exatamente o que vai receber antes de investir um centavo!</p>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="cta-content">
+                    <h2>
+                        <img src="https://img.icons8.com/?id=20183&format=png&size=64" alt="Lâmpada">
+                        Resultado: Mais Visitantes<br>Se Tornando Clientes Reais!
+                    </h2>
+                    <p>Posso começar o desenvolvimento agora mesmo, o que acha?</p>
+                    <a href="https://wa.me/5551999437916?text=Ol%C3%A1%2C%20j%C3%A1%20analisei%20a%20proposta%20e%20quero%20come%C3%A7ar%20o%20desenvolvimento%20do%20site!" target="_blank" class="cta-button">
+                        <img src="https://img.icons8.com/?id=118377&format=png&size=64" alt="Chat">
+                        Vamos Conversar!
+                    </a>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-brand">
+                    <div class="logo-mini">
+                        <img src="https://i.ibb.co/hRs4pZJP/logo-workflow-sem-fundo2.png" alt="Workflow">
+                    </div>
+                    Workflow
+                </div>
+                <p>Transformando presença digital em resultados reais</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section, .pricing-section, .cta-section, .screenshot-section').forEach(el => {
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+            observer.observe(el);
+        });
+
+        // Helper function to add screenshot image
+        // Usage: Call addScreenshot('URL_DA_SUA_IMAGEM') in the browser console
+        function addScreenshot(imageUrl) {
+            const container = document.getElementById('screenshotContainer');
+            container.className = 'screenshot-placeholder has-image';
+            container.innerHTML = `<img src="${imageUrl}" alt="Resultado do teste de desempenho" class="screenshot-image">`;
+        }
+    </script>
+</body>
+</html>

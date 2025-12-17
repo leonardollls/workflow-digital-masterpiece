@@ -157,25 +157,55 @@ export const isWhatsAppLink = (url: string): boolean => {
 }
 
 /**
- * Formata telefone brasileiro
+ * Formata telefone brasileiro para o formato 55XXXXXXXXXXX (apenas números com código do país)
+ * Exemplo: "5554999226134"
  */
 export const formatPhone = (phone: string | undefined): string => {
   if (!phone) return ''
   
   // Remove tudo que não é número
-  const numbers = phone.replace(/\D/g, '')
+  let numbers = phone.replace(/\D/g, '')
   
-  // Formatar como (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
-  if (numbers.length === 11) {
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`
-  } else if (numbers.length === 10) {
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`
-  } else if (numbers.length === 13 && numbers.startsWith('55')) {
-    // Remove código do país
-    return formatPhone(numbers.slice(2))
+  // Se não tem números, retorna vazio
+  if (!numbers) return ''
+  
+  // Se já começa com 55 e tem 12 ou 13 dígitos, está no formato correto
+  if (numbers.startsWith('55')) {
+    if (numbers.length === 13 || numbers.length === 12) {
+      return numbers
+    }
+    // Remove o 55 para reprocessar se o formato estiver incorreto
+    numbers = numbers.slice(2)
   }
   
-  return phone
+  // Remove zero inicial (comum em números brasileiros: 054... -> 54...)
+  if (numbers.startsWith('0')) {
+    numbers = numbers.slice(1)
+  }
+  
+  // Telefone com 11 dígitos (DDD + 9 dígitos) - celular
+  if (numbers.length === 11) {
+    return `55${numbers}`
+  }
+  
+  // Telefone com 10 dígitos (DDD + 8 dígitos) - fixo
+  if (numbers.length === 10) {
+    return `55${numbers}`
+  }
+  
+  // Telefone com 9 dígitos (sem DDD, só celular) - não podemos adicionar DDD
+  // Retorna apenas os números disponíveis
+  if (numbers.length === 9) {
+    return numbers
+  }
+  
+  // Telefone com 8 dígitos (sem DDD, fixo ou celular antigo)
+  if (numbers.length === 8) {
+    return numbers
+  }
+  
+  // Para outros formatos, retorna apenas os números
+  return numbers
 }
 
 /**

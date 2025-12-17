@@ -1285,6 +1285,103 @@
    END SPLASH LOADER ANIMATIONS
    ============================================ */
 
+/* ============================================
+   VENDAS PAGE ANIMATIONS
+   ============================================ */
+
+/* Scroll Through Animation */
+.animate-scroll-through {
+  animation: scroll-through 30s linear infinite;
+}
+
+@keyframes scroll-through {
+  0% {
+    transform: translateY(0);
+  }
+  45% {
+    transform: translateY(-60%);
+  }
+  50% {
+    transform: translateY(-60%);
+  }
+  95% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* QR Code Scan Line */
+.animate-scan-line {
+  animation: scan-line-move 2s linear infinite;
+}
+
+@keyframes scan-line-move {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    top: 100%;
+    opacity: 1;
+  }
+}
+
+/* Hotspot Pulse Animation */
+@keyframes hotspot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* 3D Perspective Utilities */
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Draw Circle Animation for Lighthouse */
+@keyframes draw-circle {
+  from {
+    stroke-dasharray: 0 283;
+  }
+  to {
+    stroke-dasharray: var(--score) 283;
+  }
+}
+
+.animate-draw-circle {
+  animation: draw-circle 1.5s ease-out forwards;
+}
+
+/* Counter Animation */
+@keyframes count-up-number {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   END VENDAS PAGE ANIMATIONS
+   ============================================ */
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,

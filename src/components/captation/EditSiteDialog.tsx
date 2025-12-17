@@ -91,33 +91,58 @@ export const EditSiteDialog = ({
     )
   }
 
-  // Initialize form data when site changes
+  // Initialize form data when site changes and load cities
   useEffect(() => {
-    if (site) {
-      setFormData({
-        company_name: site.company_name || '',
-        website_url: site.website_url || '',
-        state_id: site.city?.state_id || '',
-        city_id: site.city_id || '',
-        category_id: site.category_id || '',
-        contact_person: site.contact_person || '',
-        phone: site.phone || '',
-        email: site.email || '',
-        contact_link: site.contact_link || '',
-        proposal_link: site.proposal_link || '',
-        proposal_status: site.proposal_status || 'pending',
-        service_value: site.service_value ? `R$ ${site.service_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '',
-        notes: site.notes || '',
-        google_rating: site.google_rating?.toString() || '',
-        google_reviews_count: site.google_reviews_count?.toString() || '',
-        google_maps_url: site.google_maps_url || '',
-        next_contact_date: site.next_contact_date || '',
-        priority: site.priority || 'normal'
-      })
+    const initializeFormData = async () => {
+      if (site) {
+        const stateId = site.city?.state_id || site.city?.state?.id || ''
+        
+        // Carregar cidades do estado antes de definir o formData completo
+        if (stateId) {
+          try {
+            const citiesResult = await getCitiesByState(stateId)
+            setStateCities(citiesResult)
+          } catch (err) {
+            console.error('Erro ao carregar cidades:', err)
+          }
+        }
+        
+        setFormData({
+          company_name: site.company_name || '',
+          website_url: site.website_url || '',
+          state_id: stateId,
+          city_id: site.city_id || '',
+          category_id: site.category_id || '',
+          contact_person: site.contact_person || '',
+          phone: site.phone || '',
+          email: site.email || '',
+          contact_link: site.contact_link || '',
+          proposal_link: site.proposal_link || '',
+          proposal_status: site.proposal_status || 'pending',
+          service_value: site.service_value ? `R$ ${site.service_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '',
+          notes: site.notes || '',
+          google_rating: site.google_rating?.toString() || '',
+          google_reviews_count: site.google_reviews_count?.toString() || '',
+          google_maps_url: site.google_maps_url || '',
+          next_contact_date: site.next_contact_date || '',
+          priority: site.priority || 'normal'
+        })
+      }
     }
+    
+    initializeFormData()
   }, [site])
 
+  // Recarregar cidades quando o estado muda manualmente (não na inicialização)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  
   useEffect(() => {
+    // Na inicialização, as cidades já foram carregadas no useEffect acima
+    if (isInitialLoad) {
+      setIsInitialLoad(false)
+      return
+    }
+    
     const loadCities = async () => {
       if (!formData.state_id) {
         setStateCities([])

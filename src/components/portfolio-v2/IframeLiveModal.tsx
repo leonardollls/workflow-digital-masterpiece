@@ -30,9 +30,10 @@ const PROXY_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/iframe-proxy`;
 // Sites que precisam passar pelo proxy (bloqueiam X-Frame-Options ou tem CORS issues)
 // NOTA: Sites React/Vite (como gynfood.vercel.app) nao devem usar proxy pois quebra o fetch client-side
 // A solucao para estes e configurar vercel.json com headers de frame-ancestors
+// NOTA 2: reidocreditoficial.com.br REMOVIDO - site permite iframe direto (sem X-Frame-Options)
 const SITES_REQUIRING_PROXY = [
   'liviarosaadvocacia.com.br',
-  'reidocreditoficial.com.br',
+  // 'reidocreditoficial.com.br', // REMOVIDO - site React/Vite permite iframe direto
   'sandrasouzaacademy.com',
   'dxlub.com',
   'conexaai.com.br',

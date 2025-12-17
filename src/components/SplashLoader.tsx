@@ -326,7 +326,6 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
                 width={64}
                 height={64}
                 className="w-full h-full object-contain logo-pulse"
-                fetchPriority="high"
               />
             </div>
           </div>
