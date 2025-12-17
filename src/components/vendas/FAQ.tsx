@@ -8,8 +8,8 @@ interface FAQItem {
 
 const faqData: FAQItem[] = [
   {
-    question: 'Vocês cuidam da hospedagem e domínio?',
-    answer: 'Sim, podemos cuidar de toda a configuração técnica, se necessário. Configuramos a hospedagem otimizada e deixamos tudo funcionando perfeitamente!'
+    question: 'Você cuida da hospedagem e domínio?',
+    answer: 'Sim, posso cuidar de toda a configuração técnica, se necessário. Configuro a hospedagem otimizada e deixo tudo funcionando perfeitamente!'
   },
   {
     question: 'O site ficará no meu nome e domínio?',
@@ -21,15 +21,15 @@ const faqData: FAQItem[] = [
   },
   {
     question: 'Posso fazer alterações no site depois?',
-    answer: 'Sim! Você terá acesso completo ao código fonte e poderá fazer alterações quando quiser. Além disso, oferecemos suporte técnico para auxiliar em qualquer modificação futura que desejar.'
+    answer: 'Sim! Você terá acesso completo ao código fonte e poderá fazer alterações quando quiser. Além disso, ofereço suporte técnico para auxiliar em qualquer modificação futura que desejar.'
   },
   {
     question: 'E se eu não gostei do resultado atual?',
-    answer: 'Oferecemos 30 dias de garantia para quaisquer ajustes e mudanças desejadas.'
+    answer: 'Ofereço 30 dias de garantia para quaisquer ajustes e mudanças desejadas.'
   },
   {
     question: 'O site funcionará bem no celular?',
-    answer: 'Sim, todos os nossos sites são 100% responsivos! Funcionam perfeitamente em celulares, tablets e desktops, garantindo uma experiência excelente em qualquer dispositivo.'
+    answer: 'Sim, o site é totalmente responsivo! Funciona perfeitamente em celulares, tablets e desktops, garantindo uma experiência excelente em qualquer dispositivo.'
   }
 ];
 

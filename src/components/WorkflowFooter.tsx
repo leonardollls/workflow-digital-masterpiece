@@ -16,7 +16,7 @@ const WorkflowFooter = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Copyright */}
           <div className="text-white/60 text-sm text-center md:text-left">
-            <span className="block md:inline">Workflow Services © {currentYear}</span>
+            <span className="block md:inline">Dev. Leonardo Lopes © {currentYear}</span>
             <span className="hidden md:inline"> </span>
             <span className="block md:inline">Todos os direitos reservados.</span>
           </div>

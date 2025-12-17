@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GlassBackground } from '@/components/portfolio-v2';
 import WorkflowFooter from '@/components/WorkflowFooter';
-import SplashLoader from '@/components/SplashLoader';
 import {
   SocialProof,
   LighthouseScores,
@@ -15,6 +14,7 @@ import {
   FAQ,
   LogoCarousel,
   DeveloperShowcase,
+  LidderaSplashLoader,
 } from '@/components/vendas';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
@@ -238,7 +238,7 @@ const VendasLiddera = () => {
     <>
       {/* Splash Loading Screen */}
       {showSplash && (
-        <SplashLoader onComplete={handleSplashComplete} duration={1200} />
+        <LidderaSplashLoader onComplete={handleSplashComplete} duration={1200} />
       )}
 
       {/* Preview Modal */}
@@ -705,7 +705,7 @@ const VendasLiddera = () => {
 
               {/* Row 5: Social Proof */}
               <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <h3 className="text-white font-semibold mb-4 text-center">Por que confiar na Workflow?</h3>
+                <h3 className="text-white font-semibold mb-4 text-center">Por que confiar em mim?</h3>
                 <SocialProof />
               </div>
 
@@ -916,7 +916,7 @@ const VendasLiddera = () => {
                 <div className="mt-12">
                   <div className="text-center mb-6">
                     <h3 className="text-white/90 text-xl font-semibold mb-2">
-                      Empresas que <span className="bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] bg-clip-text text-transparent">confiam</span> em nós
+                      Empresas que <span className="bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] bg-clip-text text-transparent">confiaram</span> no meu trabalho
                     </h3>
                     <p className="text-white/50 text-sm">Mais de 50 empresas com sites modernos e de alta performance</p>
                   </div>

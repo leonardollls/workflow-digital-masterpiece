@@ -14,4 +14,5 @@ export { default as HeroMockup3D } from './HeroMockup3D';
 export { default as FAQ } from './FAQ';
 export { default as LogoCarousel } from './LogoCarousel';
 export { default as DeveloperShowcase } from './DeveloperShowcase';
+export { default as LidderaSplashLoader } from './LidderaSplashLoader';
 

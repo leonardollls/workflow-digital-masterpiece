@@ -184,7 +184,7 @@ const DeveloperShowcase = () => {
                             <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </a>
                           <a
-                            href="mailto:contato@workflow.com.br"
+                            href="mailto:contato@leonardolopes.dev"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:border-blue-500/30 transition-all duration-300"
