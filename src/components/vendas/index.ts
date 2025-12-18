@@ -15,4 +15,5 @@ export { default as FAQ } from './FAQ';
 export { default as LogoCarousel } from './LogoCarousel';
 export { default as DeveloperShowcase } from './DeveloperShowcase';
 export { default as LidderaSplashLoader } from './LidderaSplashLoader';
-
+export { default as EnvelSplashLoader } from './EnvelSplashLoader';
+export { default as InoveSplashLoader } from './InoveSplashLoader';

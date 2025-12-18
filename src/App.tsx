@@ -20,6 +20,8 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const VendasLiddera = lazy(() => import("./pages/VendasLiddera"));
+const VendasEnvel = lazy(() => import("./pages/VendasEnvel"));
+const VendasInove = lazy(() => import("./pages/VendasInove"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,6 +76,8 @@ function App() {
               <Route path="/termos-de-uso" element={<Terms />} />
               <Route path="/politica-de-privacidade" element={<Privacy />} />
               <Route path="/site/liddera" element={<VendasLiddera />} />
+              <Route path="/site/envel" element={<VendasEnvel />} />
+              <Route path="/site/inove" element={<VendasInove />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

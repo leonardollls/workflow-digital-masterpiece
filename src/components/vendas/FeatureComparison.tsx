@@ -6,17 +6,22 @@ interface ComparisonItem {
   newSite: boolean;
 }
 
-const FeatureComparison = () => {
-  const comparisons: ComparisonItem[] = [
-    { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
-    { feature: '100% Responsivo', oldSite: false, newSite: true },
-    { feature: 'SEO Otimizado', oldSite: false, newSite: true },
-    { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
-    { feature: 'Animações Profissionais', oldSite: false, newSite: true },
-    { feature: 'Formulário Inteligente', oldSite: false, newSite: true },
-    { feature: 'Google Maps Integrado', oldSite: false, newSite: true },
-    { feature: 'Performance A+', oldSite: false, newSite: true },
-  ];
+interface FeatureComparisonProps {
+  comparisons?: ComparisonItem[];
+}
+
+const defaultComparisons: ComparisonItem[] = [
+  { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
+  { feature: '100% Responsivo', oldSite: false, newSite: true },
+  { feature: 'SEO Otimizado', oldSite: false, newSite: true },
+  { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
+  { feature: 'Animações Profissionais', oldSite: false, newSite: true },
+  { feature: 'Formulário Inteligente', oldSite: false, newSite: true },
+  { feature: 'Google Maps Integrado', oldSite: false, newSite: true },
+  { feature: 'Performance A+', oldSite: false, newSite: true },
+];
+
+const FeatureComparison = ({ comparisons = defaultComparisons }: FeatureComparisonProps) => {
 
   return (
     <div className="w-full">
