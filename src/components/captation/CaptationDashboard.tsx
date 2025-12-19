@@ -75,6 +75,7 @@ import { CaptationAnalytics } from './CaptationAnalytics'
 import { ProposalTemplates } from './ProposalTemplates'
 import { BulkDeleteDialog } from './BulkDeleteDialog'
 import { DeleteSiteDialog } from './DeleteSiteDialog'
+import { EditableField } from './EditableField'
 
 export const CaptationDashboard = () => {
   const [states, setStates] = useState<State[]>([])
@@ -280,6 +281,23 @@ export const CaptationDashboard = () => {
     }
   }
 
+  const handleQuickUpdate = async (siteId: string, field: string, value: string) => {
+    try {
+      const updatedSite = await updateCaptationSite({
+        id: siteId,
+        [field]: value || null
+      })
+      
+      // Atualizar estado local
+      setSites(prev => prev.map(site => 
+        site.id === siteId ? { ...site, [field]: value || null } : site
+      ))
+    } catch (err: any) {
+      console.error(`Erro ao atualizar ${field}:`, err)
+      throw err
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
@@ -460,7 +478,7 @@ export const CaptationDashboard = () => {
 
       {/* Estatísticas */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-200">Total de Sites</CardTitle>
@@ -474,7 +492,7 @@ export const CaptationDashboard = () => {
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-200">Pendentes</CardTitle>
-              <Clock className="h-4 w-4 text-slate-400" />
+              <Clock className="h-4 w-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-yellow-400">{stats.pending_proposals}</div>
@@ -483,28 +501,8 @@ export const CaptationDashboard = () => {
 
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-200">A Enviar</CardTitle>
-              <Send className="h-4 w-4 text-slate-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-400">{stats.to_send_proposals}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-900 border-slate-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-200">Aceitas</CardTitle>
-              <CheckCircle className="h-4 w-4 text-slate-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-emerald-400">{stats.accepted_proposals}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-900 border-slate-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-200">Em Execução</CardTitle>
-              <PlayCircle className="h-4 w-4 text-slate-400" />
+              <PlayCircle className="h-4 w-4 text-blue-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-400">{stats.in_progress_proposals}</div>
@@ -513,8 +511,28 @@ export const CaptationDashboard = () => {
 
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-200">Projetos Pagos</CardTitle>
-              <DollarSign className="h-4 w-4 text-slate-400" />
+              <CardTitle className="text-sm font-medium text-slate-200">A Enviar</CardTitle>
+              <Send className="h-4 w-4 text-orange-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-400">{stats.to_send_proposals}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-slate-200">Aceitos</CardTitle>
+              <CheckCircle className="h-4 w-4 text-emerald-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-emerald-400">{stats.accepted_proposals}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-slate-200">Pagos</CardTitle>
+              <DollarSign className="h-4 w-4 text-purple-400" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-400">{stats.paid_proposals}</div>
@@ -524,7 +542,7 @@ export const CaptationDashboard = () => {
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-200">Valor Total Pago</CardTitle>
-              <TrendingUp className="h-4 w-4 text-slate-400" />
+              <TrendingUp className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold text-emerald-400">
@@ -995,38 +1013,34 @@ export const CaptationDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     {site.contact_person && (
                       <div>
                         <label className="text-sm font-medium text-slate-400">Contato</label>
                         <p className="text-sm text-slate-300">{site.contact_person}</p>
                       </div>
                     )}
-                    {site.phone && (
-                      <div>
-                        <label className="text-sm font-medium text-slate-400">Telefone</label>
-                        <p className="text-sm text-slate-300">{site.phone}</p>
-                      </div>
-                    )}
+                    <EditableField
+                      label="Telefone"
+                      value={site.phone}
+                      onSave={(value) => handleQuickUpdate(site.id, 'phone', value)}
+                      type="phone"
+                      placeholder="Não informado"
+                    />
                     {site.email && (
                       <div>
                         <label className="text-sm font-medium text-slate-400">E-mail</label>
                         <p className="text-sm text-slate-300">{site.email}</p>
                       </div>
                     )}
-                    {site.website_url && (
-                      <div>
-                        <label className="text-sm font-medium text-slate-400">Website</label>
-                        <a 
-                          href={site.website_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-sm text-blue-400 hover:underline flex items-center gap-1"
-                        >
-                          Ver site <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
-                    )}
+                    <EditableField
+                      label="Website"
+                      value={site.website_url}
+                      onSave={(value) => handleQuickUpdate(site.id, 'website_url', value)}
+                      type="url"
+                      placeholder="Não informado"
+                      showLink={true}
+                    />
                     {site.google_maps_url && (
                       <div>
                         <label className="text-sm font-medium text-slate-400">Google Maps</label>
@@ -1095,12 +1109,15 @@ export const CaptationDashboard = () => {
                     </div>
                   </div>
 
-                  {site.notes && (
-                    <div className="mt-4 p-3 bg-slate-800 rounded-md">
-                      <label className="text-sm font-medium text-slate-400">Observações</label>
-                      <p className="text-sm text-slate-300 mt-1">{site.notes}</p>
-                    </div>
-                  )}
+                  <div className="mt-4 p-3 bg-slate-800 rounded-md">
+                    <EditableField
+                      label="Observações"
+                      value={site.notes}
+                      onSave={(value) => handleQuickUpdate(site.id, 'notes', value)}
+                      type="textarea"
+                      placeholder="Adicionar observações..."
+                    />
+                  </div>
                 </CardContent>
               </Card>
             ))}
