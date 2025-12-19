@@ -247,6 +247,37 @@ export const deleteCaptationSite = async (siteId: string): Promise<void> => {
   }
 }
 
+// Exclusão em massa de sites
+export const bulkDeleteSites = async (siteIds: string[]): Promise<number> => {
+  if (siteIds.length === 0) return 0
+
+  // Primeiro, excluir os registros da tabela de histórico
+  await supabase
+    .from('captation_status_history')
+    .delete()
+    .in('site_id', siteIds)
+
+  // Excluir registros da tabela de tags
+  await supabase
+    .from('captation_site_tags')
+    .delete()
+    .in('site_id', siteIds)
+
+  // Por fim, excluir os sites
+  const { data, error } = await supabase
+    .from('captation_sites')
+    .delete()
+    .in('id', siteIds)
+    .select('id')
+
+  if (error) {
+    console.error('Erro ao deletar sites em massa:', error)
+    throw new Error('Erro ao deletar sites em massa')
+  }
+
+  return data?.length || 0
+}
+
 // Atualização em massa de status
 export const bulkUpdateStatus = async (
   siteIds: string[], 

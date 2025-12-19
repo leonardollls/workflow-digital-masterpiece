@@ -39,7 +39,8 @@ import {
   LayoutList,
   Tags,
   BarChart3,
-  Edit2
+  Edit2,
+  Trash2
 } from 'lucide-react'
 import type { 
   State, 
@@ -59,7 +60,9 @@ import {
   getCitiesByState,
   getCategories,
   updateCaptationSite,
-  bulkUpdateStatus
+  bulkUpdateStatus,
+  bulkDeleteSites,
+  deleteCaptationSite
 } from '@/services/captationService'
 import { AddSiteDialog } from './AddSiteDialog'
 import { EditSiteDialog } from './EditSiteDialog'
@@ -70,6 +73,8 @@ import { ExportDialog } from './ExportDialog'
 import { TagsManager } from './TagsManager'
 import { CaptationAnalytics } from './CaptationAnalytics'
 import { ProposalTemplates } from './ProposalTemplates'
+import { BulkDeleteDialog } from './BulkDeleteDialog'
+import { DeleteSiteDialog } from './DeleteSiteDialog'
 
 export const CaptationDashboard = () => {
   const [states, setStates] = useState<State[]>([])
@@ -104,6 +109,10 @@ export const CaptationDashboard = () => {
   const [statusChangeSite, setStatusChangeSite] = useState<CaptationSite | null>(null)
   const [selectedSites, setSelectedSites] = useState<string[]>([])
   const [bulkUpdating, setBulkUpdating] = useState(false)
+  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false)
+  const [bulkDeleting, setBulkDeleting] = useState(false)
+  const [deletingSite, setDeletingSite] = useState<CaptationSite | null>(null)
+  const [singleDeleting, setSingleDeleting] = useState(false)
 
   // Carregar dados iniciais
   useEffect(() => {
@@ -240,18 +249,51 @@ export const CaptationDashboard = () => {
     }
   }
 
+  const handleBulkDelete = async () => {
+    if (selectedSites.length === 0) return
+    
+    try {
+      setBulkDeleting(true)
+      await bulkDeleteSites(selectedSites)
+      setSelectedSites([])
+      await loadSitesAndStats()
+    } catch (err: any) {
+      console.error('Erro ao excluir sites em massa:', err)
+    } finally {
+      setBulkDeleting(false)
+      setShowBulkDeleteDialog(false)
+    }
+  }
+
+  const handleSingleDelete = async () => {
+    if (!deletingSite) return
+    
+    try {
+      setSingleDeleting(true)
+      await deleteCaptationSite(deletingSite.id)
+      await loadSitesAndStats()
+    } catch (err: any) {
+      console.error('Erro ao excluir site:', err)
+    } finally {
+      setSingleDeleting(false)
+      setDeletingSite(null)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
+      case 'pending':
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" />Pendente</Badge>
+      case 'in_progress':
+        return <Badge variant="default" className="bg-blue-500"><PlayCircle className="w-3 h-3 mr-1" />Em Execução</Badge>
       case 'to_send':
         return <Badge variant="default" className="bg-orange-500"><Send className="w-3 h-3 mr-1" />A Enviar</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-green-500"><CheckCircle className="w-3 h-3 mr-1" />Aceita</Badge>
+        return <Badge variant="default" className="bg-green-500"><CheckCircle className="w-3 h-3 mr-1" />Aceito</Badge>
       case 'rejected':
-        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" />Negada</Badge>
-      case 'in_progress':
-        return <Badge variant="default" className="bg-blue-500"><PlayCircle className="w-3 h-3 mr-1" />Em Execução</Badge>
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" />Negado</Badge>
       case 'paid':
-        return <Badge variant="default" className="bg-purple-500"><DollarSign className="w-3 h-3 mr-1" />Projeto Pago</Badge>
+        return <Badge variant="default" className="bg-purple-500"><DollarSign className="w-3 h-3 mr-1" />Pago</Badge>
       default:
         return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" />Pendente</Badge>
     }
@@ -288,7 +330,7 @@ export const CaptationDashboard = () => {
           comparison = (a.google_rating || 0) - (b.google_rating || 0)
           break
         case 'proposal_status':
-          const statusOrder = ['pending', 'to_send', 'accepted', 'in_progress', 'paid', 'rejected']
+          const statusOrder = ['pending', 'in_progress', 'to_send', 'accepted', 'rejected', 'paid']
           comparison = statusOrder.indexOf(a.proposal_status) - statusOrder.indexOf(b.proposal_status)
           break
         case 'next_contact_date':
@@ -584,6 +626,11 @@ export const CaptationDashboard = () => {
                     <Clock className="w-3 h-3 text-gray-400" /> Pendente
                   </div>
                 </SelectItem>
+                <SelectItem value="in_progress" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <PlayCircle className="w-3 h-3 text-blue-400" /> Em Execução
+                  </div>
+                </SelectItem>
                 <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">
                   <div className="flex items-center gap-2">
                     <Send className="w-3 h-3 text-orange-400" /> A Enviar
@@ -591,17 +638,12 @@ export const CaptationDashboard = () => {
                 </SelectItem>
                 <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-emerald-400" /> Aceita
+                    <CheckCircle className="w-3 h-3 text-emerald-400" /> Aceito
                   </div>
                 </SelectItem>
                 <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">
                   <div className="flex items-center gap-2">
-                    <XCircle className="w-3 h-3 text-red-400" /> Negada
-                  </div>
-                </SelectItem>
-                <SelectItem value="in_progress" className="text-slate-200 focus:bg-slate-700 focus:text-white">
-                  <div className="flex items-center gap-2">
-                    <PlayCircle className="w-3 h-3 text-blue-400" /> Em Execução
+                    <XCircle className="w-3 h-3 text-red-400" /> Negado
                   </div>
                 </SelectItem>
                 <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">
@@ -717,11 +759,21 @@ export const CaptationDashboard = () => {
               <Button 
                 size="sm" 
                 onClick={() => setShowBulkStatusDialog(true)}
-                disabled={bulkUpdating}
+                disabled={bulkUpdating || bulkDeleting}
                 className="gap-2 bg-purple-600 hover:bg-purple-700 text-white"
               >
                 <CheckSquare className="w-4 h-4" />
                 Alterar Status em Massa
+              </Button>
+              <Button 
+                size="sm" 
+                variant="destructive"
+                onClick={() => setShowBulkDeleteDialog(true)}
+                disabled={bulkUpdating || bulkDeleting}
+                className="gap-2 bg-red-600 hover:bg-red-700 text-white"
+              >
+                <Trash2 className="w-4 h-4" />
+                Excluir Selecionados
               </Button>
               <Button 
                 size="sm" 
@@ -846,6 +898,15 @@ export const CaptationDashboard = () => {
                               title="Editar"
                             >
                               <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                              onClick={() => setDeletingSite(site)}
+                              title="Excluir"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
                         </td>
@@ -1012,14 +1073,26 @@ export const CaptationDashboard = () => {
                         </Button>
                       )}
                     </div>
-                    <Button 
-                      size="sm" 
-                      variant="ghost"
-                      onClick={() => setEditingSite(site)}
-                      className="text-slate-400 hover:text-white hover:bg-slate-800"
-                    >
-                      Editar
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => setEditingSite(site)}
+                        className="text-slate-400 hover:text-white hover:bg-slate-800"
+                      >
+                        <Edit2 className="w-4 h-4 mr-1" />
+                        Editar
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => setDeletingSite(site)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Excluir
+                      </Button>
+                    </div>
                   </div>
 
                   {site.notes && (
@@ -1178,6 +1251,24 @@ export const CaptationDashboard = () => {
         onOpenChange={setShowProposalTemplates}
         categories={categories}
       />
+
+      <BulkDeleteDialog
+        open={showBulkDeleteDialog}
+        onOpenChange={setShowBulkDeleteDialog}
+        selectedCount={selectedSites.length}
+        onConfirmDelete={handleBulkDelete}
+        loading={bulkDeleting}
+      />
+
+      {deletingSite && (
+        <DeleteSiteDialog
+          open={!!deletingSite}
+          onOpenChange={(open) => !open && setDeletingSite(null)}
+          siteName={deletingSite.company_name}
+          onConfirmDelete={handleSingleDelete}
+          loading={singleDeleting}
+        />
+      )}
     </div>
   )
 } 

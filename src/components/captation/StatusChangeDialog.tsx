@@ -69,11 +69,11 @@ export const StatusChangeDialog = ({
   const getStatusLabel = (status: ProposalStatus) => {
     switch (status) {
       case 'pending': return 'Pendente'
-      case 'to_send': return 'A Enviar'
-      case 'accepted': return 'Aceita'
-      case 'rejected': return 'Negada'
       case 'in_progress': return 'Em Execução'
-      case 'paid': return 'Projeto Pago'
+      case 'to_send': return 'A Enviar'
+      case 'accepted': return 'Aceito'
+      case 'rejected': return 'Negado'
+      case 'paid': return 'Pago'
       default: return status
     }
   }
@@ -100,11 +100,11 @@ export const StatusChangeDialog = ({
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
                 <SelectItem value="pending" className="text-slate-200 focus:bg-slate-700 focus:text-white">Pendente</SelectItem>
-                <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">A Enviar</SelectItem>
-                <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">Aceita</SelectItem>
-                <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">Negada</SelectItem>
                 <SelectItem value="in_progress" className="text-slate-200 focus:bg-slate-700 focus:text-white">Em Execução</SelectItem>
-                <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">Projeto Pago</SelectItem>
+                <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">A Enviar</SelectItem>
+                <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">Aceito</SelectItem>
+                <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">Negado</SelectItem>
+                <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">Pago</SelectItem>
               </SelectContent>
             </Select>
           </div>

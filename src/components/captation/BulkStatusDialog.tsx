@@ -27,11 +27,11 @@ interface BulkStatusDialogProps {
 
 const statusOptions = [
   { value: 'pending', label: 'Pendente', icon: Clock, color: 'text-slate-600', bgColor: 'bg-gray-100' },
-  { value: 'to_send', label: 'A Enviar', icon: Send, color: 'text-orange-600', bgColor: 'bg-orange-100' },
-  { value: 'accepted', label: 'Aceita', icon: CheckCircle, color: 'text-green-600', bgColor: 'bg-green-100' },
-  { value: 'rejected', label: 'Negada', icon: XCircle, color: 'text-red-600', bgColor: 'bg-red-100' },
   { value: 'in_progress', label: 'Em Execução', icon: PlayCircle, color: 'text-blue-600', bgColor: 'bg-blue-100' },
-  { value: 'paid', label: 'Projeto Pago', icon: DollarSign, color: 'text-purple-600', bgColor: 'bg-purple-100' }
+  { value: 'to_send', label: 'A Enviar', icon: Send, color: 'text-orange-600', bgColor: 'bg-orange-100' },
+  { value: 'accepted', label: 'Aceito', icon: CheckCircle, color: 'text-green-600', bgColor: 'bg-green-100' },
+  { value: 'rejected', label: 'Negado', icon: XCircle, color: 'text-red-600', bgColor: 'bg-red-100' },
+  { value: 'paid', label: 'Pago', icon: DollarSign, color: 'text-purple-600', bgColor: 'bg-purple-100' }
 ]
 
 export const BulkStatusDialog = ({ 
