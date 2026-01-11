@@ -17,3 +17,4 @@ export { default as DeveloperShowcase } from './DeveloperShowcase';
 export { default as LidderaSplashLoader } from './LidderaSplashLoader';
 export { default as EnvelSplashLoader } from './EnvelSplashLoader';
 export { default as InoveSplashLoader } from './InoveSplashLoader';
+export { default as AdminPanelShowcase } from './AdminPanelShowcase';
