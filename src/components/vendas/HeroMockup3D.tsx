@@ -140,14 +140,20 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
                 {/* Botão Play Animado no Centro */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                   <div className="relative">
-                    {/* Círculos pulsantes */}
+                    {/* Círculos pulsantes - múltiplas camadas para efeito mais suave */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/30 animate-ping" />
-                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/20 animate-pulse" />
+                      <div className="absolute w-20 h-20 rounded-full bg-purple-500/40 animate-ping" style={{ animationDuration: '2s' }} />
+                      <div className="absolute w-20 h-20 rounded-full bg-purple-500/30 animate-pulse" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
+                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/20 animate-pulse" style={{ animationDuration: '1.5s' }} />
+                    </div>
+                    
+                    {/* Glow effect pulsante */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute w-20 h-20 rounded-full bg-purple-500/50 blur-xl animate-pulse" style={{ animationDuration: '2s' }} />
                     </div>
                     
                     {/* Botão Play */}
-                    <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/50 transition-all duration-300 hover:scale-110">
+                    <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/70 transition-all duration-300 hover:scale-110 animate-pulse" style={{ animationDuration: '2s' }}>
                       <Play 
                         size={24} 
                         className="text-white ml-1" 
@@ -208,21 +214,6 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
           />
         </div>
 
-        {/* Partículas flutuantes decorativas */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-purple-400/40"
-              style={{
-                left: `${15 + i * 15}%`,
-                top: `${20 + (i % 3) * 25}%`,
-                animation: `float ${3 + i * 0.5}s ease-in-out infinite`,
-                animationDelay: `${i * 0.3}s`,
-              }}
-            />
-          ))}
-        </div>
       </div>
 
       {/* Instruções */}
@@ -232,19 +223,6 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
         </p>
       )}
 
-      {/* Animação de float para partículas */}
-      <style>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px);
-            opacity: 0.4;
-          }
-          50% {
-            transform: translateY(-20px) translateX(10px);
-            opacity: 0.8;
-          }
-        }
-      `}</style>
     </div>
   );
 };

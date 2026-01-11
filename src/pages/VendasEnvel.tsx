@@ -15,13 +15,14 @@ import {
   LogoCarousel,
   DeveloperShowcase,
   EnvelSplashLoader,
+  AdminPanelShowcase,
 } from '@/components/vendas';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare
+  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
@@ -62,6 +63,17 @@ const VendasEnvel = () => {
     }, 100);
   }, []);
 
+  // Garantir fundo escuro ao montar
+  useEffect(() => {
+    document.body.style.backgroundColor = '#020617'; // slate-950
+    document.documentElement.style.backgroundColor = '#020617';
+    
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
+    };
+  }, []);
+
   // Animation on mount (after splash)
   useEffect(() => {
     if (contentReady) {
@@ -77,8 +89,12 @@ const VendasEnvel = () => {
     }
   }, [isPreviewOpen]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when modal is open and ensure dark background
   useEffect(() => {
+    // Garantir fundo escuro
+    document.body.style.backgroundColor = '#020617'; // slate-950
+    document.documentElement.style.backgroundColor = '#020617';
+    
     if (isPreviewOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -86,6 +102,8 @@ const VendasEnvel = () => {
     }
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
@@ -225,7 +243,7 @@ const VendasEnvel = () => {
   const includedItems = [
     'Site completo e funcional',
     'Design moderno e premium',
-    'Código fonte documentado',
+    'Painel Administrativo',
     'Integração WhatsApp',
     'SEO otimizado',
     '100% responsivo',
@@ -246,6 +264,7 @@ const VendasEnvel = () => {
     '/Images/capas-sites/MRA Advogados Associados.webp',
     '/Images/capas-sites/Oasis Corp.webp',
     '/Images/capas-sites/Oxpay.webp',
+    '/Images/Captura1101262.webp',
   ];
 
   return (
@@ -423,7 +442,7 @@ const VendasEnvel = () => {
                 >
                   <Play size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Visualizar</span>
-                  <span className="sm:hidden">Ver</span>
+                  <span className="sm:hidden">Visualizar Site</span>
                 </button>
 
                 {/* Buy Button - Desktop */}
@@ -507,7 +526,7 @@ const VendasEnvel = () => {
         <ChevronUp size={24} />
       </button>
 
-      <div className={`min-h-screen relative transition-opacity duration-700 ${contentReady ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`min-h-screen relative transition-opacity duration-700 bg-slate-950 ${contentReady ? 'opacity-100' : 'opacity-0'}`}>
         <GlassBackground />
 
         <main className="relative z-10">
@@ -779,30 +798,26 @@ const VendasEnvel = () => {
                     <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
                     <div className="relative z-10 p-8 sm:p-12">
-                      {/* Price Section */}
+                      {/* Contact CTA Section */}
                       <div className="text-center mb-10 group-hover:scale-[1.02] transition-transform duration-500">
-                        <div className="flex items-baseline justify-center gap-2 mb-3">
-                          <span className="text-white/50 text-2xl line-through decoration-red-500/50">R$ 1.500</span>
-                          <div className="px-3 py-1 rounded-full bg-red-500/20 border border-red-500/30">
-                            <span className="text-red-400 text-sm font-bold">-67%</span>
-                          </div>
-                        </div>
-                        
-                        <div className="relative inline-block">
-                          <div className="flex items-baseline justify-center gap-2 mb-2">
-                            <span className="text-white/70 text-3xl font-semibold">R$</span>
-                            <span className="text-7xl sm:text-8xl md:text-9xl font-black bg-gradient-to-br from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(212,165,116,0.5)]">
-                              500
-                            </span>
-                            <span className="text-white/40 text-2xl font-medium">,00</span>
+                        <div className="relative inline-block mb-6">
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#D4A574]/30 to-purple-500/20 border border-[#D4A574]/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <MessageSquare size={40} className="text-[#D4A574]" />
+                            </div>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-br from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
+                              Solicite um Orçamento
+                            </h3>
                           </div>
                           
-                          {/* Decorative lines around price */}
+                          {/* Decorative lines */}
                           <div className="absolute -left-16 top-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent to-[#D4A574]/50" />
                           <div className="absolute -right-16 top-1/2 w-12 h-[2px] bg-gradient-to-l from-transparent to-[#D4A574]/50" />
                         </div>
                         
-                        <p className="text-white/60 text-lg mt-3 font-medium">ou em até 12x de R$ 41,66</p>
+                        <p className="text-white/70 text-lg mt-3 font-medium max-w-lg mx-auto">
+                          Entre em contato e receba uma proposta personalizada para o seu novo site profissional
+                        </p>
                         
                         {/* Value proposition */}
                         <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
@@ -810,13 +825,13 @@ const VendasEnvel = () => {
                             <CheckCircle size={18} className="text-green-400" />
                             <span className="text-green-300 text-sm font-medium">Pagamento único</span>
                           </div>
-                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                            <Shield size={18} className="text-blue-400" />
-                            <span className="text-blue-300 text-sm font-medium">Garantia 30 dias</span>
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                            <Monitor size={18} className="text-cyan-400" />
+                            <span className="text-cyan-300 text-sm font-medium">Painel Admin incluso</span>
                           </div>
                           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
                             <Sparkles size={18} className="text-purple-400" />
-                            <span className="text-purple-300 text-sm font-medium">Entrega imediata</span>
+                            <span className="text-purple-300 text-sm font-medium">Resposta rápida</span>
                           </div>
                         </div>
                       </div>
@@ -939,6 +954,11 @@ const VendasEnvel = () => {
               </div>
             </div>
           </section>
+
+          {/* ============================================
+              ADMIN PANEL SHOWCASE SECTION
+              ============================================ */}
+          <AdminPanelShowcase />
 
           {/* ============================================
               DEVELOPER SHOWCASE SECTION

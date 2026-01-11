@@ -59,14 +59,20 @@ const Mockup3D = ({ siteUrl, onOpenFullscreen }: Mockup3DProps) => {
                 {/* Botão Play Animado no Centro */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                   <div className="relative">
-                    {/* Círculos pulsantes */}
+                    {/* Círculos pulsantes - múltiplas camadas para efeito mais suave */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute w-12 h-12 rounded-full bg-purple-500/30 animate-ping" />
-                      <div className="absolute w-12 h-12 rounded-full bg-purple-500/20 animate-pulse" />
+                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/40 animate-ping" style={{ animationDuration: '2s' }} />
+                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/30 animate-pulse" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
+                      <div className="absolute w-12 h-12 rounded-full bg-purple-500/20 animate-pulse" style={{ animationDuration: '1.5s' }} />
+                    </div>
+                    
+                    {/* Glow effect pulsante */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute w-16 h-16 rounded-full bg-purple-500/50 blur-xl animate-pulse" style={{ animationDuration: '2s' }} />
                     </div>
                     
                     {/* Botão Play */}
-                    <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/50 transition-all duration-300 hover:scale-110">
+                    <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/70 transition-all duration-300 hover:scale-110 animate-pulse" style={{ animationDuration: '2s' }}>
                       <Play 
                         size={18} 
                         className="text-white ml-0.5" 

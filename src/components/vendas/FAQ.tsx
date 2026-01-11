@@ -16,12 +16,12 @@ const faqData: FAQItem[] = [
     answer: 'Sim, 100%. O site será registrado em seu nome, com seu domínio personalizado. Você terá total propriedade e controle sobre todos os arquivos e códigos fonte.'
   },
   {
-    question: 'Quanto tempo leva para o site ficar pronto?',
-    answer: 'O site está praticamente pronto! Após a confirmação do pagamento, fazemos os ajustes finais personalizados e o site fica no ar em até 48 horas.'
+    question: 'Posso fazer alterações no site depois?',
+    answer: 'Sim! Você terá acesso ao painel administrativo editável, onde poderá fazer alterações em textos, imagens e configurações sem precisar de conhecimento técnico. Além disso, ofereço suporte técnico para auxiliar em qualquer modificação futura que desejar.'
   },
   {
-    question: 'Posso fazer alterações no site depois?',
-    answer: 'Sim! Você terá acesso completo ao código fonte e poderá fazer alterações quando quiser. Além disso, ofereço suporte técnico para auxiliar em qualquer modificação futura que desejar.'
+    question: 'Quanto tempo leva para o site ficar pronto?',
+    answer: 'O site está praticamente pronto! Após a confirmação do pagamento, fazemos os ajustes finais personalizados e o site fica no ar em até 48 horas.'
   },
   {
     question: 'E se eu não gostei do resultado atual?',

@@ -1,3 +1,5 @@
+import { MessageCircle, Mail } from 'lucide-react';
+
 const WorkflowFooter = () => {
   const currentYear = new Date().getFullYear();
 
@@ -21,22 +23,49 @@ const WorkflowFooter = () => {
             <span className="block md:inline">Todos os direitos reservados.</span>
           </div>
           
-          {/* Simple Links */}
-          <div className="flex items-center gap-6 text-sm text-white/60">
-            <button
-              onClick={handlePrivacyClick}
-              className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
-              type="button"
-            >
-              Privacidade
-            </button>
-            <button
-              onClick={handleTermsClick}
-              className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
-              type="button"
-            >
-              Termos
-            </button>
+          {/* Links and Contact */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            {/* Contact Links */}
+            <div className="flex items-center gap-4">
+              <a
+                href="https://wa.me/555199437916"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-white/60 hover:text-green-400 transition-colors"
+                title="WhatsApp"
+              >
+                <MessageCircle size={18} />
+                <span className="hidden sm:inline">WhatsApp</span>
+              </a>
+              <a
+                href="mailto:contato@leonardolopes.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-white/60 hover:text-purple-400 transition-colors"
+                title="Email"
+              >
+                <Mail size={18} />
+                <span className="hidden sm:inline">Email</span>
+              </a>
+            </div>
+            
+            {/* Simple Links */}
+            <div className="flex items-center gap-6 text-sm text-white/60">
+              <button
+                onClick={handlePrivacyClick}
+                className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
+                type="button"
+              >
+                Privacidade
+              </button>
+              <button
+                onClick={handleTermsClick}
+                className="hover:text-workflow-zen transition-colors cursor-pointer bg-transparent border-none text-sm text-white/60 hover:underline"
+                type="button"
+              >
+                Termos
+              </button>
+            </div>
           </div>
         </div>
       </div>
