@@ -13,15 +13,21 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
   const [isHovered, setIsHovered] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Detectar se é mobile
+  // Detectar se é mobile - apenas no cliente para evitar problemas de hidratação
   useEffect(() => {
+    setIsMounted(true);
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 768);
+      }
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
   }, []);
 
   // Efeito parallax com mouse
@@ -219,7 +225,7 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
       {/* Instruções */}
       {!compact && (
         <p className="text-center text-white/40 text-sm mt-6">
-          {isMobile ? 'Toque para ver em tela cheia' : 'Mova o mouse para interagir • Clique para expandir'}
+          {isMounted && isMobile ? 'Toque para ver em tela cheia' : 'Mova o mouse para interagir • Clique para expandir'}
         </p>
       )}
 

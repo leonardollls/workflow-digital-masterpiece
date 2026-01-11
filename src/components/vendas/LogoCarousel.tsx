@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface LogoCarouselProps {
   logos: string[];
@@ -6,39 +6,136 @@ interface LogoCarouselProps {
 }
 
 const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
-  const [mounted, setMounted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
 
+  // Duplicamos os logos 4 vezes para garantir loop suave e contínuo
+  // [A, B, C] -> [A, B, C, A, B, C, A, B, C, A, B, C]
+  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
+
+  // Calcular a porcentagem exata baseada no número de logos após renderização
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (typeof window === 'undefined' || !trackRef.current || logos.length === 0) return;
 
-  // Duplicamos os logos para criar o efeito infinito sem gaps
-  const duplicatedLogos = [...logos, ...logos, ...logos];
-
-  // Definir velocidade da animação
-  const getAnimationDuration = () => {
-    switch (speed) {
-      case 'slow': return '60s';
-      case 'fast': return '20s';
-      default: return '40s';
-    }
-  };
+    const calculateAnimation = () => {
+      if (!trackRef.current) return;
+      
+      const track = trackRef.current;
+      const children = Array.from(track.children) as HTMLElement[];
+      
+      if (children.length === 0) return;
+      
+      // Função para calcular e aplicar a animação
+      const applyAnimation = () => {
+        // Calcular a largura total de um conjunto completo de logos originais
+        let singleSetWidth = 0;
+        for (let i = 0; i < logos.length && i < children.length; i++) {
+          const child = children[i];
+          if (child) {
+            const rect = child.getBoundingClientRect();
+            singleSetWidth += rect.width;
+            // Adicionar gap (gap-8 = 2rem = 32px) exceto no último item
+            if (i < logos.length - 1) {
+              singleSetWidth += 32;
+            }
+          }
+        }
+        
+        // Forçar reflow para garantir scrollWidth correto
+        track.offsetHeight;
+        
+        // Calcular a largura total de todos os logos duplicados
+        const totalWidth = track.scrollWidth;
+        
+        if (totalWidth > 0 && singleSetWidth > 0) {
+          // Calcular a porcentagem exata para mover exatamente um conjunto
+          const percentage = (singleSetWidth / totalWidth) * 100;
+          
+          // Criar ou atualizar os keyframes dinamicamente
+          if (typeof document === 'undefined') return;
+          
+          const styleId = 'logo-carousel-dynamic-keyframes';
+          let styleElement = document.getElementById(styleId) as HTMLStyleElement;
+          
+          if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = styleId;
+            document.head.appendChild(styleElement);
+          }
+          
+          styleElement.textContent = `
+            @keyframes logo-carousel-scroll {
+              from {
+                transform: translate3d(0, 0, 0);
+              }
+              to {
+                transform: translate3d(-${percentage}%, 0, 0);
+              }
+            }
+          `;
+        }
+      };
+      
+      // Aguardar que todas as imagens carreguem para cálculo preciso
+      const images = track.querySelectorAll('img');
+      const totalImages = images.length;
+      
+      if (totalImages === 0) {
+        // Se não houver imagens, calcular imediatamente após um frame
+        requestAnimationFrame(() => {
+          requestAnimationFrame(applyAnimation);
+        });
+      } else {
+        // Aguardar todas as imagens carregarem
+        let loadedImages = 0;
+        const checkAndCalculate = () => {
+          loadedImages++;
+          if (loadedImages >= totalImages) {
+            // Aguardar um frame adicional para garantir layout completo
+            requestAnimationFrame(() => {
+              requestAnimationFrame(applyAnimation);
+            });
+          }
+        };
+        
+        images.forEach((img) => {
+          if (img.complete) {
+            checkAndCalculate();
+          } else {
+            img.addEventListener('load', checkAndCalculate, { once: true });
+            img.addEventListener('error', checkAndCalculate, { once: true });
+          }
+        });
+      }
+    };
+    
+    // Aguardar múltiplos frames para garantir renderização completa
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        calculateAnimation();
+      });
+    });
+  }, [logos.length]);
 
   return (
-    <div className="relative w-full overflow-hidden py-8">
+    <div className="relative w-full py-8 overflow-hidden">
+      {/* Gradient masks for smooth edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none" />
+      
       {/* Container do carousel */}
-      <div className="flex items-center justify-center">
+      <div 
+        className="relative overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <div 
-          className={`flex gap-8 items-center ${mounted ? 'animate-logo-scroll' : ''}`}
-          style={{
-            animationDuration: getAnimationDuration(),
-            animationTimingFunction: 'linear',
-            animationIterationCount: 'infinite',
-          }}
+          ref={trackRef}
+          className={`logo-carousel-track speed-${speed} gap-8 items-center ${isPaused ? 'paused' : ''}`}
         >
           {duplicatedLogos.map((logo, index) => (
             <div
-              key={`${logo}-${index}`}
+              key={`logo-${index}`}
               className="flex-shrink-0 w-48 h-28 sm:w-56 sm:h-32 md:w-64 md:h-36 flex items-center justify-center group cursor-pointer"
             >
               <div className="relative w-full h-full">
@@ -73,43 +170,6 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes logo-scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-33.333%);
-          }
-        }
-
-        .animate-logo-scroll {
-          animation-name: logo-scroll;
-        }
-
-        /* Pause animation on hover */
-        .animate-logo-scroll:hover {
-          animation-play-state: paused;
-        }
-
-        /* Ensure smooth scrolling with GPU acceleration */
-        @media (prefers-reduced-motion: no-preference) {
-          .animate-logo-scroll {
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-          }
-        }
-
-        /* Disable animation for reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-          .animate-logo-scroll {
-            animation: none !important;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
     </div>
   );
 };
