@@ -97,7 +97,7 @@ const AdminPanelShowcase = () => {
             {/* Image Container */}
             <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] group-hover:border-white/20 transition-all duration-500">
               <img
-                src="/Images/mockups-paineis-ediçao/painel-envel.jpeg"
+                src="/Images/mockups-paineis-edi%C3%A7ao/painel-envel.jpeg"
                 alt="Painel Administrativo de Edições Visuais - Envel Contabilidade"
                 className="w-full h-auto object-contain"
                 loading="lazy"

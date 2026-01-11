@@ -7,15 +7,21 @@ interface LogoCarouselProps {
 
 const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
   const [isPaused, setIsPaused] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Duplicamos os logos 4 vezes para garantir loop suave e contínuo
   // [A, B, C] -> [A, B, C, A, B, C, A, B, C, A, B, C]
   const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
 
+  // Marcar quando estamos no cliente para evitar hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Calcular a porcentagem exata baseada no número de logos após renderização
   useEffect(() => {
-    if (typeof window === 'undefined' || !trackRef.current || logos.length === 0) return;
+    if (!isClient || !trackRef.current || logos.length === 0) return;
 
     const calculateAnimation = () => {
       if (!trackRef.current) return;
@@ -52,8 +58,6 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
           const percentage = (singleSetWidth / totalWidth) * 100;
           
           // Criar ou atualizar os keyframes dinamicamente
-          if (typeof document === 'undefined') return;
-          
           const styleId = 'logo-carousel-dynamic-keyframes';
           let styleElement = document.getElementById(styleId) as HTMLStyleElement;
           
@@ -115,7 +119,7 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
         calculateAnimation();
       });
     });
-  }, [logos.length]);
+  }, [logos.length, isClient]);
 
   return (
     <div className="relative w-full py-8 overflow-hidden">
@@ -131,7 +135,7 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
       >
         <div 
           ref={trackRef}
-          className={`logo-carousel-track speed-${speed} gap-8 items-center ${isPaused ? 'paused' : ''}`}
+          className={`logo-carousel-track speed-${speed} ${isPaused ? 'paused' : ''}`}
         >
           {duplicatedLogos.map((logo, index) => (
             <div

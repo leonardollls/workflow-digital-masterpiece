@@ -1,9 +1,49 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
 interface EnvelSplashLoaderProps {
   onComplete: () => void;
   duration?: number;
 }
+
+interface ParticleStyle {
+  width: string;
+  height: string;
+  left: string;
+  top: string;
+  background: string;
+  animation: string;
+  animationDelay: string;
+}
+
+// Função para gerar partículas com valores fixos (baseados no índice) para evitar hydration mismatch
+const generateParticleStyles = (count: number): ParticleStyle[] => {
+  const particles: ParticleStyle[] = [];
+  for (let i = 0; i < count; i++) {
+    // Usar valores pseudorandom baseados no índice para consistência
+    const seed = i * 17 + 7;
+    const width = ((seed % 30) / 10) + 1; // 1-4px
+    const height = width;
+    const left = (seed * 7 % 100); // 0-100%
+    const top = (seed * 13 % 100); // 0-100%
+    const r = 212 + (seed % 20);
+    const g = 165 + (seed * 3 % 30);
+    const b = 116 + (seed * 2 % 20);
+    const opacity = ((seed % 40) / 100) + 0.1;
+    const animDuration = 4 + (seed % 30) / 10;
+    const animDelay = (seed % 20) / 10;
+
+    particles.push({
+      width: `${width}px`,
+      height: `${height}px`,
+      left: `${left}%`,
+      top: `${top}%`,
+      background: `rgba(${r}, ${g}, ${b}, ${opacity})`,
+      animation: `float ${animDuration}s ease-in-out infinite`,
+      animationDelay: `${animDelay}s`,
+    });
+  }
+  return particles;
+};
 
 /**
  * Splash Loader customizado para Envel Contabilidade
@@ -22,6 +62,9 @@ const EnvelSplashLoader = ({ onComplete, duration = 1200 }: EnvelSplashLoaderPro
   const hasPlayedCompletionRef = useRef(false);
 
   const words = ['Tradição', 'Confiança', 'Excelência', 'Resultados'];
+  
+  // Gerar estilos de partículas uma vez (valores consistentes entre servidor e cliente)
+  const particleStyles = useMemo(() => generateParticleStyles(20), []);
 
   useEffect(() => {
     hasPlayedWhooshRef.current = false;
@@ -216,19 +259,11 @@ const EnvelSplashLoader = ({ onComplete, duration = 1200 }: EnvelSplashLoaderPro
     >
       {/* Animated Background Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {particleStyles.map((style, i) => (
           <div
             key={i}
             className="splash-particle absolute rounded-full"
-            style={{
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              background: `rgba(${212 + Math.random() * 20}, ${165 + Math.random() * 30}, ${116 + Math.random() * 20}, ${Math.random() * 0.4 + 0.1})`,
-              animation: `float ${4 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`,
-            }}
+            style={style}
           />
         ))}
       </div>

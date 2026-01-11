@@ -162,6 +162,7 @@ export default {
 				'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'float-delayed': 'float 3s ease-in-out infinite 1s',
+				'float-slow': 'float 6s ease-in-out infinite',
 				'particle': 'particle 2s ease-in-out infinite',
 				'rotate-slow': 'rotate-slow 20s linear infinite',
 				'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',

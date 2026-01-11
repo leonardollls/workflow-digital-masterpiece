@@ -1379,12 +1379,60 @@
 }
 
 /* ============================================
+   LOGO CAROUSEL ANIMATION
+   ============================================ */
+
+/* Keyframes serão injetados dinamicamente via JavaScript para cálculo preciso */
+@keyframes logo-carousel-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-33.333333%, 0, 0);
+  }
+}
+
+.logo-carousel-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2rem !important;
+  animation-name: logo-carousel-scroll !important;
+  animation-duration: 25s !important;
+  animation-timing-function: linear !important;
+  animation-iteration-count: infinite !important;
+  animation-play-state: running !important;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  width: max-content;
+  flex-shrink: 0;
+}
+
+.logo-carousel-track.speed-slow {
+  animation-duration: 35s !important;
+}
+
+.logo-carousel-track.speed-medium {
+  animation-duration: 25s !important;
+}
+
+.logo-carousel-track.speed-fast {
+  animation-duration: 15s !important;
+}
+
+.logo-carousel-track.paused,
+.logo-carousel-track:hover {
+  animation-play-state: paused !important;
+}
+
+/* ============================================
    END VENDAS PAGE ANIMATIONS
    ============================================ */
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-  *,
+  *:not(.logo-carousel-track),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
@@ -1408,5 +1456,11 @@
   .animate-orbit,
   .animate-pulse-scale {
     animation: none !important;
+  }
+
+  /* Manter o carrossel animando mesmo com prefers-reduced-motion */
+  .logo-carousel-track {
+    animation-duration: 60s !important;
+    animation-iteration-count: infinite !important;
   }
 }

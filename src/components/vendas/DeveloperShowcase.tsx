@@ -17,9 +17,15 @@ import {
 const DeveloperShowcase = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Marcar quando estamos no cliente para evitar hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (!isClient) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -42,7 +48,7 @@ const DeveloperShowcase = () => {
         observer.unobserve(section);
       }
     };
-  }, []);
+  }, [isClient]);
 
   const stats = [
     { value: '150+', label: 'Projetos', icon: Rocket },
