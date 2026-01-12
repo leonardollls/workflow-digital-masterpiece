@@ -1,11 +1,7 @@
 Options -MultiViews
 RewriteEngine On
 
-# Serve specific HTML for /site/lauren route (for crawlers)
-RewriteCond %{REQUEST_URI} ^/site/lauren/?$
+# Default SPA routing - only if file/directory doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^site/lauren/?$ /site/lauren.html [L]
-
-# Default SPA routing
-RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L] 
