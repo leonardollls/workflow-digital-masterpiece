@@ -66,7 +66,7 @@ const VendasLauren = () => {
   // Atualizar meta tags para compartilhamento
   useEffect(() => {
     // Atualizar título
-    document.title = 'Leonardo Lopes - Web Designer | Especialista em sites de alta performance e conversão';
+    document.title = 'Leonardo Lopes - UX/UI Designer & Developer | Especialista em sites de alta performance e conversão';
     
     // Atualizar ou criar meta tags Open Graph
     const updateMetaTag = (property: string, content: string, isProperty = true) => {
@@ -85,33 +85,44 @@ const VendasLauren = () => {
       meta.setAttribute('content', content);
     };
 
-    // Open Graph Meta Tags
-    updateMetaTag('og:title', 'Leonardo Lopes - Web Designer');
+    // Remover meta tags de imagem existentes
+    const removeMetaTag = (property: string, isProperty = true) => {
+      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
+      const meta = document.querySelector(selector);
+      if (meta) {
+        meta.remove();
+      }
+    };
+
+    // Remover todas as meta tags de imagem
+    removeMetaTag('og:image');
+    removeMetaTag('og:image:secure_url');
+    removeMetaTag('og:image:type');
+    removeMetaTag('og:image:width');
+    removeMetaTag('og:image:height');
+    removeMetaTag('og:image:alt');
+    removeMetaTag('twitter:image', false);
+    removeMetaTag('twitter:image:alt', false);
+
+    // Open Graph Meta Tags (sem imagem)
+    updateMetaTag('og:title', 'Leonardo Lopes - UX/UI Designer & Developer');
     updateMetaTag('og:description', 'Especialista em sites de alta performance e conversão.');
-    updateMetaTag('og:image', 'https://leonardolopes.online/Images/leonardo-lopes/Image_202601111107.JPG');
-    updateMetaTag('og:image:secure_url', 'https://leonardolopes.online/Images/leonardo-lopes/Image_202601111107.JPG');
-    updateMetaTag('og:image:type', 'image/jpeg');
-    updateMetaTag('og:image:width', '1200');
-    updateMetaTag('og:image:height', '630');
-    updateMetaTag('og:image:alt', 'Leonardo Lopes - Web Designer');
     updateMetaTag('og:url', 'https://leonardolopes.online/site/lauren');
     updateMetaTag('og:type', 'website');
     updateMetaTag('og:site_name', 'Leonardo Lopes');
     updateMetaTag('og:locale', 'pt_BR');
 
-    // Twitter Meta Tags
-    updateMetaTag('twitter:card', 'summary_large_image', false);
-    updateMetaTag('twitter:title', 'Leonardo Lopes - Web Designer', false);
+    // Twitter Meta Tags (sem imagem)
+    updateMetaTag('twitter:card', 'summary', false);
+    updateMetaTag('twitter:title', 'Leonardo Lopes - UX/UI Designer & Developer', false);
     updateMetaTag('twitter:description', 'Especialista em sites de alta performance e conversão.', false);
-    updateMetaTag('twitter:image', 'https://leonardolopes.online/Images/leonardo-lopes/Image_202601111107.JPG', false);
-    updateMetaTag('twitter:image:alt', 'Leonardo Lopes - Web Designer', false);
 
     // Meta description padrão
-    updateMetaTag('description', 'Leonardo Lopes - Web Designer. Especialista em sites de alta performance e conversão.', false);
+    updateMetaTag('description', 'Leonardo Lopes - UX/UI Designer & Developer. Especialista em sites de alta performance e conversão.', false);
 
     // Cleanup - restaurar meta tags padrão ao desmontar
     return () => {
-      document.title = 'Leonardo Lopes - Web Designer | Especialista em sites de alta performance e conversão';
+      document.title = 'Leonardo Lopes - UX/UI Designer & Developer | Especialista em sites de alta performance e conversão';
     };
   }, []);
 
