@@ -90,11 +90,8 @@
       
       // If not a crawler, redirect to main SPA (which will handle routing)
       if (!isCrawler) {
-        // Redirect to root, then React Router will handle the /site/lauren route
-        // Use a hash to avoid server-side redirect loop
-        if (window.location.pathname === '/site/lauren/' || window.location.pathname === '/site/lauren') {
-          window.location.replace('/#/site/lauren');
-        }
+        // Redirect to root with redirect parameter, React Router will handle it
+        window.location.replace('/?redirect=/site/lauren');
       }
     </script>
   </head>

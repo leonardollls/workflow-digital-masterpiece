@@ -1,9 +1,9 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -45,9 +45,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter
-          basename="/"
-        >
+        <BrowserRouter>
           <Suspense fallback={
             <div 
               className="flex items-center justify-center min-h-screen"
