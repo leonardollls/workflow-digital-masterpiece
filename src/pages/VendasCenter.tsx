@@ -14,20 +14,20 @@ import {
   FAQ,
   LogoCarousel,
   DeveloperShowcase,
-  EnvelSplashLoader,
-  AdminPanelShowcase,
+  CenterSplashLoader,
+  AdminPanelShowcaseCenter,
 } from '@/components/vendas';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings
+  Play, Sparkles, Menu, ChevronUp, MessageSquare
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
 
-const VendasEnvel = () => {
+const VendasCenter = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [contentReady, setContentReady] = useState(false);
@@ -38,20 +38,20 @@ const VendasEnvel = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const SITE_URL = 'https://envel-contabilidade.vercel.app/';
+  const SITE_URL = 'https://center-ortodontia.vercel.app/';
   const PAYMENT_LINK = 'https://wa.me/555199437916';
 
-  // Recursos específicos do site Envel para o comparativo
-  const envelComparisons = [
-    { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
+  // Recursos específicos do site Center Ortodontia para o comparativo
+  const centerComparisons = [
+    { feature: 'Design Moderno e Elegante', oldSite: false, newSite: true },
     { feature: '100% Responsivo', oldSite: false, newSite: true },
     { feature: 'SEO Otimizado', oldSite: false, newSite: true },
     { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
-    { feature: 'Timeline Interativa (60 Anos)', oldSite: false, newSite: true },
-    { feature: 'Métricas Animadas', oldSite: false, newSite: true },
-    { feature: 'Multi-escritórios (BR/EUA)', oldSite: false, newSite: true },
-    { feature: 'Segmentação de Clientes', oldSite: false, newSite: true },
-    { feature: 'Portais Integrados (RH/Acessórias)', oldSite: false, newSite: true },
+    { feature: 'Galeria de Sorrisos/Casos', oldSite: false, newSite: true },
+    { feature: 'Seção de Especialidades', oldSite: false, newSite: true },
+    { feature: 'Sistema de Agendamento', oldSite: false, newSite: true },
+    { feature: 'Blog de Saúde Bucal', oldSite: false, newSite: true },
+    { feature: 'Depoimentos de Pacientes', oldSite: false, newSite: true },
     { feature: 'Performance A+', oldSite: false, newSite: true },
   ];
 
@@ -63,14 +63,11 @@ const VendasEnvel = () => {
     }, 100);
   }, []);
 
-  // Garantir fundo escuro ao montar
+  // Set dark background on mount
   useEffect(() => {
     document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
-    
     return () => {
       document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
     };
   }, []);
 
@@ -91,11 +88,8 @@ const VendasEnvel = () => {
 
   // Lock body scroll when modal is open and ensure dark background
   useEffect(() => {
-    // Garantir fundo escuro
-    document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
-    
     if (isPreviewOpen) {
+      document.body.style.backgroundColor = '#020617'; // slate-950
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -103,7 +97,6 @@ const VendasEnvel = () => {
     return () => {
       document.body.style.overflow = 'unset';
       document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
@@ -200,19 +193,19 @@ const VendasEnvel = () => {
     {
       icon: TrendingUp,
       title: 'Aumento de Credibilidade',
-      description: 'Site profissional que transmite confiança e solidez, refletindo os 60+ anos de tradição da Envel.',
+      description: 'Site profissional que transmite confiança e excelência em ortodontia e estética dental.',
       accent: 'from-blue-500 to-cyan-500'
     },
     {
       icon: MessageCircle,
       title: '+60% Mais Contatos',
-      description: 'Integração inteligente com WhatsApp e formulário otimizado para conversão de visitantes em leads.',
+      description: 'Integração inteligente com WhatsApp e formulário otimizado para conversão de visitantes em pacientes.',
       accent: 'from-green-500 to-emerald-500'
     },
     {
       icon: Search,
       title: 'Melhor no Google',
-      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas locais por contabilidade.',
+      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas locais por ortodontia em Caxias do Sul.',
       accent: 'from-purple-500 to-violet-500'
     },
     {
@@ -272,14 +265,13 @@ const VendasEnvel = () => {
     '/Images/capas-sites/MRA Advogados Associados.webp',
     '/Images/capas-sites/Oasis Corp.webp',
     '/Images/capas-sites/Oxpay.webp',
-    '/Images/Captura1101262.webp',
   ];
 
   return (
     <>
       {/* Splash Loading Screen */}
       {showSplash && (
-        <EnvelSplashLoader onComplete={handleSplashComplete} duration={1200} />
+        <CenterSplashLoader onComplete={handleSplashComplete} duration={1200} />
       )}
 
       {/* Preview Modal */}
@@ -296,11 +288,11 @@ const VendasEnvel = () => {
             {/* Modal Header */}
             <div className="relative flex items-center justify-between gap-4 px-4 py-3 bg-white/5 backdrop-blur-xl border-b border-white/10 rounded-t-2xl">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold">E</span>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C8968C] to-[#8B6B5C] flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">CO</span>
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-white font-semibold truncate">Envel Contabilidade</h2>
+                  <h2 className="text-white font-semibold truncate">Center Ortodontia</h2>
                   <p className="text-white/50 text-xs truncate">Preview Interativo</p>
                 </div>
               </div>
@@ -357,7 +349,7 @@ const VendasEnvel = () => {
                 )}
                 <iframe
                   src={SITE_URL}
-                  title="Preview Envel Contabilidade"
+                  title="Preview Center Ortodontia"
                   className={`w-full h-full bg-white transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   onLoad={() => setIframeLoading(false)}
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -394,13 +386,13 @@ const VendasEnvel = () => {
                 className="flex items-center gap-3 group"
               >
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(212,165,116,0.4)] transition-all duration-300">
-                    <span className="text-white font-bold text-lg">E</span>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C8968C] to-[#8B6B5C] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(200,150,140,0.4)] transition-all duration-300">
+                    <span className="text-white font-bold text-sm">CO</span>
                   </div>
                   <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-slate-900 animate-pulse" />
                 </div>
                 <div className="hidden sm:block text-left">
-                  <span className="text-white font-semibold text-sm">Envel</span>
+                  <span className="text-white font-semibold text-sm">Center</span>
                   <span className="block text-white/50 text-xs">Novo Site</span>
                 </div>
               </button>
@@ -449,13 +441,13 @@ const VendasEnvel = () => {
                 >
                   <Play size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Visualizar</span>
-                  <span className="sm:hidden">Visualizar Site</span>
+                  <span className="sm:hidden">Ver</span>
                 </button>
 
                 {/* Buy Button - Desktop */}
                 <button
                   onClick={scrollToPricing}
-                  className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_25px_rgba(212,165,116,0.5)] hover:scale-105"
+                  className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#C8968C] to-[#E0B8B0] text-[#2d2420] font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_25px_rgba(200,150,140,0.5)] hover:scale-105"
                 >
                   <MessageSquare size={16} />
                   Adquirir
@@ -511,7 +503,7 @@ const VendasEnvel = () => {
                 </button>
                 <button
                   onClick={scrollToPricing}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#C8968C] to-[#E0B8B0] text-[#2d2420] font-semibold text-sm transition-all duration-300"
                 >
                   <MessageSquare size={18} />
                   Adquirir
@@ -545,23 +537,23 @@ const VendasEnvel = () => {
               <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 
                 {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#122737]/30 to-[#D4A574]/30 border border-[#D4A574]/30 mb-6">
-                  <Award size={16} className="text-[#D4A574]" />
-                  <span className="text-[#D4A574] text-sm font-medium">Proposta Exclusiva</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#2d2420]/30 to-[#C8968C]/30 border border-[#C8968C]/30 mb-6">
+                  <Award size={16} className="text-[#C8968C]" />
+                  <span className="text-[#C8968C] text-sm font-medium">Proposta Exclusiva</span>
                 </div>
 
                 {/* Title */}
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
                   <span className="text-white">Novo Site</span>
                   <br />
-                  <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
-                    Envel Contabilidade
+                  <span className="bg-gradient-to-r from-[#C8968C] via-[#E0B8B0] to-[#C8968C] bg-clip-text text-transparent">
+                    Center Ortodontia
                   </span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-lg sm:text-xl md:text-2xl text-white/60 max-w-3xl mx-auto mb-8 leading-relaxed">
-                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e tradição</strong> de mais de 60 anos da Envel Contabilidade.
+                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e cuidado</strong> da Center Ortodontia em Caxias do Sul.
                 </p>
 
                 {/* Hero Mockup 3D Interativo - Mobile First */}
@@ -585,9 +577,9 @@ const VendasEnvel = () => {
                   
                   <button
                     onClick={scrollToPricing}
-                    className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#122737] to-[#1a3346] text-white font-semibold text-lg transition-all duration-300 hover:bg-[#D4A574]/10 hover:shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:scale-105"
+                    className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#2d2420] to-[#3d3430] text-white font-semibold text-lg transition-all duration-300 hover:bg-[#C8968C]/10 hover:shadow-[0_0_30px_rgba(200,150,140,0.3)] hover:scale-105"
                   >
-                    <MessageSquare size={22} className="text-[#D4A574]" />
+                    <MessageSquare size={22} className="text-[#C8968C]" />
                     Quero Adquirir
                   </button>
                 </div>
@@ -740,7 +732,7 @@ const VendasEnvel = () => {
               {/* Row 4: Feature Comparison */}
               <div className={`mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
-                <FeatureComparison comparisons={envelComparisons} />
+                <FeatureComparison comparisons={centerComparisons} />
               </div>
 
               {/* Row 5: Social Proof */}
@@ -768,20 +760,20 @@ const VendasEnvel = () => {
           <section id="pricing-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-[100px]" />
+              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C8968C]/10 rounded-full blur-[100px]" />
               <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px]" />
             </div>
 
             <div className="max-w-5xl mx-auto relative z-10">
               {/* Section Header */}
               <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#D4A574]/20 via-[#D4A574]/10 to-transparent border border-[#D4A574]/30 mb-6 group hover:scale-105 transition-transform duration-300">
-                  <Shield size={18} className="text-[#D4A574] group-hover:rotate-12 transition-transform duration-300" />
-                  <span className="text-[#D4A574] text-sm font-semibold tracking-wide">OFERTA EXCLUSIVA</span>
-                  <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#C8968C]/20 via-[#C8968C]/10 to-transparent border border-[#C8968C]/30 mb-6 group hover:scale-105 transition-transform duration-300">
+                  <Shield size={18} className="text-[#C8968C] group-hover:rotate-12 transition-transform duration-300" />
+                  <span className="text-[#C8968C] text-sm font-semibold tracking-wide">OFERTA EXCLUSIVA</span>
+                  <div className="w-2 h-2 rounded-full bg-[#C8968C]" />
                 </div>
                 <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
-                  Investimento <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">Único</span>
+                  Investimento <span className="bg-gradient-to-r from-[#C8968C] via-[#E0B8B0] to-[#C8968C] bg-clip-text text-transparent">Único</span>
                 </h2>
                 <p className="text-white/50 text-lg max-w-2xl mx-auto">
                   Sem mensalidades. Sem taxas ocultas. Apenas um pagamento.
@@ -792,16 +784,16 @@ const VendasEnvel = () => {
                 {/* Main Investment Card */}
                 <div className="relative group">
                   {/* Subtle gradient border effect */}
-                  <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#D4A574]/20 via-purple-500/20 to-[#D4A574]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#C8968C]/20 via-purple-500/20 to-[#C8968C]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   
                   {/* Main card */}
                   <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500">
                     {/* Decorative gradient orbs */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#D4A574]/20 via-[#D4A574]/10 to-transparent rounded-full blur-3xl group-hover:scale-110 transition-transform duration-1000" />
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#C8968C]/20 via-[#C8968C]/10 to-transparent rounded-full blur-3xl group-hover:scale-110 transition-transform duration-1000" />
                     <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-gradient-to-tr from-purple-500/20 via-violet-500/10 to-transparent rounded-full blur-3xl group-hover:scale-110 transition-transform duration-1000" />
                     
                     {/* Subtle accent lines */}
-                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#D4A574]/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C8968C]/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                     <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
                     <div className="relative z-10 p-8 sm:p-12">
@@ -809,17 +801,17 @@ const VendasEnvel = () => {
                       <div className="text-center mb-10 group-hover:scale-[1.02] transition-transform duration-500">
                         <div className="relative inline-block mb-6">
                           <div className="flex flex-col items-center gap-4">
-                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#D4A574]/30 to-purple-500/20 border border-[#D4A574]/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                              <MessageSquare size={40} className="text-[#D4A574]" />
+                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#C8968C]/30 to-purple-500/20 border border-[#C8968C]/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              <MessageSquare size={40} className="text-[#C8968C]" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-br from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-br from-[#C8968C] via-[#E0B8B0] to-[#C8968C] bg-clip-text text-transparent">
                               Solicite um Orçamento
                             </h3>
                           </div>
                           
                           {/* Decorative lines */}
-                          <div className="absolute -left-16 top-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent to-[#D4A574]/50" />
-                          <div className="absolute -right-16 top-1/2 w-12 h-[2px] bg-gradient-to-l from-transparent to-[#D4A574]/50" />
+                          <div className="absolute -left-16 top-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent to-[#C8968C]/50" />
+                          <div className="absolute -right-16 top-1/2 w-12 h-[2px] bg-gradient-to-l from-transparent to-[#C8968C]/50" />
                         </div>
                         
                         <p className="text-white/70 text-lg mt-3 font-medium max-w-lg mx-auto">
@@ -879,14 +871,14 @@ const VendasEnvel = () => {
                           {paymentMethods.map((method, index) => (
                             <div
                               key={index}
-                              className="group/payment relative overflow-hidden flex items-center gap-3 px-5 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-[#D4A574]/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                              className="group/payment relative overflow-hidden flex items-center gap-3 px-5 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-[#C8968C]/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                             >
                               {/* Hover gradient effect */}
-                              <div className="absolute inset-0 bg-gradient-to-br from-[#D4A574]/10 to-purple-500/10 opacity-0 group-hover/payment:opacity-100 transition-opacity duration-300" />
+                              <div className="absolute inset-0 bg-gradient-to-br from-[#C8968C]/10 to-purple-500/10 opacity-0 group-hover/payment:opacity-100 transition-opacity duration-300" />
                               
                               <div className="relative z-10 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4A574]/20 to-[#D4A574]/10 border border-[#D4A574]/30 flex items-center justify-center group-hover/payment:scale-110 transition-transform duration-300">
-                                  <method.icon size={20} className="text-[#D4A574]" />
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C8968C]/20 to-[#C8968C]/10 border border-[#C8968C]/30 flex items-center justify-center group-hover/payment:scale-110 transition-transform duration-300">
+                                  <method.icon size={20} className="text-[#C8968C]" />
                                 </div>
                                 <div className="text-left">
                                   <div className="text-white font-semibold text-sm">{method.name}</div>
@@ -907,18 +899,18 @@ const VendasEnvel = () => {
                           className="group/cta relative inline-flex items-center gap-3 px-12 py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
                           {/* Animated gradient background */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#C8968C] via-[#E0B8B0] to-[#C8968C] bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#C8968C] to-[#E0B8B0] opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
                           
                           {/* Glow effect */}
-                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-[#D4A574] transition-all duration-300" />
+                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-[#C8968C] transition-all duration-300" />
                           
                           {/* Button content */}
                           <div className="relative z-10 flex items-center gap-3">
-                            <MessageSquare size={26} className="text-[#122737] group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
+                            <MessageSquare size={26} className="text-[#2d2420] group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
                             <div className="text-left">
-                              <div className="text-[#122737] font-bold text-xl">Adquirir Agora</div>
-                              <div className="text-[#122737]/70 text-xs font-medium">Falar com desenvolvedor</div>
+                              <div className="text-[#2d2420] font-bold text-xl">Adquirir Agora</div>
+                              <div className="text-[#2d2420]/70 text-xs font-medium">Falar com desenvolvedor</div>
                             </div>
                           </div>
                         </a>
@@ -952,7 +944,7 @@ const VendasEnvel = () => {
                 <div className="mt-12">
                   <div className="text-center mb-6">
                     <h3 className="text-white/90 text-xl font-semibold mb-2">
-                      Empresas que <span className="bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] bg-clip-text text-transparent">confiaram</span> no meu trabalho
+                      Empresas que <span className="bg-gradient-to-r from-[#C8968C] to-[#E0B8B0] bg-clip-text text-transparent">confiaram</span> no meu trabalho
                     </h3>
                     <p className="text-white/50 text-sm">Mais de 50 empresas com sites modernos e de alta performance</p>
                   </div>
@@ -965,7 +957,7 @@ const VendasEnvel = () => {
           {/* ============================================
               ADMIN PANEL SHOWCASE SECTION
               ============================================ */}
-          <AdminPanelShowcase />
+          <AdminPanelShowcaseCenter />
 
           {/* ============================================
               DEVELOPER SHOWCASE SECTION
@@ -990,7 +982,7 @@ const VendasEnvel = () => {
                   Um site profissional não é um custo, é um investimento que gera retorno todos os dias.
                 </p>
                 <p className="text-white/40 text-sm max-w-xl mx-auto mb-8 italic">
-                  "Com 60 anos de tradição, a Envel merece um site que transmita toda essa experiência e profissionalismo aos clientes."
+                  "Um consultório de ortodontia moderno merece um site que transmita toda a excelência e cuidado no tratamento dos pacientes."
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <button
@@ -1021,4 +1013,4 @@ const VendasEnvel = () => {
   );
 };
 
-export default VendasEnvel;
+export default VendasCenter;

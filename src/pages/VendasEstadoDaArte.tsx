@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { GlassBackground } from '@/components/portfolio-v2';
 import WorkflowFooter from '@/components/WorkflowFooter';
 import {
   SocialProof,
   LighthouseScores,
-  FeatureComparison,
   QRCodePreview,
   LoadTimeCounter,
   UptimeScore,
@@ -14,46 +13,36 @@ import {
   FAQ,
   LogoCarousel,
   DeveloperShowcase,
-  EnvelSplashLoader,
-  AdminPanelShowcase,
+  EstadoDaArteSplashLoader,
+  AdminPanelShowcaseEstadoDaArte,
 } from '@/components/vendas';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings
+  Play, Sparkles, Menu, ChevronUp, MessageSquare,
+  Moon, Star, FileImage, Calendar
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
 
-const VendasEnvel = () => {
+const VendasEstadoDaArte = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [contentReady, setContentReady] = useState(false);
   const [device, setDevice] = useState<DeviceType>('desktop');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [iframeLoading, setIframeLoading] = useState(true);
+  const [iframeError, setIframeError] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const iframeLoadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const iframeCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const SITE_URL = 'https://envel-contabilidade.vercel.app/';
+  const SITE_URL = 'https://estado-da-arte.vercel.app/';
   const PAYMENT_LINK = 'https://wa.me/555199437916';
-
-  // Recursos específicos do site Envel para o comparativo
-  const envelComparisons = [
-    { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
-    { feature: '100% Responsivo', oldSite: false, newSite: true },
-    { feature: 'SEO Otimizado', oldSite: false, newSite: true },
-    { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
-    { feature: 'Timeline Interativa (60 Anos)', oldSite: false, newSite: true },
-    { feature: 'Métricas Animadas', oldSite: false, newSite: true },
-    { feature: 'Multi-escritórios (BR/EUA)', oldSite: false, newSite: true },
-    { feature: 'Segmentação de Clientes', oldSite: false, newSite: true },
-    { feature: 'Portais Integrados (RH/Acessórias)', oldSite: false, newSite: true },
-    { feature: 'Performance A+', oldSite: false, newSite: true },
-  ];
 
   // Handle splash loader completion
   const handleSplashComplete = useCallback(() => {
@@ -61,17 +50,6 @@ const VendasEnvel = () => {
     setTimeout(() => {
       setContentReady(true);
     }, 100);
-  }, []);
-
-  // Garantir fundo escuro ao montar
-  useEffect(() => {
-    document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
-    
-    return () => {
-      document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
-    };
   }, []);
 
   // Animation on mount (after splash)
@@ -86,15 +64,108 @@ const VendasEnvel = () => {
   useEffect(() => {
     if (isPreviewOpen) {
       setIframeLoading(true);
+      setIframeError(false);
+      
+      // Listener para erros de console relacionados a X-Frame-Options
+      const originalError = console.error;
+      const errorHandler = (...args: any[]) => {
+        const errorMsg = args.join(' ');
+        if (errorMsg.includes('X-Frame-Options') || errorMsg.includes('Refused to display') || errorMsg.includes('frame-ancestors')) {
+          // Detecta erro de bloqueio imediatamente
+          setIframeError(true);
+          setIframeLoading(false);
+        }
+        originalError.apply(console, args);
+      };
+      
+      // Temporariamente sobrescreve console.error para detectar erros
+      console.error = errorHandler;
+
+      // Limpa intervalos anteriores se existirem
+      if (iframeCheckIntervalRef.current) {
+        clearInterval(iframeCheckIntervalRef.current);
+        iframeCheckIntervalRef.current = null;
+      }
+      if (iframeLoadTimeoutRef.current) {
+        clearTimeout(iframeLoadTimeoutRef.current);
+        iframeLoadTimeoutRef.current = null;
+      }
+
+      // Verificação periódica para detectar quando o iframe carrega
+      // Isso garante que detectamos mesmo se onLoad não disparar
+      iframeCheckIntervalRef.current = setInterval(() => {
+        const iframe = document.querySelector('iframe[title="Preview Estado da Arte"]') as HTMLIFrameElement;
+        if (iframe) {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDoc && iframeDoc.location.href !== 'about:blank') {
+              // Tem documento válido - carregou!
+              console.log('✅ Iframe carregou detectado via verificação periódica');
+              setIframeLoading(false);
+              setIframeError(false);
+              if (iframeCheckIntervalRef.current) {
+                clearInterval(iframeCheckIntervalRef.current);
+                iframeCheckIntervalRef.current = null;
+              }
+              if (iframeLoadTimeoutRef.current) {
+                clearTimeout(iframeLoadTimeoutRef.current);
+                iframeLoadTimeoutRef.current = null;
+              }
+            }
+          } catch (e) {
+            // CORS - não consegue acessar, mas pode ter carregado
+            // Continua verificando
+          }
+        }
+      }, 500); // Verifica a cada 500ms
+
+      // Timeout de segurança para detectar bloqueio após 8 segundos
+      iframeLoadTimeoutRef.current = setTimeout(() => {
+        if (iframeCheckIntervalRef.current) {
+          clearInterval(iframeCheckIntervalRef.current);
+          iframeCheckIntervalRef.current = null;
+        }
+        
+        // Verifica se o iframe existe e tentou carregar
+        const iframe = document.querySelector('iframe[title="Preview Estado da Arte"]') as HTMLIFrameElement;
+        if (iframe) {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (!iframeDoc || iframeDoc.location.href === 'about:blank') {
+              // Ainda em about:blank após 8s = bloqueado ou não carregou
+              console.warn('⚠️ Iframe ainda em about:blank após 8s - provavelmente bloqueado');
+              setIframeError(true);
+              setIframeLoading(false);
+            } else {
+              // Tem documento - marca como carregado
+              console.log('✅ Iframe tem documento - marcando como carregado');
+              setIframeLoading(false);
+            }
+          } catch (e) {
+            // Não consegue acessar - pode ser CORS normal (site carregou mas não podemos acessar)
+            // Se chegou no timeout e não consegue acessar, assume que carregou
+            console.log('✅ Não consegue acessar iframe DOM (CORS normal) - assumindo que carregou');
+            setIframeLoading(false);
+          }
+        }
+      }, 8000);
+
+      return () => {
+        if (iframeCheckIntervalRef.current) {
+          clearInterval(iframeCheckIntervalRef.current);
+          iframeCheckIntervalRef.current = null;
+        }
+        if (iframeLoadTimeoutRef.current) {
+          clearTimeout(iframeLoadTimeoutRef.current);
+          iframeLoadTimeoutRef.current = null;
+        }
+        console.error = originalError;
+      };
     }
   }, [isPreviewOpen]);
 
-  // Lock body scroll when modal is open and ensure dark background
+  // Lock body scroll when modal is open
   useEffect(() => {
-    // Garantir fundo escuro
-    document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
-    
     if (isPreviewOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -102,8 +173,6 @@ const VendasEnvel = () => {
     }
     return () => {
       document.body.style.overflow = 'unset';
-      document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
@@ -200,19 +269,19 @@ const VendasEnvel = () => {
     {
       icon: TrendingUp,
       title: 'Aumento de Credibilidade',
-      description: 'Site profissional que transmite confiança e solidez, refletindo os 60+ anos de tradição da Envel.',
+      description: 'Site profissional que transmite confiança e excelência, alinhado com a qualidade da Estado da Arte.',
       accent: 'from-blue-500 to-cyan-500'
     },
     {
       icon: MessageCircle,
       title: '+60% Mais Contatos',
-      description: 'Integração inteligente com WhatsApp e formulário otimizado para conversão de visitantes em leads.',
+      description: 'Integração inteligente com WhatsApp e formulário otimizado para conversão de visitantes em pacientes.',
       accent: 'from-green-500 to-emerald-500'
     },
     {
       icon: Search,
       title: 'Melhor no Google',
-      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas locais por contabilidade.',
+      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas locais por odontologia em Caxias do Sul.',
       accent: 'from-purple-500 to-violet-500'
     },
     {
@@ -251,12 +320,28 @@ const VendasEnvel = () => {
   const includedItems = [
     'Site completo e funcional',
     'Design moderno e premium',
-    'Painel Administrativo',
+    'Código fonte documentado',
     'Integração WhatsApp',
     'SEO otimizado',
     '100% responsivo',
     'Suporte Técnico',
     'Garantia de 30 dias',
+  ];
+
+  // Comparativo de recursos específico para Estado da Arte
+  const featureComparisons = [
+    { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
+    { feature: '100% Responsivo', oldSite: false, newSite: true },
+    { feature: 'SEO Otimizado', oldSite: false, newSite: true },
+    { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
+    { feature: 'Animações Profissionais', oldSite: false, newSite: true },
+    { feature: 'Formulário de Contato', oldSite: false, newSite: true },
+    { feature: 'Google Maps Integrado', oldSite: false, newSite: true },
+    { feature: 'Performance A+', oldSite: false, newSite: true },
+    { feature: 'Modo Dark/Light', oldSite: false, newSite: true },
+    { feature: '6 Páginas de Serviços', oldSite: false, newSite: true },
+    { feature: 'Seção de Avaliações Google', oldSite: false, newSite: true },
+    { feature: 'Blog Integrado', oldSite: false, newSite: true },
   ];
 
   // Logos das empresas atendidas
@@ -272,14 +357,23 @@ const VendasEnvel = () => {
     '/Images/capas-sites/MRA Advogados Associados.webp',
     '/Images/capas-sites/Oasis Corp.webp',
     '/Images/capas-sites/Oxpay.webp',
-    '/Images/Captura1101262.webp',
   ];
+
+  // Set dark background on mount
+  useEffect(() => {
+    document.documentElement.style.backgroundColor = '#0a0a0f';
+    document.body.style.backgroundColor = '#0a0a0f';
+    return () => {
+      document.documentElement.style.backgroundColor = '';
+      document.body.style.backgroundColor = '';
+    };
+  }, []);
 
   return (
     <>
       {/* Splash Loading Screen */}
       {showSplash && (
-        <EnvelSplashLoader onComplete={handleSplashComplete} duration={1200} />
+        <EstadoDaArteSplashLoader onComplete={handleSplashComplete} duration={1200} />
       )}
 
       {/* Preview Modal */}
@@ -297,10 +391,10 @@ const VendasEnvel = () => {
             <div className="relative flex items-center justify-between gap-4 px-4 py-3 bg-white/5 backdrop-blur-xl border-b border-white/10 rounded-t-2xl">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold">E</span>
+                  <span className="text-white font-bold">EA</span>
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-white font-semibold truncate">Envel Contabilidade</h2>
+                  <h2 className="text-white font-semibold truncate">Estado da Arte</h2>
                   <p className="text-white/50 text-xs truncate">Preview Interativo</p>
                 </div>
               </div>
@@ -346,7 +440,8 @@ const VendasEnvel = () => {
                   boxShadow: device !== 'desktop' ? '0 0 60px rgba(0,0,0,0.5)' : 'none',
                 }}
               >
-                {iframeLoading && (
+                {/* Loading State */}
+                {iframeLoading && !iframeError && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10">
                     <div className="relative">
                       <div className="w-16 h-16 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin" />
@@ -355,13 +450,77 @@ const VendasEnvel = () => {
                     <p className="mt-4 text-white/50 text-sm">Carregando preview...</p>
                   </div>
                 )}
-                <iframe
-                  src={SITE_URL}
-                  title="Preview Envel Contabilidade"
-                  className={`w-full h-full bg-white transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
-                  onLoad={() => setIframeLoading(false)}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                />
+
+                {/* Error State - Site blocks iframe */}
+                {iframeError && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10 p-8">
+                    <div className="text-center max-w-md">
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 border border-purple-500/30 flex items-center justify-center mb-6 mx-auto">
+                        <Globe size={40} className="text-purple-400" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-3">
+                        Visualize o Site Completo
+                      </h3>
+                      <p className="text-white/60 mb-6 leading-relaxed">
+                        O site Estado da Arte possui proteções de segurança que impedem a visualização em iframe. 
+                        Clique no botão abaixo para abrir o site em uma nova aba e explorar todas as funcionalidades.
+                      </p>
+                      <a
+                        href={SITE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-lg transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:scale-105"
+                      >
+                        <Globe size={22} />
+                        Abrir Site em Nova Aba
+                        <ChevronDown size={18} className="rotate-[-90deg]" />
+                      </a>
+                      <button
+                        onClick={() => setIsPreviewOpen(false)}
+                        className="mt-4 text-white/50 hover:text-white text-sm transition-colors"
+                      >
+                        ou fechar esta janela
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Iframe - Tenta carregar normalmente */}
+                {!iframeError && (
+                  <iframe
+                    key={`iframe-${isPreviewOpen}`}
+                    src={SITE_URL}
+                    title="Preview Estado da Arte"
+                    className={`w-full h-full bg-white transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                    onLoad={(e) => {
+                      // Simplificado: se onLoad disparou, considera carregado
+                      // O evento onLoad só dispara quando o iframe realmente carrega
+                      console.log('✅ Iframe onLoad disparado - site carregou');
+                      
+                      // Limpa os timeouts/intervals já que carregou
+                      if (iframeCheckIntervalRef.current) {
+                        clearInterval(iframeCheckIntervalRef.current);
+                        iframeCheckIntervalRef.current = null;
+                      }
+                      if (iframeLoadTimeoutRef.current) {
+                        clearTimeout(iframeLoadTimeoutRef.current);
+                        iframeLoadTimeoutRef.current = null;
+                      }
+                      
+                      setIframeLoading(false);
+                      setIframeError(false);
+                    }}
+                    onError={(e) => {
+                      // Se houver erro no carregamento
+                      console.error('Iframe onError disparado', e);
+                      setIframeError(true);
+                      setIframeLoading(false);
+                    }}
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation"
+                    allow="fullscreen"
+                    loading="eager"
+                  />
+                )}
               </div>
             </div>
 
@@ -395,12 +554,12 @@ const VendasEnvel = () => {
               >
                 <div className="relative">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(212,165,116,0.4)] transition-all duration-300">
-                    <span className="text-white font-bold text-lg">E</span>
+                    <span className="text-white font-bold text-sm">EA</span>
                   </div>
                   <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-slate-900 animate-pulse" />
                 </div>
                 <div className="hidden sm:block text-left">
-                  <span className="text-white font-semibold text-sm">Envel</span>
+                  <span className="text-white font-semibold text-sm">Estado da Arte</span>
                   <span className="block text-white/50 text-xs">Novo Site</span>
                 </div>
               </button>
@@ -449,7 +608,7 @@ const VendasEnvel = () => {
                 >
                   <Play size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Visualizar</span>
-                  <span className="sm:hidden">Visualizar Site</span>
+                  <span className="sm:hidden">Ver</span>
                 </button>
 
                 {/* Buy Button - Desktop */}
@@ -555,13 +714,13 @@ const VendasEnvel = () => {
                   <span className="text-white">Novo Site</span>
                   <br />
                   <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
-                    Envel Contabilidade
+                    Estado da Arte
                   </span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-lg sm:text-xl md:text-2xl text-white/60 max-w-3xl mx-auto mb-8 leading-relaxed">
-                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e tradição</strong> de mais de 60 anos da Envel Contabilidade.
+                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e sofisticação</strong> da Clínica Odontológica e Harmonização Facial Estado da Arte.
                 </p>
 
                 {/* Hero Mockup 3D Interativo - Mobile First */}
@@ -646,10 +805,10 @@ const VendasEnvel = () => {
             <div className="max-w-6xl mx-auto">
               <div className={`text-center mb-12 sm:mb-16 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-                  Por que sua empresa <span className="text-gradient">precisa</span> deste site?
+                  Por que sua clínica <span className="text-gradient">precisa</span> deste site?
                 </h2>
                 <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                  Vantagens estratégicas que transformam visitantes em clientes
+                  Vantagens estratégicas que transformam visitantes em pacientes
                 </p>
               </div>
 
@@ -737,10 +896,64 @@ const VendasEnvel = () => {
                 </div>
               </div>
 
-              {/* Row 4: Feature Comparison */}
+              {/* Row 4: Feature Comparison - Específico para Estado da Arte */}
               <div className={`mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
-                <FeatureComparison comparisons={envelComparisons} />
+                <div className="w-full">
+                  <div className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10">
+                    {/* Header */}
+                    <div className="grid grid-cols-3 bg-white/10 border-b border-white/10">
+                      <div className="py-4 px-4 sm:px-6 text-center">
+                        <span className="text-red-400 font-semibold text-sm sm:text-base">Site Atual</span>
+                      </div>
+                      <div className="py-4 px-4 sm:px-6 text-center border-x border-white/10">
+                        <span className="text-white/80 font-semibold text-sm sm:text-base">Recurso</span>
+                      </div>
+                      <div className="py-4 px-4 sm:px-6 text-center">
+                        <span className="text-green-400 font-semibold text-sm sm:text-base">Nova Versão</span>
+                      </div>
+                    </div>
+
+                    {/* Rows */}
+                    {featureComparisons.map((item, index) => (
+                      <div
+                        key={index}
+                        className={`grid grid-cols-3 ${
+                          index !== featureComparisons.length - 1 ? 'border-b border-white/10' : ''
+                        } hover:bg-white/5 transition-colors duration-200`}
+                      >
+                        {/* Old Site */}
+                        <div className="py-3 sm:py-4 px-4 sm:px-6 flex justify-center items-center">
+                          {item.oldSite ? (
+                            <CheckCircle size={20} className="text-green-400" />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
+                              <X size={14} className="text-red-400" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Feature Name */}
+                        <div className="py-3 sm:py-4 px-4 sm:px-6 border-x border-white/10 flex items-center justify-center">
+                          <span className="text-white/80 text-xs sm:text-sm text-center">
+                            {item.feature}
+                          </span>
+                        </div>
+
+                        {/* New Site */}
+                        <div className="py-3 sm:py-4 px-4 sm:px-6 flex justify-center items-center">
+                          {item.newSite ? (
+                            <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                              <CheckCircle size={16} className="text-green-400" />
+                            </div>
+                          ) : (
+                            <X size={20} className="text-red-400" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Row 5: Social Proof */}
@@ -751,16 +964,23 @@ const VendasEnvel = () => {
 
               {/* CTA Button */}
               <div className={`text-center mt-12 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <button
-                  onClick={() => setIsPreviewOpen(true)}
+                <a
+                  href={SITE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-lg transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:scale-105"
                 >
                   <Globe size={22} />
-                  Ver Site em Tela Cheia
-                </button>
+                  Ver Site em Nova Aba
+                </a>
               </div>
             </div>
           </section>
+
+          {/* ============================================
+              ADMIN PANEL SHOWCASE SECTION
+              ============================================ */}
+          <AdminPanelShowcaseEstadoDaArte />
 
           {/* ============================================
               INVESTMENT SECTION - MODERNIZED
@@ -872,6 +1092,33 @@ const VendasEnvel = () => {
                         </div>
                       </div>
 
+                      {/* Recursos Específicos Estado da Arte */}
+                      <div className="mb-10">
+                        <div className="relative h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6">
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full bg-slate-900 border border-white/10">
+                            <span className="text-white/50 text-xs font-medium">Recursos Específicos</span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                          <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10">
+                            <Moon size={24} className="text-[#D4A574]" />
+                            <span className="text-white/70 text-xs text-center">Modo Dark/Light</span>
+                          </div>
+                          <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10">
+                            <Star size={24} className="text-[#D4A574]" />
+                            <span className="text-white/70 text-xs text-center">127 Avaliações Google</span>
+                          </div>
+                          <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10">
+                            <FileImage size={24} className="text-[#D4A574]" />
+                            <span className="text-white/70 text-xs text-center">6 Páginas de Serviços</span>
+                          </div>
+                          <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10">
+                            <Calendar size={24} className="text-[#D4A574]" />
+                            <span className="text-white/70 text-xs text-center">Blog Integrado</span>
+                          </div>
+                        </div>
+                      </div>
+
                       {/* Payment Methods - Enhanced */}
                       <div className="hidden sm:block mb-10">
                         <h3 className="text-center text-white/60 text-sm font-medium mb-4">Formas de Pagamento</h3>
@@ -963,11 +1210,6 @@ const VendasEnvel = () => {
           </section>
 
           {/* ============================================
-              ADMIN PANEL SHOWCASE SECTION
-              ============================================ */}
-          <AdminPanelShowcase />
-
-          {/* ============================================
               DEVELOPER SHOWCASE SECTION
               ============================================ */}
           <DeveloperShowcase />
@@ -990,7 +1232,7 @@ const VendasEnvel = () => {
                   Um site profissional não é um custo, é um investimento que gera retorno todos os dias.
                 </p>
                 <p className="text-white/40 text-sm max-w-xl mx-auto mb-8 italic">
-                  "Com 60 anos de tradição, a Envel merece um site que transmita toda essa experiência e profissionalismo aos clientes."
+                  "A maioria das clínicas odontológicas em Caxias do Sul possui sites desatualizados. Com o novo site, a Estado da Arte estará à frente da concorrência."
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <button
@@ -1021,4 +1263,4 @@ const VendasEnvel = () => {
   );
 };
 
-export default VendasEnvel;
+export default VendasEstadoDaArte;

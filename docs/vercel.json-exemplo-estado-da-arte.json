@@ -1,0 +1,17 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://workflow-digital-masterpiece.vercel.app https://*.vercel.app http://localhost:* http://127.0.0.1:* https://workflow-services.online https://www.workflow-services.online"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}

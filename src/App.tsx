@@ -22,6 +22,13 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const VendasLiddera = lazy(() => import("./pages/VendasLiddera"));
 const VendasEnvel = lazy(() => import("./pages/VendasEnvel"));
 const VendasInove = lazy(() => import("./pages/VendasInove"));
+const VendasLauren = lazy(() => import("./pages/VendasLauren"));
+const VendasOrtobom = lazy(() => import("./pages/VendasOrtobom"));
+const VendasPrevinir = lazy(() => import("./pages/VendasPrevinir"));
+const VendasEstadoDaArte = lazy(() => import("./pages/VendasEstadoDaArte"));
+const VendasFlach = lazy(() => import("./pages/VendasFlach"));
+const VendasCenter = lazy(() => import("./pages/VendasCenter"));
+const VendasEZ = lazy(() => import("./pages/VendasEZ"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +85,13 @@ function App() {
               <Route path="/site/liddera" element={<VendasLiddera />} />
               <Route path="/site/envel" element={<VendasEnvel />} />
               <Route path="/site/inove" element={<VendasInove />} />
+              <Route path="/site/lauren" element={<VendasLauren />} />
+              <Route path="/site/ortobom" element={<VendasOrtobom />} />
+              <Route path="/site/previnir" element={<VendasPrevinir />} />
+              <Route path="/site/estado-da-arte" element={<VendasEstadoDaArte />} />
+              <Route path="/site/flach" element={<VendasFlach />} />
+              <Route path="/site/center" element={<VendasCenter />} />
+              <Route path="/site/ez" element={<VendasEZ />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

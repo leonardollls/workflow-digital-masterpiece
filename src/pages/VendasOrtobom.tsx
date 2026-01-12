@@ -4,7 +4,6 @@ import WorkflowFooter from '@/components/WorkflowFooter';
 import {
   SocialProof,
   LighthouseScores,
-  FeatureComparison,
   QRCodePreview,
   LoadTimeCounter,
   UptimeScore,
@@ -14,20 +13,103 @@ import {
   FAQ,
   LogoCarousel,
   DeveloperShowcase,
-  EnvelSplashLoader,
-  AdminPanelShowcase,
+  OrtobomSplashLoader,
+  AdminPanelShowcaseOrtobom,
 } from '@/components/vendas';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings
+  Play, Sparkles, Menu, ChevronUp, MessageSquare
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
 
-const VendasEnvel = () => {
+// Recursos específicos do site Ortobom Odontologia
+interface ComparisonItem {
+  feature: string;
+  oldSite: boolean;
+  newSite: boolean;
+}
+
+const ortobomComparisons: ComparisonItem[] = [
+  { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
+  { feature: '100% Responsivo', oldSite: false, newSite: true },
+  { feature: 'Modo Escuro Integrado', oldSite: false, newSite: true },
+  { feature: 'Internacionalização (Multi-idiomas)', oldSite: false, newSite: true },
+  { feature: 'Localizador de Unidades com GPS', oldSite: false, newSite: true },
+  { feature: 'Seção de Especialidades Detalhada', oldSite: false, newSite: true },
+  { feature: 'Blog com Notícias', oldSite: false, newSite: true },
+  { feature: 'Depoimentos de Pacientes', oldSite: false, newSite: true },
+  { feature: 'Newsletter Integrada', oldSite: false, newSite: true },
+  { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
+  { feature: 'SEO Otimizado', oldSite: false, newSite: true },
+  { feature: 'Performance A+', oldSite: false, newSite: true },
+];
+
+// Componente de comparação de recursos customizado
+const FeatureComparisonOrtobom = () => {
+  return (
+    <div className="w-full">
+      <div className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10">
+        {/* Header */}
+        <div className="grid grid-cols-3 bg-white/10 border-b border-white/10">
+          <div className="py-4 px-4 sm:px-6 text-center">
+            <span className="text-red-400 font-semibold text-sm sm:text-base">Site Atual</span>
+          </div>
+          <div className="py-4 px-4 sm:px-6 text-center border-x border-white/10">
+            <span className="text-white/80 font-semibold text-sm sm:text-base">Recurso</span>
+          </div>
+          <div className="py-4 px-4 sm:px-6 text-center">
+            <span className="text-green-400 font-semibold text-sm sm:text-base">Nova Versão</span>
+          </div>
+        </div>
+
+        {/* Rows */}
+        {ortobomComparisons.map((item, index) => (
+          <div
+            key={index}
+            className={`grid grid-cols-3 ${
+              index !== ortobomComparisons.length - 1 ? 'border-b border-white/10' : ''
+            } hover:bg-white/5 transition-colors duration-200`}
+          >
+            {/* Old Site */}
+            <div className="py-3 sm:py-4 px-4 sm:px-6 flex justify-center items-center">
+              {item.oldSite ? (
+                <CheckCircle size={20} className="text-green-400" />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <X size={14} className="text-red-400" />
+                </div>
+              )}
+            </div>
+
+            {/* Feature Name */}
+            <div className="py-3 sm:py-4 px-4 sm:px-6 border-x border-white/10 flex items-center justify-center">
+              <span className="text-white/80 text-xs sm:text-sm text-center">
+                {item.feature}
+              </span>
+            </div>
+
+            {/* New Site */}
+            <div className="py-3 sm:py-4 px-4 sm:px-6 flex justify-center items-center">
+              {item.newSite ? (
+                <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <CheckCircle size={16} className="text-green-400" />
+                </div>
+              ) : (
+                <X size={20} className="text-red-400" />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const VendasOrtobom = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [contentReady, setContentReady] = useState(false);
@@ -38,22 +120,8 @@ const VendasEnvel = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const SITE_URL = 'https://envel-contabilidade.vercel.app/';
+  const SITE_URL = 'https://ortobom-odontologia.vercel.app/';
   const PAYMENT_LINK = 'https://wa.me/555199437916';
-
-  // Recursos específicos do site Envel para o comparativo
-  const envelComparisons = [
-    { feature: 'Design Moderno e Premium', oldSite: false, newSite: true },
-    { feature: '100% Responsivo', oldSite: false, newSite: true },
-    { feature: 'SEO Otimizado', oldSite: false, newSite: true },
-    { feature: 'WhatsApp Integrado', oldSite: false, newSite: true },
-    { feature: 'Timeline Interativa (60 Anos)', oldSite: false, newSite: true },
-    { feature: 'Métricas Animadas', oldSite: false, newSite: true },
-    { feature: 'Multi-escritórios (BR/EUA)', oldSite: false, newSite: true },
-    { feature: 'Segmentação de Clientes', oldSite: false, newSite: true },
-    { feature: 'Portais Integrados (RH/Acessórias)', oldSite: false, newSite: true },
-    { feature: 'Performance A+', oldSite: false, newSite: true },
-  ];
 
   // Handle splash loader completion
   const handleSplashComplete = useCallback(() => {
@@ -89,12 +157,8 @@ const VendasEnvel = () => {
     }
   }, [isPreviewOpen]);
 
-  // Lock body scroll when modal is open and ensure dark background
+  // Lock body scroll when modal is open
   useEffect(() => {
-    // Garantir fundo escuro
-    document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
-    
     if (isPreviewOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -102,8 +166,6 @@ const VendasEnvel = () => {
     }
     return () => {
       document.body.style.overflow = 'unset';
-      document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
@@ -200,19 +262,19 @@ const VendasEnvel = () => {
     {
       icon: TrendingUp,
       title: 'Aumento de Credibilidade',
-      description: 'Site profissional que transmite confiança e solidez, refletindo os 60+ anos de tradição da Envel.',
+      description: 'Site profissional que transmite confiança e modernidade, alinhado com 23+ anos de tradição da Ortobom.',
       accent: 'from-blue-500 to-cyan-500'
     },
     {
       icon: MessageCircle,
-      title: '+60% Mais Contatos',
-      description: 'Integração inteligente com WhatsApp e formulário otimizado para conversão de visitantes em leads.',
+      title: '+60% Mais Agendamentos',
+      description: 'Integração inteligente com WhatsApp e localizador de unidades otimizado para conversão de visitantes em pacientes.',
       accent: 'from-green-500 to-emerald-500'
     },
     {
       icon: Search,
       title: 'Melhor no Google',
-      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas locais por contabilidade.',
+      description: 'SEO otimizado para aparecer nas primeiras posições nas buscas por clínicas odontológicas.',
       accent: 'from-purple-500 to-violet-500'
     },
     {
@@ -238,7 +300,7 @@ const VendasEnvel = () => {
   const stats = [
     { value: '+70%', label: 'Mais Credibilidade', accent: 'from-amber-500 to-orange-600' },
     { value: '+45%', label: 'Mais Visibilidade', accent: 'from-blue-500 to-indigo-600' },
-    { value: '+60%', label: 'Mais Contatos', accent: 'from-green-500 to-emerald-600' },
+    { value: '+60%', label: 'Mais Agendamentos', accent: 'from-green-500 to-emerald-600' },
     { value: '+80%', label: 'Mais Profissionalismo', accent: 'from-purple-500 to-violet-600' },
   ];
 
@@ -251,7 +313,7 @@ const VendasEnvel = () => {
   const includedItems = [
     'Site completo e funcional',
     'Design moderno e premium',
-    'Painel Administrativo',
+    'Código fonte documentado',
     'Integração WhatsApp',
     'SEO otimizado',
     '100% responsivo',
@@ -272,14 +334,13 @@ const VendasEnvel = () => {
     '/Images/capas-sites/MRA Advogados Associados.webp',
     '/Images/capas-sites/Oasis Corp.webp',
     '/Images/capas-sites/Oxpay.webp',
-    '/Images/Captura1101262.webp',
   ];
 
   return (
     <>
       {/* Splash Loading Screen */}
       {showSplash && (
-        <EnvelSplashLoader onComplete={handleSplashComplete} duration={1200} />
+        <OrtobomSplashLoader onComplete={handleSplashComplete} duration={1200} />
       )}
 
       {/* Preview Modal */}
@@ -297,10 +358,10 @@ const VendasEnvel = () => {
             <div className="relative flex items-center justify-between gap-4 px-4 py-3 bg-white/5 backdrop-blur-xl border-b border-white/10 rounded-t-2xl">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-bold">E</span>
+                  <span className="text-white font-bold">O</span>
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-white font-semibold truncate">Envel Contabilidade</h2>
+                  <h2 className="text-white font-semibold truncate">Ortobom Odontologia</h2>
                   <p className="text-white/50 text-xs truncate">Preview Interativo</p>
                 </div>
               </div>
@@ -357,7 +418,7 @@ const VendasEnvel = () => {
                 )}
                 <iframe
                   src={SITE_URL}
-                  title="Preview Envel Contabilidade"
+                  title="Preview Ortobom Odontologia"
                   className={`w-full h-full bg-white transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   onLoad={() => setIframeLoading(false)}
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -395,12 +456,12 @@ const VendasEnvel = () => {
               >
                 <div className="relative">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#122737] to-[#D4A574] flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(212,165,116,0.4)] transition-all duration-300">
-                    <span className="text-white font-bold text-lg">E</span>
+                    <span className="text-white font-bold text-lg">O</span>
                   </div>
                   <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-slate-900 animate-pulse" />
                 </div>
                 <div className="hidden sm:block text-left">
-                  <span className="text-white font-semibold text-sm">Envel</span>
+                  <span className="text-white font-semibold text-sm">Ortobom</span>
                   <span className="block text-white/50 text-xs">Novo Site</span>
                 </div>
               </button>
@@ -449,7 +510,7 @@ const VendasEnvel = () => {
                 >
                   <Play size={16} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Visualizar</span>
-                  <span className="sm:hidden">Visualizar Site</span>
+                  <span className="sm:hidden">Ver</span>
                 </button>
 
                 {/* Buy Button - Desktop */}
@@ -555,13 +616,13 @@ const VendasEnvel = () => {
                   <span className="text-white">Novo Site</span>
                   <br />
                   <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
-                    Envel Contabilidade
+                    Ortobom Odontologia
                   </span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-lg sm:text-xl md:text-2xl text-white/60 max-w-3xl mx-auto mb-8 leading-relaxed">
-                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e tradição</strong> de mais de 60 anos da Envel Contabilidade.
+                  Uma nova presença digital que reflete a <strong className="text-white/90">excelência e tradição</strong> de mais de 23 anos transformando sorrisos na América Latina.
                 </p>
 
                 {/* Hero Mockup 3D Interativo - Mobile First */}
@@ -646,10 +707,10 @@ const VendasEnvel = () => {
             <div className="max-w-6xl mx-auto">
               <div className={`text-center mb-12 sm:mb-16 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-                  Por que sua empresa <span className="text-gradient">precisa</span> deste site?
+                  Por que sua clínica <span className="text-gradient">precisa</span> deste site?
                 </h2>
                 <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                  Vantagens estratégicas que transformam visitantes em clientes
+                  Vantagens estratégicas que transformam visitantes em pacientes
                 </p>
               </div>
 
@@ -740,7 +801,7 @@ const VendasEnvel = () => {
               {/* Row 4: Feature Comparison */}
               <div className={`mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
-                <FeatureComparison comparisons={envelComparisons} />
+                <FeatureComparisonOrtobom />
               </div>
 
               {/* Row 5: Social Proof */}
@@ -761,6 +822,11 @@ const VendasEnvel = () => {
               </div>
             </div>
           </section>
+
+          {/* ============================================
+              ADMIN PANEL SHOWCASE SECTION
+              ============================================ */}
+          <AdminPanelShowcaseOrtobom />
 
           {/* ============================================
               INVESTMENT SECTION - MODERNIZED
@@ -963,11 +1029,6 @@ const VendasEnvel = () => {
           </section>
 
           {/* ============================================
-              ADMIN PANEL SHOWCASE SECTION
-              ============================================ */}
-          <AdminPanelShowcase />
-
-          {/* ============================================
               DEVELOPER SHOWCASE SECTION
               ============================================ */}
           <DeveloperShowcase />
@@ -990,7 +1051,7 @@ const VendasEnvel = () => {
                   Um site profissional não é um custo, é um investimento que gera retorno todos os dias.
                 </p>
                 <p className="text-white/40 text-sm max-w-xl mx-auto mb-8 italic">
-                  "Com 60 anos de tradição, a Envel merece um site que transmita toda essa experiência e profissionalismo aos clientes."
+                  "Com recursos modernos como modo escuro, multi-idiomas e localizador de unidades, a Ortobom Odontologia estará à frente da concorrência."
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <button
@@ -1021,4 +1082,4 @@ const VendasEnvel = () => {
   );
 };
 
-export default VendasEnvel;
+export default VendasOrtobom;
