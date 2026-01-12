@@ -10,8 +10,8 @@
     <meta name="robots" content="index, follow" />
     <meta name="language" content="pt-BR" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <!-- Favicon - Removido para evitar exibição do favicon do Lovable -->
+    <!-- <link rel="icon" type="image/x-icon" href="/favicon.ico" /> -->
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -78,6 +78,19 @@
     
     <!-- Redirect to SPA after crawlers read meta tags -->
     <script>
+      // Remover TODOS os favicons existentes (incluindo qualquer referência ao Lovable)
+      (function() {
+        // Remover todos os links de favicon existentes
+        const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"]');
+        faviconLinks.forEach(function(link) {
+          const href = link.getAttribute('href') || '';
+          // Remover se contiver "lovable" ou qualquer referência suspeita
+          if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable') || href.toLowerCase().includes('favicon')) {
+            link.remove();
+          }
+        });
+      })();
+      
       // Detect if it's a crawler (Facebook, Twitter, WhatsApp, etc.)
       const userAgent = navigator.userAgent.toLowerCase();
       const isCrawler = /facebookexternalhit|twitterbot|whatsapp|linkedinbot|slackbot|skypeuripreview|bingbot|googlebot/i.test(userAgent);

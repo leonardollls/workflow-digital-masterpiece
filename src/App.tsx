@@ -57,6 +57,49 @@ const RedirectHandler = () => {
   return null;
 };
 
+// Component to remove Lovable favicons globally
+const FaviconCleaner = () => {
+  useEffect(() => {
+    const removeAllFavicons = () => {
+      // Remover todos os links de favicon existentes
+      const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"]');
+      faviconLinks.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        // Remover se contiver "lovable" ou qualquer referência suspeita
+        if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
+          link.remove();
+        }
+      });
+      
+      // Remover também por seletores específicos
+      const selectors = [
+        'link[rel="icon"]',
+        'link[rel="shortcut icon"]',
+        'link[rel="apple-touch-icon"]',
+        'link[rel="apple-touch-icon-precomposed"]',
+      ];
+      
+      selectors.forEach(selector => {
+        const links = document.querySelectorAll(selector);
+        links.forEach(link => {
+          const href = link.getAttribute('href') || '';
+          if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
+            link.remove();
+          }
+        });
+      });
+    };
+
+    // Executar imediatamente e também após um pequeno delay para garantir
+    removeAllFavicons();
+    const timeout = setTimeout(removeAllFavicons, 100);
+    
+    return () => clearTimeout(timeout);
+  }, []);
+  
+  return null;
+};
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -64,6 +107,7 @@ function App() {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <FaviconCleaner />
           <RedirectHandler />
           <Suspense fallback={
             <div 
