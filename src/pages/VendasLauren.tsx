@@ -119,37 +119,27 @@ const VendasLauren = () => {
       meta.setAttribute('content', content);
     };
 
-    // Remover meta tags de imagem existentes
-    const removeMetaTag = (property: string, isProperty = true) => {
-      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
-      const meta = document.querySelector(selector);
-      if (meta) {
-        meta.remove();
-      }
-    };
+    // URL da imagem de preview
+    const previewImageUrl = 'https://leonardolopes.online/Images/leonardo-lopes/I_need_the_202601121847.jpeg';
 
-    // Remover todas as meta tags de imagem
-    removeMetaTag('og:image');
-    removeMetaTag('og:image:secure_url');
-    removeMetaTag('og:image:type');
-    removeMetaTag('og:image:width');
-    removeMetaTag('og:image:height');
-    removeMetaTag('og:image:alt');
-    removeMetaTag('twitter:image', false);
-    removeMetaTag('twitter:image:alt', false);
-
-    // Open Graph Meta Tags (sem imagem)
+    // Open Graph Meta Tags (com imagem)
     updateMetaTag('og:title', 'Leonardo Lopes - UX/UI Designer & Developer');
     updateMetaTag('og:description', 'Especialista em sites de alta performance e conversão.');
     updateMetaTag('og:url', 'https://leonardolopes.online/site/lauren');
     updateMetaTag('og:type', 'website');
     updateMetaTag('og:site_name', 'Leonardo Lopes');
     updateMetaTag('og:locale', 'pt_BR');
+    updateMetaTag('og:image', previewImageUrl);
+    updateMetaTag('og:image:secure_url', previewImageUrl);
+    updateMetaTag('og:image:type', 'image/jpeg');
+    updateMetaTag('og:image:alt', 'Leonardo Lopes - UX/UI Designer & Developer');
 
-    // Twitter Meta Tags (sem imagem)
-    updateMetaTag('twitter:card', 'summary', false);
+    // Twitter Meta Tags (com imagem)
+    updateMetaTag('twitter:card', 'summary_large_image', false);
     updateMetaTag('twitter:title', 'Leonardo Lopes - UX/UI Designer & Developer', false);
     updateMetaTag('twitter:description', 'Especialista em sites de alta performance e conversão.', false);
+    updateMetaTag('twitter:image', previewImageUrl, false);
+    updateMetaTag('twitter:image:alt', 'Leonardo Lopes - UX/UI Designer & Developer', false);
 
     // Meta description padrão
     updateMetaTag('description', 'Leonardo Lopes - UX/UI Designer & Developer. Especialista em sites de alta performance e conversão.', false);

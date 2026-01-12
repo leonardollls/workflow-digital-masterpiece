@@ -20,7 +20,7 @@ const Index = () => {
     setIsLoading(false);
   };
 
-  // Remover favicons do Lovable
+  // Remover favicons do Lovable e atualizar meta tags de imagem
   useEffect(() => {
     const removeAllFavicons = () => {
       // Remover todos os links de favicon existentes
@@ -52,7 +52,33 @@ const Index = () => {
       });
     };
 
+    const updateMetaTag = (property: string, content: string, isProperty = true) => {
+      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
+      let meta = document.querySelector(selector) as HTMLMetaElement;
+      
+      if (!meta) {
+        meta = document.createElement('meta');
+        if (isProperty) {
+          meta.setAttribute('property', property);
+        } else {
+          meta.setAttribute('name', property);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
     removeAllFavicons();
+
+    // Atualizar meta tags de imagem de preview
+    const previewImageUrl = 'https://leonardolopes.online/Images/leonardo-lopes/I_need_the_202601121847.jpeg';
+    updateMetaTag('og:image', previewImageUrl);
+    updateMetaTag('og:image:secure_url', previewImageUrl);
+    updateMetaTag('og:image:type', 'image/jpeg');
+    updateMetaTag('og:image:alt', 'Leonardo Lopes - UX/UI Designer & Developer');
+    updateMetaTag('twitter:card', 'summary_large_image', false);
+    updateMetaTag('twitter:image', previewImageUrl, false);
+    updateMetaTag('twitter:image:alt', 'Leonardo Lopes - UX/UI Designer & Developer', false);
   }, []);
 
   // Garantir que o loading seja removido após um tempo máximo
