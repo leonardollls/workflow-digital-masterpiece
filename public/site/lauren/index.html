@@ -51,9 +51,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-    
-    <!-- Preload LCP image -->
-    <link rel="preload" href="/Images/leonardo-lopes/Image_202601111107.JPG" as="image" type="image/jpeg" fetchpriority="high" />
 
     <!-- Google Fonts - Async Loading (non-blocking) -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" />
@@ -84,9 +81,35 @@
       #root{min-height:100vh}
       img,video{max-width:100%;height:auto;display:block}
     </style>
+    
+    <!-- Redirect to SPA after crawlers read meta tags -->
+    <script>
+      // Detect if it's a crawler (Facebook, Twitter, WhatsApp, etc.)
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isCrawler = /facebookexternalhit|twitterbot|whatsapp|linkedinbot|slackbot|skypeuripreview|bingbot|googlebot/i.test(userAgent);
+      
+      // If not a crawler, redirect to main SPA (which will handle routing)
+      if (!isCrawler) {
+        // Redirect to root, then React Router will handle the /site/lauren route
+        // Use a hash to avoid server-side redirect loop
+        if (window.location.pathname === '/site/lauren/' || window.location.pathname === '/site/lauren') {
+          window.location.replace('/#/site/lauren');
+        }
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- Content for crawlers to see -->
+    <div style="display:none;">
+      <h1>Leonardo Lopes - Web Designer</h1>
+      <p>Especialista em sites de alta performance e conversão.</p>
+      <img src="https://leonardolopes.online/Images/leonardo-lopes/Image_202601111107.JPG" alt="Leonardo Lopes - Web Designer" />
+    </div>
+    
+    <!-- Fallback content for crawlers -->
+    <div style="padding:20px;max-width:800px;margin:0 auto;">
+      <h1>Leonardo Lopes - Web Designer</h1>
+      <p>Especialista em sites de alta performance e conversão.</p>
+    </div>
   </body>
 </html>
