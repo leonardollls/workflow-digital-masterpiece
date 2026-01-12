@@ -39,6 +39,24 @@ const queryClient = new QueryClient({
   },
 });
 
+// Component to handle redirect from static HTML
+const RedirectHandler = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Check if we came from the static HTML redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectPath = urlParams.get('redirect');
+    
+    if (redirectPath && location.pathname === '/') {
+      navigate(redirectPath, { replace: true });
+    }
+  }, [location, navigate]);
+  
+  return null;
+};
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
