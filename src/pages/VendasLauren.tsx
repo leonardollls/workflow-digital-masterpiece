@@ -40,7 +40,6 @@ const VendasLauren = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const SITE_URL = 'https://lauren-rossarola.vercel.app/';
-  const PAYMENT_LINK = '/checkout/lauren';
   const WHATSAPP_LINK = 'https://wa.me/555199437916';
 
   // Recursos específicos do site Lauren Rossarola para o comparativo
@@ -1097,7 +1096,9 @@ const VendasLauren = () => {
                       {/* CTA Section - Enhanced */}
                       <div className="text-center space-y-4">
                         <a
-                          href={PAYMENT_LINK}
+                          href={WHATSAPP_LINK}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="group/cta relative inline-flex items-center gap-3 px-12 py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
                           {/* Animated gradient background */}
@@ -1198,10 +1199,12 @@ const VendasLauren = () => {
                     Ver Demonstração
                   </button>
                   <a
-                    href={PAYMENT_LINK}
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.4)] hover:scale-105"
                   >
-                    <CreditCard size={20} />
+                    <MessageSquare size={20} />
                     Adquirir Agora
                   </a>
                 </div>
