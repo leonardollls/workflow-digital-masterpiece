@@ -15,6 +15,7 @@ import {
   LogoCarousel,
   DeveloperShowcase,
   LaurenSplashLoader,
+  HostingBonusSection,
 } from '@/components/vendas';
 import AdminPanelShowcaseLauren from '@/components/vendas/AdminPanelShowcaseLauren';
 import { 
@@ -22,7 +23,7 @@ import {
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings
+  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings, Gift
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
@@ -39,7 +40,8 @@ const VendasLauren = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const SITE_URL = 'https://lauren-rossarola.vercel.app/';
-  const PAYMENT_LINK = 'https://wa.me/555199437916';
+  const PAYMENT_LINK = '/checkout/lauren';
+  const WHATSAPP_LINK = 'https://wa.me/555199437916';
 
   // Recursos específicos do site Lauren Rossarola para o comparativo
   const laurenComparisons = [
@@ -68,39 +70,114 @@ const VendasLauren = () => {
     // Atualizar título
     document.title = 'Leonardo Lopes - UX/UI Designer & Developer | Especialista em sites de alta performance e conversão';
     
-    // Remover TODOS os favicons existentes (incluindo qualquer referência ao Lovable)
-    const removeAllFavicons = () => {
-      // Remover todos os links de favicon existentes
-      const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"]');
+    // Forçar favicon Leonardo Lopes
+    const leonardoFavicon = '/Images/logos/logo-leonardo-lopes-icone.svg';
+    
+    const forceLeonardoFavicon = () => {
+      // Remover TODOS os links de favicon existentes que não sejam do Leonardo Lopes
+      const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"], link[rel*="mask-icon"]');
       faviconLinks.forEach(link => {
         const href = link.getAttribute('href') || '';
-        // Remover se contiver "lovable" ou qualquer referência suspeita
-        if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
+        if (!href.includes('logo-leonardo-lopes-icone.svg') && 
+            !href.includes('leonardolopes') &&
+            (href.toLowerCase().includes('lovable') || 
+             href.toLowerCase().includes('workflow.lovable') ||
+             href.toLowerCase().includes('favicon.ico') ||
+             href.includes('data:image'))) {
           link.remove();
         }
       });
       
-      // Remover também por seletores específicos
-      const selectors = [
-        'link[rel="icon"]',
-        'link[rel="shortcut icon"]',
-        'link[rel="apple-touch-icon"]',
-        'link[rel="apple-touch-icon-precomposed"]',
-      ];
+      // Verificar se já existe o favicon do Leonardo Lopes
+      let hasLeonardoFavicon = false;
+      const existingFavicons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+      existingFavicons.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        if (href.includes('logo-leonardo-lopes-icone.svg')) {
+          hasLeonardoFavicon = true;
+        }
+      });
       
-      selectors.forEach(selector => {
-        const links = document.querySelectorAll(selector);
-        links.forEach(link => {
-          const href = link.getAttribute('href') || '';
-          if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
-            link.remove();
+      // Adicionar favicon Leonardo Lopes se não existir
+      if (!hasLeonardoFavicon && document.head) {
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        link.href = leonardoFavicon;
+        link.type = 'image/svg+xml';
+        document.head.insertBefore(link, document.head.firstChild);
+        
+        const shortcutLink = document.createElement('link');
+        shortcutLink.rel = 'shortcut icon';
+        shortcutLink.href = leonardoFavicon;
+        shortcutLink.type = 'image/svg+xml';
+        document.head.insertBefore(shortcutLink, document.head.firstChild);
+      }
+      
+      // Remover também qualquer link que possa ser um favicon indesejado
+      const allLinks = document.querySelectorAll('link');
+      allLinks.forEach(link => {
+        const rel = link.getAttribute('rel') || '';
+        const href = link.getAttribute('href') || '';
+        if (
+          (rel.toLowerCase().includes('icon') || rel.toLowerCase().includes('shortcut')) &&
+          !href.includes('logo-leonardo-lopes-icone.svg') &&
+          !href.includes('leonardolopes') &&
+          (href.toLowerCase().includes('lovable') ||
+           href.toLowerCase().includes('workflow.lovable') ||
+           href.toLowerCase().includes('favicon.ico') ||
+           href.includes('data:image') ||
+           (href.toLowerCase().includes('.ico') && !href.includes('leonardo')) ||
+           (href.toLowerCase().includes('.png') && !href.includes('leonardo')))
+        ) {
+          link.remove();
+        }
+      });
+    };
+    
+    // Usar MutationObserver para monitorar e remover favicons adicionados dinamicamente
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            const element = node as Element;
+            if (element.tagName === 'LINK') {
+              const rel = element.getAttribute('rel') || '';
+              const href = element.getAttribute('href') || '';
+              if (
+                (rel.toLowerCase().includes('icon') || rel.toLowerCase().includes('shortcut')) &&
+                !href.includes('logo-leonardo-lopes-icone.svg') &&
+                !href.includes('leonardolopes') &&
+                (href.toLowerCase().includes('lovable') ||
+                 href.toLowerCase().includes('workflow.lovable') ||
+                 href.toLowerCase().includes('favicon.ico') ||
+                 href.includes('data:image') ||
+                 (href.toLowerCase().includes('.ico') && !href.includes('leonardo')) ||
+                 (href.toLowerCase().includes('.png') && !href.includes('leonardo')))
+              ) {
+                element.remove();
+              }
+            }
           }
         });
       });
+      forceLeonardoFavicon();
+    });
+    
+    // Observar mudanças no head
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true,
+    });
+    
+    // Executar remoção de favicons imediatamente e periodicamente
+    forceLeonardoFavicon();
+    const interval = setInterval(forceLeonardoFavicon, 200);
+    
+    // Cleanup
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
     };
-
-    // Executar remoção de favicons
-    removeAllFavicons();
     
     // Atualizar ou criar meta tags Open Graph
     const updateMetaTag = (property: string, content: string, isProperty = true) => {
@@ -125,7 +202,7 @@ const VendasLauren = () => {
     // Open Graph Meta Tags (com imagem)
     updateMetaTag('og:title', 'Leonardo Lopes - UX/UI Designer & Developer');
     updateMetaTag('og:description', 'Especialista em sites de alta performance e conversão.');
-    updateMetaTag('og:url', 'https://leonardolopes.online/site/lauren');
+    updateMetaTag('og:url', 'https://leonardolopes.online/site/lauren-odontologia');
     updateMetaTag('og:type', 'website');
     updateMetaTag('og:site_name', 'Leonardo Lopes');
     updateMetaTag('og:locale', 'pt_BR');
@@ -850,6 +927,16 @@ const VendasLauren = () => {
           </section>
 
           {/* ============================================
+              ADMIN PANEL SHOWCASE SECTION
+              ============================================ */}
+          <AdminPanelShowcaseLauren />
+
+          {/* ============================================
+              HOSTING BONUS SECTION
+              ============================================ */}
+          <HostingBonusSection isVisible={isVisible} />
+
+          {/* ============================================
               INVESTMENT SECTION - MODERNIZED
               ============================================ */}
           <section id="pricing-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
@@ -862,10 +949,10 @@ const VendasLauren = () => {
             <div className="max-w-5xl mx-auto relative z-10">
               {/* Section Header */}
               <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#D4A574]/20 via-[#D4A574]/10 to-transparent border border-[#D4A574]/30 mb-6 group hover:scale-105 transition-transform duration-300">
-                  <Shield size={18} className="text-[#D4A574] group-hover:rotate-12 transition-transform duration-300" />
-                  <span className="text-[#D4A574] text-sm font-semibold tracking-wide">OFERTA EXCLUSIVA</span>
-                  <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 mb-6 group hover:scale-105 transition-transform duration-300">
+                  <Sparkles size={18} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+                  <span className="text-amber-400 text-sm font-semibold tracking-wide">OFERTA ESPECIAL DE LANÇAMENTO</span>
+                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                 </div>
                 <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
                   Investimento <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">Único</span>
@@ -892,40 +979,62 @@ const VendasLauren = () => {
                     <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
                     <div className="relative z-10 p-8 sm:p-12">
-                      {/* Contact CTA Section */}
+                      {/* Pricing Section */}
                       <div className="text-center mb-10 group-hover:scale-[1.02] transition-transform duration-500">
                         <div className="relative inline-block mb-6">
                           <div className="flex flex-col items-center gap-4">
-                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#D4A574]/30 to-purple-500/20 border border-[#D4A574]/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                              <MessageSquare size={40} className="text-[#D4A574]" />
+                            {/* Old Price - Strikethrough */}
+                            <div className="flex items-center gap-2">
+                              <span className="text-white/70 text-lg line-through">De R$ 1.597,00</span>
+                              <span className="px-2 py-1 rounded-md bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-bold">-44%</span>
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-br from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
-                              Solicite um Orçamento
-                            </h3>
+                            
+                            {/* New Price - Highlighted */}
+                            <div className="relative">
+                              <div className="absolute -inset-4 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-green-500/20 rounded-2xl blur-xl animate-pulse" />
+                              <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-green-500/30 rounded-2xl px-8 py-6">
+                                {/* Label - Above Price */}
+                                <div className="mb-3 flex items-center justify-center">
+                                  <span className="text-white/60 text-sm font-medium uppercase tracking-wider">por</span>
+                                </div>
+                                {/* Cash Price - Main Highlight */}
+                                <div className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent mb-3">
+                                  R$ 897<span className="text-3xl sm:text-4xl">,00</span>
+                                </div>
+                                {/* À Vista Label - Below Price */}
+                                <div className="mb-3 flex items-center justify-center">
+                                  <span className="text-white/70 text-base font-medium uppercase tracking-wider">à vista</span>
+                                </div>
+                                {/* Installment - Below À Vista */}
+                                <div className="flex flex-col items-center gap-1 pt-3 border-t border-white/10">
+                                  <span className="text-[#D4A574] text-xl sm:text-2xl font-semibold">ou 12x de R$ 74,75</span>
+                                  <span className="text-white/50 text-sm">no cartão sem juros</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          
-                          {/* Decorative lines */}
-                          <div className="absolute -left-16 top-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent to-[#D4A574]/50" />
-                          <div className="absolute -right-16 top-1/2 w-12 h-[2px] bg-gradient-to-l from-transparent to-[#D4A574]/50" />
                         </div>
                         
-                        <p className="text-white/70 text-lg mt-3 font-medium max-w-lg mx-auto">
-                          Entre em contato e receba uma proposta personalizada para o seu novo site profissional
+                        {/* Urgency text */}
+                        <p className="text-amber-400/80 text-sm mt-4 font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                          <Sparkles size={16} className="animate-pulse flex-shrink-0" />
+                          <span>O valor retornará ao padrão após o preenchimento das vagas da região.</span>
+                          <Sparkles size={16} className="animate-pulse flex-shrink-0" />
                         </p>
                         
                         {/* Value proposition */}
-                        <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+                        <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
                           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/20">
                             <CheckCircle size={18} className="text-green-400" />
-                            <span className="text-green-300 text-sm font-medium">Pagamento único</span>
+                            <span className="text-green-300 text-sm font-medium">Zero Mensalidade</span>
                           </div>
                           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
                             <Monitor size={18} className="text-cyan-400" />
                             <span className="text-cyan-300 text-sm font-medium">Painel Admin incluso</span>
                           </div>
-                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                            <Sparkles size={18} className="text-purple-400" />
-                            <span className="text-purple-300 text-sm font-medium">Resposta rápida</span>
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <Shield size={18} className="text-amber-400" />
+                            <span className="text-amber-300 text-sm font-medium">Hospedagem Vitalícia</span>
                           </div>
                         </div>
                       </div>
@@ -988,31 +1097,37 @@ const VendasLauren = () => {
                       {/* CTA Section - Enhanced */}
                       <div className="text-center space-y-4">
                         <a
-                          href="https://wa.me/555199437916"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href={PAYMENT_LINK}
                           className="group/cta relative inline-flex items-center gap-3 px-12 py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
                           {/* Animated gradient background */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
                           
                           {/* Glow effect */}
-                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-[#D4A574] transition-all duration-300" />
+                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-green-500 transition-all duration-300" />
                           
                           {/* Button content */}
                           <div className="relative z-10 flex items-center gap-3">
-                            <MessageSquare size={26} className="text-[#122737] group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
+                            <CreditCard size={26} className="text-white group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
                             <div className="text-left">
-                              <div className="text-[#122737] font-bold text-xl">Adquirir Agora</div>
-                              <div className="text-[#122737]/70 text-xs font-medium">Falar com desenvolvedor</div>
+                              <div className="text-white font-bold text-xl">QUERO GARANTIR ESSE PREÇO</div>
+                              <div className="text-white/80 text-xs font-medium">Solicitar instalação e teste (Sem pagamento agora)</div>
                             </div>
                           </div>
                         </a>
                         
                         <div className="flex items-center justify-center gap-2 text-white/40 text-sm">
-                          <MessageCircle size={16} className="text-green-400" />
-                          <span>Resposta em até 5 minutos via WhatsApp</span>
+                          <Shield size={16} className="text-green-400" />
+                          <span>Pagamento 100% seguro via Asaas</span>
+                        </div>
+
+                        {/* Bonus Highlight */}
+                        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-500/30">
+                          <div className="flex items-center justify-center gap-3 text-amber-400 font-semibold">
+                            <Gift size={20} />
+                            <span>+ BÔNUS: Isenção Vitalícia de Hospedagem (Zero Mensalidade)</span>
+                          </div>
                         </div>
 
                         {/* Trust badges */}
@@ -1050,11 +1165,6 @@ const VendasLauren = () => {
           </section>
 
           {/* ============================================
-              ADMIN PANEL SHOWCASE SECTION
-              ============================================ */}
-          <AdminPanelShowcaseLauren />
-
-          {/* ============================================
               DEVELOPER SHOWCASE SECTION
               ============================================ */}
           <DeveloperShowcase />
@@ -1089,11 +1199,9 @@ const VendasLauren = () => {
                   </button>
                   <a
                     href={PAYMENT_LINK}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.4)] hover:scale-105"
                   >
-                    <MessageSquare size={20} />
+                    <CreditCard size={20} />
                     Adquirir Agora
                   </a>
                 </div>

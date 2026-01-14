@@ -150,9 +150,16 @@
   }
 
   /* Enhanced Custom Scrollbar */
+  /* Firefox */
+  * {
+    scrollbar-width: thick;
+    scrollbar-color: rgba(124, 58, 237, 0.6) rgba(0, 0, 0, 0.1);
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 14px;
+    height: 14px;
   }
 
   ::-webkit-scrollbar-track {
