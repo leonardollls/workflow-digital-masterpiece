@@ -275,72 +275,21 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       <div className={`relative z-10 text-center transition-all duration-500 ${
         phase === 'revealing' ? 'scale-105 opacity-0' : 'scale-100 opacity-100'
       }`}>
-        {/* Logo Container */}
-        <div className="relative mb-6" style={{ width: '140px', height: '140px', margin: '0 auto', contain: 'layout' }}>
-          {/* Outer Ring */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div 
-              className="w-full h-full rounded-full border border-purple-500/20"
-              style={{ animation: 'pulse-ring 2s ease-in-out infinite' }}
+        {/* Logo - Large and positioned above progress bar */}
+        <div className="mb-4 sm:mb-6 flex justify-center">
+          <div style={{ width: '320px', height: '320px', contain: 'layout' }}>
+            <img
+              src="/Images/logo-workflow-sem-fundo2.png"
+              alt="Workflow"
+              width={320}
+              height={320}
+              className="w-full h-full object-contain logo-pulse"
             />
-          </div>
-          
-          {/* Progress Ring */}
-          <svg className="w-full h-full mx-auto transform -rotate-90" viewBox="0 0 100 100">
-            {/* Background Circle */}
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke="rgba(139, 92, 246, 0.1)"
-              strokeWidth="2"
-            />
-            {/* Progress Circle */}
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke="url(#progressGradient)"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray={`${progress * 2.83} 283`}
-              className="transition-all duration-75"
-            />
-            <defs>
-              <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="50%" stopColor="#a78bfa" />
-                <stop offset="100%" stopColor="#c4b5fd" />
-              </linearGradient>
-            </defs>
-          </svg>
-
-          {/* Logo in Center */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div style={{ width: '64px', height: '64px', contain: 'layout' }}>
-              <img
-                src="/Images/logo-workflow-sem-fundo2.png"
-                alt="Workflow"
-                width={64}
-                height={64}
-                className="w-full h-full object-contain logo-pulse"
-              />
-            </div>
           </div>
         </div>
 
-        {/* Brand Name */}
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2 tracking-wider">
-          <span className="text-white">Work</span>
-          <span className="bg-gradient-to-r from-purple-400 via-violet-400 to-purple-500 bg-clip-text text-transparent">
-            flow
-          </span>
-        </h1>
-
         {/* Animated Text - sem cursor */}
-        <div className="h-7 mb-6">
+        <div className="h-7 mb-4">
           <p className="text-base sm:text-lg text-purple-300/80 font-light tracking-wide">
             <span className="inline-block min-w-[120px]">{displayText}</span>
           </p>
