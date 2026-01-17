@@ -287,7 +287,7 @@ const PortfolioV2 = () => {
         </main>
 
         {/* Footer */}
-        <WorkflowFooter />
+        <WorkflowFooter hideContact={true} />
       </div>
     </>
   );
