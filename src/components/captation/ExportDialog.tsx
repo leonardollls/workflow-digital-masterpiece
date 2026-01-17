@@ -55,7 +55,8 @@ const statusLabels: Record<string, string> = {
   accepted: 'Aceita',
   rejected: 'Negada',
   in_progress: 'Em Execução',
-  paid: 'Pago'
+  paid: 'Pago',
+  contact_no_site: 'Entrar em Contato (Sem site)'
 }
 
 export const ExportDialog = ({ 

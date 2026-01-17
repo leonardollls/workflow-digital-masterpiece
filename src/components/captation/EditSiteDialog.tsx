@@ -416,6 +416,7 @@ export const EditSiteDialog = ({
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-slate-700">
                     <SelectItem value="pending" className="text-slate-200 focus:bg-slate-700 focus:text-white">Pendente</SelectItem>
+                    <SelectItem value="contact_no_site" className="text-slate-200 focus:bg-slate-700 focus:text-white">Entrar em Contato (Sem site)</SelectItem>
                     <SelectItem value="to_send" className="text-slate-200 focus:bg-slate-700 focus:text-white">A Enviar</SelectItem>
                     <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">Aceita</SelectItem>
                     <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">Negada</SelectItem>

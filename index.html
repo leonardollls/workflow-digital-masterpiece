@@ -10,8 +10,149 @@
     <meta name="robots" content="index, follow" />
     <meta name="language" content="pt-BR" />
 
-    <!-- Favicon - Removido temporariamente para evitar exibição do favicon do Lovable -->
-    <!-- <link rel="icon" type="image/x-icon" href="/favicon.ico" /> -->
+    <!-- Favicon Leonardo Lopes -->
+    <link rel="icon" href="/Images/logos/logo-leonardo-lopes-icone.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="/Images/logos/logo-leonardo-lopes-icone.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/Images/logos/logo-leonardo-lopes-icone.svg">
+    
+    <!-- Script para remover TODOS os favicons indesejados e forçar favicon Leonardo Lopes -->
+    <script>
+      (function() {
+        // Favicon Leonardo Lopes
+        const leonardoFavicon = '/Images/logos/logo-leonardo-lopes-icone.svg';
+        
+        // Função para forçar favicon Leonardo Lopes
+        function forceLeonardoFavicon() {
+          // Remover TODOS os links de favicon existentes que não sejam do Leonardo Lopes
+          const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"], link[rel*="mask-icon"]');
+          faviconLinks.forEach(function(link) {
+            const href = link.getAttribute('href') || '';
+            // Manter apenas favicons do Leonardo Lopes, remover todos os outros
+            if (!href.includes('logo-leonardo-lopes-icone.svg') && 
+                !href.includes('leonardolopes') &&
+                (href.toLowerCase().includes('lovable') || 
+                 href.toLowerCase().includes('workflow.lovable') ||
+                 href.toLowerCase().includes('favicon.ico') ||
+                 href.includes('data:image'))) {
+              link.remove();
+            }
+          });
+          
+          // Verificar se já existe o favicon do Leonardo Lopes
+          let hasLeonardoFavicon = false;
+          const existingFavicons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+          existingFavicons.forEach(function(link) {
+            const href = link.getAttribute('href') || '';
+            if (href.includes('logo-leonardo-lopes-icone.svg')) {
+              hasLeonardoFavicon = true;
+            }
+          });
+          
+          // Adicionar favicon Leonardo Lopes se não existir
+          if (!hasLeonardoFavicon && document.head) {
+            const link = document.createElement('link');
+            link.rel = 'icon';
+            link.href = leonardoFavicon;
+            link.type = 'image/svg+xml';
+            document.head.insertBefore(link, document.head.firstChild);
+            
+            // Também adicionar shortcut icon
+            const shortcutLink = document.createElement('link');
+            shortcutLink.rel = 'shortcut icon';
+            shortcutLink.href = leonardoFavicon;
+            shortcutLink.type = 'image/svg+xml';
+            document.head.insertBefore(shortcutLink, document.head.firstChild);
+            
+            // Adicionar apple-touch-icon
+            const appleLink = document.createElement('link');
+            appleLink.rel = 'apple-touch-icon';
+            appleLink.href = leonardoFavicon;
+            document.head.insertBefore(appleLink, document.head.firstChild);
+          }
+          
+          // Remover também qualquer link que possa ser um favicon indesejado
+          const allLinks = document.querySelectorAll('link');
+          allLinks.forEach(function(link) {
+            const rel = link.getAttribute('rel') || '';
+            const href = link.getAttribute('href') || '';
+            if (
+              (rel.toLowerCase().includes('icon') || rel.toLowerCase().includes('shortcut')) &&
+              !href.includes('logo-leonardo-lopes-icone.svg') &&
+              !href.includes('leonardolopes') &&
+              (href.toLowerCase().includes('lovable') ||
+               href.toLowerCase().includes('workflow.lovable') ||
+               href.toLowerCase().includes('favicon.ico') ||
+               href.includes('data:image') ||
+               (href.toLowerCase().includes('.ico') && !href.includes('leonardo')) ||
+               (href.toLowerCase().includes('.png') && !href.includes('leonardo')))
+            ) {
+              link.remove();
+            }
+          });
+        }
+        
+        // Executar imediatamente
+        forceLeonardoFavicon();
+        
+        // Executar quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', forceLeonardoFavicon);
+        } else {
+          forceLeonardoFavicon();
+        }
+        
+        // Usar MutationObserver para monitorar e remover favicons adicionados dinamicamente
+        if (typeof MutationObserver !== 'undefined') {
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1 && node.tagName === 'LINK') {
+                  const rel = node.getAttribute('rel') || '';
+                  const href = node.getAttribute('href') || '';
+                  if (
+                    rel.toLowerCase().includes('icon') ||
+                    rel.toLowerCase().includes('shortcut') ||
+                    href.toLowerCase().includes('favicon') ||
+                    href.toLowerCase().includes('lovable') ||
+                    href.toLowerCase().includes('workflow.lovable')
+                  ) {
+                    node.remove();
+                  }
+                }
+              });
+            });
+            forceLeonardoFavicon();
+          });
+          
+          // Observar mudanças no head
+          if (document.head) {
+            observer.observe(document.head, {
+              childList: true,
+              subtree: true
+            });
+          }
+          
+          // Observar quando o head for criado
+          if (!document.head) {
+            const headObserver = new MutationObserver(function() {
+              if (document.head) {
+                observer.observe(document.head, {
+                  childList: true,
+                  subtree: true
+                });
+                headObserver.disconnect();
+              }
+            });
+            headObserver.observe(document.documentElement, {
+              childList: true
+            });
+          }
+        }
+        
+        // Executar periodicamente para garantir
+        setInterval(forceLeonardoFavicon, 200);
+      })();
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -53,8 +194,7 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     
-    <!-- Preload LCP image (logo) for portfolio page -->
-    <link rel="preload" href="/Images/logo-workflow-sem-fundo2.png" as="image" type="image/png" fetchpriority="high" />
+    <!-- Logo is loaded by React components when needed, no preload needed -->
 
     <!-- Google Fonts - Async Loading (non-blocking) -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" />

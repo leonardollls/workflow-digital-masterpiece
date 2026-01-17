@@ -20,36 +20,113 @@ const Index = () => {
     setIsLoading(false);
   };
 
-  // Remover favicons do Lovable e atualizar meta tags de imagem
+  // Forçar favicon Leonardo Lopes e atualizar meta tags de imagem
   useEffect(() => {
-    const removeAllFavicons = () => {
-      // Remover todos os links de favicon existentes
-      const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"]');
+    const leonardoFavicon = '/Images/logos/logo-leonardo-lopes-icone.svg';
+    
+    const forceLeonardoFavicon = () => {
+      // Remover TODOS os links de favicon existentes que não sejam do Leonardo Lopes
+      const faviconLinks = document.querySelectorAll('link[rel*="icon"], link[rel*="shortcut"], link[rel*="apple-touch-icon"], link[rel*="mask-icon"]');
       faviconLinks.forEach(link => {
         const href = link.getAttribute('href') || '';
-        // Remover se contiver "lovable" ou qualquer referência suspeita
-        if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
+        if (!href.includes('logo-leonardo-lopes-icone.svg') && 
+            !href.includes('leonardolopes') &&
+            (href.toLowerCase().includes('lovable') || 
+             href.toLowerCase().includes('workflow.lovable') ||
+             href.toLowerCase().includes('favicon.ico') ||
+             href.includes('data:image'))) {
           link.remove();
         }
       });
       
-      // Remover também por seletores específicos
-      const selectors = [
-        'link[rel="icon"]',
-        'link[rel="shortcut icon"]',
-        'link[rel="apple-touch-icon"]',
-        'link[rel="apple-touch-icon-precomposed"]',
-      ];
+      // Verificar se já existe o favicon do Leonardo Lopes
+      let hasLeonardoFavicon = false;
+      const existingFavicons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+      existingFavicons.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        if (href.includes('logo-leonardo-lopes-icone.svg')) {
+          hasLeonardoFavicon = true;
+        }
+      });
       
-      selectors.forEach(selector => {
-        const links = document.querySelectorAll(selector);
-        links.forEach(link => {
-          const href = link.getAttribute('href') || '';
-          if (href.toLowerCase().includes('lovable') || href.toLowerCase().includes('workflow.lovable')) {
-            link.remove();
+      // Adicionar favicon Leonardo Lopes se não existir
+      if (!hasLeonardoFavicon && document.head) {
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        link.href = leonardoFavicon;
+        link.type = 'image/svg+xml';
+        document.head.insertBefore(link, document.head.firstChild);
+        
+        const shortcutLink = document.createElement('link');
+        shortcutLink.rel = 'shortcut icon';
+        shortcutLink.href = leonardoFavicon;
+        shortcutLink.type = 'image/svg+xml';
+        document.head.insertBefore(shortcutLink, document.head.firstChild);
+      }
+      
+      // Remover também qualquer link que possa ser um favicon indesejado
+      const allLinks = document.querySelectorAll('link');
+      allLinks.forEach(link => {
+        const rel = link.getAttribute('rel') || '';
+        const href = link.getAttribute('href') || '';
+        if (
+          (rel.toLowerCase().includes('icon') || rel.toLowerCase().includes('shortcut')) &&
+          !href.includes('logo-leonardo-lopes-icone.svg') &&
+          !href.includes('leonardolopes') &&
+          (href.toLowerCase().includes('lovable') ||
+           href.toLowerCase().includes('workflow.lovable') ||
+           href.toLowerCase().includes('favicon.ico') ||
+           href.includes('data:image') ||
+           (href.toLowerCase().includes('.ico') && !href.includes('leonardo')) ||
+           (href.toLowerCase().includes('.png') && !href.includes('leonardo')))
+        ) {
+          link.remove();
+        }
+      });
+    };
+    
+    // Usar MutationObserver para monitorar e remover favicons adicionados dinamicamente
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            const element = node as Element;
+            if (element.tagName === 'LINK') {
+              const rel = element.getAttribute('rel') || '';
+              const href = element.getAttribute('href') || '';
+              if (
+                (rel.toLowerCase().includes('icon') || rel.toLowerCase().includes('shortcut')) &&
+                !href.includes('logo-leonardo-lopes-icone.svg') &&
+                !href.includes('leonardolopes') &&
+                (href.toLowerCase().includes('lovable') ||
+                 href.toLowerCase().includes('workflow.lovable') ||
+                 href.toLowerCase().includes('favicon.ico') ||
+                 href.includes('data:image') ||
+                 (href.toLowerCase().includes('.ico') && !href.includes('leonardo')) ||
+                 (href.toLowerCase().includes('.png') && !href.includes('leonardo')))
+              ) {
+                element.remove();
+              }
+            }
           }
         });
       });
+      forceLeonardoFavicon();
+    });
+    
+    // Observar mudanças no head
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true,
+    });
+    
+    // Executar imediatamente e periodicamente
+    forceLeonardoFavicon();
+    const interval = setInterval(forceLeonardoFavicon, 200);
+    
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
     };
 
     const updateMetaTag = (property: string, content: string, isProperty = true) => {
@@ -68,7 +145,7 @@ const Index = () => {
       meta.setAttribute('content', content);
     };
 
-    removeAllFavicons();
+    // removeAllFavicons já está sendo executado no useEffect acima
 
     // Atualizar meta tags de imagem de preview
     const previewImageUrl = 'https://leonardolopes.online/Images/leonardo-lopes/I_need_the_202601121847.jpeg';

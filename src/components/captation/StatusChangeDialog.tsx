@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { DollarSign } from 'lucide-react'
+import { DollarSign, Phone } from 'lucide-react'
 import type { ProposalStatus } from '@/types/captation'
 
 interface StatusChangeDialogProps {
@@ -74,6 +74,7 @@ export const StatusChangeDialog = ({
       case 'accepted': return 'Aceito'
       case 'rejected': return 'Negado'
       case 'paid': return 'Pago'
+      case 'contact_no_site': return 'Entrar em Contato (Sem site)'
       default: return status
     }
   }
@@ -105,6 +106,7 @@ export const StatusChangeDialog = ({
                 <SelectItem value="accepted" className="text-slate-200 focus:bg-slate-700 focus:text-white">Aceito</SelectItem>
                 <SelectItem value="rejected" className="text-slate-200 focus:bg-slate-700 focus:text-white">Negado</SelectItem>
                 <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">Pago</SelectItem>
+                <SelectItem value="contact_no_site" className="text-slate-200 focus:bg-slate-700 focus:text-white">Entrar em Contato (Sem site)</SelectItem>
               </SelectContent>
             </Select>
           </div>

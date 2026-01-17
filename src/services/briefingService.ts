@@ -1293,4 +1293,282 @@ export const getLogoBriefing = async (id: string): Promise<LogoBriefing | null> 
     console.error('❌ [LOGO-DEBUG] Erro geral ao buscar briefing:', error);
     throw error;
   }
+};
+
+// ============================================================================
+// BRIEFING ODONTOLÓGICO
+// ============================================================================
+
+// Tipo para o formulário de briefing odontológico
+export interface DentalBriefForm {
+  clinicName: string
+  logoFile?: FileList | null
+  colorPreference: string
+  colorCustom?: string
+  instagramLink?: string
+  mainTreatments: string
+  slogan?: string
+  contactInfo: string
+  profilePhoto?: FileList | null
+  agreedTerms: boolean
+}
+
+// Tipo para briefing odontológico salvo
+export interface DentalBriefing {
+  id: string
+  clinic_name: string
+  logo_file?: string
+  color_preference: string
+  instagram_link?: string
+  main_treatments: string
+  slogan?: string
+  contact_info: string
+  profile_photo?: string
+  agreed_terms: boolean
+  responsible_name?: string
+  business_segment: string
+  proposal_value?: number
+  proposal_date?: string
+  created_at: string
+  updated_at: string
+}
+
+// Função para salvar briefing odontológico
+export const submitDentalBriefing = async (formData: DentalBriefForm): Promise<DentalBriefing> => {
+  console.log('🦷 Iniciando submitDentalBriefing...', { 
+    device: navigator.userAgent,
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  });
+  
+  try {
+    // 1. Upload de arquivos
+    console.log('📁 [DENTAL-DEBUG] Fazendo upload de arquivos...');
+    let logoUrl: string | null = null;
+    let profileUrl: string | null = null;
+    
+    try {
+      if (formData.logoFile && formData.logoFile.length > 0) {
+        const logoUrls = await uploadFiles(formData.logoFile, 'briefing-files', 'dental-logos');
+        logoUrl = logoUrls[0] || null;
+      }
+      
+      if (formData.profilePhoto && formData.profilePhoto.length > 0) {
+        const profileUrls = await uploadFiles(formData.profilePhoto, 'briefing-files', 'dental-profiles');
+        profileUrl = profileUrls[0] || null;
+      }
+      
+      console.log('✅ [DENTAL-DEBUG] Upload de arquivos concluído:', { logoUrl, profileUrl });
+    } catch (uploadError) {
+      console.error('❌ [DENTAL-DEBUG] Erro no upload de arquivos:', uploadError);
+      // Continuar mesmo com erro no upload
+      logoUrl = null;
+      profileUrl = null;
+    }
+
+    // 2. Preparar dados para o banco
+    console.log('📝 [DENTAL-DEBUG] Preparando dados para o banco...');
+    
+    // Determinar preferência de cor final
+    let finalColorPreference = formData.colorPreference;
+    if (formData.colorPreference === 'custom' && formData.colorCustom) {
+      finalColorPreference = formData.colorCustom;
+    }
+    
+    const briefingData = {
+      clinic_name: formData.clinicName,
+      logo_file: logoUrl,
+      color_preference: finalColorPreference,
+      instagram_link: formData.instagramLink || null,
+      main_treatments: formData.mainTreatments,
+      slogan: formData.slogan || null,
+      contact_info: formData.contactInfo,
+      profile_photo: profileUrl,
+      agreed_terms: formData.agreedTerms,
+      responsible_name: formData.clinicName, // Usar nome da clínica como responsável
+      business_segment: 'odontologia',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('📋 [DENTAL-DEBUG] Dados preparados para o banco:', {
+      totalFields: Object.keys(briefingData).length,
+      clinicName: briefingData.clinic_name,
+      agreedTerms: briefingData.agreed_terms,
+      hasLogo: !!briefingData.logo_file,
+      hasProfile: !!briefingData.profile_photo
+    });
+
+    // 3. Salvar no Supabase com retry
+    console.log('💾 [DENTAL-DEBUG] Salvando no Supabase...');
+    
+    const savedBriefing = await retryOperation(async () => {
+      const { data, error } = await supabase
+        .from('dental_briefings')
+        .insert([briefingData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [DENTAL-DEBUG] Erro do Supabase:', error);
+        throw new Error(`Erro do banco: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error('Nenhum dado retornado do banco');
+      }
+
+      return data;
+    }, 3, 1000);
+
+    console.log('✅ [DENTAL-DEBUG] Briefing odontológico salvo com sucesso:', savedBriefing.id);
+
+    return savedBriefing;
+
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral no submitDentalBriefing:', error);
+    
+    // Melhorar mensagem de erro
+    let errorMessage = 'Erro desconhecido';
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        errorMessage = 'Briefing duplicado detectado';
+      } else if (error.message.includes('connection')) {
+        errorMessage = 'Erro de conexão com o banco de dados';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Tempo limite excedido';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
+    throw new Error(`Erro ao salvar briefing odontológico: ${errorMessage}`);
+  }
+};
+
+// Função para buscar briefings odontológicos
+export const getDentalBriefings = async (): Promise<DentalBriefing[]> => {
+  console.log('🦷 [DENTAL-DEBUG] Buscando briefings odontológicos...');
+  
+  try {
+    const { data, error } = await supabase
+      .from('dental_briefings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ [DENTAL-DEBUG] Erro ao buscar briefings:', error);
+      throw new Error(`Erro ao buscar briefings: ${error.message}`);
+    }
+
+    console.log('✅ [DENTAL-DEBUG] Briefings encontrados:', data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral ao buscar briefings:', error);
+    throw error;
+  }
+};
+
+// Função para buscar um briefing odontológico específico
+export const getDentalBriefing = async (id: string): Promise<DentalBriefing | null> => {
+  console.log('🦷 [DENTAL-DEBUG] Buscando briefing odontológico:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('dental_briefings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        console.log('ℹ️ [DENTAL-DEBUG] Briefing não encontrado:', id);
+        return null;
+      }
+      console.error('❌ [DENTAL-DEBUG] Erro ao buscar briefing:', error);
+      throw new Error(`Erro ao buscar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [DENTAL-DEBUG] Briefing encontrado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral ao buscar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para deletar briefing odontológico
+export const deleteDentalBriefing = async (id: string): Promise<void> => {
+  console.log('🗑️ [DENTAL-DEBUG] Deletando briefing odontológico:', id);
+  
+  try {
+    const { error } = await supabase
+      .from('dental_briefings')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ [DENTAL-DEBUG] Erro ao deletar briefing:', error);
+      throw new Error(`Erro ao deletar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [DENTAL-DEBUG] Briefing odontológico deletado:', id);
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral ao deletar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para atualizar briefing odontológico
+export const updateDentalBriefing = async (id: string, updates: Partial<DentalBriefing>): Promise<DentalBriefing> => {
+  console.log('📝 [DENTAL-DEBUG] Atualizando briefing odontológico:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('dental_briefings')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [DENTAL-DEBUG] Erro ao atualizar briefing:', error);
+      throw new Error(`Erro ao atualizar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [DENTAL-DEBUG] Briefing atualizado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral ao atualizar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para adicionar valor da proposta ao briefing odontológico
+export const addDentalProposalValue = async (id: string, proposalValue: number): Promise<DentalBriefing> => {
+  console.log('💰 [DENTAL-DEBUG] Adicionando valor da proposta:', { id, proposalValue });
+  
+  try {
+    const { data, error } = await supabase
+      .from('dental_briefings')
+      .update({ 
+        proposal_value: proposalValue,
+        proposal_date: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [DENTAL-DEBUG] Erro ao adicionar valor da proposta:', error);
+      throw new Error(`Erro ao adicionar valor da proposta: ${error.message}`);
+    }
+
+    console.log('✅ [DENTAL-DEBUG] Valor da proposta adicionado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [DENTAL-DEBUG] Erro geral ao adicionar valor da proposta:', error);
+    throw error;
+  }
 }; 

@@ -8,6 +8,7 @@ import {
   XCircle, 
   PlayCircle, 
   DollarSign,
+  Phone,
   ArrowRight,
   Loader2,
   History
@@ -26,6 +27,7 @@ const statusConfig: Record<ProposalStatus, { label: string; color: string; icon:
   rejected: { label: 'Negada', color: 'bg-red-500', icon: XCircle },
   in_progress: { label: 'Em Execução', color: 'bg-blue-500', icon: PlayCircle },
   paid: { label: 'Pago', color: 'bg-purple-500', icon: DollarSign },
+  contact_no_site: { label: 'Entrar em Contato (Sem site)', color: 'bg-cyan-500', icon: Phone },
 }
 
 export const StatusHistory = ({ siteId }: StatusHistoryProps) => {

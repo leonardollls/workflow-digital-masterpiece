@@ -15,13 +15,15 @@ import {
   LogoCarousel,
   DeveloperShowcase,
   InoveSplashLoader,
+  HostingBonusSection,
 } from '@/components/vendas';
+import AdminPanelShowcaseInove from '@/components/vendas/AdminPanelShowcaseInove';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Tablet, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare
+  Play, Sparkles, Menu, ChevronUp, MessageSquare, Gift
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
@@ -62,6 +64,17 @@ const VendasInove = () => {
     }, 100);
   }, []);
 
+  // Garantir fundo escuro ao montar
+  useEffect(() => {
+    document.body.style.backgroundColor = '#020617'; // slate-950
+    document.documentElement.style.backgroundColor = '#020617';
+    
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
+    };
+  }, []);
+
   // Animation on mount (after splash)
   useEffect(() => {
     if (contentReady) {
@@ -77,8 +90,12 @@ const VendasInove = () => {
     }
   }, [isPreviewOpen]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when modal is open and ensure dark background
   useEffect(() => {
+    // Garantir fundo escuro
+    document.body.style.backgroundColor = '#020617'; // slate-950
+    document.documentElement.style.backgroundColor = '#020617';
+    
     if (isPreviewOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -86,6 +103,8 @@ const VendasInove = () => {
     }
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
@@ -514,7 +533,7 @@ const VendasInove = () => {
         <ChevronUp size={24} />
       </button>
 
-      <div className={`min-h-screen relative transition-opacity duration-700 ${contentReady ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`min-h-screen relative transition-opacity duration-700 bg-slate-950 ${contentReady ? 'opacity-100' : 'opacity-0'}`}>
         <GlassBackground />
 
         <main className="relative z-10">
@@ -744,6 +763,16 @@ const VendasInove = () => {
           </section>
 
           {/* ============================================
+              ADMIN PANEL SHOWCASE SECTION
+              ============================================ */}
+          <AdminPanelShowcaseInove />
+
+          {/* ============================================
+              HOSTING BONUS SECTION
+              ============================================ */}
+          <HostingBonusSection isVisible={isVisible} />
+
+          {/* ============================================
               INVESTMENT SECTION - MODERNIZED
               ============================================ */}
           <section id="pricing-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
@@ -756,10 +785,10 @@ const VendasInove = () => {
             <div className="max-w-5xl mx-auto relative z-10">
               {/* Section Header */}
               <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#D4A574]/20 via-[#D4A574]/10 to-transparent border border-[#D4A574]/30 mb-6 group hover:scale-105 transition-transform duration-300">
-                  <Shield size={18} className="text-[#D4A574] group-hover:rotate-12 transition-transform duration-300" />
-                  <span className="text-[#D4A574] text-sm font-semibold tracking-wide">OFERTA EXCLUSIVA</span>
-                  <div className="w-2 h-2 rounded-full bg-[#D4A574]" />
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 mb-6 group hover:scale-105 transition-transform duration-300">
+                  <Sparkles size={18} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+                  <span className="text-amber-400 text-sm font-semibold tracking-wide">OFERTA ESPECIAL DE LANÇAMENTO</span>
+                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                 </div>
                 <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
                   Investimento <span className="bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">Único</span>
@@ -786,40 +815,62 @@ const VendasInove = () => {
                     <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
                     <div className="relative z-10 p-8 sm:p-12">
-                      {/* Contact CTA Section */}
+                      {/* Pricing Section */}
                       <div className="text-center mb-10 group-hover:scale-[1.02] transition-transform duration-500">
                         <div className="relative inline-block mb-6">
                           <div className="flex flex-col items-center gap-4">
-                            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#D4A574]/30 to-purple-500/20 border border-[#D4A574]/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                              <MessageSquare size={40} className="text-[#D4A574]" />
+                            {/* Old Price - Strikethrough */}
+                            <div className="flex items-center gap-2">
+                              <span className="text-white/70 text-lg line-through">De R$ 1.597,00</span>
+                              <span className="px-2 py-1 rounded-md bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-bold">-44%</span>
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-br from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-clip-text text-transparent">
-                              Solicite um Orçamento
-                            </h3>
+                            
+                            {/* New Price - Highlighted */}
+                            <div className="relative">
+                              <div className="absolute -inset-4 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-green-500/20 rounded-2xl blur-xl animate-pulse" />
+                              <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-green-500/30 rounded-2xl px-8 py-6">
+                                {/* Label - Above Price */}
+                                <div className="mb-3 flex items-center justify-center">
+                                  <span className="text-white/60 text-sm font-medium uppercase tracking-wider">por</span>
+                                </div>
+                                {/* Cash Price - Main Highlight */}
+                                <div className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent mb-3">
+                                  R$ 897<span className="text-3xl sm:text-4xl">,00</span>
+                                </div>
+                                {/* À Vista Label - Below Price */}
+                                <div className="mb-3 flex items-center justify-center">
+                                  <span className="text-white/70 text-base font-medium uppercase tracking-wider">à vista</span>
+                                </div>
+                                {/* Installment - Below À Vista */}
+                                <div className="flex flex-col items-center gap-1 pt-3 border-t border-white/10">
+                                  <span className="text-[#D4A574] text-xl sm:text-2xl font-semibold">ou 12x de R$ 74,75</span>
+                                  <span className="text-white/50 text-sm">no cartão sem juros</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          
-                          {/* Decorative lines */}
-                          <div className="absolute -left-16 top-1/2 w-12 h-[2px] bg-gradient-to-r from-transparent to-[#D4A574]/50" />
-                          <div className="absolute -right-16 top-1/2 w-12 h-[2px] bg-gradient-to-l from-transparent to-[#D4A574]/50" />
                         </div>
                         
-                        <p className="text-white/70 text-lg mt-3 font-medium max-w-lg mx-auto">
-                          Entre em contato e receba uma proposta personalizada para o seu novo site profissional
+                        {/* Urgency text */}
+                        <p className="text-amber-400/80 text-sm mt-4 font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                          <Sparkles size={16} className="animate-pulse flex-shrink-0" />
+                          <span>O valor retornará ao padrão após o preenchimento das vagas da região.</span>
+                          <Sparkles size={16} className="animate-pulse flex-shrink-0" />
                         </p>
                         
                         {/* Value proposition */}
-                        <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+                        <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
                           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/20">
                             <CheckCircle size={18} className="text-green-400" />
-                            <span className="text-green-300 text-sm font-medium">Pagamento único</span>
+                            <span className="text-green-300 text-sm font-medium">Zero Mensalidade</span>
                           </div>
                           <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
                             <Monitor size={18} className="text-cyan-400" />
                             <span className="text-cyan-300 text-sm font-medium">Painel Admin incluso</span>
                           </div>
-                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                            <Sparkles size={18} className="text-purple-400" />
-                            <span className="text-purple-300 text-sm font-medium">Resposta rápida</span>
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <Shield size={18} className="text-amber-400" />
+                            <span className="text-amber-300 text-sm font-medium">Hospedagem Vitalícia</span>
                           </div>
                         </div>
                       </div>
@@ -882,31 +933,39 @@ const VendasInove = () => {
                       {/* CTA Section - Enhanced */}
                       <div className="text-center space-y-4">
                         <a
-                          href="https://wa.me/555199437916"
+                          href={PAYMENT_LINK}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="group/cta relative inline-flex items-center gap-3 px-12 py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:-translate-y-1"
                         >
                           {/* Animated gradient background */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] via-[#E8C9A9] to-[#D4A574] bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300" />
                           
                           {/* Glow effect */}
-                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-[#D4A574] transition-all duration-300" />
+                          <div className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 blur-xl bg-green-500 transition-all duration-300" />
                           
                           {/* Button content */}
                           <div className="relative z-10 flex items-center gap-3">
-                            <MessageSquare size={26} className="text-[#122737] group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
+                            <CreditCard size={26} className="text-white group-hover/cta:rotate-12 group-hover/cta:scale-110 transition-all duration-300" />
                             <div className="text-left">
-                              <div className="text-[#122737] font-bold text-xl">Adquirir Agora</div>
-                              <div className="text-[#122737]/70 text-xs font-medium">Falar com desenvolvedor</div>
+                              <div className="text-white font-bold text-xl">QUERO GARANTIR ESSE PREÇO</div>
+                              <div className="text-white/80 text-xs font-medium">Solicitar instalação e teste (Sem pagamento agora)</div>
                             </div>
                           </div>
                         </a>
                         
                         <div className="flex items-center justify-center gap-2 text-white/40 text-sm">
-                          <MessageCircle size={16} className="text-green-400" />
-                          <span>Resposta em até 5 minutos via WhatsApp</span>
+                          <Shield size={16} className="text-green-400" />
+                          <span>Pagamento 100% seguro via Asaas</span>
+                        </div>
+
+                        {/* Bonus Highlight */}
+                        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-500/30">
+                          <div className="flex items-center justify-center gap-3 text-amber-400 font-semibold">
+                            <Gift size={20} />
+                            <span>+ BÔNUS: Isenção Vitalícia de Hospedagem (Zero Mensalidade)</span>
+                          </div>
                         </div>
 
                         {/* Trust badges */}

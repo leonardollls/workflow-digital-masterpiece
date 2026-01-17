@@ -1,8 +1,115 @@
 {
+  "redirects": [
+    {
+      "source": "/site/lauren",
+      "destination": "/site/lauren-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/lauren/",
+      "destination": "/site/lauren-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/liddera",
+      "destination": "/site/liddera-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/liddera/",
+      "destination": "/site/liddera-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/inove",
+      "destination": "/site/inove-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/inove/",
+      "destination": "/site/inove-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/envel",
+      "destination": "/site/envel-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/envel/",
+      "destination": "/site/envel-contabilidade",
+      "permanent": true
+    },
+    {
+      "source": "/site/ortobom",
+      "destination": "/site/ortobom-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/ortobom/",
+      "destination": "/site/ortobom-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/previnir",
+      "destination": "/site/previnir-odontopediatria",
+      "permanent": true
+    },
+    {
+      "source": "/site/previnir/",
+      "destination": "/site/previnir-odontopediatria",
+      "permanent": true
+    },
+    {
+      "source": "/site/flach",
+      "destination": "/site/flach-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/flach/",
+      "destination": "/site/flach-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/center",
+      "destination": "/site/center-ortodontia",
+      "permanent": true
+    },
+    {
+      "source": "/site/center/",
+      "destination": "/site/center-ortodontia",
+      "permanent": true
+    },
+    {
+      "source": "/site/ez",
+      "destination": "/site/ez-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/ez/",
+      "destination": "/site/ez-odontologia",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
   ]
-} 
+}

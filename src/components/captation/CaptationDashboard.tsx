@@ -76,6 +76,7 @@ import { ProposalTemplates } from './ProposalTemplates'
 import { BulkDeleteDialog } from './BulkDeleteDialog'
 import { DeleteSiteDialog } from './DeleteSiteDialog'
 import { EditableField } from './EditableField'
+import { AssignScriptDialog } from '@/components/scripts'
 
 export const CaptationDashboard = () => {
   const [states, setStates] = useState<State[]>([])
@@ -114,6 +115,7 @@ export const CaptationDashboard = () => {
   const [bulkDeleting, setBulkDeleting] = useState(false)
   const [deletingSite, setDeletingSite] = useState<CaptationSite | null>(null)
   const [singleDeleting, setSingleDeleting] = useState(false)
+  const [scriptSite, setScriptSite] = useState<CaptationSite | null>(null)
 
   // Carregar dados iniciais
   useEffect(() => {
@@ -195,7 +197,7 @@ export const CaptationDashboard = () => {
     }
   }
 
-  const handleStatusChange = async (newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid', serviceValue?: number) => {
+  const handleStatusChange = async (newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid' | 'contact_no_site', serviceValue?: number) => {
     if (!statusChangeSite) return
     
     try {
@@ -312,6 +314,8 @@ export const CaptationDashboard = () => {
         return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" />Negado</Badge>
       case 'paid':
         return <Badge variant="default" className="bg-purple-500"><DollarSign className="w-3 h-3 mr-1" />Pago</Badge>
+      case 'contact_no_site':
+        return <Badge variant="default" className="bg-cyan-500"><Phone className="w-3 h-3 mr-1" />Entrar em Contato (Sem site)</Badge>
       default:
         return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" />Pendente</Badge>
     }
@@ -348,7 +352,7 @@ export const CaptationDashboard = () => {
           comparison = (a.google_rating || 0) - (b.google_rating || 0)
           break
         case 'proposal_status':
-          const statusOrder = ['pending', 'in_progress', 'to_send', 'accepted', 'rejected', 'paid']
+          const statusOrder = ['pending', 'contact_no_site', 'in_progress', 'to_send', 'accepted', 'rejected', 'paid']
           comparison = statusOrder.indexOf(a.proposal_status) - statusOrder.indexOf(b.proposal_status)
           break
         case 'next_contact_date':
@@ -478,7 +482,7 @@ export const CaptationDashboard = () => {
 
       {/* Estatísticas */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-4">
           <Card className="bg-slate-900 border-slate-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-200">Total de Sites</CardTitle>
@@ -536,6 +540,16 @@ export const CaptationDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-400">{stats.paid_proposals}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-slate-200">Entrar em Contato (Sem site)</CardTitle>
+              <Phone className="h-4 w-4 text-cyan-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-cyan-400">{stats.contact_no_site_proposals}</div>
             </CardContent>
           </Card>
 
@@ -667,6 +681,11 @@ export const CaptationDashboard = () => {
                 <SelectItem value="paid" className="text-slate-200 focus:bg-slate-700 focus:text-white">
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-3 h-3 text-purple-400" /> Pago
+                  </div>
+                </SelectItem>
+                <SelectItem value="contact_no_site" className="text-slate-200 focus:bg-slate-700 focus:text-white">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-3 h-3 text-cyan-400" /> Entrar em Contato (Sem site)
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -1086,6 +1105,15 @@ export const CaptationDashboard = () => {
                           </a>
                         </Button>
                       )}
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="bg-green-900/50 text-green-400 border-green-600 hover:bg-green-800/50"
+                        onClick={() => setScriptSite(site)}
+                      >
+                        <MessageSquare className="w-4 h-4 mr-1" />
+                        Scripts
+                      </Button>
                     </div>
                     <div className="flex gap-2">
                       <Button 
@@ -1284,6 +1312,15 @@ export const CaptationDashboard = () => {
           siteName={deletingSite.company_name}
           onConfirmDelete={handleSingleDelete}
           loading={singleDeleting}
+        />
+      )}
+
+      {scriptSite && (
+        <AssignScriptDialog
+          site={scriptSite}
+          open={!!scriptSite}
+          onClose={() => setScriptSite(null)}
+          onAssigned={loadSitesAndStats}
         />
       )}
     </div>

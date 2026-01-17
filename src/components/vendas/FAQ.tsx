@@ -9,7 +9,7 @@ interface FAQItem {
 const faqData: FAQItem[] = [
   {
     question: 'Você cuida da hospedagem e domínio?',
-    answer: 'Sim, posso cuidar de toda a configuração técnica, se necessário. Configuro a hospedagem otimizada e deixo tudo funcionando perfeitamente!'
+    answer: 'A hospedagem de alta performance já está INCLUSA gratuitamente! Utilizo infraestrutura Cloud (Cloudflare) que garante velocidade e segurança sem nenhum custo adicional para você. Quanto ao domínio, você escolhe o endereço que preferir (ex: seusite.com.br) e eu cuido de toda a configuração técnica necessária. Seu único custo será a renovação anual do domínio, aproximadamente R$ 40/ano, pago diretamente ao registrador de sua preferência.'
   },
   {
     question: 'O site ficará no meu nome e domínio?',

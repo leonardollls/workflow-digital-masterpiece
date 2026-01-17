@@ -26,7 +26,7 @@ export interface Category {
   updated_at?: string
 }
 
-export type ProposalStatus = 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid'
+export type ProposalStatus = 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid' | 'contact_no_site'
 
 export type Priority = 'low' | 'normal' | 'high' | 'urgent'
 export type SortField = 'created_at' | 'company_name' | 'google_rating' | 'proposal_status' | 'next_contact_date'
@@ -87,6 +87,7 @@ export interface CaptationStats {
   rejected_proposals: number
   in_progress_proposals: number
   paid_proposals: number
+  contact_no_site_proposals: number
   total_paid_value: number
   conversion_rate: number
   sites_by_category: Array<{

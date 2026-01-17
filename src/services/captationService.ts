@@ -281,7 +281,7 @@ export const bulkDeleteSites = async (siteIds: string[]): Promise<number> => {
 // Atualização em massa de status
 export const bulkUpdateStatus = async (
   siteIds: string[], 
-  newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid',
+  newStatus: 'pending' | 'to_send' | 'accepted' | 'rejected' | 'in_progress' | 'paid' | 'contact_no_site',
   serviceValue?: number
 ): Promise<number> => {
   const updateData: { proposal_status: string; service_value?: number } = {
@@ -347,6 +347,7 @@ export const getCaptationStats = async (filters?: {
     const rejected_proposals = filteredSites.filter(s => s.proposal_status === 'rejected').length
     const in_progress_proposals = filteredSites.filter(s => s.proposal_status === 'in_progress').length
     const paid_proposals = filteredSites.filter(s => s.proposal_status === 'paid').length
+    const contact_no_site_proposals = filteredSites.filter(s => s.proposal_status === 'contact_no_site').length
     
     // Calcular valor total dos projetos pagos
     const total_paid_value = filteredSites
@@ -386,6 +387,7 @@ export const getCaptationStats = async (filters?: {
       rejected_proposals,
       in_progress_proposals,
       paid_proposals,
+      contact_no_site_proposals,
       total_paid_value,
       conversion_rate,
       sites_by_category: Object.values(categoryCounts).sort((a, b) => b.count - a.count),

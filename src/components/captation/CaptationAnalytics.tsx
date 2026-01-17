@@ -47,7 +47,8 @@ const STATUS_COLORS: Record<string, string> = {
   accepted: '#10B981',
   rejected: '#EF4444',
   in_progress: '#3B82F6',
-  paid: '#8B5CF6'
+  paid: '#8B5CF6',
+  contact_no_site: '#06B6D4'
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -56,7 +57,8 @@ const STATUS_LABELS: Record<string, string> = {
   accepted: 'Aceita',
   rejected: 'Negada',
   in_progress: 'Em Execução',
-  paid: 'Pago'
+  paid: 'Pago',
+  contact_no_site: 'Entrar em Contato (Sem site)'
 }
 
 export const CaptationAnalytics = ({ open, onOpenChange, stats, sites }: CaptationAnalyticsProps) => {
@@ -67,6 +69,7 @@ export const CaptationAnalytics = ({ open, onOpenChange, stats, sites }: Captati
   // Dados para o gráfico de funil
   const funnelData = [
     { name: 'Pendente', value: stats.pending_proposals, fill: STATUS_COLORS.pending },
+    { name: 'Entrar em Contato (Sem site)', value: stats.contact_no_site_proposals, fill: STATUS_COLORS.contact_no_site },
     { name: 'A Enviar', value: stats.to_send_proposals, fill: STATUS_COLORS.to_send },
     { name: 'Aceita', value: stats.accepted_proposals, fill: STATUS_COLORS.accepted },
     { name: 'Em Execução', value: stats.in_progress_proposals, fill: STATUS_COLORS.in_progress },
@@ -76,6 +79,7 @@ export const CaptationAnalytics = ({ open, onOpenChange, stats, sites }: Captati
   // Dados para gráfico de pizza por status
   const statusPieData = [
     { name: 'Pendente', value: stats.pending_proposals, fill: STATUS_COLORS.pending },
+    { name: 'Entrar em Contato (Sem site)', value: stats.contact_no_site_proposals, fill: STATUS_COLORS.contact_no_site },
     { name: 'A Enviar', value: stats.to_send_proposals, fill: STATUS_COLORS.to_send },
     { name: 'Aceita', value: stats.accepted_proposals, fill: STATUS_COLORS.accepted },
     { name: 'Negada', value: stats.rejected_proposals, fill: STATUS_COLORS.rejected },
