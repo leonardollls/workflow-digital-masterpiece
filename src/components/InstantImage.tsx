@@ -8,6 +8,7 @@ interface InstantImageProps {
   onClick?: () => void;
   width?: number;
   height?: number;
+  isHovered?: boolean;
 }
 
 const InstantImage: React.FC<InstantImageProps> = ({ 
@@ -17,7 +18,8 @@ const InstantImage: React.FC<InstantImageProps> = ({
   className = "",
   onClick,
   width = 800,
-  height = 406
+  height = 406,
+  isHovered = false
 }) => {
   return (
     <div 
@@ -30,7 +32,8 @@ const InstantImage: React.FC<InstantImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+        className="w-full h-full object-cover object-top transition-transform duration-300"
+        style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         fetchPriority={priority ? "high" : "auto"}
