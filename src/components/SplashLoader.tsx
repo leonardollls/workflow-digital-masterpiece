@@ -248,13 +248,15 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       </div>
 
       {/* Central Glow Effect - GPU optimized */}
+      {/* Para ajustar a posição vertical do brilho, altere o valor de 'translateY' abaixo (valores negativos = mais acima, positivos = mais abaixo) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           className={`w-[400px] h-[400px] rounded-full transition-all duration-500 ${
-            phase === 'revealing' ? 'scale-[2] opacity-0' : 'scale-100 opacity-100'
+            phase === 'revealing' ? 'opacity-0' : 'opacity-100'
           }`}
           style={{
             background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
+            transform: phase === 'revealing' ? 'translateY(-40px) scale(2)' : 'translateY(-40px) scale(1)',
           }}
         />
       </div>
@@ -277,7 +279,7 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       }`} style={{ minHeight: '100vh' }}>
         {/* Logo - Large and positioned above progress bar */}
         {/* Para ajustar a posição vertical da logo, altere o valor de 'mt-8' abaixo (ex: mt-4 = menos espaço, mt-12 = mais espaço) */}
-        <div className="mb-0 mt-8 flex justify-center">
+        <div className="mb-0 mt-0 flex justify-center">
           <div style={{ width: '320px', height: '320px', contain: 'layout' }}>
             <img
               src="/Images/logo-workflow-sem-fundo2.png"
