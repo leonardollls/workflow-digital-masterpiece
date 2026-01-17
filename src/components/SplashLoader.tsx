@@ -272,9 +272,9 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       />
 
       {/* Main Content */}
-      <div className={`relative z-10 text-center transition-all duration-500 flex flex-col justify-end items-center ${
+      <div className={`relative z-10 text-center transition-all duration-500 flex flex-col justify-center items-center ${
         phase === 'revealing' ? 'scale-105 opacity-0' : 'scale-100 opacity-100'
-      }`} style={{ minHeight: '100vh', paddingBottom: '5vh' }}>
+      }`} style={{ minHeight: '100vh' }}>
         {/* Logo - Large and positioned above progress bar */}
         <div className="mb-0 flex justify-center">
           <div style={{ width: '320px', height: '320px', contain: 'layout' }}>
