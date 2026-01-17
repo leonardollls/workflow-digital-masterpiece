@@ -456,39 +456,50 @@
   /* Portfolio Card - Fixed height to prevent CLS */
   .card-portfolio {
     min-height: 420px;
-    contain: layout style;
   }
 
-  /* Portfolio Card Container - Isolates hover effects completely */
+  /* Portfolio Card Container - Simple container */
   .portfolio-card-container {
-    isolation: isolate;
     position: relative;
-    z-index: 0;
-    contain: layout style paint;
   }
 
-  /* Hover state for container - raises z-index */
-  .portfolio-card-container:hover {
-    z-index: 10;
-  }
-
-  /* Inner card wrapper with contained shadow effect */
+  /* Inner card - clean design with NO external shadows */
   .portfolio-card-inner {
     position: relative;
     width: 100%;
     height: 100%;
     border-radius: 1.5rem;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    background: white;
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
   }
 
-  /* Shadow effect on hover - using smaller, more contained shadow */
-  .portfolio-card-inner.group:hover {
-    box-shadow: 
-      0 4px 20px rgba(124, 58, 237, 0.15),
-      0 0 0 2px rgba(124, 58, 237, 0.1);
-    transform: translateY(-2px);
+  /* Hover effect - only internal effects, NO external shadows */
+  .portfolio-card-inner:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.5);
+  }
+
+  /* Inner glow effect using pseudo-element */
+  .portfolio-card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1.5rem;
+    padding: 2px;
+    background: linear-gradient(135deg, transparent 0%, transparent 40%, rgba(124, 58, 237, 0.3) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .portfolio-card-inner:hover::before {
+    opacity: 1;
   }
 
   /* Project card image placeholder */
