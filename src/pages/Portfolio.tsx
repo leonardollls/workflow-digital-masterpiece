@@ -151,12 +151,14 @@ const Portfolio = () => {
                 {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="group relative overflow-hidden rounded-3xl bg-white shadow-glass hover:shadow-workflow-lg transition-shadow duration-300 card-portfolio"
+                  className="portfolio-card-container"
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
                 >
-                  {/* Project Image - with fixed aspect ratio to prevent CLS */}
-                  <div className="relative overflow-hidden" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
+                  {/* Wrapper interno para conter o efeito hover */}
+                  <div className="portfolio-card-inner group relative overflow-hidden rounded-3xl bg-white transition-shadow duration-300 card-portfolio">
+                    {/* Project Image - with fixed aspect ratio to prevent CLS */}
+                    <div className="relative overflow-hidden" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
                     <InstantImage
                       src={project.thumbnailImage || project.image}
                       alt={`Capa do projeto ${project.title}`}
@@ -279,8 +281,9 @@ const Portfolio = () => {
                     </div>
                   </div>
 
-                  {/* Simple Border */}
-                  <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300" />
+                    {/* Simple Border */}
+                    <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-workflow-energy/20 transition-colors duration-300 pointer-events-none" />
+                  </div>
                 </div>
                 ))}
               </div>
