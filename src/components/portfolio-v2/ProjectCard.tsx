@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import GlassCard from './GlassCard';
 import { Eye, ExternalLink } from 'lucide-react';
 
@@ -17,8 +18,8 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Generate placeholder gradient based on category
   const getCategoryGradient = (category: string): string => {
     const gradients: Record<string, string> = {
       'Advocacia': 'from-amber-500/20 to-orange-600/20',
@@ -59,40 +60,35 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
 
   return (
     <div
-      className="group"
       style={{
         animationDelay: `${index * 50}ms`,
-        contain: 'layout style',
         minHeight: '420px',
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <GlassCard className="h-full flex flex-col" hover>
-        {/* Thumbnail Section with image or gradient placeholder - fixed height */}
-        <div className="relative overflow-hidden rounded-t-2xl" style={{ height: '208px', contain: 'layout' }}>
-          {/* Show thumbnail image if available, otherwise show gradient placeholder */}
+      <GlassCard className="h-full flex flex-col" hover isHovered={isHovered}>
+        {/* Thumbnail Section */}
+        <div className="relative overflow-hidden rounded-t-2xl" style={{ height: '208px' }}>
           {project.thumbnail_url ? (
             <img
               src={project.thumbnail_url}
               alt={`Capa do projeto ${project.title}`}
               width={800}
               height={406}
-              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500"
+              style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
               loading="lazy"
               decoding="async"
             />
           ) : (
-            <div 
-              className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient(project.category)}`}
-            >
-              {/* Decorative pattern */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient(project.category)}`}>
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-white/10 blur-xl" />
                 <div className="absolute bottom-4 right-4 w-32 h-32 rounded-full bg-white/5 blur-2xl" />
               </div>
-              
-              {/* Project initial letter */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-lg">
+                <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
                   <span className="text-4xl font-bold text-white/80">
                     {project.title.charAt(0)}
                   </span>
@@ -102,7 +98,10 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
           )}
 
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+          <div 
+            className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-300"
+            style={{ opacity: isHovered ? 0.8 : 0.6 }}
+          />
 
           {/* Eye icon button */}
           <button
@@ -110,14 +109,17 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
               e.stopPropagation();
               onView(project);
             }}
-            className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-white/30 hover:scale-110 z-10"
+            className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white transition-all duration-300 hover:bg-white/30 hover:scale-110 z-10"
+            style={{
+              opacity: isHovered ? 1 : 0,
+              transform: isHovered ? 'translateY(0)' : 'translateY(8px)',
+            }}
             aria-label={`Visualizar ${project.title}`}
-            tabIndex={0}
           >
             <Eye size={18} />
           </button>
 
-          {/* Category badge on image */}
+          {/* Category badge */}
           <div className="absolute bottom-3 left-3">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border backdrop-blur-md ${getCategoryColor(project.category)}`}>
               <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -128,7 +130,10 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
 
         {/* Content Section */}
         <div className="flex-1 p-5 flex flex-col">
-          <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1 group-hover:text-purple-300 transition-colors duration-300">
+          <h3 
+            className="text-lg font-semibold mb-2 line-clamp-1 transition-colors duration-300"
+            style={{ color: isHovered ? 'rgb(216, 180, 254)' : 'white' }}
+          >
             {project.title}
           </h3>
           
@@ -140,9 +145,8 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={() => onView(project)}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 text-white text-sm font-medium transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:scale-[1.02] active:scale-[0.98]"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 text-white text-sm font-medium transition-all duration-300 hover:from-purple-500 hover:to-violet-500 active:scale-[0.98]"
               aria-label={`Visualizar projeto ${project.title}`}
-              tabIndex={0}
             >
               <Eye size={16} />
               <span>Visualizar</span>
@@ -152,9 +156,8 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300"
+              className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300"
               aria-label={`Abrir ${project.title} em nova aba`}
-              tabIndex={0}
             >
               <ExternalLink size={16} />
             </a>
@@ -166,4 +169,3 @@ const ProjectCard = ({ project, onView, index }: ProjectCardProps) => {
 };
 
 export default ProjectCard;
-
