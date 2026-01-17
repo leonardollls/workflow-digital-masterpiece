@@ -272,11 +272,11 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
       />
 
       {/* Main Content */}
-      <div className={`relative z-10 text-center transition-all duration-500 ${
+      <div className={`relative z-10 text-center transition-all duration-500 flex flex-col justify-end items-center ${
         phase === 'revealing' ? 'scale-105 opacity-0' : 'scale-100 opacity-100'
-      }`}>
+      }`} style={{ minHeight: '100vh', paddingBottom: '5vh' }}>
         {/* Logo - Large and positioned above progress bar */}
-        <div className="mb-4 sm:mb-6 flex justify-center">
+        <div className="mb-0 flex justify-center">
           <div style={{ width: '320px', height: '320px', contain: 'layout' }}>
             <img
               src="/Images/logo-workflow-sem-fundo2.png"
@@ -289,14 +289,14 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
         </div>
 
         {/* Animated Text - sem cursor */}
-        <div className="h-7 mb-4">
+        <div className="h-7 mb-0">
           <p className="text-base sm:text-lg text-purple-300/80 font-light tracking-wide">
             <span className="inline-block min-w-[120px]">{displayText}</span>
           </p>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-56 sm:w-64 mx-auto mb-3">
+        <div className="w-56 sm:w-64 mx-auto mb-2">
           <div className="relative h-1 bg-white/5 rounded-full overflow-hidden">
             <div
               className="absolute inset-y-0 left-0 rounded-full transition-all duration-75"
