@@ -276,7 +276,8 @@ const SplashLoader = ({ onComplete, duration = 1200 }: SplashLoaderProps) => {
         phase === 'revealing' ? 'scale-105 opacity-0' : 'scale-100 opacity-100'
       }`} style={{ minHeight: '100vh' }}>
         {/* Logo - Large and positioned above progress bar */}
-        <div className="mb-0 flex justify-center">
+        {/* Para ajustar a posição vertical da logo, altere o valor de 'mt-8' abaixo (ex: mt-4 = menos espaço, mt-12 = mais espaço) */}
+        <div className="mb-0 mt-8 flex justify-center">
           <div style={{ width: '320px', height: '320px', contain: 'layout' }}>
             <img
               src="/Images/logo-workflow-sem-fundo2.png"
