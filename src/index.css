@@ -459,12 +459,17 @@
     contain: layout style;
   }
 
-  /* Portfolio Card Container - Isolates hover effects to prevent shadow bleed */
+  /* Portfolio Card Container - Isolates hover effects completely */
   .portfolio-card-container {
     isolation: isolate;
     position: relative;
-    /* Isolate each card's stacking context to contain hover effects */
     z-index: 0;
+    contain: layout style paint;
+  }
+
+  /* Hover state for container - raises z-index */
+  .portfolio-card-container:hover {
+    z-index: 10;
   }
 
   /* Inner card wrapper with contained shadow effect */
@@ -473,17 +478,17 @@
     width: 100%;
     height: 100%;
     border-radius: 1.5rem;
-    box-shadow: 0 4px 32px rgba(124, 58, 237, 0.15);
-    transition: box-shadow 0.3s ease;
-    will-change: box-shadow;
-    /* Ensure the card creates its own stacking context */
-    z-index: 0;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background: white;
   }
 
-  /* Shadow effect on hover - isolation prevents bleed to adjacent cards */
+  /* Shadow effect on hover - using smaller, more contained shadow */
   .portfolio-card-inner.group:hover {
-    box-shadow: 0 8px 48px rgba(124, 58, 237, 0.25);
-    z-index: 1;
+    box-shadow: 
+      0 4px 20px rgba(124, 58, 237, 0.15),
+      0 0 0 2px rgba(124, 58, 237, 0.1);
+    transform: translateY(-2px);
   }
 
   /* Project card image placeholder */
