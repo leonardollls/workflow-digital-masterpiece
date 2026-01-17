@@ -130,114 +130,139 @@ const Portfolio = () => {
           {/* Projects Grid */}
           <div className={`transition-opacity duration-500 portfolio-content ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 md:px-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2 sm:px-4 md:px-0">
                 {Array.from({ length: 9 }).map((_, index) => (
-                  <div key={index} className="group relative overflow-hidden rounded-3xl bg-white shadow-glass card-portfolio" style={{ minHeight: '420px' }}>
-                    {/* Fixed aspect ratio skeleton to prevent CLS */}
-                    <div className="relative overflow-hidden skeleton" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
-                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200"></div>
-                    </div>
-                    <div className="p-6">
-                      <div className="h-6 bg-gray-200 rounded skeleton mb-3"></div>
-                      <div className="h-4 bg-gray-100 rounded skeleton mb-2"></div>
-                      <div className="h-4 bg-gray-100 rounded skeleton w-3/4"></div>
+                  <div 
+                    key={index} 
+                    className="rounded-2xl overflow-hidden"
+                    style={{ 
+                      backgroundColor: '#16162a',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      minHeight: '420px'
+                    }}
+                  >
+                    <div className="animate-pulse">
+                      <div style={{ aspectRatio: '800/406', backgroundColor: '#1f1f3a' }} />
+                      <div className="p-5">
+                        <div className="h-5 rounded" style={{ backgroundColor: '#2a2a4a', marginBottom: '12px' }} />
+                        <div className="h-4 rounded" style={{ backgroundColor: '#232340', marginBottom: '8px' }} />
+                        <div className="h-4 rounded w-3/4" style={{ backgroundColor: '#232340' }} />
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-2 sm:px-4 md:px-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2 sm:px-4 md:px-0">
                 {projects.map((project) => (
-                  <div
+                  <article
                     key={project.id}
-                    className="portfolio-card-container"
+                    className="group rounded-2xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+                    style={{ 
+                      backgroundColor: '#16162a',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      minHeight: '420px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                    }}
                   >
-                    {/* Card com design limpo - SEM box-shadow externo */}
-                    <div className="portfolio-card-inner group card-portfolio">
-                      {/* Project Image */}
-                      <div className="relative overflow-hidden" style={{ aspectRatio: '800/406', minHeight: '200px' }}>
-                        <InstantImage
-                          src={project.thumbnailImage || project.image}
-                          alt={`Capa do projeto ${project.title}`}
-                          priority={project.priority}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          width={800}
-                          height={406}
-                        />
-                        
-                        {/* Category Badge - posicionado sobre a imagem */}
-                        <div className="absolute bottom-3 left-3">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-workflow-energy/90 backdrop-blur-sm text-white rounded-full text-xs font-semibold">
-                            <span className="w-1.5 h-1.5 bg-white rounded-full" />
-                            {project.category}
-                          </span>
-                        </div>
-                        
-                        {/* Eye Button */}
+                    {/* Project Image */}
+                    <div className="relative overflow-hidden" style={{ aspectRatio: '800/406' }}>
+                      <InstantImage
+                        src={project.thumbnailImage || project.image}
+                        alt={`Capa do projeto ${project.title}`}
+                        priority={project.priority}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        width={800}
+                        height={406}
+                      />
+                      
+                      {/* Category Badge */}
+                      <div className="absolute bottom-3 left-3">
+                        <span 
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-white rounded-full text-xs font-semibold"
+                          style={{ backgroundColor: 'rgba(139, 92, 246, 0.9)' }}
+                        >
+                          <span className="w-1.5 h-1.5 bg-white rounded-full" />
+                          {project.category}
+                        </span>
+                      </div>
+                      
+                      {/* Eye Button */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          openImageModal(project.image);
+                        }}
+                        className="absolute top-3 right-3 w-10 h-10 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-transform duration-200 cursor-pointer hover:scale-110"
+                        type="button"
+                        aria-label={`Visualizar ${project.title}`}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-gray-700">
+                          <path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Project Info */}
+                    <div className="p-5">
+                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-200">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                        {project.description}
+                      </p>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-3">
                         <button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             openImageModal(project.image);
                           }}
-                          className="absolute top-3 right-3 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer hover:scale-110"
+                          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-semibold transition-colors duration-200 cursor-pointer"
                           type="button"
-                          aria-label={`Visualizar ${project.title}`}
                         >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-gray-700">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-white">
                             <path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
                           </svg>
+                          Visualizar
+                        </button>
+                        
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openImageModal(project.image);
+                          }}
+                          className="w-10 h-10 flex items-center justify-center text-white rounded-xl transition-colors duration-200 cursor-pointer"
+                          style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                          }}
+                          type="button"
+                          aria-label="Abrir em nova aba"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                          </svg>
                         </button>
                       </div>
-
-                      {/* Project Info - fundo escuro */}
-                      <div className="p-5 bg-[#1a1a2e]">
-                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-200">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">
-                          {project.description}
-                        </p>
-                        
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              openImageModal(project.image);
-                            }}
-                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-semibold transition-colors duration-200 cursor-pointer"
-                            type="button"
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-white">
-                              <path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
-                            </svg>
-                            Visualizar
-                          </button>
-                          
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              openImageModal(project.image);
-                            }}
-                            className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors duration-200 cursor-pointer"
-                            type="button"
-                            aria-label="Abrir em nova aba"
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                              <polyline points="15 3 21 3 21 9"/>
-                              <line x1="10" y1="14" x2="21" y2="3"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             )}

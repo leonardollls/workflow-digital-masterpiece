@@ -453,53 +453,9 @@
     pointer-events: auto !important;
   }
 
-  /* Portfolio Card - Fixed height to prevent CLS */
+  /* Portfolio Card - Minimal styles, no shadows */
   .card-portfolio {
     min-height: 420px;
-  }
-
-  /* Portfolio Card Container - Simple container */
-  .portfolio-card-container {
-    position: relative;
-  }
-
-  /* Inner card - clean design with NO external shadows */
-  .portfolio-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 1.5rem;
-    background: #1a1a2e;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    overflow: hidden;
-  }
-
-  /* Hover effect - only internal effects, NO external shadows */
-  .portfolio-card-inner:hover {
-    transform: translateY(-4px);
-    border-color: rgba(124, 58, 237, 0.5);
-  }
-
-  /* Inner glow effect using pseudo-element */
-  .portfolio-card-inner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 1.5rem;
-    padding: 2px;
-    background: linear-gradient(135deg, transparent 0%, transparent 40%, rgba(124, 58, 237, 0.3) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .portfolio-card-inner:hover::before {
-    opacity: 1;
   }
 
   /* Project card image placeholder */
