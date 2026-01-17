@@ -23,6 +23,17 @@ const PortfolioV2 = () => {
     }, 100);
   }, []);
 
+  // Garantir fundo escuro ao montar
+  useEffect(() => {
+    document.body.style.backgroundColor = '#020617'; // slate-950
+    document.documentElement.style.backgroundColor = '#020617';
+    
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
+    };
+  }, []);
+
   // Animation on mount (after splash)
   useEffect(() => {
     if (contentReady) {
@@ -78,12 +89,12 @@ const PortfolioV2 = () => {
             >
               {/* Logo with Glow Effect - explicit dimensions to prevent CLS */}
               <div className="flex justify-center mb-6 sm:mb-8">
-                <div className="logo-glow-container" style={{ width: '128px', height: '128px', contain: 'layout' }}>
+                <div className="logo-glow-container" style={{ width: '160px', height: '160px', contain: 'layout' }}>
                   <img
                     src="/Images/logo-workflow-sem-fundo2.png"
                     alt="Workflow Logo"
-                    width={128}
-                    height={128}
+                    width={160}
+                    height={160}
                     className="logo-optimized w-full h-full object-contain"
                     fetchPriority="high"
                     decoding="async"
