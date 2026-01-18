@@ -14,6 +14,9 @@ const PortfolioV2 = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [contentReady, setContentReady] = useState(false);
 
+  // Tema escuro fixo
+  const isDark = true;
+
   // Handle splash loader completion
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
@@ -23,10 +26,10 @@ const PortfolioV2 = () => {
     }, 100);
   }, []);
 
-  // Garantir fundo escuro ao montar
+  // Remove body background to let GlassBackground show through
   useEffect(() => {
-    document.body.style.backgroundColor = '#020617'; // slate-950
-    document.documentElement.style.backgroundColor = '#020617';
+    document.body.style.backgroundColor = 'transparent';
+    document.documentElement.style.backgroundColor = 'transparent';
     
     return () => {
       document.body.style.backgroundColor = '';
@@ -96,7 +99,7 @@ const PortfolioV2 = () => {
                     width={160}
                     height={160}
                     className="logo-optimized w-full h-full object-contain"
-                    fetchPriority="high"
+                    fetchpriority="high"
                     decoding="async"
                     loading="eager"
                   />
@@ -105,13 +108,19 @@ const PortfolioV2 = () => {
 
               {/* Title */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-white via-purple-200 to-violet-300 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]">
+                <span className={`bg-clip-text text-transparent transition-all duration-500 ${
+                  isDark 
+                    ? 'bg-gradient-to-r from-white via-purple-200 to-violet-300 drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]'
+                    : 'bg-gradient-to-r from-slate-800 via-purple-700 to-violet-600 drop-shadow-[0_2px_10px_rgba(124,58,237,0.2)]'
+                }`}>
                   Criações Recentes
                 </span>
               </h1>
 
               {/* Description */}
-              <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed">
+              <p className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed transition-colors duration-500 ${
+                isDark ? 'text-white/60' : 'text-slate-600'
+              }`}>
                 Conheça alguns dos projetos desenvolvidos. Cada site é uma experiência
                 única, criada com foco em performance, design moderno e resultados reais.
               </p>
@@ -128,13 +137,19 @@ const PortfolioV2 = () => {
                     onClick={() => setSelectedCategory(null)}
                     className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                       selectedCategory === null
-                        ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
-                        : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                        ? isDark 
+                          ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
+                          : 'bg-purple-100 text-purple-700 border border-purple-300'
+                        : isDark
+                          ? 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                          : 'bg-white/60 text-slate-600 border border-slate-200 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200'
                     }`}
                   >
                     <Filter size={14} />
                     Todos
-                    <span className="px-1.5 py-0.5 rounded-md bg-white/10 text-xs">
+                    <span className={`px-1.5 py-0.5 rounded-md text-xs transition-colors duration-300 ${
+                      isDark ? 'bg-white/10' : 'bg-purple-100'
+                    }`}>
                       {projects.length}
                     </span>
                   </button>
@@ -148,8 +163,12 @@ const PortfolioV2 = () => {
                       }
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                         selectedCategory === category
-                          ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
-                          : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                          ? isDark
+                            ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
+                            : 'bg-purple-100 text-purple-700 border border-purple-300'
+                          : isDark
+                            ? 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                            : 'bg-white/60 text-slate-600 border border-slate-200 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200'
                       }`}
                     >
                       {category}
@@ -173,21 +192,25 @@ const PortfolioV2 = () => {
                 {Array.from({ length: 6 }).map((_, index) => (
                   <div
                     key={index}
-                    className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden"
+                    className={`rounded-2xl backdrop-blur-sm border overflow-hidden transition-colors duration-300 ${
+                      isDark 
+                        ? 'bg-white/5 border-white/10' 
+                        : 'bg-white/60 border-purple-100'
+                    }`}
                     style={{ minHeight: '420px', height: '420px', contain: 'layout style' }}
                   >
                     {/* Fixed height for image placeholder - matches ProjectCard */}
                     <div 
-                      className="bg-white/5" 
+                      className={`transition-colors duration-300 ${isDark ? 'bg-white/5' : 'bg-purple-50'}`}
                       style={{ height: '208px', contain: 'layout' }} 
                     />
                     <div className="p-5 space-y-3">
-                      <div className="h-5 bg-white/10 rounded-lg w-3/4" />
-                      <div className="h-4 bg-white/5 rounded-lg" />
-                      <div className="h-4 bg-white/5 rounded-lg w-2/3" />
+                      <div className={`h-5 rounded-lg w-3/4 transition-colors duration-300 ${isDark ? 'bg-white/10' : 'bg-purple-100'}`} />
+                      <div className={`h-4 rounded-lg transition-colors duration-300 ${isDark ? 'bg-white/5' : 'bg-slate-100'}`} />
+                      <div className={`h-4 rounded-lg w-2/3 transition-colors duration-300 ${isDark ? 'bg-white/5' : 'bg-slate-100'}`} />
                       <div className="flex gap-3 pt-2">
-                        <div className="h-10 bg-white/10 rounded-xl flex-1" />
-                        <div className="h-10 w-10 bg-white/10 rounded-xl" />
+                        <div className={`h-10 rounded-xl flex-1 transition-colors duration-300 ${isDark ? 'bg-white/10' : 'bg-purple-100'}`} />
+                        <div className={`h-10 w-10 rounded-xl transition-colors duration-300 ${isDark ? 'bg-white/10' : 'bg-purple-50'}`} />
                       </div>
                     </div>
                   </div>
@@ -222,18 +245,24 @@ const PortfolioV2 = () => {
             {/* No results message */}
             {!loading && filteredProjects.length === 0 && (
               <div className="text-center py-16">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
-                  <Filter size={24} className="text-white/40" />
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors duration-300 ${
+                  isDark ? 'bg-white/5' : 'bg-purple-50'
+                }`}>
+                  <Filter size={24} className={`transition-colors duration-300 ${isDark ? 'text-white/40' : 'text-purple-400'}`} />
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">
+                <h3 className={`font-semibold text-lg mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-slate-800'}`}>
                   Nenhum projeto encontrado
                 </h3>
-                <p className="text-white/50 text-sm mb-4">
+                <p className={`text-sm mb-4 transition-colors duration-300 ${isDark ? 'text-white/50' : 'text-slate-500'}`}>
                   Não há projetos na categoria selecionada.
                 </p>
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 transition-all duration-200"
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30' 
+                      : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                  }`}
                 >
                   <X size={14} />
                   Limpar filtro
@@ -259,13 +288,17 @@ const PortfolioV2 = () => {
                 >
                   {/* Animated gradient border */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
-                  <div className="absolute inset-[1px] bg-slate-900/90 rounded-2xl" />
+                  <div className={`absolute inset-[1px] rounded-2xl transition-colors duration-300 ${isDark ? 'bg-slate-900/90' : 'bg-white/95'}`} />
                   
                   {/* Glow effect */}
                   <div className={`absolute -inset-1 bg-gradient-to-r ${stat.accent} opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 rounded-2xl`} />
                   
                   {/* Content */}
-                  <div className="relative text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-300">
+                  <div className={`relative text-center p-4 sm:p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 ${
+                    isDark 
+                      ? 'bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 border-white/10 group-hover:border-white/20' 
+                      : 'bg-gradient-to-br from-white/90 via-slate-50/95 to-purple-50/80 border-purple-100 group-hover:border-purple-200 shadow-lg shadow-purple-500/5'
+                  }`}>
                     {/* Decorative top line */}
                     <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[2px] bg-gradient-to-r ${stat.accent} rounded-full opacity-60 group-hover:w-20 group-hover:opacity-100 transition-all duration-300`} />
                     
@@ -275,7 +308,11 @@ const PortfolioV2 = () => {
                     </div>
                     
                     {/* Label */}
-                    <div className="text-white/70 text-xs sm:text-sm font-medium group-hover:text-white/90 transition-colors duration-300">
+                    <div className={`text-xs sm:text-sm font-medium transition-colors duration-300 ${
+                      isDark 
+                        ? 'text-white/70 group-hover:text-white/90' 
+                        : 'text-slate-600 group-hover:text-slate-800'
+                    }`}>
                       {stat.label}
                     </div>
                   </div>
