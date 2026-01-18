@@ -36,53 +36,114 @@ const GlassBackground = () => {
         }}
       />
 
-      {/* Layer 3: Wave Pattern SVG - Main Waves */}
+      {/* Layer 3: Wave Patterns - Multiple animated waves */}
       <div className="absolute inset-0 overflow-hidden">
-        <svg
-          className={`absolute w-full transition-opacity duration-700 ${isDark ? 'opacity-[0.12]' : 'opacity-[0.08]'}`}
-          style={{ top: '10%', height: '40%', minHeight: '300px' }}
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            className="wave-path-1"
-            d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,133.3C672,117,768,139,864,165.3C960,192,1056,224,1152,218.7C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            fill={isDark ? 'rgba(139, 92, 246, 0.5)' : 'rgba(139, 92, 246, 0.4)'}
-          />
-          <path
-            className="wave-path-2"
-            d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,197.3C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            fill={isDark ? 'rgba(124, 58, 237, 0.35)' : 'rgba(124, 58, 237, 0.25)'}
-          />
-        </svg>
+        {/* Wave 1 - Top area, slowest */}
+        <div 
+          className={`wave-layer wave-1 absolute w-[200%] transition-opacity duration-700 ${
+            isDark ? 'opacity-[0.15]' : 'opacity-[0.1]'
+          }`}
+          style={{
+            height: '60%',
+            top: '5%',
+            left: '-50%',
+            background: isDark
+              ? `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(139, 92, 246, 0.3) 30%,
+                  rgba(124, 58, 237, 0.4) 50%,
+                  rgba(139, 92, 246, 0.3) 70%,
+                  transparent 100%)`
+              : `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(139, 92, 246, 0.2) 30%,
+                  rgba(124, 58, 237, 0.3) 50%,
+                  rgba(139, 92, 246, 0.2) 70%,
+                  transparent 100%)`,
+            borderRadius: '45% 55% 60% 40% / 50% 45% 55% 50%',
+            transform: 'rotate(-3deg)',
+          }}
+        />
 
-        {/* Bottom Wave Layer */}
-        <svg
-          className={`absolute w-full transition-opacity duration-700 ${isDark ? 'opacity-[0.08]' : 'opacity-[0.06]'}`}
-          style={{ bottom: '5%', height: '35%', minHeight: '250px', transform: 'rotate(180deg)' }}
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            className="wave-path-3"
-            d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,128C672,107,768,85,864,90.7C960,96,1056,128,1152,138.7C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            fill={isDark ? 'rgba(167, 139, 250, 0.4)' : 'rgba(167, 139, 250, 0.3)'}
-          />
-          <path
-            className="wave-path-4"
-            d="M0,192L48,181.3C96,171,192,149,288,154.7C384,160,480,192,576,197.3C672,203,768,181,864,170.7C960,160,1056,160,1152,170.7C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            fill={isDark ? 'rgba(139, 92, 246, 0.25)' : 'rgba(139, 92, 246, 0.2)'}
-          />
-        </svg>
+        {/* Wave 2 - Middle, medium speed */}
+        <div 
+          className={`wave-layer wave-2 absolute w-[200%] transition-opacity duration-700 ${
+            isDark ? 'opacity-[0.12]' : 'opacity-[0.08]'
+          }`}
+          style={{
+            height: '50%',
+            top: '25%',
+            left: '-50%',
+            background: isDark
+              ? `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(167, 139, 250, 0.25) 35%,
+                  rgba(139, 92, 246, 0.35) 50%,
+                  rgba(167, 139, 250, 0.25) 65%,
+                  transparent 100%)`
+              : `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(167, 139, 250, 0.15) 35%,
+                  rgba(139, 92, 246, 0.25) 50%,
+                  rgba(167, 139, 250, 0.15) 65%,
+                  transparent 100%)`,
+            borderRadius: '50% 50% 45% 55% / 55% 50% 50% 45%',
+            transform: 'rotate(2deg)',
+          }}
+        />
+
+        {/* Wave 3 - Lower area, faster */}
+        <div 
+          className={`wave-layer wave-3 absolute w-[200%] transition-opacity duration-700 ${
+            isDark ? 'opacity-[0.1]' : 'opacity-[0.06]'
+          }`}
+          style={{
+            height: '45%',
+            top: '50%',
+            left: '-50%',
+            background: isDark
+              ? `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(124, 58, 237, 0.2) 40%,
+                  rgba(139, 92, 246, 0.3) 50%,
+                  rgba(124, 58, 237, 0.2) 60%,
+                  transparent 100%)`
+              : `linear-gradient(180deg, 
+                  transparent 0%, 
+                  rgba(124, 58, 237, 0.12) 40%,
+                  rgba(139, 92, 246, 0.2) 50%,
+                  rgba(124, 58, 237, 0.12) 60%,
+                  transparent 100%)`,
+            borderRadius: '55% 45% 50% 50% / 45% 55% 45% 55%',
+            transform: 'rotate(-1deg)',
+          }}
+        />
+
+        {/* Wave 4 - Bottom accent */}
+        <div 
+          className={`wave-layer wave-4 absolute w-[200%] transition-opacity duration-700 ${
+            isDark ? 'opacity-[0.08]' : 'opacity-[0.05]'
+          }`}
+          style={{
+            height: '40%',
+            bottom: '0%',
+            left: '-50%',
+            background: isDark
+              ? `linear-gradient(0deg, 
+                  rgba(139, 92, 246, 0.25) 0%,
+                  rgba(167, 139, 250, 0.15) 40%,
+                  transparent 100%)`
+              : `linear-gradient(0deg, 
+                  rgba(139, 92, 246, 0.15) 0%,
+                  rgba(167, 139, 250, 0.08) 40%,
+                  transparent 100%)`,
+            borderRadius: '50% 50% 0 0 / 100% 100% 0 0',
+          }}
+        />
       </div>
 
       {/* Layer 4: Floating Dot Particles */}
       <div className="absolute inset-0">
-        {/* Large accent dots */}
         <div 
           className={`absolute w-2 h-2 rounded-full animate-dot-float-1 transition-colors duration-500 ${
             isDark ? 'bg-purple-400/40' : 'bg-purple-500/30'
@@ -119,18 +180,6 @@ const GlassBackground = () => {
           }`}
           style={{ top: '85%', left: '35%' }}
         />
-        <div 
-          className={`absolute w-3 h-3 rounded-full animate-dot-float-1 transition-colors duration-500 ${
-            isDark ? 'bg-purple-500/20' : 'bg-purple-400/15'
-          }`}
-          style={{ top: '15%', left: '60%' }}
-        />
-        <div 
-          className={`absolute w-1 h-1 rounded-full animate-dot-float-2 transition-colors duration-500 ${
-            isDark ? 'bg-violet-400/50' : 'bg-violet-500/30'
-          }`}
-          style={{ top: '55%', left: '90%' }}
-        />
       </div>
 
       {/* Layer 5: Gradient Glow Spots */}
@@ -154,18 +203,8 @@ const GlassBackground = () => {
         `}
         style={{ bottom: '-5%', right: '-5%' }}
       />
-      <div 
-        className={`
-          absolute w-[400px] h-[400px] rounded-full blur-[80px] transition-opacity duration-700
-          ${isDark 
-            ? 'bg-indigo-600/10 opacity-40' 
-            : 'bg-indigo-400/6 opacity-30'
-          }
-        `}
-        style={{ top: '40%', left: '50%', transform: 'translateX(-50%)' }}
-      />
 
-      {/* Layer 6: Noise Texture for depth */}
+      {/* Layer 6: Noise Texture */}
       <div 
         className={`absolute inset-0 transition-opacity duration-700 ${isDark ? 'opacity-[0.02]' : 'opacity-[0.015]'}`}
         style={{
@@ -173,7 +212,7 @@ const GlassBackground = () => {
         }}
       />
 
-      {/* Layer 7: Vignette effect */}
+      {/* Layer 7: Vignette */}
       <div 
         className={`
           absolute inset-0 transition-all duration-700
@@ -184,7 +223,7 @@ const GlassBackground = () => {
         `}
       />
 
-      {/* Layer 8: Top edge fade for header area (dark mode only) */}
+      {/* Layer 8: Top fade (dark mode) */}
       {isDark && (
         <div 
           className="absolute top-0 left-0 right-0 h-32 transition-opacity duration-700"
