@@ -125,9 +125,32 @@
     @apply border-border;
   }
 
+  /* Theme transition - smooth color changes */
   html {
     scroll-behavior: smooth;
     font-feature-settings: "cv11", "ss01";
+    color-scheme: dark light;
+  }
+  
+  /* Global theme transition for smooth theme switching */
+  html.transitioning,
+  html.transitioning *,
+  html.transitioning *::before,
+  html.transitioning *::after {
+    transition: background-color 0.5s ease, 
+                border-color 0.5s ease, 
+                color 0.3s ease,
+                box-shadow 0.5s ease !important;
+  }
+
+  /* Light mode body styles */
+  html:not(.dark) body {
+    background-color: #f8fafc;
+  }
+
+  /* Dark mode body styles */  
+  html.dark body {
+    background-color: #020617;
   }
 
   body {
@@ -1436,6 +1459,467 @@
    END VENDAS PAGE ANIMATIONS
    ============================================ */
 
+/* ============================================
+   THEME TOGGLE ANIMATIONS
+   ============================================ */
+
+/* Theme Toggle Button Styles */
+.theme-toggle-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme icon rotation animation */
+@keyframes theme-icon-spin-out {
+  from {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(90deg) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes theme-icon-spin-in {
+  from {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-icon-enter {
+  animation: theme-icon-spin-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.theme-icon-exit {
+  animation: theme-icon-spin-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Sun rays animation for light mode */
+@keyframes sun-rays-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Moon glow animation for dark mode */
+@keyframes moon-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(167, 139, 250, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.8));
+  }
+}
+
+/* Apply subtle glow to active theme icon */
+.dark .theme-toggle-btn .moon-icon {
+  animation: moon-glow 2s ease-in-out infinite;
+}
+
+html:not(.dark) .theme-toggle-btn .sun-icon {
+  animation: sun-rays-pulse 3s ease-in-out infinite;
+}
+
+/* Portfolio Light Mode Specific Styles */
+html:not(.dark) .logo-glow-container::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(124, 58, 237, 0.2) 0%,
+    rgba(167, 139, 250, 0.15) 40%,
+    transparent 70%
+  );
+}
+
+/* Light mode card shadows */
+html:not(.dark) .glass-card-light {
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.08),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+html:not(.dark) .glass-card-light:hover {
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15),
+              0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Dark mode refinements */
+.dark .glass-card-dark {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-card-dark:hover {
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15),
+              0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Improved text contrast in dark mode */
+.dark .text-contrast-high {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.dark .text-contrast-medium {
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.dark .text-contrast-low {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+/* Light mode text contrast */
+html:not(.dark) .text-contrast-high {
+  color: rgba(15, 23, 42, 0.95);
+}
+
+html:not(.dark) .text-contrast-medium {
+  color: rgba(51, 65, 85, 0.85);
+}
+
+html:not(.dark) .text-contrast-low {
+  color: rgba(100, 116, 139, 0.80);
+}
+
+/* ============================================
+   END THEME TOGGLE ANIMATIONS
+   ============================================ */
+
+/* ============================================
+   MODERN BACKGROUND EFFECTS - AURORA/ORBS
+   ============================================ */
+
+/* Aurora drift - slow organic movement */
+@keyframes aurora-drift-1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.6;
+  }
+  25% { 
+    transform: translate(50px, -30px) scale(1.15) rotate(3deg);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: translate(-30px, 50px) scale(0.9) rotate(-2deg);
+    opacity: 0.5;
+  }
+  75% { 
+    transform: translate(20px, 20px) scale(1.1) rotate(1deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes aurora-drift-2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  33% { 
+    transform: translate(-40px, 30px) scale(1.2) rotate(-4deg);
+    opacity: 0.7;
+  }
+  66% { 
+    transform: translate(30px, -40px) scale(0.85) rotate(3deg);
+    opacity: 0.4;
+  }
+}
+
+@keyframes aurora-drift-3 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% { 
+    transform: translate(40px, 40px) scale(1.1) rotate(5deg);
+    opacity: 0.6;
+  }
+}
+
+/* Orb floating with gentle wobble */
+@keyframes orb-float-1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  25% { 
+    transform: translate(30px, -40px) scale(1.05);
+  }
+  50% { 
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% { 
+    transform: translate(15px, -15px) scale(1.02);
+  }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  33% { 
+    transform: translate(-25px, 35px) scale(1.08);
+  }
+  66% { 
+    transform: translate(20px, -25px) scale(0.92);
+  }
+}
+
+@keyframes orb-float-3 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  50% { 
+    transform: translate(35px, 25px) scale(1.1);
+  }
+}
+
+/* Glow pulse effect - subtle breathing */
+@keyframes glow-breathe {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes glow-breathe-slow {
+  0%, 100% { 
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+/* Particle subtle drift */
+@keyframes particle-subtle {
+  0%, 100% { 
+    transform: translateY(0) translateX(0);
+    opacity: 0.2;
+  }
+  50% { 
+    transform: translateY(-15px) translateX(8px);
+    opacity: 0.5;
+  }
+}
+
+/* Shimmer effect for light mode */
+@keyframes shimmer-light {
+  0% { 
+    background-position: -200% 0;
+  }
+  100% { 
+    background-position: 200% 0;
+  }
+}
+
+/* Background classes */
+.aurora-layer {
+  position: absolute;
+  border-radius: 50%;
+  /* blur is applied inline for per-element control */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.aurora-1 {
+  animation: aurora-drift-1 45s ease-in-out infinite;
+}
+
+.aurora-2 {
+  animation: aurora-drift-2 55s ease-in-out infinite;
+}
+
+.aurora-3 {
+  animation: aurora-drift-3 35s ease-in-out infinite;
+}
+
+.orb-layer {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.orb-float-1 {
+  animation: orb-float-1 30s ease-in-out infinite;
+}
+
+.orb-float-2 {
+  animation: orb-float-2 40s ease-in-out infinite;
+}
+
+.orb-float-3 {
+  animation: orb-float-3 25s ease-in-out infinite;
+}
+
+.glow-spot {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.glow-breathe {
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+
+.glow-breathe-slow {
+  animation: glow-breathe-slow 6s ease-in-out infinite;
+}
+
+/* ============================================
+   END MODERN BACKGROUND EFFECTS
+   ============================================ */
+
+/* ============================================
+   WAVE PATTERNS + DOT MATRIX BACKGROUND
+   ============================================ */
+
+/* Wave animations - subtle horizontal movement */
+@keyframes wave-drift-1 {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-15px) translateY(5px);
+  }
+}
+
+@keyframes wave-drift-2 {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(20px) translateY(-8px);
+  }
+}
+
+.wave-path-1 {
+  animation: wave-drift-1 20s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-path-2 {
+  animation: wave-drift-2 25s ease-in-out infinite;
+  animation-delay: -5s;
+  transform-origin: center;
+}
+
+.wave-path-3 {
+  animation: wave-drift-1 22s ease-in-out infinite;
+  animation-delay: -3s;
+  transform-origin: center;
+}
+
+.wave-path-4 {
+  animation: wave-drift-2 28s ease-in-out infinite;
+  animation-delay: -8s;
+  transform-origin: center;
+}
+
+/* Floating dot animations */
+@keyframes dot-float-1 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-35px) translateX(-5px) scale(0.9);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-15px) translateX(15px) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+@keyframes dot-float-2 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translateY(-25px) translateX(-15px) scale(1.15);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translateY(-40px) translateX(10px) scale(0.85);
+    opacity: 0.4;
+  }
+}
+
+@keyframes dot-float-3 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) translateX(20px) scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.animate-dot-float-1 {
+  animation: dot-float-1 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-dot-float-2 {
+  animation: dot-float-2 10s ease-in-out infinite;
+  animation-delay: -2s;
+  will-change: transform, opacity;
+}
+
+.animate-dot-float-3 {
+  animation: dot-float-3 12s ease-in-out infinite;
+  animation-delay: -4s;
+  will-change: transform, opacity;
+}
+
+/* Dot matrix grid animation - subtle shimmer */
+@keyframes dot-matrix-shimmer {
+  0%, 100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.dot-matrix-animated {
+  animation: dot-matrix-shimmer 6s ease-in-out infinite;
+}
+
+/* ============================================
+   END WAVE PATTERNS + DOT MATRIX BACKGROUND
+   ============================================ */
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *:not(.logo-carousel-track),
@@ -1460,7 +1944,15 @@
   .animate-wave,
   .animate-glitch,
   .animate-orbit,
-  .animate-pulse-scale {
+  .animate-pulse-scale,
+  .aurora-1,
+  .aurora-2,
+  .aurora-3,
+  .orb-float-1,
+  .orb-float-2,
+  .orb-float-3,
+  .glow-breathe,
+  .glow-breathe-slow {
     animation: none !important;
   }
 
