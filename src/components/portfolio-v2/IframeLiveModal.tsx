@@ -328,7 +328,7 @@ img[src*="liviarosaadvocacia"]:not([src*="data:"]) {
   const getDeviceWidth = (): string => {
     switch (device) {
       case 'mobile':
-        return 'max-w-[375px]';
+        return 'max-w-[420px]';
       case 'tablet':
         return 'max-w-[768px]';
       default:
