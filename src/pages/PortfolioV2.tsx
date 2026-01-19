@@ -26,8 +26,11 @@ const PortfolioV2 = () => {
     }, 100);
   }, []);
 
-  // Remove body background to let GlassBackground show through
+  // Ensure dark mode is applied and remove body background to let GlassBackground show through
   useEffect(() => {
+    // Force dark mode for portfolio page
+    document.documentElement.classList.add('dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
     document.body.style.backgroundColor = 'transparent';
     document.documentElement.style.backgroundColor = 'transparent';
     

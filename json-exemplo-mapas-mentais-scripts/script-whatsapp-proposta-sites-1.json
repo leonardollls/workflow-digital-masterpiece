@@ -1,0 +1,157 @@
+{
+  "playbook_title": "Playbook de Vendas: Sites de Alta Performance",
+  "nodes": [
+    {
+      "id": "1_abordagem_texto",
+      "type": "text",
+      "title": "Mensagem 1 (Apresentação)",
+      "objective": "Gerar curiosidade visual imediata.",
+      "content": "Boa tarde.\n\nMe chamo Leonardo, sou Designer especializado na área da saúde.\n\nTomei a liberdade de criar uma nova proposta de site profissional para a clínica da Dra. Lauren, focada em transmitir mais autoridade e sofisticação.",
+      "next_node": "2_abordagem_mockup"
+    },
+    {
+      "id": "2_abordagem_mockup",
+      "type": "image",
+      "title": "Mensagem 2 (Prova Visual)",
+      "content": "[ENVIE A IMAGEM DO MOCKUP NO COMPUTADOR AQUI]",
+      "note": "Imagem de alta qualidade do iMac em fundo Dark.",
+      "next_node": "3_abordagem_gancho"
+    },
+    {
+      "id": "3_abordagem_gancho",
+      "type": "text",
+      "title": "Mensagem 3 (O Gancho)",
+      "content": "O site já está pronto. O resultado ficou incrível e muito superior ao antigo.\n\nPara quem eu posso enviar o link de visualização (sem compromisso) para aprovação da Dra.?",
+      "connections": [
+        {
+          "label": "Resposta Positiva (Sim)",
+          "target_id": "4_envio_proposta"
+        },
+        {
+          "label": "Resposta Negativa (Não)",
+          "target_id": "5_negativa_inicial_root"
+        }
+      ]
+    },
+    {
+      "id": "4_envio_proposta",
+      "type": "text",
+      "title": "PASSO 2: Envio da Proposta",
+      "objective": "Enviar link e valorizar o painel admin.",
+      "content": "Ótimo!\n\nCriei uma página de apresentação explicando por que esse novo padrão visual e técnico vai atrair mais pacientes particulares para a clínica.\n\n*Segue o link do projeto* 👇\nhttps://leonardolopes.online/site/lauren\n\nNessa página eu detalho exatamente como a nova estrutura vai ajudar na autoridade da clínica e apresento o investimento.\n\n*Uma dica*: Se possível, acesse pelo computador. Assim você consegue visualizar todos os detalhes do design e testar a performance em tela cheia.\n\n_Obs: O site já vem com um Painel Administrativo incluso. Vocês terão total autonomia para alterar fotos e textos quando quiserem, sem custos extras!_\n\nFico à total disposição se tiver qualquer dúvida!",
+      "connections": [
+        {
+          "label": "Cliente tem Objeção",
+          "target_id": "6_objecoes_root"
+        },
+        {
+          "label": "Cliente Aceitou (Fechamento)",
+          "target_id": "7_fechamento"
+        }
+      ]
+    },
+    {
+      "id": "5_negativa_inicial_root",
+      "type": "conditional",
+      "title": "PASSO 3A: Tratamento de 'NÃO' Inicial",
+      "content": "Escolha a resposta baseada no motivo do não:",
+      "connections": [
+        {
+          "label": "Não temos interesse",
+          "target_id": "5a_sem_compromisso"
+        },
+        {
+          "label": "Já temos site",
+          "target_id": "5b_comparativa"
+        },
+        {
+          "label": "Resposta Seca / Insistência",
+          "target_id": "5c_escassez"
+        }
+      ]
+    },
+    {
+      "id": "5a_sem_compromisso",
+      "type": "text",
+      "title": "Opção 1: Sem Compromisso (Padrão)",
+      "content": "Entendo perfeitamente, [Nome].\n\nMas como eu já deixei o site pronto (realmente criei toda a estrutura antes de te chamar), seria uma pena descartar o projeto sem a Dra. ao menos ver como ficou.\n\nTopa gastar apenas 1 minuto para olhar? Não tem custo nenhum e nenhum compromisso de compra. É só para vocês conhecerem um novo padrão de qualidade mesmo.\n\nPosso enviar?"
+    },
+    {
+      "id": "5b_comparativa",
+      "type": "text",
+      "title": "Opção 2: Comparativa Técnica",
+      "content": "Compreendo. Vi que vocês já têm site, e justamente por isso entrei em contato.\n\nNotei que o site atual tem uma tecnologia um pouco mais antiga, o que dificulta o agendamento rápido pelo celular (onde estão 90% dos pacientes).\n\nNessa versão nova que criei, foquei em carregamento instantâneo e botões de WhatsApp otimizados. A diferença de performance é gritante.\n\nPosso mandar o link só para vocês compararem a velocidade com o atual? Sem compromisso."
+    },
+    {
+      "id": "5c_escassez",
+      "type": "text",
+      "title": "Opção 3: Escassez / Despedida",
+      "content": "Sem problemas, agradeço o retorno!\n\nDe qualquer forma, como o design foi feito exclusivamente para a imagem da Dra. Lauren, vou deixar o link ativo por 24 horas antes de arquivar o projeto.\n\nCaso bata a curiosidade de ver como a clínica ficaria com um posicionamento digital Premium:\n🔗 [SEU LINK AQUI]\n\nDesejo muito sucesso para a clínica!"
+    },
+    {
+      "id": "6_objecoes_root",
+      "type": "conditional",
+      "title": "PASSO 3B: Tratamento de Objeções (Pós-Link)",
+      "content": "Selecione a objeção apresentada pelo cliente:",
+      "connections": [
+        {
+          "label": "Design Escuro / Não Gostou",
+          "target_id": "6a_design"
+        },
+        {
+          "label": "Preço Alto / Sem Orçamento",
+          "target_id": "6b_preco"
+        },
+        {
+          "label": "Preguiça / Feliz com Atual",
+          "target_id": "6c_inercia"
+        },
+        {
+          "label": "Vácuo (24h sem resposta)",
+          "target_id": "6d_vacuo"
+        },
+        {
+          "label": "Downsell (Último Recurso)",
+          "target_id": "6e_downsell"
+        }
+      ]
+    },
+    {
+      "id": "6a_design",
+      "type": "text",
+      "title": "Cenário 1: Não gostamos do Design",
+      "content": "Entendo perfeitamente, Dra. Design é algo muito pessoal mesmo.\n\nEu optei por essa linha Dark Premium justamente para diferenciar a clínica da concorrência, que usa sempre o padrão branco/azul.\n\nMas a boa notícia é que a estrutura de alta conversão é o mais importante. Eu consigo virar a chave para um Tema Clean (Branco/Minimalista) mantendo toda a tecnologia e performance.\n\nSe eu te enviar uma prévia dele na versão Clara, você daria uma olhada?"
+    },
+    {
+      "id": "6b_preco",
+      "type": "text",
+      "title": "Cenário 2: Achamos caro",
+      "content": "Compreendo totalmente a questão do orçamento.\n\nMas queria apenas ressaltar um ponto matemático da proposta: A isenção de mensalidade.\n\nHoje, a maioria das agências cobra entre R$ 100 a R$ 150/mês só de manutenção. Com o meu modelo, vocês economizam cerca de R$ 1.200,00 por ano.\n\nOu seja: em menos de 9 meses, a economia de hospedagem já 'paga' o valor do site novo. Basicamente, o site sai de graça no médio prazo.\n\nFaz sentido se olharmos por esse ângulo de investimento x economia?"
+    },
+    {
+      "id": "6c_inercia",
+      "type": "text",
+      "title": "Cenário 3: Preguiça de Mudar",
+      "content": "Fico feliz que tenha gostado do visual! E entendo que mexer nisso parece trabalhoso.\n\nO meu único receio com o site atual de vocês é a perda de pacientes no mobile. Fiz um teste aqui e ele demora um pouco para carregar no 4G, o que faz muita gente desistir antes de ver o telefone.\n\nComo esse novo já está pronto e configurado no meu servidor, a troca é feita em 10 minutos, sem dor de cabeça nenhuma para vocês.\n\nNão valeria a pena testar esse novo por 30 dias? Se não sentir aumento na procura, voltamos para o antigo."
+    },
+    {
+      "id": "6d_vacuo",
+      "type": "text",
+      "title": "Cenário 4: O Vácuo (Repescagem)",
+      "content": "Olá! Imagino que a rotina na clínica esteja corrida.\n\nSó queria confirmar se conseguiram abrir o link corretamente?\n\nComo comentei, deixarei o projeto salvo no meu servidor por mais 24 horas antes de arquivar. Caso tenham alguma dúvida sobre o painel de edições ou o pagamento parcelado, estou por aqui!"
+    },
+    {
+      "id": "6e_downsell",
+      "type": "text",
+      "title": "Botão de Emergência (Downsell)",
+      "content": "Dra., entendi que o momento financeiro não permite o investimento completo agora.\n\nO que podemos fazer é o seguinte: Eu mantenho o site no ar como está, mas sem o painel administrativo (qualquer alteração futura teria um custo avulso).\n\nAssim consigo reduzir o valor para R$ 500,00 à vista, apenas para cobrir meu custo de setup, e você já garante a presença digital profissional. O que acha?"
+    },
+    {
+      "id": "7_fechamento",
+      "type": "text",
+      "title": "PASSO 4: O Fechamento (Venda)",
+      "objective": "Script para enviar assim que o cliente disser SIM.",
+      "content": "Maravilha, [Nome]! Fico muito feliz com a decisão. Tenho certeza que esse novo posicionamento vai trazer um retorno excelente para a clínica.\n\nComo confio 100% na qualidade do meu trabalho, faremos o seguinte:\n\n1. Eu faço toda a instalação e configuração primeiro.\n2. Colocamos o site no ar no domínio oficial.\n3. Vocês conferem se está tudo perfeito.\n4. Somente após a aprovação final vocês realizam o pagamento.\n\nPara eu começar agora mesmo e entregar tudo em até 48 horas, preciso apenas de 2 coisas:\n\n1. Um e-mail (para eu cadastrar o acesso de vocês ao Painel Administrativo).\n2. Os dados de acesso do registro.br (ou onde compraram o domínio) para eu apontar para o novo servidor.\n\nAssim que me enviar isso, já coloco a mão na massa!"
+    }
+  ]
+}
