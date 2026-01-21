@@ -206,6 +206,12 @@ const SiteBrief = () => {
       };
       
       console.log('🚀 [SITE-DEBUG] Dados do formulário:', formData);
+      console.log('🚀 [SITE-DEBUG] businessSegment:', formData.businessSegment);
+      console.log('🚀 [SITE-DEBUG] businessSegmentOther:', formData.businessSegmentOther);
+      console.log('🚀 [SITE-DEBUG] websiteGoal:', formData.websiteGoal);
+      console.log('🚀 [SITE-DEBUG] websiteGoalOther:', formData.websiteGoalOther);
+      console.log('🚀 [SITE-DEBUG] websiteType:', formData.websiteType);
+      console.log('🚀 [SITE-DEBUG] websiteTypeOther:', formData.websiteTypeOther);
       
       await submitSiteBriefing(formData);
       
@@ -457,10 +463,9 @@ const SiteBrief = () => {
                         </Select>
                         {showBusinessSegmentOther && (
                           <Input
-                            {...register('businessSegmentOther')}
+                            {...register('businessSegmentOther' as any)}
                             placeholder="Especifique o segmento"
                             className={`${themeClasses.input} h-9 text-sm mt-2`}
-                            onChange={(e) => setValue('businessSegmentOther', e.target.value)}
                           />
                         )}
                       </div>
@@ -571,10 +576,9 @@ const SiteBrief = () => {
                         </Select>
                         {showWebsiteGoalOther && (
                           <Input
-                            {...register('websiteGoalOther')}
+                            {...register('websiteGoalOther' as any)}
                             placeholder="Especifique o objetivo"
                             className={`${themeClasses.input} h-9 text-sm mt-2`}
-                            onChange={(e) => setValue('websiteGoalOther' as any, e.target.value)}
                           />
                         )}
                       </div>
@@ -607,10 +611,9 @@ const SiteBrief = () => {
                         </Select>
                         {showWebsiteTypeOther && (
                           <Input
-                            {...register('websiteTypeOther')}
+                            {...register('websiteTypeOther' as any)}
                             placeholder="Especifique o tipo de site"
                             className={`${themeClasses.input} h-9 text-sm mt-2`}
-                            onChange={(e) => setValue('websiteTypeOther' as any, e.target.value)}
                           />
                         )}
                       </div>

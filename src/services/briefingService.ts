@@ -1737,14 +1737,14 @@ export const submitLandingPageBriefing = async (formData: LandingPageBriefForm):
     const briefingData = {
       // Seção 1: Sobre sua Empresa
       company_name: formData.companyName || 'Nome não informado',
-      business_segment: formData.businessSegment === 'outro' && formData.businessSegmentOther 
-        ? formData.businessSegmentOther 
+      business_segment: formData.businessSegment === 'outro'
+        ? (formData.businessSegmentOther?.trim() || 'Outro (não especificado)')
         : (formData.businessSegment || 'Segmento não informado'),
       business_description: formData.businessDescription || 'Descrição não informada',
       target_audience: formData.targetAudience || 'Público-alvo não informado',
       competitive_differential: formData.competitiveDifferential || 'Diferencial não informado',
-      landing_page_goal: formData.landingPageGoal === 'outro' && formData.landingPageGoalOther
-        ? formData.landingPageGoalOther
+      landing_page_goal: formData.landingPageGoal === 'outro'
+        ? (formData.landingPageGoalOther?.trim() || 'Outro (não especificado)')
         : (formData.landingPageGoal || 'Objetivo não informado'),
       
       // Seção 2: Estratégia & Mercado
@@ -2149,7 +2149,9 @@ export const submitSiteBriefing = async (formData: SiteBriefForm): Promise<SiteB
     const briefingData = {
       // Seção 1: Informações da Empresa
       company_name: formData.companyName || 'Nome não informado',
-      business_segment: formData.businessSegment || 'Segmento não informado',
+      business_segment: formData.businessSegment === 'outro' 
+        ? (formData.businessSegmentOther?.trim() || 'Outro (não especificado)')
+        : (formData.businessSegment || 'Segmento não informado'),
       company_description: formData.companyDescription || 'Descrição não informada',
       company_history: formData.companyHistory || null,
       mission: formData.mission || null,

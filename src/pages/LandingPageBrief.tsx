@@ -456,10 +456,9 @@ const LandingPageBrief = () => {
                         </Select>
                         {showBusinessSegmentOther && (
                           <Input
-                            {...register('businessSegmentOther')}
+                            {...register('businessSegmentOther' as any)}
                             placeholder="Especifique o segmento"
                             className={`${themeClasses.input} h-9 text-sm mt-2`}
-                            onChange={(e) => setValue('businessSegmentOther' as any, e.target.value)}
                           />
                         )}
                       </div>
@@ -508,10 +507,9 @@ const LandingPageBrief = () => {
                         </Select>
                         {showLandingPageGoalOther && (
                           <Input
-                            {...register('landingPageGoalOther')}
+                            {...register('landingPageGoalOther' as any)}
                             placeholder="Especifique o objetivo"
                             className={`${themeClasses.input} h-9 text-sm mt-2`}
-                            onChange={(e) => setValue('landingPageGoalOther' as any, e.target.value)}
                           />
                         )}
                       </div>
