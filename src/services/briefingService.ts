@@ -1662,11 +1662,13 @@ export interface LandingPageBriefing {
   offer_details?: string
   pricing_model?: string
   guarantees?: string
+  product_differentials?: string
   target_results?: string
   urgency_factors?: string
   objections?: string
   call_to_action: string
   lead_destination: string
+  sales_arguments?: string
   brand_colors?: string
   has_logo: string
   logo_files?: string[]
@@ -1680,6 +1682,7 @@ export interface LandingPageBriefing {
   landing_page_sections?: string
   specific_requirements?: string
   desired_domain?: string
+  hosting_preference?: string
   integrations?: string
   analytics_tracking?: string
   additional_notes?: string
@@ -1754,6 +1757,7 @@ export const submitLandingPageBriefing = async (formData: LandingPageBriefForm):
       offer_details: formData.offerDetails || null,
       pricing_model: formData.pricingModel || null,
       guarantees: formData.guarantees || null,
+      product_differentials: formData.productDifferentials || null,
       
       // Seção 4: Conversão & Argumentos
       target_results: formData.targetResults || null,
@@ -1761,6 +1765,7 @@ export const submitLandingPageBriefing = async (formData: LandingPageBriefForm):
       objections: formData.objections || null,
       call_to_action: formData.callToAction || 'CTA não informado',
       lead_destination: formData.leadDestination || 'Destino não informado',
+      sales_arguments: formData.salesArguments || null,
       
       // Seção 5: Design & Identidade
       brand_colors: formData.brandColors || null,
@@ -1778,6 +1783,7 @@ export const submitLandingPageBriefing = async (formData: LandingPageBriefForm):
       landing_page_sections: formData.landingPageSections || null,
       specific_requirements: formData.specificRequirements || null,
       desired_domain: formData.desiredDomain || null,
+      hosting_preference: formData.hostingPreference || null,
       integrations: formData.integrations || null,
       analytics_tracking: formData.analytics || null,
       

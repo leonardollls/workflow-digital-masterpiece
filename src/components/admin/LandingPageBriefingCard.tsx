@@ -389,6 +389,13 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                             <p className="text-white mt-1">{briefing.guarantees}</p>
                           </div>
                         )}
+                        
+                        {briefing.product_differentials && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-slate-400">20. Diferenciais do Produto</label>
+                            <p className="text-white mt-1 whitespace-pre-wrap">{briefing.product_differentials}</p>
+                          </div>
+                        )}
                       </div>
                     </section>
 
@@ -655,7 +662,7 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                     )}
 
                     {/* Seção 6: Estrutura & Funcionalidades */}
-                    {(briefing.landing_page_sections || briefing.specific_requirements || briefing.desired_domain || briefing.integrations || briefing.analytics_tracking) && (
+                    {(briefing.landing_page_sections || briefing.specific_requirements || briefing.desired_domain || briefing.hosting_preference || briefing.integrations || briefing.analytics_tracking) && (
                       <section>
                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-white">
                           <LayoutGrid className="w-5 h-5 text-cyan-400" />
@@ -683,16 +690,23 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                             </div>
                           )}
                           
+                          {briefing.hosting_preference && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">39. Hospedagem</label>
+                              <p className="text-white mt-1">{briefing.hosting_preference}</p>
+                            </div>
+                          )}
+                          
                           {briefing.integrations && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">39. Integrações Necessárias</label>
+                              <label className="text-sm font-medium text-slate-400">40. Integrações Necessárias</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.integrations}</p>
                             </div>
                           )}
                           
                           {briefing.analytics_tracking && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">40. Analytics e Tracking</label>
+                              <label className="text-sm font-medium text-slate-400">41. Analytics e Tracking</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.analytics_tracking}</p>
                             </div>
                           )}
@@ -710,28 +724,28 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                           {briefing.additional_notes && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">41. Observações Adicionais</label>
+                              <label className="text-sm font-medium text-slate-400">42. Observações Adicionais</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.additional_notes}</p>
                             </div>
                           )}
                           
                           {briefing.deadline && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">42. Prazo de Entrega</label>
+                              <label className="text-sm font-medium text-slate-400">43. Prazo de Entrega</label>
                               <p className="text-white mt-1">{briefing.deadline}</p>
                             </div>
                           )}
                           
                           {briefing.budget && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">43. Orçamento</label>
+                              <label className="text-sm font-medium text-slate-400">44. Orçamento</label>
                               <p className="text-white mt-1">{briefing.budget}</p>
                             </div>
                           )}
                           
                           {briefing.start_date && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">44. Data de Início</label>
+                              <label className="text-sm font-medium text-slate-400">45. Data de Início</label>
                               <p className="text-white mt-1">{briefing.start_date}</p>
                             </div>
                           )}
