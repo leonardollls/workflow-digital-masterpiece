@@ -36,6 +36,14 @@ import { supabase } from '@/lib/supabase'
 import { CaptationDashboard } from '@/components/captation/CaptationDashboard'
 import UploadsManagement from '@/components/admin/UploadsManagement'
 import { WhatsAppScriptsDashboard } from '@/components/scripts'
+import { exportMultipleBriefingsToJSON, exportBriefingToMarkdown } from '@/utils/exportBriefing'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { FileJson, FileText } from 'lucide-react'
 
 const AdminDashboard = () => {
   const { user, signOut } = useAuth()
@@ -730,10 +738,42 @@ const AdminDashboard = () => {
                     Novos: {filteredLandingPageBriefings.length} | Antigos: {filteredBriefings.length}
                   </span>
             </h2>
-            <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
-              <Download className="w-4 h-4" />
-              Exportar
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
+                  <Download className="w-4 h-4" />
+                  Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-slate-800 border-slate-700">
+                <DropdownMenuItem 
+                  onClick={() => {
+                    if (filteredLandingPageBriefings.length > 0) {
+                      exportMultipleBriefingsToJSON(filteredLandingPageBriefings)
+                    }
+                  }}
+                  className="text-slate-200 hover:bg-slate-700 cursor-pointer"
+                  disabled={filteredLandingPageBriefings.length === 0}
+                >
+                  <FileJson className="w-4 h-4 mr-2" />
+                  Exportar Todos como JSON ({filteredLandingPageBriefings.length})
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => {
+                    filteredLandingPageBriefings.forEach((briefing, index) => {
+                      setTimeout(() => {
+                        exportBriefingToMarkdown(briefing)
+                      }, index * 300)
+                    })
+                  }}
+                  className="text-slate-200 hover:bg-slate-700 cursor-pointer"
+                  disabled={filteredLandingPageBriefings.length === 0}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Exportar Todos como MD ({filteredLandingPageBriefings.length})
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {filteredBriefings.length === 0 && filteredLandingPageBriefings.length === 0 ? (

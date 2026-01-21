@@ -40,13 +40,22 @@ import {
   TrendingUp,
   ShoppingBag,
   LayoutGrid,
-  FileCheck
+  FileCheck,
+  Download
 } from 'lucide-react'
 import type { LandingPageBriefing } from '@/services/briefingService'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { deleteLandingPageBriefing, addLandingPageProposalValue } from '@/services/briefingService'
 import { Input } from '@/components/ui/input'
+import { exportBriefingToJSON, exportBriefingToMarkdown } from '@/utils/exportBriefing'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { FileJson, FileText } from 'lucide-react'
 
 interface LandingPageBriefingCardProps {
   briefing: LandingPageBriefing
@@ -782,6 +791,32 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                 </ScrollArea>
               </DialogContent>
             </Dialog>
+            
+            {/* Botão de Exportação */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
+                  <Download className="w-4 h-4" />
+                  Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-slate-800 border-slate-700">
+                <DropdownMenuItem 
+                  onClick={() => exportBriefingToJSON(briefing)}
+                  className="text-slate-200 hover:bg-slate-700 cursor-pointer"
+                >
+                  <FileJson className="w-4 h-4 mr-2" />
+                  Exportar como JSON
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => exportBriefingToMarkdown(briefing)}
+                  className="text-slate-200 hover:bg-slate-700 cursor-pointer"
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Exportar como Markdown
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             {/* Botão de Adicionar Proposta */}
             <Dialog open={isProposalDialogOpen} onOpenChange={setIsProposalDialogOpen}>

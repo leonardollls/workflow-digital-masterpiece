@@ -281,7 +281,7 @@ const LandingPageBrief = () => {
                   <h3 className={`font-semibold ${themeClasses.text}`}>Próximo Passo</h3>
                 </div>
                 <p className={`text-sm ${themeClasses.textMuted}`}>
-                  Você receberá um feedback em até 24 horas com a apresentação da sua landing page.
+                  Você receberá um feedback em até 24 horas do desenvolvedor.
                 </p>
               </div>
             </div>
@@ -928,21 +928,6 @@ const LandingPageBrief = () => {
                             <SelectItem value="rapido">Rápido (até 7 dias)</SelectItem>
                             <SelectItem value="normal">Normal (até 15 dias)</SelectItem>
                             <SelectItem value="flexivel">Flexível (sem pressa)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label className={`${themeClasses.label} text-xs font-medium mb-1.5 block`}>Preferência de Contato</Label>
-                        <Select onValueChange={(value) => setValue('preferredContact', value)}>
-                          <SelectTrigger className={`${themeClasses.input} h-9 text-sm`}>
-                            <SelectValue placeholder="Como prefere ser contatado?" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                            <SelectItem value="email">E-mail</SelectItem>
-                            <SelectItem value="telefone">Telefone</SelectItem>
-                            <SelectItem value="videocall">Videochamada</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
