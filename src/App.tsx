@@ -16,6 +16,7 @@ const InstitutionalBrief = lazy(() => import("./pages/InstitutionalBrief"));
 const LogoBrief = lazy(() => import("./pages/LogoBrief"));
 const DentalBrief = lazy(() => import("./pages/DentalBrief"));
 const LandingPageBrief = lazy(() => import("./pages/LandingPageBrief"));
+const SiteBrief = lazy(() => import("./pages/SiteBrief"));
 const ClientUpload = lazy(() => import("./pages/ClientUpload"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -227,6 +228,7 @@ function App() {
               <Route path="/briefing-logo" element={<LogoBrief />} />
               <Route path="/briefing-odontologia" element={<DentalBrief />} />
               <Route path="/briefing-landing-page" element={<LandingPageBrief />} />
+              <Route path="/briefing-site" element={<SiteBrief />} />
               <Route path="/upload-cliente" element={<ClientUpload />} />
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={

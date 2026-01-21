@@ -1582,10 +1582,12 @@ export interface LandingPageBriefForm {
   // Seção 1: Sobre sua Empresa
   companyName?: string
   businessSegment?: string
+  businessSegmentOther?: string
   businessDescription?: string
   targetAudience?: string
   competitiveDifferential?: string
   landingPageGoal?: string
+  landingPageGoalOther?: string
   
   // Seção 2: Estratégia & Mercado
   mainCompetitors?: string
@@ -1735,11 +1737,15 @@ export const submitLandingPageBriefing = async (formData: LandingPageBriefForm):
     const briefingData = {
       // Seção 1: Sobre sua Empresa
       company_name: formData.companyName || 'Nome não informado',
-      business_segment: formData.businessSegment || 'Segmento não informado',
+      business_segment: formData.businessSegment === 'outro' && formData.businessSegmentOther 
+        ? formData.businessSegmentOther 
+        : (formData.businessSegment || 'Segmento não informado'),
       business_description: formData.businessDescription || 'Descrição não informada',
       target_audience: formData.targetAudience || 'Público-alvo não informado',
       competitive_differential: formData.competitiveDifferential || 'Diferencial não informado',
-      landing_page_goal: formData.landingPageGoal || 'Objetivo não informado',
+      landing_page_goal: formData.landingPageGoal === 'outro' && formData.landingPageGoalOther
+        ? formData.landingPageGoalOther
+        : (formData.landingPageGoal || 'Objetivo não informado'),
       
       // Seção 2: Estratégia & Mercado
       main_competitors: formData.mainCompetitors || null,
@@ -1983,4 +1989,409 @@ export const addLandingPageProposalValue = async (id: string, proposalValue: num
     console.error('❌ [LANDING-DEBUG] Erro geral ao adicionar valor da proposta:', error);
     throw error;
   }
-}; 
+};
+
+// ============================================================================
+// BRIEFING DE SITE INSTITUCIONAL (NOVO - VISUAL MODERNO)
+// ============================================================================
+
+// Tipo para o formulário de briefing de site
+export interface SiteBriefForm {
+  // Seção 1: Informações da Empresa
+  companyName?: string
+  businessSegment?: string
+  businessSegmentOther?: string
+  companyDescription?: string
+  companyHistory?: string
+  mission?: string
+  vision?: string
+  values?: string
+  targetAudience?: string
+  competitiveAdvantage?: string
+  responsibleName?: string
+  currentWebsite?: string
+  
+  // Seção 2: Objetivos e Estrutura do Site
+  websiteGoal?: string
+  websiteGoalOther?: string
+  websiteType?: string
+  websiteTypeOther?: string
+  mainFunctionalities?: string
+  requiredPages?: string
+  navigationStructure?: string
+  contentHierarchy?: string
+  servicesProducts?: string
+  teamInfo?: string
+  certifications?: string
+  awardsRecognition?: string
+  caseStudies?: string
+  testimonials?: string
+  
+  // Seção 3: Design e Identidade Visual
+  designStyle?: string
+  brandColors?: string
+  hasLogo?: string
+  logoFiles?: FileList | null
+  visualReferences?: string
+  visualFiles?: FileList | null
+  mainCompetitors?: string
+  customerPainPoints?: string
+  customerObjections?: string
+  communicationTone?: string
+  keyMessages?: string
+  specificRequirements?: string
+  contentMaterials?: string
+  materialFiles?: FileList | null
+  
+  // Seção 4: Funcionalidades Técnicas
+  contactForms?: string
+  integrations?: string
+  seoRequirements?: string
+  analytics?: string
+  desiredDomain?: string
+  hostingPreferences?: string
+  
+  // Seção 5: Timeline e Orçamento
+  additionalNotes?: string
+}
+
+// Tipo para briefing de site salvo
+export interface SiteBriefing {
+  id: string
+  company_name: string
+  business_segment: string
+  company_description: string
+  company_history?: string
+  mission?: string
+  vision?: string
+  values?: string
+  target_audience: string
+  competitive_advantage: string
+  responsible_name: string
+  current_website?: string
+  website_goal: string
+  website_type: string
+  main_functionalities: string
+  required_pages: string
+  navigation_structure?: string
+  content_hierarchy?: string
+  services_products: string
+  team_info?: string
+  certifications?: string
+  awards_recognition?: string
+  case_studies?: string
+  testimonials?: string
+  design_style?: string
+  brand_colors?: string
+  has_logo: string
+  logo_files?: string[]
+  visual_references?: string
+  visual_files?: string[]
+  main_competitors?: string
+  customer_pain_points?: string
+  customer_objections?: string
+  communication_tone?: string
+  key_messages?: string
+  specific_requirements?: string
+  content_materials?: string
+  material_files?: string[]
+  contact_forms?: string
+  integrations?: string
+  seo_requirements?: string
+  analytics_tracking?: string
+  domain_info: string
+  hosting_preferences?: string
+  deadline: string
+  budget?: string
+  additional_notes?: string
+  created_at: string
+  updated_at: string
+  proposal_value?: number
+  proposal_date?: string
+}
+
+// Função para salvar briefing de site
+export const submitSiteBriefing = async (formData: SiteBriefForm): Promise<SiteBriefing> => {
+  console.log('🌐 Iniciando submitSiteBriefing...', { 
+    device: navigator.userAgent,
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  });
+  
+  try {
+    // 1. Upload de arquivos
+    console.log('📁 [SITE-DEBUG] Fazendo upload de arquivos...');
+    let logoUrls: string[] = [];
+    let visualUrls: string[] = [];
+    let materialUrls: string[] = [];
+    
+    try {
+      [logoUrls, visualUrls, materialUrls] = await Promise.all([
+        uploadFiles(formData.logoFiles, 'briefing-files', 'site-logos'),
+        uploadFiles(formData.visualFiles, 'briefing-files', 'site-visual-references'),
+        uploadFiles(formData.materialFiles, 'briefing-files', 'site-materials')
+      ]);
+      console.log('✅ [SITE-DEBUG] Upload de arquivos concluído:', { 
+        logoUrls: logoUrls.length, 
+        visualUrls: visualUrls.length,
+        materialUrls: materialUrls.length
+      });
+    } catch (uploadError) {
+      console.error('❌ [SITE-DEBUG] Erro no upload de arquivos:', uploadError);
+      // Continuar mesmo com erro no upload
+      logoUrls = [];
+      visualUrls = [];
+      materialUrls = [];
+    }
+
+    // 2. Preparar dados para o banco
+    console.log('📝 [SITE-DEBUG] Preparando dados para o banco...');
+    const briefingData = {
+      // Seção 1: Informações da Empresa
+      company_name: formData.companyName || 'Nome não informado',
+      business_segment: formData.businessSegment || 'Segmento não informado',
+      company_description: formData.companyDescription || 'Descrição não informada',
+      company_history: formData.companyHistory || null,
+      mission: formData.mission || null,
+      vision: formData.vision || null,
+      values: formData.values || null,
+      target_audience: formData.targetAudience || 'Público não informado',
+      competitive_advantage: formData.competitiveAdvantage || 'Diferencial não informado',
+      responsible_name: formData.responsibleName || 'Responsável não informado',
+      current_website: formData.currentWebsite || null,
+      
+      // Seção 2: Objetivos e Estrutura do Site
+      website_goal: formData.websiteGoal === 'outro' && formData.websiteGoalOther
+        ? formData.websiteGoalOther
+        : (formData.websiteGoal || 'Objetivo não informado'),
+      website_type: formData.websiteType === 'outro' && formData.websiteTypeOther
+        ? formData.websiteTypeOther
+        : (formData.websiteType || 'Tipo não informado'),
+      main_functionalities: formData.mainFunctionalities || 'Funcionalidades não informadas',
+      required_pages: formData.requiredPages || 'Páginas não especificadas',
+      navigation_structure: formData.navigationStructure || null,
+      content_hierarchy: formData.contentHierarchy || null,
+      services_products: formData.servicesProducts || 'Serviços não descritos',
+      team_info: formData.teamInfo || null,
+      certifications: formData.certifications || null,
+      awards_recognition: formData.awardsRecognition || null,
+      case_studies: formData.caseStudies || null,
+      testimonials: formData.testimonials || null,
+      
+      // Seção 3: Design e Identidade Visual
+      design_style: formData.designStyle || null,
+      brand_colors: formData.brandColors || null,
+      has_logo: formData.hasLogo || 'nao-informado',
+      logo_files: logoUrls.length > 0 ? logoUrls : null,
+      visual_references: formData.visualReferences || null,
+      visual_files: visualUrls.length > 0 ? visualUrls : null,
+      main_competitors: formData.mainCompetitors || null,
+      customer_pain_points: formData.customerPainPoints || null,
+      customer_objections: formData.customerObjections || null,
+      communication_tone: formData.communicationTone || null,
+      key_messages: formData.keyMessages || null,
+      specific_requirements: formData.specificRequirements || null,
+      content_materials: formData.contentMaterials || null,
+      material_files: materialUrls.length > 0 ? materialUrls : null,
+      
+      // Seção 4: Funcionalidades Técnicas
+      contact_forms: formData.contactForms || null,
+      integrations: formData.integrations || null,
+      seo_requirements: formData.seoRequirements || null,
+      analytics_tracking: formData.analytics || null,
+      domain_info: formData.desiredDomain || 'Não informado',
+      hosting_preferences: formData.hostingPreferences || null,
+      
+      // Seção 5: Timeline e Orçamento
+      deadline: 'Valor Acordado na Workana',
+      budget: 'Valor Acordado na Workana',
+      additional_notes: formData.additionalNotes || null,
+      
+      // Metadados
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('📋 [SITE-DEBUG] Dados preparados para o banco:', {
+      totalFields: Object.keys(briefingData).length,
+      companyName: briefingData.company_name,
+      responsibleName: briefingData.responsible_name,
+      hasLogo: briefingData.has_logo,
+      logoFilesCount: briefingData.logo_files?.length || 0,
+      visualFilesCount: briefingData.visual_files?.length || 0,
+      materialFilesCount: briefingData.material_files?.length || 0
+    });
+
+    // 3. Salvar no Supabase com retry
+    console.log('💾 [SITE-DEBUG] Salvando no Supabase...');
+    
+    const savedBriefing = await retryOperation(async () => {
+      const { data, error } = await supabase
+        .from('site_briefings')
+        .insert([briefingData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [SITE-DEBUG] Erro do Supabase:', error);
+        throw new Error(`Erro do banco: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error('Nenhum dado retornado do banco');
+      }
+
+      return data;
+    }, 3, 1000);
+
+    console.log('✅ [SITE-DEBUG] Briefing de site salvo com sucesso:', savedBriefing.id);
+
+    return savedBriefing;
+
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral no submitSiteBriefing:', error);
+    
+    // Melhorar mensagem de erro
+    let errorMessage = 'Erro desconhecido';
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        errorMessage = 'Briefing duplicado detectado';
+      } else if (error.message.includes('connection')) {
+        errorMessage = 'Erro de conexão com o banco de dados';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Tempo limite excedido';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
+    throw new Error(`Erro ao salvar briefing de site: ${errorMessage}`);
+  }
+};
+
+// Função para buscar briefings de site
+export const getSiteBriefings = async (): Promise<SiteBriefing[]> => {
+  console.log('🌐 [SITE-DEBUG] Buscando briefings de site...');
+  
+  try {
+    const { data, error } = await supabase
+      .from('site_briefings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ [SITE-DEBUG] Erro ao buscar briefings:', error);
+      throw new Error(`Erro ao buscar briefings: ${error.message}`);
+    }
+
+    console.log('✅ [SITE-DEBUG] Briefings encontrados:', data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral ao buscar briefings:', error);
+    throw error;
+  }
+};
+
+// Função para buscar um briefing de site específico
+export const getSiteBriefing = async (id: string): Promise<SiteBriefing | null> => {
+  console.log('🌐 [SITE-DEBUG] Buscando briefing de site:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('site_briefings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        console.log('ℹ️ [SITE-DEBUG] Briefing não encontrado:', id);
+        return null;
+      }
+      console.error('❌ [SITE-DEBUG] Erro ao buscar briefing:', error);
+      throw new Error(`Erro ao buscar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [SITE-DEBUG] Briefing encontrado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral ao buscar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para deletar briefing de site
+export const deleteSiteBriefing = async (id: string): Promise<void> => {
+  console.log('🗑️ [SITE-DEBUG] Deletando briefing de site:', id);
+  
+  try {
+    const { error } = await supabase
+      .from('site_briefings')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ [SITE-DEBUG] Erro ao deletar briefing:', error);
+      throw new Error(`Erro ao deletar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [SITE-DEBUG] Briefing de site deletado:', id);
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral ao deletar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para atualizar briefing de site
+export const updateSiteBriefing = async (id: string, updates: Partial<SiteBriefing>): Promise<SiteBriefing> => {
+  console.log('📝 [SITE-DEBUG] Atualizando briefing de site:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('site_briefings')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [SITE-DEBUG] Erro ao atualizar briefing:', error);
+      throw new Error(`Erro ao atualizar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [SITE-DEBUG] Briefing atualizado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral ao atualizar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para adicionar valor da proposta ao briefing de site
+export const addSiteProposalValue = async (id: string, proposalValue: number): Promise<SiteBriefing> => {
+  console.log('💰 [SITE-DEBUG] Adicionando valor da proposta:', { id, proposalValue });
+  
+  try {
+    const { data, error } = await supabase
+      .from('site_briefings')
+      .update({ 
+        proposal_value: proposalValue,
+        proposal_date: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [SITE-DEBUG] Erro ao adicionar valor da proposta:', error);
+      throw new Error(`Erro ao adicionar valor da proposta: ${error.message}`);
+    }
+
+    console.log('✅ [SITE-DEBUG] Valor da proposta adicionado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [SITE-DEBUG] Erro geral ao adicionar valor da proposta:', error);
+    throw error;
+  }
+};

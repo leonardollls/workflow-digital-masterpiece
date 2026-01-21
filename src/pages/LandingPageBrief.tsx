@@ -36,10 +36,12 @@ const landingPageBriefSchema = z.object({
   // Seção 1: Sobre sua Empresa
   companyName: z.string().optional(),
   businessSegment: z.string().optional(),
+  businessSegmentOther: z.string().optional(),
   businessDescription: z.string().optional(),
   targetAudience: z.string().optional(),
   competitiveDifferential: z.string().optional(),
   landingPageGoal: z.string().optional(),
+  landingPageGoalOther: z.string().optional(),
   
   // Seção 2: Estratégia & Mercado
   mainCompetitors: z.string().optional(),
@@ -116,6 +118,8 @@ const LandingPageBrief = () => {
   const [materialFiles, setMaterialFiles] = useState<FileList | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+  const [showBusinessSegmentOther, setShowBusinessSegmentOther] = useState(false);
+  const [showLandingPageGoalOther, setShowLandingPageGoalOther] = useState(false);
 
   // Generate preview URL for logo
   const handleLogoChange = (files: FileList | null) => {
@@ -427,7 +431,16 @@ const LandingPageBrief = () => {
                       </div>
                       <div>
                         <Label className={`${themeClasses.label} text-xs font-medium mb-1.5 block`}>Segmento *</Label>
-                        <Select onValueChange={(value) => setValue('businessSegment', value)}>
+                        <Select onValueChange={(value) => {
+                          setValue('businessSegment', value);
+                          if (value === 'outro') {
+                            setShowBusinessSegmentOther(true);
+                            setValue('businessSegmentOther', '');
+                          } else {
+                            setShowBusinessSegmentOther(false);
+                            setValue('businessSegmentOther', '');
+                          }
+                        }}>
                           <SelectTrigger className={`${themeClasses.input} h-9 text-sm`}>
                             <SelectValue placeholder="Selecione" />
                           </SelectTrigger>
@@ -441,6 +454,14 @@ const LandingPageBrief = () => {
                             <SelectItem value="outro">Outro</SelectItem>
                           </SelectContent>
                         </Select>
+                        {showBusinessSegmentOther && (
+                          <Input
+                            {...register('businessSegmentOther')}
+                            placeholder="Especifique o segmento"
+                            className={`${themeClasses.input} h-9 text-sm mt-2`}
+                            onChange={(e) => setValue('businessSegmentOther' as any, e.target.value)}
+                          />
+                        )}
                       </div>
                       <div>
                         <Label className={`${themeClasses.label} text-xs font-medium mb-1.5 block`}>Descrição do Negócio *</Label>
@@ -462,7 +483,16 @@ const LandingPageBrief = () => {
                     <div className="space-y-4">
                       <div>
                         <Label className={`${themeClasses.label} text-xs font-medium mb-1.5 block`}>Objetivo da Landing Page *</Label>
-                        <Select onValueChange={(value) => setValue('landingPageGoal', value)}>
+                        <Select onValueChange={(value) => {
+                          setValue('landingPageGoal', value);
+                          if (value === 'outro') {
+                            setShowLandingPageGoalOther(true);
+                            setValue('landingPageGoalOther', '');
+                          } else {
+                            setShowLandingPageGoalOther(false);
+                            setValue('landingPageGoalOther', '');
+                          }
+                        }}>
                           <SelectTrigger className={`${themeClasses.input} h-9 text-sm`}>
                             <SelectValue placeholder="Qual o objetivo?" />
                           </SelectTrigger>
@@ -473,8 +503,17 @@ const LandingPageBrief = () => {
                             <SelectItem value="cadastros">Aumentar Cadastros</SelectItem>
                             <SelectItem value="awareness">Brand Awareness</SelectItem>
                             <SelectItem value="downloads">Downloads</SelectItem>
+                            <SelectItem value="outro">Outro</SelectItem>
                           </SelectContent>
                         </Select>
+                        {showLandingPageGoalOther && (
+                          <Input
+                            {...register('landingPageGoalOther')}
+                            placeholder="Especifique o objetivo"
+                            className={`${themeClasses.input} h-9 text-sm mt-2`}
+                            onChange={(e) => setValue('landingPageGoalOther' as any, e.target.value)}
+                          />
+                        )}
                       </div>
 
                       <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-purple-500/10 border-purple-500/20' : 'bg-purple-50 border-purple-200'} border`}>
