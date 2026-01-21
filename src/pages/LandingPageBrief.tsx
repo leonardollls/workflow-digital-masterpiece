@@ -1009,7 +1009,7 @@ const LandingPageBrief = () => {
                   variant="outline"
                   onClick={handlePrevTab}
                   disabled={currentTab === 1}
-                  className={`${isDarkMode ? 'border-white/30 bg-white/5 text-white hover:bg-white/15 hover:border-white/40' : 'border-slate-200 text-slate-700 hover:bg-slate-100'} disabled:opacity-50`}
+                  className={`${isDarkMode ? 'border-white/30 bg-white/5 text-white hover:bg-white/15 hover:border-white/40' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400'} disabled:opacity-50`}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   Anterior

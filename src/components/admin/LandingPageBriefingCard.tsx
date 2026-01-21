@@ -361,34 +361,83 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                             <p className="text-white mt-1 whitespace-pre-wrap">{briefing.main_benefits}</p>
                           </div>
                         )}
+                        
+                        {briefing.number_of_offers && (
+                          <div>
+                            <label className="text-sm font-medium text-slate-400">16. Quantidade de Ofertas</label>
+                            <p className="text-white mt-1">{briefing.number_of_offers}</p>
+                          </div>
+                        )}
+                        
+                        {briefing.pricing_model && (
+                          <div>
+                            <label className="text-sm font-medium text-slate-400">17. Modelo de Cobrança</label>
+                            <p className="text-white mt-1">{briefing.pricing_model}</p>
+                          </div>
+                        )}
+                        
+                        {briefing.offer_details && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-slate-400">18. Detalhes das Ofertas</label>
+                            <p className="text-white mt-1 whitespace-pre-wrap">{briefing.offer_details}</p>
+                          </div>
+                        )}
+                        
+                        {briefing.guarantees && (
+                          <div className="md:col-span-2">
+                            <label className="text-sm font-medium text-slate-400">19. Garantias</label>
+                            <p className="text-white mt-1">{briefing.guarantees}</p>
+                          </div>
+                        )}
                       </div>
                     </section>
 
                     {/* Seção 4: Conversão & Argumentos */}
-                    {(briefing.call_to_action || briefing.lead_destination || briefing.sales_arguments) && (
+                    {(briefing.target_results || briefing.urgency_factors || briefing.objections || briefing.call_to_action || briefing.lead_destination || briefing.sales_arguments) && (
                       <section>
                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-white">
                           <Target className="w-5 h-5 text-orange-400" />
                           Step 4: Conversão & Argumentos
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                          {briefing.target_results && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">20. Resultados Esperados</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.target_results}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.urgency_factors && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">21. Fatores de Urgência</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.urgency_factors}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.objections && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">22. Objeções dos Clientes</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.objections}</p>
+                            </div>
+                          )}
+                          
                           {briefing.call_to_action && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">16. CTA Principal</label>
+                              <label className="text-sm font-medium text-slate-400">23. CTA Principal</label>
                               <p className="text-white mt-1">{briefing.call_to_action}</p>
                             </div>
                           )}
                           
                           {briefing.lead_destination && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">17. Destino dos Leads</label>
+                              <label className="text-sm font-medium text-slate-400">24. Destino dos Leads</label>
                               <p className="text-white mt-1">{briefing.lead_destination}</p>
                             </div>
                           )}
                           
                           {briefing.sales_arguments && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">18. Principais Argumentos de Venda</label>
+                              <label className="text-sm font-medium text-slate-400">25. Principais Argumentos de Venda</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.sales_arguments}</p>
                             </div>
                           )}
@@ -397,7 +446,7 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                     )}
 
                     {/* Seção 5: Design & Identidade */}
-                    {(briefing.brand_colors || briefing.has_logo || briefing.brand_personality) && (
+                    {(briefing.brand_colors || briefing.has_logo || briefing.logo_files || briefing.visual_references || briefing.visual_files || briefing.content_materials || briefing.material_files || briefing.brand_personality || briefing.communication_tone || briefing.key_messages) && (
                       <section>
                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-white">
                           <Palette className="w-5 h-5 text-pink-400" />
@@ -406,22 +455,199 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                           {briefing.brand_colors && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">19. Cores da Marca</label>
+                              <label className="text-sm font-medium text-slate-400">26. Cores da Marca</label>
                               <p className="text-white mt-1">{briefing.brand_colors}</p>
                             </div>
                           )}
                           
                           {briefing.has_logo && (
                             <div>
-                              <label className="text-sm font-medium text-slate-400">20. Logo</label>
+                              <label className="text-sm font-medium text-slate-400">27. Logo</label>
                               <p className="text-white mt-1">{briefing.has_logo}</p>
+                            </div>
+                          )}
+                          
+                          {/* Arquivos de Logo */}
+                          {briefing.logo_files && briefing.logo_files.length > 0 && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">28. Arquivos de Logo Enviados</label>
+                              <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {briefing.logo_files.map((fileUrl, index) => (
+                                  <div key={index} className="relative group">
+                                    <div className="w-full h-24 rounded-lg overflow-hidden bg-slate-700 border border-slate-600">
+                                      {fileUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) ? (
+                                        <img 
+                                          src={fileUrl} 
+                                          alt={`Logo ${index + 1}`}
+                                          className="w-full h-full object-contain p-1"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          <ImageIcon className="w-8 h-8 text-slate-400" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <a 
+                                      href={fileUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs"
+                                    >
+                                      Ver arquivo
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {briefing.logo_files.map((fileUrl, index) => (
+                                  <a
+                                    key={index}
+                                    href={fileUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-pink-400 hover:text-pink-300 text-sm underline"
+                                  >
+                                    Logo {index + 1}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {briefing.visual_references && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">29. Referências Visuais</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.visual_references}</p>
+                            </div>
+                          )}
+                          
+                          {/* Arquivos de Referências Visuais */}
+                          {briefing.visual_files && briefing.visual_files.length > 0 && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">30. Arquivos de Referências Visuais</label>
+                              <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {briefing.visual_files.map((fileUrl, index) => (
+                                  <div key={index} className="relative group">
+                                    <div className="w-full h-24 rounded-lg overflow-hidden bg-slate-700 border border-slate-600">
+                                      {fileUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) ? (
+                                        <img 
+                                          src={fileUrl} 
+                                          alt={`Referência visual ${index + 1}`}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          <ImageIcon className="w-8 h-8 text-slate-400" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <a 
+                                      href={fileUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs"
+                                    >
+                                      Ver arquivo
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {briefing.visual_files.map((fileUrl, index) => (
+                                  <a
+                                    key={index}
+                                    href={fileUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-pink-400 hover:text-pink-300 text-sm underline"
+                                  >
+                                    Referência {index + 1}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {briefing.content_materials && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">31. Materiais para Landing</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.content_materials}</p>
+                            </div>
+                          )}
+                          
+                          {/* Arquivos de Materiais */}
+                          {briefing.material_files && briefing.material_files.length > 0 && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">32. Arquivos de Materiais Enviados</label>
+                              <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {briefing.material_files.map((fileUrl, index) => (
+                                  <div key={index} className="relative group">
+                                    <div className="w-full h-24 rounded-lg overflow-hidden bg-slate-700 border border-slate-600">
+                                      {fileUrl.match(/\.(jpg|jpeg|png|gif|webp|svg|mp4|mov|avi)$/i) ? (
+                                        fileUrl.match(/\.(mp4|mov|avi)$/i) ? (
+                                          <video 
+                                            src={fileUrl}
+                                            className="w-full h-full object-cover"
+                                            controls={false}
+                                          />
+                                        ) : (
+                                          <img 
+                                            src={fileUrl} 
+                                            alt={`Material ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                          />
+                                        )
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          <ImageIcon className="w-8 h-8 text-slate-400" />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <a 
+                                      href={fileUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs"
+                                    >
+                                      Ver arquivo
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {briefing.material_files.map((fileUrl, index) => (
+                                  <a
+                                    key={index}
+                                    href={fileUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-pink-400 hover:text-pink-300 text-sm underline"
+                                  >
+                                    Material {index + 1}
+                                  </a>
+                                ))}
+                              </div>
                             </div>
                           )}
                           
                           {briefing.brand_personality && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">21. Personalidade da Marca</label>
+                              <label className="text-sm font-medium text-slate-400">33. Personalidade da Marca</label>
                               <p className="text-white mt-1">{briefing.brand_personality}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.communication_tone && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">34. Tom de Comunicação</label>
+                              <p className="text-white mt-1">{briefing.communication_tone}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.key_messages && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">35. Mensagens-Chave</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.key_messages}</p>
                             </div>
                           )}
                         </div>
@@ -429,7 +655,7 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                     )}
 
                     {/* Seção 6: Estrutura & Funcionalidades */}
-                    {(briefing.landing_page_sections || briefing.specific_requirements) && (
+                    {(briefing.landing_page_sections || briefing.specific_requirements || briefing.desired_domain || briefing.integrations || briefing.analytics_tracking) && (
                       <section>
                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-white">
                           <LayoutGrid className="w-5 h-5 text-cyan-400" />
@@ -438,15 +664,36 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                           {briefing.landing_page_sections && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">22. Seções da Landing Page</label>
+                              <label className="text-sm font-medium text-slate-400">36. Seções da Landing Page</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.landing_page_sections}</p>
                             </div>
                           )}
                           
                           {briefing.specific_requirements && (
                             <div className="md:col-span-2">
-                              <label className="text-sm font-medium text-slate-400">23. Requisitos Específicos</label>
+                              <label className="text-sm font-medium text-slate-400">37. Requisitos Específicos</label>
                               <p className="text-white mt-1 whitespace-pre-wrap">{briefing.specific_requirements}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.desired_domain && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">38. Domínio Desejado</label>
+                              <p className="text-white mt-1">{briefing.desired_domain}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.integrations && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">39. Integrações Necessárias</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.integrations}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.analytics_tracking && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">40. Analytics e Tracking</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.analytics_tracking}</p>
                             </div>
                           )}
                         </div>
@@ -454,17 +701,40 @@ export const LandingPageBriefingCard = ({ briefing, onUpdate, onDelete }: Landin
                     )}
 
                     {/* Seção 7: Finalização */}
-                    {briefing.additional_notes && (
+                    {(briefing.additional_notes || briefing.deadline || briefing.budget || briefing.start_date) && (
                       <section>
                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-white">
                           <FileCheck className="w-5 h-5 text-green-400" />
                           Step 7: Finalização
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                          <div className="md:col-span-2">
-                            <label className="text-sm font-medium text-slate-400">24. Observações Adicionais</label>
-                            <p className="text-white mt-1 whitespace-pre-wrap">{briefing.additional_notes}</p>
-                          </div>
+                          {briefing.additional_notes && (
+                            <div className="md:col-span-2">
+                              <label className="text-sm font-medium text-slate-400">41. Observações Adicionais</label>
+                              <p className="text-white mt-1 whitespace-pre-wrap">{briefing.additional_notes}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.deadline && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">42. Prazo de Entrega</label>
+                              <p className="text-white mt-1">{briefing.deadline}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.budget && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">43. Orçamento</label>
+                              <p className="text-white mt-1">{briefing.budget}</p>
+                            </div>
+                          )}
+                          
+                          {briefing.start_date && (
+                            <div>
+                              <label className="text-sm font-medium text-slate-400">44. Data de Início</label>
+                              <p className="text-white mt-1">{briefing.start_date}</p>
+                            </div>
+                          )}
                         </div>
                       </section>
                     )}
