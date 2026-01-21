@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { getBriefings, getInstitutionalBriefings, getLogoBriefings, deleteLogoBriefing, getDentalBriefings, deleteDentalBriefing } from '@/services/briefingService'
+import { getBriefings, getInstitutionalBriefings, getLogoBriefings, deleteLogoBriefing, getDentalBriefings, deleteDentalBriefing, getLandingPageBriefings, deleteLandingPageBriefing } from '@/services/briefingService'
+import type { LandingPageBriefing } from '@/services/briefingService'
 import { BriefingCard } from '@/components/admin/BriefingCard'
 import { DentalBriefingCard } from '@/components/admin/DentalBriefingCard'
+import { LandingPageBriefingCard } from '@/components/admin/LandingPageBriefingCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -39,10 +41,12 @@ const AdminDashboard = () => {
   const { user, signOut } = useAuth()
   
   const [briefings, setBriefings] = useState<ClientBriefing[]>([])
+  const [landingPageBriefings, setLandingPageBriefings] = useState<LandingPageBriefing[]>([])
   const [institutionalBriefings, setInstitutionalBriefings] = useState<InstitutionalBriefing[]>([])
   const [logoBriefings, setLogoBriefings] = useState<LogoBriefing[]>([])
   const [dentalBriefings, setDentalBriefings] = useState<DentalBriefing[]>([])
   const [filteredBriefings, setFilteredBriefings] = useState<ClientBriefing[]>([])
+  const [filteredLandingPageBriefings, setFilteredLandingPageBriefings] = useState<LandingPageBriefing[]>([])
   const [filteredInstitutionalBriefings, setFilteredInstitutionalBriefings] = useState<InstitutionalBriefing[]>([])
   const [filteredLogoBriefings, setFilteredLogoBriefings] = useState<LogoBriefing[]>([])
   const [filteredDentalBriefings, setFilteredDentalBriefings] = useState<DentalBriefing[]>([])
@@ -60,7 +64,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     filterBriefings()
-  }, [briefings, institutionalBriefings, logoBriefings, dentalBriefings, searchTerm, budgetFilter, urgencyFilter, segmentFilter, activeTab])
+  }, [briefings, landingPageBriefings, institutionalBriefings, logoBriefings, dentalBriefings, searchTerm, budgetFilter, urgencyFilter, segmentFilter, activeTab])
 
   const loadAllBriefings = async () => {
     try {
@@ -86,19 +90,22 @@ const AdminDashboard = () => {
       console.log('🔄 [DEBUG] Resultado do teste direto institucionais:', { institutionalTestData, institutionalTestError })
       
       // Carregar dados via services
-      const [landingPagesData, institutionalData, logoData, dentalData] = await Promise.all([
+      const [landingPagesData, newLandingPageData, institutionalData, logoData, dentalData] = await Promise.all([
         getBriefings(),
+        getLandingPageBriefings(),
         getInstitutionalBriefings(),
         getLogoBriefings(),
         getDentalBriefings()
       ])
       
-      console.log('✅ [DEBUG] Landing pages carregados:', landingPagesData?.length || 0)
+      console.log('✅ [DEBUG] Landing pages (antigos) carregados:', landingPagesData?.length || 0)
+      console.log('✅ [DEBUG] Landing pages (novos) carregados:', newLandingPageData?.length || 0)
       console.log('✅ [DEBUG] Briefings institucionais carregados:', institutionalData?.length || 0)
       console.log('✅ [DEBUG] Briefings de logo carregados:', logoData?.length || 0)
       console.log('✅ [DEBUG] Briefings odontológicos carregados:', dentalData?.length || 0)
       
       setBriefings(landingPagesData || [])
+      setLandingPageBriefings(newLandingPageData || [])
       setInstitutionalBriefings(institutionalData || [])
       setLogoBriefings(logoData || [])
       setDentalBriefings(dentalData || [])
@@ -145,6 +152,14 @@ const AdminDashboard = () => {
 
   const handleDentalBriefingUpdate = (updatedBriefing: DentalBriefing) => {
     setDentalBriefings(prev => 
+      prev.map(briefing => 
+        briefing.id === updatedBriefing.id ? updatedBriefing : briefing
+      )
+    )
+  }
+
+  const handleLandingPageBriefingUpdate = (updatedBriefing: LandingPageBriefing) => {
+    setLandingPageBriefings(prev => 
       prev.map(briefing => 
         briefing.id === updatedBriefing.id ? updatedBriefing : briefing
       )
@@ -277,6 +292,32 @@ const AdminDashboard = () => {
     }, 1000)
   }
 
+  const handleLandingPageBriefingDelete = async (briefingId: string) => {
+    console.log('🗑️ AdminDashboard: Processando exclusão do briefing de landing page (novo):', briefingId)
+    
+    try {
+      // Excluir do banco de dados primeiro
+      await deleteLandingPageBriefing(briefingId)
+      console.log('✅ Briefing de landing page excluído do banco de dados')
+      
+      // Remover do estado local
+      setLandingPageBriefings(prev => {
+        const filtered = prev.filter(briefing => briefing.id !== briefingId)
+        console.log('📊 Briefings de landing page restantes após exclusão:', filtered.length)
+        return filtered
+      })
+    } catch (error) {
+      console.error('❌ Erro ao excluir briefing de landing page:', error)
+      alert('Erro ao excluir briefing. Tente novamente.')
+    }
+    
+    // Aguardar um pouco antes de recarregar para evitar conflitos
+    setTimeout(async () => {
+      console.log('🔄 Recarregando dados após exclusão...')
+      await loadAllBriefings()
+    }, 1000)
+  }
+
   const filterBriefings = () => {
     // Filtrar briefings de landing pages
     let filtered = briefings
@@ -312,6 +353,25 @@ const AdminDashboard = () => {
     }
 
     setFilteredBriefings(filtered)
+
+    // Filtrar novos briefings de landing page (da tabela landing_page_briefings)
+    let filteredNewLandingPages = landingPageBriefings
+
+    if (searchTerm) {
+      filteredNewLandingPages = filteredNewLandingPages.filter(briefing =>
+        briefing.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        briefing.business_segment.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        briefing.responsible_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (segmentFilter !== 'all') {
+      filteredNewLandingPages = filteredNewLandingPages.filter(briefing => 
+        briefing.business_segment.toLowerCase().includes(segmentFilter.toLowerCase())
+      )
+    }
+
+    setFilteredLandingPageBriefings(filteredNewLandingPages)
 
     // Filtrar briefings institucionais
     let filteredInstitutional = institutionalBriefings
@@ -374,8 +434,8 @@ const AdminDashboard = () => {
   }
 
   const getStats = () => {
-    const totalBriefings = briefings.length + institutionalBriefings.length + logoBriefings.length + dentalBriefings.length
-    const totalLandingPages = briefings.length
+    const totalBriefings = briefings.length + landingPageBriefings.length + institutionalBriefings.length + logoBriefings.length + dentalBriefings.length
+    const totalLandingPages = briefings.length + landingPageBriefings.length
     const totalInstitutional = institutionalBriefings.length
     const totalLogos = logoBriefings.length
     const totalDental = dentalBriefings.length
@@ -385,8 +445,13 @@ const AdminDashboard = () => {
       return days <= 10
     }).length
     
-    // Calcular valor total das propostas (apenas landing pages por enquanto)
+    // Calcular valor total das propostas (landing pages antigas)
     const totalProposalValue = briefings.reduce((sum, b) => {
+      return sum + (b.proposal_value || 0)
+    }, 0)
+
+    // Calcular valor total das propostas de landing pages novas
+    const totalNewLandingPageProposalValue = landingPageBriefings.reduce((sum, b) => {
       return sum + (b.proposal_value || 0)
     }, 0)
 
@@ -407,12 +472,13 @@ const AdminDashboard = () => {
 
     // Contar briefings com propostas
     const briefingsWithProposals = briefings.filter(b => b.proposal_value).length
+    const newLandingPageBriefingsWithProposals = landingPageBriefings.filter(b => b.proposal_value).length
     const institutionalBriefingsWithProposals = institutionalBriefings.filter(b => b.proposal_value).length
     const logoBriefingsWithProposals = logoBriefings.filter(b => b.proposal_value).length
     const dentalBriefingsWithProposals = dentalBriefings.filter(b => b.proposal_value).length
 
     // Combinar segmentos de todos os tipos
-    const allBriefings = [...briefings, ...institutionalBriefings, ...logoBriefings, ...dentalBriefings.map(d => ({ ...d, business_segment: 'odontologia' }))]
+    const allBriefings = [...briefings, ...landingPageBriefings, ...institutionalBriefings, ...logoBriefings, ...dentalBriefings.map(d => ({ ...d, business_segment: 'odontologia' }))]
     const segmentCounts = allBriefings.reduce((acc, b) => {
       acc[b.business_segment] = (acc[b.business_segment] || 0) + 1
       return acc
@@ -429,8 +495,8 @@ const AdminDashboard = () => {
       totalLogos,
       totalDental,
       urgentCount,
-      totalProposalValue: totalProposalValue + totalInstitutionalProposalValue + totalLogoProposalValue + totalDentalProposalValue,
-      briefingsWithProposals: briefingsWithProposals + institutionalBriefingsWithProposals + logoBriefingsWithProposals + dentalBriefingsWithProposals,
+      totalProposalValue: totalProposalValue + totalNewLandingPageProposalValue + totalInstitutionalProposalValue + totalLogoProposalValue + totalDentalProposalValue,
+      briefingsWithProposals: briefingsWithProposals + newLandingPageBriefingsWithProposals + institutionalBriefingsWithProposals + logoBriefingsWithProposals + dentalBriefingsWithProposals,
       topSegment: topSegment[0] || 'Nenhum'
     }
   }
@@ -659,7 +725,10 @@ const AdminDashboard = () => {
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-white">
-                  Briefings de Landing Pages ({filteredBriefings.length})
+                  Briefings de Landing Pages ({filteredBriefings.length + filteredLandingPageBriefings.length})
+                  <span className="ml-3 text-sm font-normal text-slate-400">
+                    Novos: {filteredLandingPageBriefings.length} | Antigos: {filteredBriefings.length}
+                  </span>
             </h2>
             <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
               <Download className="w-4 h-4" />
@@ -667,7 +736,7 @@ const AdminDashboard = () => {
             </Button>
           </div>
 
-          {filteredBriefings.length === 0 ? (
+          {filteredBriefings.length === 0 && filteredLandingPageBriefings.length === 0 ? (
             <Card className="bg-slate-900 border-slate-800">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <FileText className="w-12 h-12 text-slate-500 mb-4" />
@@ -675,7 +744,7 @@ const AdminDashboard = () => {
                       Nenhum briefing de landing page encontrado
                 </h3>
                 <p className="text-slate-400 text-center max-w-md">
-                  {briefings.length === 0 
+                  {briefings.length === 0 && landingPageBriefings.length === 0
                         ? "Ainda não há briefings de landing pages enviados. Quando os clientes enviarem briefings, eles aparecerão aqui."
                     : "Nenhum briefing corresponde aos filtros aplicados. Tente ajustar os critérios de busca."
                   }
@@ -684,6 +753,20 @@ const AdminDashboard = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {/* Novos briefings de landing page (tabela landing_page_briefings) */}
+              {filteredLandingPageBriefings.map((briefing) => (
+                <div key={briefing.id} className="relative">
+                  <Badge className="absolute -top-2 -right-2 z-10 bg-purple-600 hover:bg-purple-700">
+                    Novo Formulário
+                  </Badge>
+                  <LandingPageBriefingCard 
+                    briefing={briefing} 
+                    onUpdate={handleLandingPageBriefingUpdate}
+                    onDelete={handleLandingPageBriefingDelete}
+                  />
+                </div>
+              ))}
+              {/* Briefings antigos (tabela client_briefings) */}
               {filteredBriefings.map((briefing) => (
                 <BriefingCard 
                   key={briefing.id} 

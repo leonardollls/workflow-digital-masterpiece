@@ -1571,4 +1571,410 @@ export const addDentalProposalValue = async (id: string, proposalValue: number):
     console.error('❌ [DENTAL-DEBUG] Erro geral ao adicionar valor da proposta:', error);
     throw error;
   }
+};
+
+// ============================================================================
+// BRIEFING DE LANDING PAGE / PÁGINA DE VENDAS
+// ============================================================================
+
+// Tipo para o formulário de briefing de landing page
+export interface LandingPageBriefForm {
+  // Seção 1: Sobre sua Empresa
+  companyName?: string
+  businessSegment?: string
+  businessDescription?: string
+  targetAudience?: string
+  competitiveDifferential?: string
+  landingPageGoal?: string
+  
+  // Seção 2: Estratégia & Mercado
+  mainCompetitors?: string
+  customerPainPoints?: string
+  successStories?: string
+  socialProof?: string
+  
+  // Seção 3: Produto/Serviço
+  responsibleName?: string
+  currentWebsite?: string
+  productName?: string
+  productDescription?: string
+  mainBenefits?: string
+  numberOfOffers?: string
+  offerDetails?: string
+  pricingModel?: string
+  guarantees?: string
+  productDifferentials?: string
+  
+  // Seção 4: Conversão & Argumentos
+  targetResults?: string
+  urgencyFactors?: string
+  objections?: string
+  callToAction?: string
+  leadDestination?: string
+  salesArguments?: string
+  
+  // Seção 5: Design & Identidade
+  brandColors?: string
+  hasLogo?: string
+  logoFiles?: FileList | null
+  visualReferences?: string
+  visualFiles?: FileList | null
+  contentMaterials?: string
+  materialFiles?: FileList | null
+  brandPersonality?: string
+  communicationTone?: string
+  keyMessages?: string
+  
+  // Seção 6: Estrutura & Funcionalidades
+  landingPageSections?: string
+  specificRequirements?: string
+  desiredDomain?: string
+  hostingPreference?: string
+  integrations?: string
+  analytics?: string
+  
+  // Seção 7: Finalização
+  additionalNotes?: string
+  projectTimeline?: string
+  preferredContact?: string
+  agreedTerms: boolean
+}
+
+// Tipo para briefing de landing page salvo
+export interface LandingPageBriefing {
+  id: string
+  company_name: string
+  business_segment: string
+  business_description: string
+  target_audience: string
+  competitive_differential: string
+  landing_page_goal: string
+  main_competitors?: string
+  customer_pain_points?: string
+  success_stories?: string
+  social_proof?: string
+  responsible_name: string
+  current_website?: string
+  product_name: string
+  product_description: string
+  main_benefits: string
+  number_of_offers?: string
+  offer_details?: string
+  pricing_model?: string
+  guarantees?: string
+  target_results?: string
+  urgency_factors?: string
+  objections?: string
+  call_to_action: string
+  lead_destination: string
+  brand_colors?: string
+  has_logo: string
+  logo_files?: string[]
+  visual_references?: string
+  visual_files?: string[]
+  content_materials?: string
+  material_files?: string[]
+  brand_personality?: string
+  communication_tone?: string
+  key_messages?: string
+  landing_page_sections?: string
+  specific_requirements?: string
+  desired_domain?: string
+  integrations?: string
+  analytics_tracking?: string
+  additional_notes?: string
+  agreed_terms: boolean
+  deadline?: string
+  budget?: string
+  start_date?: string
+  proposal_value?: number
+  proposal_date?: string
+  created_at: string
+  updated_at: string
+}
+
+// Função para salvar briefing de landing page
+export const submitLandingPageBriefing = async (formData: LandingPageBriefForm): Promise<LandingPageBriefing> => {
+  console.log('🚀 Iniciando submitLandingPageBriefing...', { 
+    device: navigator.userAgent,
+    online: navigator.onLine,
+    timestamp: new Date().toISOString()
+  });
+  
+  try {
+    // 1. Upload de arquivos
+    console.log('📁 [LANDING-DEBUG] Fazendo upload de arquivos...');
+    let logoUrls: string[] = [];
+    let visualUrls: string[] = [];
+    let materialUrls: string[] = [];
+    
+    try {
+      [logoUrls, visualUrls, materialUrls] = await Promise.all([
+        uploadFiles(formData.logoFiles, 'briefing-files', 'landing-page-logos'),
+        uploadFiles(formData.visualFiles, 'briefing-files', 'landing-page-visual-references'),
+        uploadFiles(formData.materialFiles, 'briefing-files', 'landing-page-materials')
+      ]);
+      console.log('✅ [LANDING-DEBUG] Upload de arquivos concluído:', { 
+        logoUrls: logoUrls.length, 
+        visualUrls: visualUrls.length,
+        materialUrls: materialUrls.length
+      });
+    } catch (uploadError) {
+      console.error('❌ [LANDING-DEBUG] Erro no upload de arquivos:', uploadError);
+      // Continuar mesmo com erro no upload
+      logoUrls = [];
+      visualUrls = [];
+      materialUrls = [];
+    }
+
+    // 2. Preparar dados para o banco
+    console.log('📝 [LANDING-DEBUG] Preparando dados para o banco...');
+    const briefingData = {
+      // Seção 1: Sobre sua Empresa
+      company_name: formData.companyName || 'Nome não informado',
+      business_segment: formData.businessSegment || 'Segmento não informado',
+      business_description: formData.businessDescription || 'Descrição não informada',
+      target_audience: formData.targetAudience || 'Público-alvo não informado',
+      competitive_differential: formData.competitiveDifferential || 'Diferencial não informado',
+      landing_page_goal: formData.landingPageGoal || 'Objetivo não informado',
+      
+      // Seção 2: Estratégia & Mercado
+      main_competitors: formData.mainCompetitors || null,
+      customer_pain_points: formData.customerPainPoints || null,
+      success_stories: formData.successStories || null,
+      social_proof: formData.socialProof || null,
+      
+      // Seção 3: Produto/Serviço
+      responsible_name: formData.responsibleName || 'Responsável não informado',
+      current_website: formData.currentWebsite || null,
+      product_name: formData.productName || 'Produto não informado',
+      product_description: formData.productDescription || 'Descrição do produto não informada',
+      main_benefits: formData.mainBenefits || 'Benefícios não informados',
+      number_of_offers: formData.numberOfOffers || null,
+      offer_details: formData.offerDetails || null,
+      pricing_model: formData.pricingModel || null,
+      guarantees: formData.guarantees || null,
+      
+      // Seção 4: Conversão & Argumentos
+      target_results: formData.targetResults || null,
+      urgency_factors: formData.urgencyFactors || null,
+      objections: formData.objections || null,
+      call_to_action: formData.callToAction || 'CTA não informado',
+      lead_destination: formData.leadDestination || 'Destino não informado',
+      
+      // Seção 5: Design & Identidade
+      brand_colors: formData.brandColors || null,
+      has_logo: formData.hasLogo || 'Não informado',
+      logo_files: logoUrls.length > 0 ? logoUrls : null,
+      visual_references: formData.visualReferences || null,
+      visual_files: visualUrls.length > 0 ? visualUrls : null,
+      content_materials: formData.contentMaterials || null,
+      material_files: materialUrls.length > 0 ? materialUrls : null,
+      brand_personality: formData.brandPersonality || null,
+      communication_tone: formData.communicationTone || null,
+      key_messages: formData.keyMessages || null,
+      
+      // Seção 6: Estrutura & Funcionalidades
+      landing_page_sections: formData.landingPageSections || null,
+      specific_requirements: formData.specificRequirements || null,
+      desired_domain: formData.desiredDomain || null,
+      integrations: formData.integrations || null,
+      analytics_tracking: formData.analytics || null,
+      
+      // Seção 7: Finalização
+      additional_notes: formData.additionalNotes || null,
+      agreed_terms: formData.agreedTerms || false,
+      
+      // Campos administrativos
+      deadline: 'Valor Acordado na Workana',
+      budget: 'Valor Acordado na Workana',
+      
+      // Metadados
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    console.log('📋 [LANDING-DEBUG] Dados preparados para o banco:', {
+      totalFields: Object.keys(briefingData).length,
+      companyName: briefingData.company_name,
+      responsibleName: briefingData.responsible_name,
+      hasLogo: briefingData.has_logo,
+      logoFilesCount: briefingData.logo_files?.length || 0,
+      visualFilesCount: briefingData.visual_files?.length || 0,
+      materialFilesCount: briefingData.material_files?.length || 0,
+      agreedTerms: briefingData.agreed_terms
+    });
+
+    // 3. Salvar no Supabase com retry
+    console.log('💾 [LANDING-DEBUG] Salvando no Supabase...');
+    
+    const savedBriefing = await retryOperation(async () => {
+      const { data, error } = await supabase
+        .from('landing_page_briefings')
+        .insert([briefingData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [LANDING-DEBUG] Erro do Supabase:', error);
+        throw new Error(`Erro do banco: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error('Nenhum dado retornado do banco');
+      }
+
+      return data;
+    }, 3, 1000);
+
+    console.log('✅ [LANDING-DEBUG] Briefing de landing page salvo com sucesso:', savedBriefing.id);
+
+    return savedBriefing;
+
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral no submitLandingPageBriefing:', error);
+    
+    // Melhorar mensagem de erro
+    let errorMessage = 'Erro desconhecido';
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        errorMessage = 'Briefing duplicado detectado';
+      } else if (error.message.includes('connection')) {
+        errorMessage = 'Erro de conexão com o banco de dados';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Tempo limite excedido';
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
+    throw new Error(`Erro ao salvar briefing de landing page: ${errorMessage}`);
+  }
+};
+
+// Função para buscar briefings de landing page
+export const getLandingPageBriefings = async (): Promise<LandingPageBriefing[]> => {
+  console.log('🚀 [LANDING-DEBUG] Buscando briefings de landing page...');
+  
+  try {
+    const { data, error } = await supabase
+      .from('landing_page_briefings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('❌ [LANDING-DEBUG] Erro ao buscar briefings:', error);
+      throw new Error(`Erro ao buscar briefings: ${error.message}`);
+    }
+
+    console.log('✅ [LANDING-DEBUG] Briefings encontrados:', data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral ao buscar briefings:', error);
+    throw error;
+  }
+};
+
+// Função para buscar um briefing de landing page específico
+export const getLandingPageBriefing = async (id: string): Promise<LandingPageBriefing | null> => {
+  console.log('🚀 [LANDING-DEBUG] Buscando briefing de landing page:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('landing_page_briefings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        console.log('ℹ️ [LANDING-DEBUG] Briefing não encontrado:', id);
+        return null;
+      }
+      console.error('❌ [LANDING-DEBUG] Erro ao buscar briefing:', error);
+      throw new Error(`Erro ao buscar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [LANDING-DEBUG] Briefing encontrado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral ao buscar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para deletar briefing de landing page
+export const deleteLandingPageBriefing = async (id: string): Promise<void> => {
+  console.log('🗑️ [LANDING-DEBUG] Deletando briefing de landing page:', id);
+  
+  try {
+    const { error } = await supabase
+      .from('landing_page_briefings')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('❌ [LANDING-DEBUG] Erro ao deletar briefing:', error);
+      throw new Error(`Erro ao deletar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [LANDING-DEBUG] Briefing de landing page deletado:', id);
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral ao deletar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para atualizar briefing de landing page
+export const updateLandingPageBriefing = async (id: string, updates: Partial<LandingPageBriefing>): Promise<LandingPageBriefing> => {
+  console.log('📝 [LANDING-DEBUG] Atualizando briefing de landing page:', id);
+  
+  try {
+    const { data, error } = await supabase
+      .from('landing_page_briefings')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [LANDING-DEBUG] Erro ao atualizar briefing:', error);
+      throw new Error(`Erro ao atualizar briefing: ${error.message}`);
+    }
+
+    console.log('✅ [LANDING-DEBUG] Briefing atualizado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral ao atualizar briefing:', error);
+    throw error;
+  }
+};
+
+// Função para adicionar valor da proposta ao briefing de landing page
+export const addLandingPageProposalValue = async (id: string, proposalValue: number): Promise<LandingPageBriefing> => {
+  console.log('💰 [LANDING-DEBUG] Adicionando valor da proposta:', { id, proposalValue });
+  
+  try {
+    const { data, error } = await supabase
+      .from('landing_page_briefings')
+      .update({ 
+        proposal_value: proposalValue,
+        proposal_date: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ [LANDING-DEBUG] Erro ao adicionar valor da proposta:', error);
+      throw new Error(`Erro ao adicionar valor da proposta: ${error.message}`);
+    }
+
+    console.log('✅ [LANDING-DEBUG] Valor da proposta adicionado:', data?.id);
+    return data;
+  } catch (error) {
+    console.error('❌ [LANDING-DEBUG] Erro geral ao adicionar valor da proposta:', error);
+    throw error;
+  }
 }; 
