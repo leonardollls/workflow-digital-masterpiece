@@ -35,3 +35,7 @@ export { default as EstadoDaArteSplashLoader } from './EstadoDaArteSplashLoader'
 export { default as EZOdontologiaSplashLoader } from './EZOdontologiaSplashLoader';
 export { default as FlachSplashLoader } from './FlachSplashLoader';
 export { default as HostingBonusSection } from './HostingBonusSection';
+export { default as DraJuliaSplashLoader } from './DraJuliaSplashLoader';
+export { default as AdminPanelShowcaseDraJulia } from './AdminPanelShowcaseDraJulia';
+export { default as OdontoVipSplashLoader } from './OdontoVipSplashLoader';
+export { default as AdminPanelShowcaseOdontoVip } from './AdminPanelShowcaseOdontoVip';
