@@ -35,6 +35,7 @@ const VendasCenter = lazy(() => import("./pages/VendasCenter"));
 const VendasEZ = lazy(() => import("./pages/VendasEZ"));
 const VendasDraJulia = lazy(() => import("./pages/VendasDraJulia"));
 const VendasOdontoVip = lazy(() => import("./pages/VendasOdontoVip"));
+const VendasVonDentz = lazy(() => import("./pages/VendasVonDentz"));
 const CheckoutLauren = lazy(() => import("./pages/CheckoutLauren"));
 const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("./pages/CheckoutCancel"));
@@ -263,6 +264,8 @@ function App() {
               <Route path="/site/drajulia-odontologia" element={<VendasDraJulia />} />
               <Route path="/site/odontovip" element={<Navigate to="/site/odontovip-caxias" replace />} />
               <Route path="/site/odontovip-caxias" element={<VendasOdontoVip />} />
+              <Route path="/site/vondentz" element={<Navigate to="/site/vondentz-odontologia" replace />} />
+              <Route path="/site/vondentz-odontologia" element={<VendasVonDentz />} />
               {/* Checkout Routes */}
               <Route path="/checkout/lauren" element={<CheckoutLauren />} />
               <Route path="/checkout/sucesso" element={<CheckoutSuccess />} />

@@ -39,3 +39,5 @@ export { default as DraJuliaSplashLoader } from './DraJuliaSplashLoader';
 export { default as AdminPanelShowcaseDraJulia } from './AdminPanelShowcaseDraJulia';
 export { default as OdontoVipSplashLoader } from './OdontoVipSplashLoader';
 export { default as AdminPanelShowcaseOdontoVip } from './AdminPanelShowcaseOdontoVip';
+export { default as VonDentzSplashLoader } from './VonDentzSplashLoader';
+export { default as AdminPanelShowcaseVonDentz } from './AdminPanelShowcaseVonDentz';

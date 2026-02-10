@@ -89,6 +89,16 @@
       "source": "/site/ez/",
       "destination": "/site/ez-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/vondentz",
+      "destination": "/site/vondentz-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/vondentz/",
+      "destination": "/site/vondentz-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [
