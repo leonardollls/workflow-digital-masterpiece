@@ -99,6 +99,16 @@
       "source": "/site/vondentz/",
       "destination": "/site/vondentz-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/vitta",
+      "destination": "/site/vitta-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/vitta/",
+      "destination": "/site/vitta-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [

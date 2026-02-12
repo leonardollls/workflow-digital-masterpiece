@@ -41,3 +41,5 @@ export { default as OdontoVipSplashLoader } from './OdontoVipSplashLoader';
 export { default as AdminPanelShowcaseOdontoVip } from './AdminPanelShowcaseOdontoVip';
 export { default as VonDentzSplashLoader } from './VonDentzSplashLoader';
 export { default as AdminPanelShowcaseVonDentz } from './AdminPanelShowcaseVonDentz';
+export { default as VittaSplashLoader } from './VittaSplashLoader';
+export { default as AdminPanelShowcaseVitta } from './AdminPanelShowcaseVitta';
