@@ -26,6 +26,8 @@ const getSiteUrl = () => {
 }
 
 // Criar cliente Supabase com configurações otimizadas
+// IMPORTANTE: Para resolver problemas de CORS, o domínio deve estar configurado
+// no Supabase Dashboard > Authentication > URL Configuration > Site URL
 export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
@@ -33,8 +35,10 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKe
     detectSessionInUrl: true,
     // Configurar redirectTo para o domínio atual
     redirectTo: getSiteUrl(),
-    // Configurar flowType para PKCE (mais seguro e resolve alguns problemas de CORS)
-    flowType: 'pkce'
+    // Storage explícito para garantir que funciona em todos os ambientes
+    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    storageKey: 'sb-wbtyimthsgdsftgwezop-auth-token'
+    // Removido flowType PKCE - usando fluxo padrão que funciona melhor com CORS
   },
   global: {
     headers: {
