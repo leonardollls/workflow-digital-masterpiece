@@ -16,12 +16,25 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 console.log('🔧 Configurando Supabase cliente...');
 
+// Obter a URL base do site atual (para configuração de redirect)
+const getSiteUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin
+  }
+  // Fallback para produção
+  return 'https://leonardolopes.online'
+}
+
 // Criar cliente Supabase com configurações otimizadas
 export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    // Configurar redirectTo para o domínio atual
+    redirectTo: getSiteUrl(),
+    // Configurar flowType para PKCE (mais seguro e resolve alguns problemas de CORS)
+    flowType: 'pkce'
   },
   global: {
     headers: {
