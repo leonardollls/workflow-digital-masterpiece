@@ -109,6 +109,16 @@
       "source": "/site/vitta/",
       "destination": "/site/vitta-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/robertabento",
+      "destination": "/site/robertabento-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/robertabento/",
+      "destination": "/site/robertabento-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [

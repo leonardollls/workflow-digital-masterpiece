@@ -43,3 +43,5 @@ export { default as VonDentzSplashLoader } from './VonDentzSplashLoader';
 export { default as AdminPanelShowcaseVonDentz } from './AdminPanelShowcaseVonDentz';
 export { default as VittaSplashLoader } from './VittaSplashLoader';
 export { default as AdminPanelShowcaseVitta } from './AdminPanelShowcaseVitta';
+export { default as RobertaBentoSplashLoader } from './RobertaBentoSplashLoader';
+export { default as AdminPanelShowcaseRobertaBento } from './AdminPanelShowcaseRobertaBento';
