@@ -119,6 +119,16 @@
       "source": "/site/robertabento/",
       "destination": "/site/robertabento-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/pergher",
+      "destination": "/site/pergher-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/pergher/",
+      "destination": "/site/pergher-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [

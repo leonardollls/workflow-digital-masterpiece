@@ -45,3 +45,5 @@ export { default as VittaSplashLoader } from './VittaSplashLoader';
 export { default as AdminPanelShowcaseVitta } from './AdminPanelShowcaseVitta';
 export { default as RobertaBentoSplashLoader } from './RobertaBentoSplashLoader';
 export { default as AdminPanelShowcaseRobertaBento } from './AdminPanelShowcaseRobertaBento';
+export { default as PergherSplashLoader } from './PergherSplashLoader';
+export { default as AdminPanelShowcasePergher } from './AdminPanelShowcasePergher';
