@@ -129,6 +129,16 @@
       "source": "/site/pergher/",
       "destination": "/site/pergher-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/alice-rodrigues",
+      "destination": "/site/alice-rodrigues-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/alice-rodrigues/",
+      "destination": "/site/alice-rodrigues-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [

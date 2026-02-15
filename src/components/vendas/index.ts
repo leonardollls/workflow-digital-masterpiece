@@ -47,3 +47,5 @@ export { default as RobertaBentoSplashLoader } from './RobertaBentoSplashLoader'
 export { default as AdminPanelShowcaseRobertaBento } from './AdminPanelShowcaseRobertaBento';
 export { default as PergherSplashLoader } from './PergherSplashLoader';
 export { default as AdminPanelShowcasePergher } from './AdminPanelShowcasePergher';
+export { default as AliceRodriguesSplashLoader } from './AliceRodriguesSplashLoader';
+export { default as AdminPanelShowcaseAliceRodrigues } from './AdminPanelShowcaseAliceRodrigues';
