@@ -139,6 +139,16 @@
       "source": "/site/alice-rodrigues/",
       "destination": "/site/alice-rodrigues-odontologia",
       "permanent": true
+    },
+    {
+      "source": "/site/beldentale",
+      "destination": "/site/beldentale-odontologia",
+      "permanent": true
+    },
+    {
+      "source": "/site/beldentale/",
+      "destination": "/site/beldentale-odontologia",
+      "permanent": true
     }
   ],
   "rewrites": [

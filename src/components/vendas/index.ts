@@ -49,3 +49,5 @@ export { default as PergherSplashLoader } from './PergherSplashLoader';
 export { default as AdminPanelShowcasePergher } from './AdminPanelShowcasePergher';
 export { default as AliceRodriguesSplashLoader } from './AliceRodriguesSplashLoader';
 export { default as AdminPanelShowcaseAliceRodrigues } from './AdminPanelShowcaseAliceRodrigues';
+export { default as BeldentaleSplashLoader } from './BeldentaleSplashLoader';
+export { default as AdminPanelShowcaseBeldentale } from './AdminPanelShowcaseBeldentale';
