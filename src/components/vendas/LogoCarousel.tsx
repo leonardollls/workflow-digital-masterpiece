@@ -12,52 +12,55 @@ interface ImageWithRetryProps {
   onError: () => void;
 }
 
+// Função para gerar variações de caminho (fora do componente para evitar recálculos)
+const generateImagePathVariations = (path: string): string[] => {
+  const normalized = path.startsWith('/') ? path : '/' + path;
+  const parts = normalized.split('/').filter(Boolean);
+  
+  const variations: string[] = [];
+  
+  // Variação 1: Original
+  variations.push(normalized);
+  
+  // Variação 2: Espaços codificados apenas no nome do arquivo
+  if (parts.length > 0) {
+    const filename = parts[parts.length - 1];
+    const encodedFilename = filename.replace(/\s+/g, '%20');
+    const newParts = [...parts];
+    newParts[newParts.length - 1] = encodedFilename;
+    variations.push('/' + newParts.join('/'));
+  }
+  
+  // Variação 3: Espaços codificados em todo o caminho
+  variations.push(normalized.replace(/\s+/g, '%20'));
+  
+  // Variação 4: encodeURIComponent no nome do arquivo
+  if (parts.length > 0) {
+    const filename = parts[parts.length - 1];
+    const encodedFilename = encodeURIComponent(filename);
+    const newParts = [...parts];
+    newParts[newParts.length - 1] = encodedFilename;
+    variations.push('/' + newParts.join('/'));
+  }
+  
+  return variations;
+};
+
 // Componente separado para gerenciar retry de imagens
 const ImageWithRetry = ({ logo, index, onLoad, onError }: ImageWithRetryProps) => {
-  const [currentSrc, setCurrentSrc] = useState<string>('');
+  // Gerar variações imediatamente (não em useEffect)
+  const variations = useRef<string[]>(generateImagePathVariations(logo));
+  const initialSrc = variations.current.length > 0 ? variations.current[0] : logo;
+  const [currentSrc, setCurrentSrc] = useState<string>(initialSrc);
   const [retryIndex, setRetryIndex] = useState(0);
-  const variationsRef = useRef<string[]>([]);
 
-  useEffect(() => {
-    // Gerar todas as variações de caminho uma única vez
-    const normalized = logo.startsWith('/') ? logo : '/' + logo;
-    const parts = normalized.split('/').filter(Boolean);
-    
-    const variations: string[] = [];
-    
-    // Variação 1: Original
-    variations.push(normalized);
-    
-    // Variação 2: Espaços codificados apenas no nome do arquivo
-    if (parts.length > 0) {
-      const filename = parts[parts.length - 1];
-      const encodedFilename = filename.replace(/\s+/g, '%20');
-      const newParts = [...parts];
-      newParts[newParts.length - 1] = encodedFilename;
-      variations.push('/' + newParts.join('/'));
-    }
-    
-    // Variação 3: Espaços codificados em todo o caminho
-    variations.push(normalized.replace(/\s+/g, '%20'));
-    
-    // Variação 4: encodeURIComponent no nome do arquivo
-    if (parts.length > 0) {
-      const filename = parts[parts.length - 1];
-      const encodedFilename = encodeURIComponent(filename);
-      const newParts = [...parts];
-      newParts[newParts.length - 1] = encodedFilename;
-      variations.push('/' + newParts.join('/'));
-    }
-    
-    variationsRef.current = variations;
-    setCurrentSrc(variations[0]);
-  }, [logo]);
-
-  const handleError = () => {
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const nextIndex = retryIndex + 1;
-    if (nextIndex < variationsRef.current.length) {
+    
+    if (nextIndex < variations.current.length) {
+      const nextSrc = variations.current[nextIndex];
       setRetryIndex(nextIndex);
-      setCurrentSrc(variationsRef.current[nextIndex]);
+      setCurrentSrc(nextSrc);
     } else {
       // Todas as tentativas falharam
       onError();
@@ -68,9 +71,12 @@ const ImageWithRetry = ({ logo, index, onLoad, onError }: ImageWithRetryProps) =
     onLoad();
   };
 
+  // Garantir que sempre temos um src válido
+  const srcToUse = currentSrc || initialSrc;
+
   return (
     <img
-      src={currentSrc}
+      src={srcToUse}
       alt={`Cliente ${index + 1}`}
       className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 absolute inset-0"
       style={{ top: '20px', bottom: 0 }}
