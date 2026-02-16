@@ -5,40 +5,88 @@ interface LogoCarouselProps {
   speed?: 'slow' | 'medium' | 'fast';
 }
 
+interface ImageWithRetryProps {
+  logo: string;
+  index: number;
+  onLoad: () => void;
+  onError: () => void;
+}
+
+// Componente separado para gerenciar retry de imagens
+const ImageWithRetry = ({ logo, index, onLoad, onError }: ImageWithRetryProps) => {
+  const [currentSrc, setCurrentSrc] = useState<string>('');
+  const [retryIndex, setRetryIndex] = useState(0);
+  const variationsRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    // Gerar todas as variações de caminho uma única vez
+    const normalized = logo.startsWith('/') ? logo : '/' + logo;
+    const parts = normalized.split('/').filter(Boolean);
+    
+    const variations: string[] = [];
+    
+    // Variação 1: Original
+    variations.push(normalized);
+    
+    // Variação 2: Espaços codificados apenas no nome do arquivo
+    if (parts.length > 0) {
+      const filename = parts[parts.length - 1];
+      const encodedFilename = filename.replace(/\s+/g, '%20');
+      const newParts = [...parts];
+      newParts[newParts.length - 1] = encodedFilename;
+      variations.push('/' + newParts.join('/'));
+    }
+    
+    // Variação 3: Espaços codificados em todo o caminho
+    variations.push(normalized.replace(/\s+/g, '%20'));
+    
+    // Variação 4: encodeURIComponent no nome do arquivo
+    if (parts.length > 0) {
+      const filename = parts[parts.length - 1];
+      const encodedFilename = encodeURIComponent(filename);
+      const newParts = [...parts];
+      newParts[newParts.length - 1] = encodedFilename;
+      variations.push('/' + newParts.join('/'));
+    }
+    
+    variationsRef.current = variations;
+    setCurrentSrc(variations[0]);
+  }, [logo]);
+
+  const handleError = () => {
+    const nextIndex = retryIndex + 1;
+    if (nextIndex < variationsRef.current.length) {
+      setRetryIndex(nextIndex);
+      setCurrentSrc(variationsRef.current[nextIndex]);
+    } else {
+      // Todas as tentativas falharam
+      onError();
+    }
+  };
+
+  const handleLoad = () => {
+    onLoad();
+  };
+
+  return (
+    <img
+      src={currentSrc}
+      alt={`Cliente ${index + 1}`}
+      className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 absolute inset-0"
+      style={{ top: '20px', bottom: 0 }}
+      loading="lazy"
+      decoding="async"
+      onError={handleError}
+      onLoad={handleLoad}
+    />
+  );
+};
+
 const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const trackRef = useRef<HTMLDivElement>(null);
-
-  // Função para codificar caminhos de imagem corretamente
-  // Em produção (Vercel), espaços e caracteres especiais em nomes de arquivo precisam ser codificados
-  // Usamos uma abordagem conservadora: codificar apenas o necessário
-  const encodeImagePath = (path: string): string => {
-    // Em Vite/Vercel, arquivos em /public são servidos na raiz
-    // Precisamos codificar apenas espaços e caracteres problemáticos no nome do arquivo
-    try {
-      // Se o caminho já começa com /, manter; caso contrário, adicionar
-      const normalizedPath = path.startsWith('/') ? path : '/' + path;
-      
-      // Separar o caminho em partes (diretórios e nome do arquivo)
-      const parts = normalizedPath.split('/').filter(Boolean); // Remove partes vazias
-      if (parts.length === 0) return normalizedPath;
-      
-      // Última parte é o nome do arquivo
-      const filename = parts[parts.length - 1];
-      // Codificar apenas espaços no nome do arquivo (mais comum em produção)
-      // Outros caracteres especiais serão tratados no retry
-      const encodedFilename = filename.replace(/\s+/g, '%20');
-      
-      // Reconstruir o caminho mantendo diretórios intactos
-      parts[parts.length - 1] = encodedFilename;
-      return '/' + parts.join('/');
-    } catch {
-      // Se houver erro, retornar caminho original
-      return path;
-    }
-  };
 
   // Duplicamos os logos 2 vezes para loop suave com menos DOM nodes
   // [A, B, C] -> [A, B, C, A, B, C]
@@ -189,81 +237,18 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
                   
                   {/* Screenshot image */}
                   {!failedImages.has(logo) ? (
-                    <img
-                      src={encodeImagePath(logo)}
-                      alt={`Cliente ${index + 1}`}
-                      className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 absolute inset-0"
-                      style={{ top: '20px', bottom: 0 }}
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        const retryCount = parseInt(target.dataset.retryCount || '0', 10);
-                        
-                        // Estratégia de retry: tentar diferentes codificações
-                        if (retryCount === 0) {
-                          // Tentativa 1: caminho original sem codificação (caso a codificação inicial tenha falhado)
-                          target.dataset.retryCount = '1';
-                          // Garantir que o caminho comece com /
-                          const originalPath = logo.startsWith('/') ? logo : '/' + logo;
-                          target.src = originalPath;
-                          return;
-                        } else if (retryCount === 1) {
-                          // Tentativa 2: codificar apenas espaços manualmente em todo o caminho
-                          target.dataset.retryCount = '2';
-                          const pathWithSpaces = logo.startsWith('/') ? logo : '/' + logo;
-                          target.src = pathWithSpaces.replace(/\s+/g, '%20');
-                          return;
-                        } else if (retryCount === 2) {
-                          // Tentativa 3: usar encodeURI para codificar caracteres especiais (exceto /, :, etc)
-                          target.dataset.retryCount = '3';
-                          try {
-                            const pathToEncode = logo.startsWith('/') ? logo : '/' + logo;
-                            // encodeURI não codifica /, então precisamos codificar manualmente o nome do arquivo
-                            const parts = pathToEncode.split('/');
-                            const encodedParts = parts.map((part, idx) => {
-                              if (idx === parts.length - 1 && part) {
-                                // Última parte: codificar caracteres especiais
-                                return encodeURIComponent(part);
-                              }
-                              return part;
-                            });
-                            target.src = encodedParts.join('/');
-                          } catch {
-                            // Se encodeURIComponent falhar, marcar como falha
-                            setFailedImages(prev => new Set(prev).add(logo));
-                            target.style.display = 'none';
-                            const placeholder = target.parentElement?.querySelector('.image-placeholder') as HTMLElement;
-                            if (placeholder) {
-                              placeholder.style.display = 'flex';
-                            }
-                          }
-                          return;
-                        }
-                        
-                        // Após todas as tentativas, marcar como falha e mostrar placeholder
-                        setFailedImages(prev => new Set(prev).add(logo));
-                        target.style.display = 'none';
-                        const placeholder = target.parentElement?.querySelector('.image-placeholder') as HTMLElement;
-                        if (placeholder) {
-                          placeholder.style.display = 'flex';
-                        }
-                      }}
-                      onLoad={(e) => {
-                        // Quando a imagem carregar com sucesso, esconder placeholder se existir
-                        const target = e.target as HTMLImageElement;
-                        const placeholder = target.parentElement?.querySelector('.image-placeholder') as HTMLElement;
-                        if (placeholder) {
-                          placeholder.style.display = 'none';
-                        }
-                        // Garantir que a imagem esteja visível
-                        target.style.display = 'block';
-                        // Remover da lista de falhas se estava lá
+                    <ImageWithRetry
+                      logo={logo}
+                      index={index}
+                      onLoad={() => {
                         setFailedImages(prev => {
                           const next = new Set(prev);
                           next.delete(logo);
                           return next;
                         });
+                      }}
+                      onError={() => {
+                        setFailedImages(prev => new Set(prev).add(logo));
                       }}
                     />
                   ) : null}
