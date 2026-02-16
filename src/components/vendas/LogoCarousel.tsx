@@ -10,6 +10,13 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
   const [isClient, setIsClient] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
 
+  // Função para codificar caminhos de imagem corretamente (especialmente espaços)
+  // Em produção (Vercel), espaços em nomes de arquivo precisam ser codificados como %20
+  const encodeImagePath = (path: string): string => {
+    // Codificar apenas espaços e caracteres problemáticos, mantendo o resto do caminho intacto
+    return path.replace(/\s/g, '%20').replace(/[^\w\s\-_.~:/?#[\]@!$&'()*+,;=%]/g, encodeURIComponent);
+  };
+
   // Duplicamos os logos 2 vezes para loop suave com menos DOM nodes
   // [A, B, C] -> [A, B, C, A, B, C]
   const duplicatedLogos = [...logos, ...logos];
@@ -159,12 +166,34 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
                   
                   {/* Screenshot image */}
                   <img
-                    src={logo}
+                    src={encodeImagePath(logo)}
                     alt={`Cliente ${index + 1}`}
                     className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105"
                     loading="lazy"
                     style={{ marginTop: '20px' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      // Tentar caminho alternativo sem codificação primeiro
+                      if (!target.dataset.retried) {
+                        target.dataset.retried = 'true';
+                        target.src = logo; // Tentar caminho original
+                        return;
+                      }
+                      // Se ainda falhar, mostrar placeholder
+                      target.style.display = 'none';
+                      const placeholder = target.parentElement?.querySelector('.image-placeholder') as HTMLElement;
+                      if (placeholder) {
+                        placeholder.style.display = 'flex';
+                      }
+                    }}
                   />
+                  {/* Placeholder para imagens quebradas */}
+                  <div 
+                    className="image-placeholder hidden w-full h-full items-center justify-center bg-slate-800/50 text-white/30 text-xs"
+                    style={{ marginTop: '20px' }}
+                  >
+                    <span>Imagem não disponível</span>
+                  </div>
                   
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

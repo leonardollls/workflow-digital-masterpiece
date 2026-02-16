@@ -514,6 +514,7 @@ const VendasRobertaBento = () => {
                   siteUrl={SITE_URL} 
                   onOpenFullscreen={() => setIsPreviewOpen(true)}
                   staticMode
+                  mockupImage="/Images/mockups-3d/robertabento-mockup-desktop.webp"
                 />
               </div>
             </div>
@@ -597,6 +598,7 @@ const VendasRobertaBento = () => {
                       siteUrl={SITE_URL} 
                       onOpenFullscreen={() => setIsPreviewOpen(true)}
                       staticMode
+                      mockupImage="/Images/mockups-3d/robertabento-mockup-desktop.webp"
                     />
                   </div>
                   <div>
@@ -617,6 +619,7 @@ const VendasRobertaBento = () => {
                       <Mockup3D 
                         siteUrl={SITE_URL} 
                         staticMode
+                        mockupImage="/Images/mockups-3d/robertabento-mockup-mobile.webp"
                         onOpenFullscreen={() => {
                           setDevice('mobile');
                           setIsPreviewOpen(true);

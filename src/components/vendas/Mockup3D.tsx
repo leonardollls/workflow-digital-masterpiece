@@ -5,9 +5,10 @@ interface Mockup3DProps {
   siteUrl: string;
   onOpenFullscreen?: () => void;
   staticMode?: boolean;
+  mockupImage?: string;
 }
 
-const Mockup3D = ({ siteUrl, onOpenFullscreen, staticMode = false }: Mockup3DProps) => {
+const Mockup3D = ({ siteUrl, onOpenFullscreen, staticMode = false, mockupImage }: Mockup3DProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
@@ -43,28 +44,37 @@ const Mockup3D = ({ siteUrl, onOpenFullscreen, staticMode = false }: Mockup3DPro
               {/* Screen */}
               <div className="relative rounded-[1.25rem] overflow-hidden bg-white" style={{ width: '150px', height: '270px' }}>
                 {staticMode ? (
-                  <div className="w-full h-full bg-gradient-to-b from-[#122737] via-[#1a3346] to-[#0f1f2e] relative overflow-hidden">
-                    <div className="absolute inset-0 flex flex-col">
-                      <div className="h-[10%] bg-white/5 flex items-center px-2">
-                        <div className="w-[30px] h-[3px] bg-[#D4A574]/30 rounded" />
-                        <div className="ml-auto flex gap-1">
-                          <div className="w-[10px] h-[2px] bg-white/10 rounded" />
-                          <div className="w-[10px] h-[2px] bg-white/10 rounded" />
+                  mockupImage ? (
+                    <img
+                      src={mockupImage}
+                      alt="Preview mobile do site Roberta Bento Odontologia"
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-b from-[#122737] via-[#1a3346] to-[#0f1f2e] relative overflow-hidden">
+                      <div className="absolute inset-0 flex flex-col">
+                        <div className="h-[10%] bg-white/5 flex items-center px-2">
+                          <div className="w-[30px] h-[3px] bg-[#D4A574]/30 rounded" />
+                          <div className="ml-auto flex gap-1">
+                            <div className="w-[10px] h-[2px] bg-white/10 rounded" />
+                            <div className="w-[10px] h-[2px] bg-white/10 rounded" />
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex-1 p-3 space-y-2">
-                        <div className="w-[50%] h-[3px] bg-[#D4A574]/25 rounded" />
-                        <div className="w-[80%] h-[4px] bg-white/12 rounded" />
-                        <div className="w-[60%] h-[4px] bg-white/12 rounded" />
-                        <div className="w-[90%] h-[2px] bg-white/5 rounded mt-2" />
-                        <div className="w-[70%] h-[2px] bg-white/5 rounded" />
-                        <div className="flex gap-2 mt-3">
-                          <div className="w-[35%] h-[10px] bg-[#D4A574]/20 rounded" />
-                          <div className="w-[35%] h-[10px] bg-white/5 rounded border border-white/10" />
+                        <div className="flex-1 p-3 space-y-2">
+                          <div className="w-[50%] h-[3px] bg-[#D4A574]/25 rounded" />
+                          <div className="w-[80%] h-[4px] bg-white/12 rounded" />
+                          <div className="w-[60%] h-[4px] bg-white/12 rounded" />
+                          <div className="w-[90%] h-[2px] bg-white/5 rounded mt-2" />
+                          <div className="w-[70%] h-[2px] bg-white/5 rounded" />
+                          <div className="flex gap-2 mt-3">
+                            <div className="w-[35%] h-[10px] bg-[#D4A574]/20 rounded" />
+                            <div className="w-[35%] h-[10px] bg-white/5 rounded border border-white/10" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )
                 ) : (
                   <iframe
                     src={siteUrl}
