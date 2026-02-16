@@ -5,100 +5,14 @@ interface LogoCarouselProps {
   speed?: 'slow' | 'medium' | 'fast';
 }
 
-interface ImageWithRetryProps {
-  logo: string;
-  index: number;
-  onLoad: () => void;
-  onError: () => void;
-}
-
-// Função para gerar variações de caminho (fora do componente para evitar recálculos)
-const generateImagePathVariations = (path: string): string[] => {
-  const normalized = path.startsWith('/') ? path : '/' + path;
-  const parts = normalized.split('/').filter(Boolean);
-  
-  const variations: string[] = [];
-  
-  // Variação 1: Original
-  variations.push(normalized);
-  
-  // Variação 2: Espaços codificados apenas no nome do arquivo
-  if (parts.length > 0) {
-    const filename = parts[parts.length - 1];
-    const encodedFilename = filename.replace(/\s+/g, '%20');
-    const newParts = [...parts];
-    newParts[newParts.length - 1] = encodedFilename;
-    variations.push('/' + newParts.join('/'));
-  }
-  
-  // Variação 3: Espaços codificados em todo o caminho
-  variations.push(normalized.replace(/\s+/g, '%20'));
-  
-  // Variação 4: encodeURIComponent no nome do arquivo
-  if (parts.length > 0) {
-    const filename = parts[parts.length - 1];
-    const encodedFilename = encodeURIComponent(filename);
-    const newParts = [...parts];
-    newParts[newParts.length - 1] = encodedFilename;
-    variations.push('/' + newParts.join('/'));
-  }
-  
-  return variations;
-};
-
-// Componente separado para gerenciar retry de imagens
-const ImageWithRetry = ({ logo, index, onLoad, onError }: ImageWithRetryProps) => {
-  // Gerar variações imediatamente (não em useEffect)
-  const variations = useRef<string[]>(generateImagePathVariations(logo));
-  const initialSrc = variations.current.length > 0 ? variations.current[0] : logo;
-  const [currentSrc, setCurrentSrc] = useState<string>(initialSrc);
-  const [retryIndex, setRetryIndex] = useState(0);
-
-  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const nextIndex = retryIndex + 1;
-    
-    if (nextIndex < variations.current.length) {
-      const nextSrc = variations.current[nextIndex];
-      setRetryIndex(nextIndex);
-      setCurrentSrc(nextSrc);
-    } else {
-      // Todas as tentativas falharam
-      onError();
-    }
-  };
-
-  const handleLoad = () => {
-    onLoad();
-  };
-
-  // Garantir que sempre temos um src válido
-  const srcToUse = currentSrc || initialSrc;
-
-  return (
-    <img
-      src={srcToUse}
-      alt={`Cliente ${index + 1}`}
-      className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 absolute inset-0"
-      style={{ top: '20px', bottom: 0 }}
-      loading="lazy"
-      decoding="async"
-      onError={handleError}
-      onLoad={handleLoad}
-    />
-  );
-};
-
 const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Duplicamos os logos 2 vezes para loop suave com menos DOM nodes
-  // [A, B, C] -> [A, B, C, A, B, C]
   const duplicatedLogos = [...logos, ...logos];
 
-  // Marcar quando estamos no cliente para evitar hydration mismatch
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -109,48 +23,41 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
 
     const calculateAnimation = () => {
       if (!trackRef.current) return;
-      
+
       const track = trackRef.current;
       const children = Array.from(track.children) as HTMLElement[];
-      
+
       if (children.length === 0) return;
-      
-      // Função para calcular e aplicar a animação
+
       const applyAnimation = () => {
-        // Calcular a largura total de um conjunto completo de logos originais
         let singleSetWidth = 0;
         for (let i = 0; i < logos.length && i < children.length; i++) {
           const child = children[i];
           if (child) {
             const rect = child.getBoundingClientRect();
             singleSetWidth += rect.width;
-            // Adicionar gap (gap-8 = 2rem = 32px) exceto no último item
             if (i < logos.length - 1) {
               singleSetWidth += 32;
             }
           }
         }
-        
-        // Forçar reflow para garantir scrollWidth correto
+
         track.offsetHeight;
-        
-        // Calcular a largura total de todos os logos duplicados
+
         const totalWidth = track.scrollWidth;
-        
+
         if (totalWidth > 0 && singleSetWidth > 0) {
-          // Calcular a porcentagem exata para mover exatamente um conjunto
           const percentage = (singleSetWidth / totalWidth) * 100;
-          
-          // Criar ou atualizar os keyframes dinamicamente
+
           const styleId = 'logo-carousel-dynamic-keyframes';
           let styleElement = document.getElementById(styleId) as HTMLStyleElement;
-          
+
           if (!styleElement) {
             styleElement = document.createElement('style');
             styleElement.id = styleId;
             document.head.appendChild(styleElement);
           }
-          
+
           styleElement.textContent = `
             @keyframes logo-carousel-scroll {
               from {
@@ -163,29 +70,25 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
           `;
         }
       };
-      
-      // Aguardar que todas as imagens carreguem para cálculo preciso
+
       const images = track.querySelectorAll('img');
       const totalImages = images.length;
-      
+
       if (totalImages === 0) {
-        // Se não houver imagens, calcular imediatamente após um frame
         requestAnimationFrame(() => {
           requestAnimationFrame(applyAnimation);
         });
       } else {
-        // Aguardar todas as imagens carregarem
         let loadedImages = 0;
         const checkAndCalculate = () => {
           loadedImages++;
           if (loadedImages >= totalImages) {
-            // Aguardar um frame adicional para garantir layout completo
             requestAnimationFrame(() => {
               requestAnimationFrame(applyAnimation);
             });
           }
         };
-        
+
         images.forEach((img) => {
           if (img.complete) {
             checkAndCalculate();
@@ -196,8 +99,7 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
         });
       }
     };
-    
-    // Aguardar múltiplos frames para garantir renderização completa
+
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         calculateAnimation();
@@ -210,14 +112,14 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
       {/* Gradient masks for smooth edges */}
       <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none" />
-      
+
       {/* Container do carousel */}
-      <div 
+      <div
         className="relative overflow-hidden"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <div 
+        <div
           ref={trackRef}
           className={`logo-carousel-track speed-${speed} ${isPaused ? 'paused' : ''}`}
         >
@@ -229,7 +131,7 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
               <div className="relative w-full h-full">
                 {/* Glow effect no hover */}
                 <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#D4A574]/0 via-purple-500/0 to-violet-500/0 group-hover:from-[#D4A574]/20 group-hover:via-purple-500/10 group-hover:to-violet-500/20 blur-xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-                
+
                 {/* Screenshot container - simulando browser window */}
                 <div className="relative w-full h-full rounded-lg overflow-hidden bg-white/5 border border-white/10 group-hover:border-[#D4A574]/30 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_30px_rgba(212,165,116,0.15)]">
                   {/* Browser top bar */}
@@ -240,34 +142,17 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
                       <div className="w-2 h-2 rounded-full bg-green-500/70" />
                     </div>
                   </div>
-                  
-                  {/* Screenshot image */}
-                  {!failedImages.has(logo) ? (
-                    <ImageWithRetry
-                      logo={logo}
-                      index={index}
-                      onLoad={() => {
-                        setFailedImages(prev => {
-                          const next = new Set(prev);
-                          next.delete(logo);
-                          return next;
-                        });
-                      }}
-                      onError={() => {
-                        setFailedImages(prev => new Set(prev).add(logo));
-                      }}
-                    />
-                  ) : null}
-                  {/* Placeholder para imagens quebradas */}
-                  {failedImages.has(logo) && (
-                    <div 
-                      className="image-placeholder w-full h-full flex items-center justify-center bg-slate-800/50 text-white/30 text-xs absolute"
-                      style={{ top: '20px', bottom: 0, left: 0, right: 0, zIndex: 5 }}
-                    >
-                      <span>Imagem não disponível</span>
-                    </div>
-                  )}
-                  
+
+                  {/* Screenshot image - caminhos já devem vir pré-codificados */}
+                  <img
+                    src={logo}
+                    alt={`Cliente ${(index % logos.length) + 1}`}
+                    className="w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 absolute inset-0"
+                    style={{ top: '20px' }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+
                   {/* Overlay gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>

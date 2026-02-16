@@ -255,17 +255,21 @@ const VendasVitta = () => {
   ];
 
   const clientLogos = [
-    '/Images/capas-sites/Bidix Pay.webp',
-    '/Images/capas-sites/CognusCore.webp',
-    '/Images/capas-sites/Color Haus Acabamentos.webp',
+    '/Images/capas-sites/Bidix%20Pay.webp',
+    '/Images/capas-sites/Color%20Haus%20Acabamentos.webp',
     '/Images/capas-sites/Empregga.webp',
-    '/Images/capas-sites/Faculdade Phorte - Black Friday.webp',
-    '/Images/capas-sites/Hora do Sono Colchões.webp',
-    '/Images/capas-sites/James Produtor.webp',
-    '/Images/capas-sites/Livia Rosa Advocacia.webp',
-    '/Images/capas-sites/MRA Advogados Associados.webp',
-    '/Images/capas-sites/Oasis Corp.webp',
+    '/Images/capas-sites/Faculdade%20Phorte%20-%20Black%20Friday.webp',
+    '/Images/capas-sites/Hora%20do%20Sono%20Colch%C3%B5es.webp',
+    '/Images/capas-sites/James%20Produtor.webp',
+    '/Images/capas-sites/Maier%20Advocacia.webp',
+    '/Images/capas-sites/Oasis%20Corp.webp',
     '/Images/capas-sites/Oxpay.webp',
+    '/Images/capas-sites/Envel-Contabilidade.webp',
+    '/Images/capas-sites/BF%20Tributos.webp',
+    '/Images/capas-sites/Conexa%20AI.webp',
+    '/Images/capas-sites/GynFood%20App.webp',
+    '/Images/capas-sites/Techome.webp',
+    '/Images/capas-sites/Semiglobe.webp',
     '/Images/Captura1101262.webp',
   ];
 
