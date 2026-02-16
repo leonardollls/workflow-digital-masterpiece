@@ -183,13 +183,11 @@ const FaviconCleaner = () => {
       subtree: true,
     });
 
-    // Executar periodicamente para garantir
-    const interval = setInterval(forceLeonardoFavicon, 200);
+    // MutationObserver já monitora mudanças dinâmicas - setInterval removido para performance
     const timeout = setTimeout(forceLeonardoFavicon, 100);
     
     return () => {
       clearTimeout(timeout);
-      clearInterval(interval);
       observer.disconnect();
     };
   }, []);

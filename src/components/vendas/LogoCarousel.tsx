@@ -10,9 +10,9 @@ const LogoCarousel = ({ logos, speed = 'medium' }: LogoCarouselProps) => {
   const [isClient, setIsClient] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Duplicamos os logos 4 vezes para garantir loop suave e contínuo
-  // [A, B, C] -> [A, B, C, A, B, C, A, B, C, A, B, C]
-  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
+  // Duplicamos os logos 2 vezes para loop suave com menos DOM nodes
+  // [A, B, C] -> [A, B, C, A, B, C]
+  const duplicatedLogos = [...logos, ...logos];
 
   // Marcar quando estamos no cliente para evitar hydration mismatch
   useEffect(() => {

@@ -5,9 +5,10 @@ interface HeroMockup3DProps {
   siteUrl: string;
   onOpenFullscreen?: () => void;
   compact?: boolean;
+  staticMode?: boolean;
 }
 
-const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup3DProps) => {
+const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false, staticMode = false }: HeroMockup3DProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -115,19 +116,52 @@ const HeroMockup3D = ({ siteUrl, onOpenFullscreen, compact = false }: HeroMockup
                   height: compact ? '180px' : (isMobile ? '200px' : '340px'),
                 }}
               >
-                {/* Iframe do site */}
-                <iframe
-                  src={siteUrl}
-                  title="Preview do novo site Lidderà"
-                  className="w-full h-full border-0 pointer-events-none"
-                  style={{
-                    transform: 'scale(0.35)',
-                    transformOrigin: 'top left',
-                    width: '286%',
-                    height: '286%',
-                  }}
-                  loading="lazy"
-                />
+                {/* Site preview - static mode uses gradient placeholder, otherwise iframe */}
+                {staticMode ? (
+                  <div className="w-full h-full bg-gradient-to-b from-[#122737] via-[#1a3346] to-[#0f1f2e] relative overflow-hidden">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div className="h-[8%] bg-white/5 flex items-center px-[4%]">
+                        <div className="flex gap-[2px]">
+                          <div className="w-[4px] h-[4px] rounded-full bg-white/20" />
+                          <div className="w-[4px] h-[4px] rounded-full bg-white/20" />
+                          <div className="w-[4px] h-[4px] rounded-full bg-white/20" />
+                        </div>
+                        <div className="ml-auto flex gap-[6px]">
+                          <div className="w-[20px] h-[3px] bg-white/10 rounded" />
+                          <div className="w-[20px] h-[3px] bg-white/10 rounded" />
+                          <div className="w-[20px] h-[3px] bg-white/10 rounded" />
+                        </div>
+                      </div>
+                      <div className="flex-1 relative">
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#122737]/80 to-[#1a3346]/60" />
+                        <div className="relative p-[6%] space-y-[4%]">
+                          <div className="w-[40%] h-[6px] bg-[#D4A574]/30 rounded" />
+                          <div className="w-[70%] h-[8px] bg-white/15 rounded" />
+                          <div className="w-[55%] h-[8px] bg-white/15 rounded" />
+                          <div className="w-[80%] h-[4px] bg-white/5 rounded mt-[3%]" />
+                          <div className="w-[60%] h-[4px] bg-white/5 rounded" />
+                          <div className="flex gap-[4%] mt-[5%]">
+                            <div className="w-[30%] h-[16px] bg-[#D4A574]/20 rounded-md" />
+                            <div className="w-[30%] h-[16px] bg-white/5 rounded-md border border-white/10" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <iframe
+                    src={siteUrl}
+                    title="Preview do novo site"
+                    className="w-full h-full border-0 pointer-events-none"
+                    style={{
+                      transform: 'scale(0.35)',
+                      transformOrigin: 'top left',
+                      width: '286%',
+                      height: '286%',
+                    }}
+                    loading="lazy"
+                  />
+                )}
 
                 {/* Reflexo da tela */}
                 <div 
