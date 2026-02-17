@@ -36,7 +36,6 @@ const VendasOdontoVip = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [iframeLoading, setIframeLoading] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const SITE_URL = 'https://odontovip-caxias.vercel.app/';
@@ -83,112 +82,62 @@ const VendasOdontoVip = () => {
     }
   }, [contentReady]);
 
-  // Reset iframe loading when preview opens
   useEffect(() => {
     if (isPreviewOpen) {
       setIframeLoading(true);
-    }
-  }, [isPreviewOpen]);
-
-  // Lock body scroll when modal is open and ensure dark background
-  useEffect(() => {
-    document.body.style.backgroundColor = '#020617';
-    document.documentElement.style.backgroundColor = '#020617';
-    
-    if (isPreviewOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => {
       document.body.style.overflow = 'unset';
-      document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
     };
   }, [isPreviewOpen]);
 
-  // Handle escape key
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isPreviewOpen) {
-        setIsPreviewOpen(false);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isPreviewOpen) setIsPreviewOpen(false);
+        if (isMobileMenuOpen) setIsMobileMenuOpen(false);
       }
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isPreviewOpen]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isPreviewOpen, isMobileMenuOpen]);
 
-  // Header visibility based on scroll
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > 200) {
-        setIsHeaderVisible(true);
-      } else {
-        setIsHeaderVisible(false);
-      }
-      
-      setLastScrollY(currentScrollY);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsHeaderVisible(window.scrollY > 200);
+        ticking = false;
+      });
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
-
-  // Close mobile menu on escape
-  useEffect(() => {
-    const handleEscapeMobileMenu = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-    document.addEventListener('keydown', handleEscapeMobileMenu);
-    return () => document.removeEventListener('keydown', handleEscapeMobileMenu);
-  }, [isMobileMenuOpen]);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToPricing = () => {
-    const pricingSection = document.getElementById('pricing-section');
-    if (pricingSection) {
-      pricingSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  const scrollToBenefits = () => {
-    const benefitsSection = document.getElementById('benefits-section');
-    if (benefitsSection) {
-      benefitsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  const scrollToPreview = () => {
-    const previewSection = document.getElementById('preview-section');
-    if (previewSection) {
-      previewSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMobileMenuOpen(false);
   };
 
   const getDeviceWidth = (): string => {
-    switch (device) {
-      case 'mobile': return 'w-full max-w-[100vw] sm:max-w-[480px]';
-      case 'tablet': return 'max-w-[900px]';
-      default: return 'max-w-[1600px]';
-    }
+    if (device === 'mobile') return 'w-full max-w-[100vw] sm:max-w-[480px]';
+    return 'max-w-[1600px]';
   };
-
   const getDeviceHeight = (): string => {
-    switch (device) {
-      case 'mobile': return 'h-full min-h-[calc(100vh-80px)] max-h-[calc(100vh-80px)] sm:max-h-[932px]';
-      case 'tablet': return 'max-h-[1200px]';
-      default: return 'max-h-full';
-    }
+    if (device === 'mobile') return 'h-full min-h-[calc(100vh-80px)] max-h-[calc(100vh-80px)] sm:max-h-[932px]';
+    return 'max-h-full';
   };
 
   const benefits = [
@@ -450,21 +399,21 @@ const VendasOdontoVip = () => {
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-2">
                 <button
-                  onClick={scrollToBenefits}
+                  onClick={() => scrollToSection('benefits-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <TrendingUp size={16} />
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={16} />
                   Ver Resultado
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Sparkles size={16} />
@@ -494,7 +443,7 @@ const VendasOdontoVip = () => {
                 </button>
 
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_25px_rgba(212,165,116,0.5)] hover:scale-105"
                 >
                   <MessageSquare size={16} />
@@ -518,21 +467,21 @@ const VendasOdontoVip = () => {
             >
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={scrollToBenefits}
+                  onClick={() => scrollToSection('benefits-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <TrendingUp size={18} />
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={18} />
                   Ver Resultado
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Sparkles size={18} />
@@ -549,7 +498,7 @@ const VendasOdontoVip = () => {
                   Abrir Site
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300"
                 >
                   <MessageSquare size={18} />
@@ -603,14 +552,6 @@ const VendasOdontoVip = () => {
                   Uma nova presença digital que reflete a <strong className="text-white/90">excelência e tradição</strong> da OdontoVip, clínica odontológica premium em Caxias do Sul.
                 </p>
 
-                {/* Hero Mockup 3D Interativo - Mobile First */}
-                <div className="block sm:hidden mb-8">
-                  <HeroMockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => setIsPreviewOpen(true)} 
-                  />
-                </div>
-
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                   <button
@@ -623,7 +564,7 @@ const VendasOdontoVip = () => {
                   </button>
                   
                   <button
-                    onClick={scrollToPricing}
+                    onClick={() => scrollToSection('pricing-section')}
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#122737] to-[#1a3346] text-white font-semibold text-lg transition-all duration-300 hover:bg-[#D4A574]/10 hover:shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:scale-105"
                   >
                     <MessageSquare size={22} className="text-[#D4A574]" />
@@ -631,13 +572,12 @@ const VendasOdontoVip = () => {
                   </button>
                 </div>
 
-                {/* Hero Mockup 3D Interativo - Desktop */}
-                <div className="hidden sm:block">
-                  <HeroMockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => setIsPreviewOpen(true)} 
-                  />
-                </div>
+                <HeroMockup3D 
+                  siteUrl={SITE_URL} 
+                  onOpenFullscreen={() => setIsPreviewOpen(true)}
+                  staticMode
+                  mockupImage="/Images/mockups-3d/odontovip-mockup-desktop.webp"
+                />
               </div>
             </div>
           </section>
@@ -653,7 +593,7 @@ const VendasOdontoVip = () => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
                     <div className="absolute inset-[1px] bg-slate-900/90 rounded-2xl" />
                     <div className={`absolute -inset-1 bg-gradient-to-r ${stat.accent} opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 rounded-2xl`} />
-                    <div className="relative text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-300">
+                    <div className="relative text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 border border-white/10 group-hover:border-white/20 transition-all duration-300">
                       <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[2px] bg-gradient-to-r ${stat.accent} rounded-full opacity-60 group-hover:w-20 group-hover:opacity-100 transition-all duration-300`} />
                       <div className={`text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent mb-1 group-hover:scale-105 transition-transform duration-300`}>
                         {stat.value}
@@ -708,94 +648,109 @@ const VendasOdontoVip = () => {
           {/* ============================================
               PREVIEW SECTION - ENHANCED
               ============================================ */}
-          <section id="preview-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-            <div className="max-w-7xl mx-auto">
-              <div className={`text-center mb-12 sm:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-                  Veja o resultado <span className="text-gradient">ao vivo</span>
-                </h2>
-                <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                  Explore todas as funcionalidades do novo site
-                </p>
-              </div>
-
-              {/* Row 1: 3D Preview + Lighthouse Scores */}
-              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 transition-all duration-1000 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="flex flex-col">
-                  <HeroMockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => setIsPreviewOpen(true)}
-                  />
+          <LazySection rootMargin="400px" minHeight="600px">
+            <section id="preview-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+              <div className="max-w-7xl mx-auto">
+                <div className={`text-center mb-12 sm:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                    Veja o resultado <span className="text-gradient">ao vivo</span>
+                  </h2>
+                  <p className="text-white/60 text-lg max-w-2xl mx-auto">
+                    Explore todas as funcionalidades do novo site
+                  </p>
                 </div>
+
+                {/* Row 1: 3D Preview + Lighthouse Scores */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div className="flex flex-col">
+                    <HeroMockup3D 
+                      siteUrl={SITE_URL} 
+                      onOpenFullscreen={() => setIsPreviewOpen(true)}
+                      staticMode
+                      mockupImage="/Images/mockups-3d/odontovip-mockup-desktop.webp"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-4 text-center lg:text-left">Métricas de Performance</h3>
+                    <Suspense fallback={<SectionFallback height="300px" />}>
+                      <LighthouseScores />
+                    </Suspense>
+                  </div>
+                </div>
+
+                {/* Row 2: QR Code + Load Time + Uptime + Code Optimization + Mockup 3D */}
+                <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8 items-stretch">
+                  <Suspense fallback={<SectionFallback height="200px" />}>
+                    <div><QRCodePreview url={SITE_URL} /></div>
+                    <div className="flex"><LoadTimeCounter siteUrl={SITE_URL} /></div>
+                    <div className="flex"><UptimeScore siteUrl={SITE_URL} /></div>
+                    <div className="flex"><CodeOptimization siteUrl={SITE_URL} /></div>
+                    <div className="flex sm:col-span-2 lg:col-span-1 justify-center">
+                      <Mockup3D 
+                        siteUrl={SITE_URL} 
+                        staticMode
+                        mockupImage="/Images/mockups-3d/odontovip-mockup-mobile.webp"
+                        onOpenFullscreen={() => {
+                          setDevice('mobile');
+                          setIsPreviewOpen(true);
+                        }}
+                      />
+                    </div>
+                  </Suspense>
+                </div>
+
+                {/* Row 4: Feature Comparison */}
+                <div className="mb-8">
+                  <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
+                  <Suspense fallback={<SectionFallback height="300px" />}>
+                    <FeatureComparison comparisons={odontovipComparisons} />
+                  </Suspense>
+                </div>
+
+                {/* Row 5: Social Proof */}
                 <div>
-                  <h3 className="text-white font-semibold mb-4 text-center lg:text-left">Métricas de Performance</h3>
-                  <LighthouseScores />
+                  <h3 className="text-white font-semibold mb-4 text-center">Por que confiar em mim?</h3>
+                  <Suspense fallback={<SectionFallback height="200px" />}>
+                    <SocialProof />
+                  </Suspense>
                 </div>
-              </div>
 
-              {/* Row 2: QR Code + Load Time + Uptime + Code Optimization + Mockup 3D */}
-              <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8 transition-all duration-1000 delay-300 items-stretch ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="hidden md:block flex">
-                  <QRCodePreview url={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <LoadTimeCounter siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <UptimeScore siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <CodeOptimization siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex sm:col-span-2 lg:col-span-1 justify-center">
-                  <Mockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => {
-                      setDevice('mobile');
-                      setIsPreviewOpen(true);
-                    }}
-                  />
+                {/* CTA Button */}
+                <div className="text-center mt-12">
+                  <button
+                    onClick={() => setIsPreviewOpen(true)}
+                    className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-lg transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:scale-105"
+                  >
+                    <Globe size={22} />
+                    Ver Site em Tela Cheia
+                  </button>
                 </div>
               </div>
-
-              {/* Row 4: Feature Comparison */}
-              <div className={`mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
-                <FeatureComparison comparisons={odontovipComparisons} />
-              </div>
-
-              {/* Row 5: Social Proof */}
-              <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <h3 className="text-white font-semibold mb-4 text-center">Por que confiar em mim?</h3>
-                <SocialProof />
-              </div>
-
-              {/* CTA Button */}
-              <div className={`text-center mt-12 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <button
-                  onClick={() => setIsPreviewOpen(true)}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-lg transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:scale-105"
-                >
-                  <Globe size={22} />
-                  Ver Site em Tela Cheia
-                </button>
-              </div>
-            </div>
-          </section>
+            </section>
+          </LazySection>
 
           {/* ============================================
               ADMIN PANEL SHOWCASE SECTION
               ============================================ */}
-          <AdminPanelShowcaseOdontoVip />
+          <LazySection rootMargin="300px" minHeight="500px">
+            <Suspense fallback={<SectionFallback height="500px" />}>
+              <AdminPanelShowcaseOdontoVip />
+            </Suspense>
+          </LazySection>
 
           {/* ============================================
               HOSTING BONUS SECTION
               ============================================ */}
-          <HostingBonusSection isVisible={isVisible} />
+          <LazySection rootMargin="300px" minHeight="400px">
+            <Suspense fallback={<SectionFallback height="400px" />}>
+              <HostingBonusSection isVisible={isVisible} />
+            </Suspense>
+          </LazySection>
 
           {/* ============================================
               INVESTMENT SECTION - MODERNIZED
               ============================================ */}
+          <LazySection rootMargin="300px" minHeight="800px">
           <section id="pricing-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -998,25 +953,37 @@ const VendasOdontoVip = () => {
                     </h3>
                     <p className="text-white/50 text-sm">Mais de 50 empresas com sites modernos e de alta performance</p>
                   </div>
-                  <LogoCarousel logos={clientLogos} speed="medium" />
+                  <Suspense fallback={<SectionFallback height="150px" />}>
+                    <LogoCarousel logos={clientLogos} speed="medium" />
+                  </Suspense>
                 </div>
               </div>
             </div>
           </section>
+          </LazySection>
 
           {/* ============================================
               DEVELOPER SHOWCASE SECTION
               ============================================ */}
-          <DeveloperShowcase />
+          <LazySection rootMargin="300px" minHeight="400px">
+            <Suspense fallback={<SectionFallback height="400px" />}>
+              <DeveloperShowcase />
+            </Suspense>
+          </LazySection>
 
           {/* ============================================
               FAQ SECTION
               ============================================ */}
-          <FAQ />
+          <LazySection rootMargin="300px" minHeight="300px">
+            <Suspense fallback={<SectionFallback height="300px" />}>
+              <FAQ />
+            </Suspense>
+          </LazySection>
 
           {/* ============================================
               FINAL CTA SECTION
               ============================================ */}
+          <LazySection rootMargin="200px" minHeight="300px">
           <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
             <div className="max-w-4xl mx-auto text-center">
               <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -1050,6 +1017,7 @@ const VendasOdontoVip = () => {
               </div>
             </div>
           </section>
+          </LazySection>
         </main>
 
         <WorkflowFooter />

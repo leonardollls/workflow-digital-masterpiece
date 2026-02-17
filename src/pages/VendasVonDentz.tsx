@@ -1,32 +1,38 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { GlassBackground } from '@/components/portfolio-v2';
 import WorkflowFooter from '@/components/WorkflowFooter';
-import {
-  SocialProof,
-  LighthouseScores,
-  FeatureComparison,
-  QRCodePreview,
-  LoadTimeCounter,
-  UptimeScore,
-  CodeOptimization,
-  Mockup3D,
-  HeroMockup3D,
-  FAQ,
-  LogoCarousel,
-  DeveloperShowcase,
-  VonDentzSplashLoader,
-  AdminPanelShowcaseVonDentz,
-  HostingBonusSection,
-} from '@/components/vendas';
+import LazySection from '@/components/ui/LazySection';
+import VonDentzSplashLoader from '@/components/vendas/VonDentzSplashLoader';
+import HeroMockup3D from '@/components/vendas/HeroMockup3D';
 import { 
   Shield, TrendingUp, Smartphone, Search, 
   MessageCircle, Award, ChevronDown,
   CreditCard, QrCode, FileText, CheckCircle, X,
   Monitor, Zap, Lock, Globe,
-  Play, Sparkles, Menu, ChevronUp, MessageSquare, Settings, Gift
+  Play, Sparkles, Menu, ChevronUp, MessageSquare, Gift
 } from 'lucide-react';
 
-type DeviceType = 'desktop' | 'tablet' | 'mobile';
+const SocialProof = lazy(() => import('@/components/vendas/SocialProof'));
+const LighthouseScores = lazy(() => import('@/components/vendas/LighthouseScores'));
+const FeatureComparison = lazy(() => import('@/components/vendas/FeatureComparison'));
+const QRCodePreview = lazy(() => import('@/components/vendas/QRCodePreview'));
+const LoadTimeCounter = lazy(() => import('@/components/vendas/LoadTimeCounter'));
+const UptimeScore = lazy(() => import('@/components/vendas/UptimeScore'));
+const CodeOptimization = lazy(() => import('@/components/vendas/CodeOptimization'));
+const Mockup3D = lazy(() => import('@/components/vendas/Mockup3D'));
+const FAQ = lazy(() => import('@/components/vendas/FAQ'));
+const LogoCarousel = lazy(() => import('@/components/vendas/LogoCarousel'));
+const DeveloperShowcase = lazy(() => import('@/components/vendas/DeveloperShowcase'));
+const AdminPanelShowcaseVonDentz = lazy(() => import('@/components/vendas/AdminPanelShowcaseVonDentz'));
+const HostingBonusSection = lazy(() => import('@/components/vendas/HostingBonusSection'));
+
+type DeviceType = 'desktop' | 'mobile';
+
+const SectionFallback = ({ height = '400px' }: { height?: string }) => (
+  <div style={{ minHeight: height }} className="flex items-center justify-center" aria-hidden="true">
+    <div className="w-8 h-8 rounded-full border-2 border-purple-500/20 border-t-purple-500 animate-spin" />
+  </div>
+);
 
 const VendasVonDentz = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -36,7 +42,6 @@ const VendasVonDentz = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [iframeLoading, setIframeLoading] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const SITE_URL = 'https://vondentz-odontologia.vercel.app/';
@@ -450,21 +455,21 @@ const VendasVonDentz = () => {
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-2">
                 <button
-                  onClick={scrollToBenefits}
+                  onClick={() => scrollToSection('benefits-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <TrendingUp size={16} />
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={16} />
                   Ver Resultado
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Sparkles size={16} />
@@ -494,7 +499,7 @@ const VendasVonDentz = () => {
                 </button>
 
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_25px_rgba(212,165,116,0.5)] hover:scale-105"
                 >
                   <MessageSquare size={16} />
@@ -518,21 +523,21 @@ const VendasVonDentz = () => {
             >
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={scrollToBenefits}
+                  onClick={() => scrollToSection('benefits-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <TrendingUp size={18} />
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={18} />
                   Ver Resultado
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Sparkles size={18} />
@@ -549,7 +554,7 @@ const VendasVonDentz = () => {
                   Abrir Site
                 </button>
                 <button
-                  onClick={scrollToPricing}
+                  onClick={() => scrollToSection('pricing-section')}
                   className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#D4A574] to-[#E8C9A9] text-[#122737] font-semibold text-sm transition-all duration-300"
                 >
                   <MessageSquare size={18} />
@@ -603,11 +608,13 @@ const VendasVonDentz = () => {
                   Uma nova presença digital que reflete a <strong className="text-white/90">excelência e cuidado</strong> da Von Dentz Odontologia em Caxias do Sul.
                 </p>
 
-                {/* Hero Mockup 3D Interativo - Mobile First */}
-                <div className="block sm:hidden mb-8">
+                {/* Hero Mockup 3D */}
+                <div className="mb-8">
                   <HeroMockup3D 
                     siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => setIsPreviewOpen(true)} 
+                    onOpenFullscreen={() => setIsPreviewOpen(true)}
+                    staticMode
+                    mockupImage="/Images/mockups-3d/vondentz-mockup-desktop.webp"
                   />
                 </div>
 
@@ -623,20 +630,12 @@ const VendasVonDentz = () => {
                   </button>
                   
                   <button
-                    onClick={scrollToPricing}
+                    onClick={() => scrollToSection('pricing-section')}
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#122737] to-[#1a3346] text-white font-semibold text-lg transition-all duration-300 hover:bg-[#D4A574]/10 hover:shadow-[0_0_30px_rgba(212,165,116,0.3)] hover:scale-105"
                   >
                     <MessageSquare size={22} className="text-[#D4A574]" />
                     Quero Adquirir
                   </button>
-                </div>
-
-                {/* Hero Mockup 3D Interativo - Desktop */}
-                <div className="hidden sm:block">
-                  <HeroMockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => setIsPreviewOpen(true)} 
-                  />
                 </div>
               </div>
             </div>
@@ -653,7 +652,7 @@ const VendasVonDentz = () => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${stat.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
                     <div className="absolute inset-[1px] bg-slate-900/90 rounded-2xl" />
                     <div className={`absolute -inset-1 bg-gradient-to-r ${stat.accent} opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500 rounded-2xl`} />
-                    <div className="relative text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-300">
+                    <div className="relative text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-900/90 to-slate-950/80 border border-white/10 group-hover:border-white/20 transition-all duration-300">
                       <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[2px] bg-gradient-to-r ${stat.accent} rounded-full opacity-60 group-hover:w-20 group-hover:opacity-100 transition-all duration-300`} />
                       <div className={`text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent mb-1 group-hover:scale-105 transition-transform duration-300`}>
                         {stat.value}
@@ -705,9 +704,8 @@ const VendasVonDentz = () => {
             </div>
           </section>
 
-          {/* ============================================
-              PREVIEW SECTION
-              ============================================ */}
+          {/* PREVIEW SECTION - Lazy loaded */}
+          <LazySection rootMargin="400px" minHeight="600px">
           <section id="preview-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
             <div className="max-w-7xl mx-auto">
               <div className={`text-center mb-12 sm:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -719,59 +717,58 @@ const VendasVonDentz = () => {
                 </p>
               </div>
 
-              {/* Row 1: 3D Preview + Lighthouse Scores */}
-              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 transition-all duration-1000 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div className="flex flex-col">
                   <HeroMockup3D 
                     siteUrl={SITE_URL} 
                     onOpenFullscreen={() => setIsPreviewOpen(true)}
+                    staticMode
+                    mockupImage="/Images/mockups-3d/vondentz-mockup-desktop.webp"
                   />
                 </div>
                 <div>
                   <h3 className="text-white font-semibold mb-4 text-center lg:text-left">Métricas de Performance</h3>
-                  <LighthouseScores />
+                  <Suspense fallback={<SectionFallback height="300px" />}>
+                    <LighthouseScores />
+                  </Suspense>
                 </div>
               </div>
 
-              {/* Row 2: QR Code + Load Time + Uptime + Code Optimization + Mockup 3D */}
-              <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8 transition-all duration-1000 delay-300 items-stretch ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                <div className="hidden md:block flex">
-                  <QRCodePreview url={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <LoadTimeCounter siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <UptimeScore siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex">
-                  <CodeOptimization siteUrl={SITE_URL} />
-                </div>
-                <div className="hidden md:flex sm:col-span-2 lg:col-span-1 justify-center">
-                  <Mockup3D 
-                    siteUrl={SITE_URL} 
-                    onOpenFullscreen={() => {
-                      setDevice('mobile');
-                      setIsPreviewOpen(true);
-                    }}
-                  />
-                </div>
+              <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8 items-stretch">
+                <Suspense fallback={<SectionFallback height="200px" />}>
+                  <div><QRCodePreview url={SITE_URL} /></div>
+                  <div className="flex"><LoadTimeCounter siteUrl={SITE_URL} /></div>
+                  <div className="flex"><UptimeScore siteUrl={SITE_URL} /></div>
+                  <div className="flex"><CodeOptimization siteUrl={SITE_URL} /></div>
+                  <div className="flex sm:col-span-2 lg:col-span-1 justify-center">
+                    <Mockup3D 
+                      siteUrl={SITE_URL} 
+                      staticMode
+                      mockupImage="/Images/mockups-3d/vondentz-mockup-mobile.webp"
+                      onOpenFullscreen={() => {
+                        setDevice('mobile');
+                        setIsPreviewOpen(true);
+                      }}
+                    />
+                  </div>
+                </Suspense>
               </div>
 
-              {/* Row 4: Feature Comparison */}
-              <div className={`mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="mb-8">
                 <h3 className="text-white font-semibold mb-4 text-center">Comparativo de Recursos</h3>
-                <FeatureComparison comparisons={vonDentzComparisons} />
+                <Suspense fallback={<SectionFallback height="300px" />}>
+                  <FeatureComparison comparisons={vonDentzComparisons} />
+                </Suspense>
               </div>
 
-              {/* Row 5: Social Proof */}
-              <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div>
                 <h3 className="text-white font-semibold mb-4 text-center">Por que confiar em mim?</h3>
-                <SocialProof />
+                <Suspense fallback={<SectionFallback height="200px" />}>
+                  <SocialProof />
+                </Suspense>
               </div>
 
-              {/* CTA Button */}
-              <div className={`text-center mt-12 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="text-center mt-12">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-lg transition-all duration-300 hover:from-purple-500 hover:to-violet-500 hover:shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:scale-105"
@@ -782,20 +779,24 @@ const VendasVonDentz = () => {
               </div>
             </div>
           </section>
+          </LazySection>
 
-          {/* ============================================
-              ADMIN PANEL SHOWCASE SECTION
-              ============================================ */}
-          <AdminPanelShowcaseVonDentz />
+          {/* ADMIN PANEL - Lazy loaded */}
+          <LazySection rootMargin="300px" minHeight="500px">
+            <Suspense fallback={<SectionFallback height="500px" />}>
+              <AdminPanelShowcaseVonDentz />
+            </Suspense>
+          </LazySection>
 
-          {/* ============================================
-              HOSTING BONUS SECTION
-              ============================================ */}
-          <HostingBonusSection isVisible={isVisible} />
+          {/* HOSTING BONUS - Lazy loaded */}
+          <LazySection rootMargin="300px" minHeight="400px">
+            <Suspense fallback={<SectionFallback height="400px" />}>
+              <HostingBonusSection isVisible={isVisible} />
+            </Suspense>
+          </LazySection>
 
-          {/* ============================================
-              INVESTMENT SECTION
-              ============================================ */}
+          {/* INVESTMENT SECTION - Lazy loaded */}
+          <LazySection rootMargin="300px" minHeight="800px">
           <section id="pricing-section" className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-[100px]" />
@@ -989,28 +990,33 @@ const VendasVonDentz = () => {
                     </h3>
                     <p className="text-white/50 text-sm">Mais de 50 empresas com sites modernos e de alta performance</p>
                   </div>
-                  <LogoCarousel logos={clientLogos} speed="medium" />
+                  <Suspense fallback={<SectionFallback height="150px" />}>
+                    <LogoCarousel logos={clientLogos} speed="medium" />
+                  </Suspense>
                 </div>
               </div>
             </div>
           </section>
+          </LazySection>
 
-          {/* ============================================
-              DEVELOPER SHOWCASE SECTION
-              ============================================ */}
-          <DeveloperShowcase />
+          {/* DEVELOPER SHOWCASE - Lazy loaded */}
+          <LazySection rootMargin="300px" minHeight="400px">
+            <Suspense fallback={<SectionFallback height="400px" />}>
+              <DeveloperShowcase />
+            </Suspense>
+          </LazySection>
 
-          {/* ============================================
-              FAQ SECTION
-              ============================================ */}
-          <FAQ />
+          {/* FAQ - Lazy loaded */}
+          <LazySection rootMargin="300px" minHeight="300px">
+            <Suspense fallback={<SectionFallback height="300px" />}>
+              <FAQ />
+            </Suspense>
+          </LazySection>
 
-          {/* ============================================
-              FINAL CTA SECTION
-              ============================================ */}
-          <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* FINAL CTA */}
+          <LazySection rootMargin="200px" minHeight="300px">
+            <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+              <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
                   Pronto para elevar sua <span className="text-gradient">presença digital</span>?
                 </h2>
@@ -1039,8 +1045,9 @@ const VendasVonDentz = () => {
                   </a>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </LazySection>
+
         </main>
 
         <WorkflowFooter />
