@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { GlassBackground } from '@/components/portfolio-v2';
+import LazySection from '@/components/ui/LazySection';
 import WorkflowFooter from '@/components/WorkflowFooter';
 import {
   SocialProof,
@@ -27,6 +28,10 @@ import {
 } from 'lucide-react';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
+
+const SectionFallback = ({ height = '400px' }: { height?: string }) => (
+  <div className="animate-pulse rounded-2xl bg-white/5" style={{ minHeight: height }} aria-hidden="true" />
+);
 
 const VendasOdontoVip = () => {
   const [isVisible, setIsVisible] = useState(false);
