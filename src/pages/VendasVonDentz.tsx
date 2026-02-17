@@ -134,12 +134,11 @@ const VendasVonDentz = () => {
         setIsHeaderVisible(false);
       }
       
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   // Close mobile menu on escape
   useEffect(() => {
@@ -156,26 +155,10 @@ const VendasVonDentz = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToPricing = () => {
-    const pricingSection = document.getElementById('pricing-section');
-    if (pricingSection) {
-      pricingSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  const scrollToBenefits = () => {
-    const benefitsSection = document.getElementById('benefits-section');
-    if (benefitsSection) {
-      benefitsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  const scrollToPreview = () => {
-    const previewSection = document.getElementById('preview-section');
-    if (previewSection) {
-      previewSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMobileMenuOpen(false);
   };

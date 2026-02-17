@@ -418,7 +418,7 @@ const VendasVitta = () => {
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={16} />
@@ -486,7 +486,7 @@ const VendasVitta = () => {
                   Vantagens
                 </button>
                 <button
-                  onClick={scrollToPreview}
+                  onClick={() => scrollToSection('preview-section')}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm font-medium"
                 >
                   <Monitor size={18} />
